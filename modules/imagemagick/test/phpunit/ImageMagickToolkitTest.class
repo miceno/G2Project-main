@@ -616,8 +616,8 @@ class ImageMagickToolkitTest extends GalleryTestCase {
 				array(
 					'next.toolkit'   => null,
 					'next.operation' => null,
-					'width'          => 77,
-					'height'         => 59,
+					'width'          => 77.0,
+					'height'         => 59.0,
 				),
 				$context,
 				'context at end ' . $this->_envName()
@@ -668,8 +668,8 @@ class ImageMagickToolkitTest extends GalleryTestCase {
 				array(
 					'next.toolkit'   => $this->_toolkit,
 					'next.operation' => 'thumbnail',
-					'width'          => 329,
-					'height'         => 250,
+					'width'          => 329.0,
+					'height'         => 250.0,
 				),
 				$context,
 				'context after crop ' . $this->_envName()
