@@ -1534,6 +1534,8 @@ class GalleryTheme extends GalleryPlugin {
 				}
 
 				if (isset($dataItemIndex)) {
+					$theme['totalItems'] = count($peerDataItemIds);
+					$theme['itemPosition'] = $dataItemIndex;
 					if ($dataItemIndex > 0) {
 						$navigator['first'] = $peerDataItemIds[0];
 						$navigator['back']  = $peerDataItemIds[$dataItemIndex - 1];
@@ -1709,6 +1711,7 @@ class GalleryTheme extends GalleryPlugin {
 					}
 					$theme['parents'][$i]['urlParams'] = $urlParams;
 				}
+				$theme['parents'][$i]['childCount'] = -1;
 			}
 			$theme['parent'] = empty($theme['parents']) ? null : $theme['parents'][count($theme['parents']) - 1];
 		}
