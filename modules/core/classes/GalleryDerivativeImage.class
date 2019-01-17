@@ -221,6 +221,20 @@ class GalleryDerivativeImage extends GalleryDerivative {
 
 				list($width, $height) = array($this->getWidth(), $this->getHeight());
 
+				/* Set a default value for class */
+				if(!array_key_exists('class', $params)){
+					$params['class'] = "";
+				}
+				$params['class'] .= ' gcPhotoImage';
+				if (!key_exists('lazyload', $params)){
+					$params['lazyload'] = false;
+				}
+				if ($params['lazyload']){
+					$data_src = $src;
+					$src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+					$params['class'] .= " lazyload";
+				}
+
 				// Shrink our dimensions if necessary
 				if (isset($params['maxSize'])) {
 					list($width, $height) = GalleryUtilities::shrinkDimensionsToFit($width, $height, $params['maxSize']);
@@ -230,6 +244,10 @@ class GalleryDerivativeImage extends GalleryDerivative {
 				$sizeStr = '';
 
 				if ($width > 0 && $height > 0) {
+					if($height > $width){
+						/* Image orientation is portrait */
+						$params['class'] .= ' giPortrait';
+					}
 					$sizeStr = sprintf(' width="%s" height="%s"', $width, $height);
 				}
 
@@ -238,6 +256,12 @@ class GalleryDerivativeImage extends GalleryDerivative {
 				}
 
 				$html = sprintf('<img src="%s"%s', $src, $sizeStr);
+
+				if ($params['lazyload']){
+					$html .= sprintf(' data-src="%s"', $data_src);
+				}
+				unset($params['lazyload']);
+
 				unset($params['fallback']);
 				unset($params['forceFullUrl']);
 				unset($params['forceRawImage']);
