@@ -896,7 +896,7 @@ class GalleryTemplateAdapter {
 	 * Render logo button image.
 	 * @param array $params ('type' => logo type)
 	 * @param Smarty $smarty the smarty instance
-	 * @return HTML content
+	 * @return string HTML content
 	 */
 	public function logoButton($params, &$smarty) {
 		global $gallery;
