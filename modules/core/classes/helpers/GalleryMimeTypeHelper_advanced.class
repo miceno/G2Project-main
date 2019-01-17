@@ -202,6 +202,12 @@ class GalleryMimeTypeHelper_advanced {
 			'tga'     => 'image/tga',
 			'flv'     => 'video/x-flv',
 			'mp4'     => 'video/mp4',
+
+			/* Mobile video formats */
+			'3gpp' => 'video/3gpp',
+			'3gp' => 'video/3gpp',
+			'3gpp2' => 'video/3gpp2',
+			'3gp2' => 'video/3gpp2',
 		);
 		$viewableMimeTypes = array(
 			'image/jpeg'  => 1,
