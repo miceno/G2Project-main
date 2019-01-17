@@ -117,16 +117,28 @@ class SimpleCallbackView extends GalleryView {
 
 		if ($platform->is_dir($path)) {
 			$match = '';
+			if ($gallery->getDebug()) {
+				$gallery->debug("it is a dir ($path)");
+			}
 		} else {
-			$match       = basename($path);
+			if ($gallery->getDebug()) {
+				$gallery->debug("not a dir ($path)");
+			}
+			$match = basename($path);
 			$matchLength = strlen($match);
-			$path        = dirname($path);
-
-			if (!$platform->is_dir($path)) {
-				return array();
+			$path = dirname($path);
+			if (!$platform->is_readable($path)) {
+				if ($gallery->getDebug()) {
+					$gallery->debug("not readable ($path)");
+				}
+				// TODO: Return the home path of the server.
+				$base_path = GalleryCoreApi::getCodeBasePath();
+				if ($gallery->getDebug()) {
+					$gallery->debug("setting base_path ($base_path)");
+				}
+				return array($base_path,);
 			}
 		}
-
 		$dirList = $fileList = array();
 
 		if ($dir = $platform->opendir($path)) {
@@ -154,6 +166,10 @@ class SimpleCallbackView extends GalleryView {
 			$platform->closedir($dir);
 			sort($dirList);
 			sort($fileList);
+		} else {
+			if ($gallery->getDebug()) {
+				$gallery->debug("unable to opendir($path)");
+			}
 		}
 
 		return empty($dirList) ? $fileList : array_merge($dirList, $fileList);
