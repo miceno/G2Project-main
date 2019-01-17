@@ -782,10 +782,13 @@ class GalleryTemplateAdapter {
 		$type      = isset($params['type']) ? $params['type'] : 'link';
 		$lowercase = !empty($params['lowercase']);
 		$text      = isset($params['text']) ? $params['text'] : $link['text'];
+		$onlyIcon  = isset($params['onlyIcon']) ? $params['onlyIcon'] : false;
+
 		unset($params['link']);
 		unset($params['type']);
 		unset($params['lowercase']);
 		unset($params['text']);
+		unset($params['onlyIcon']);
 
 		$linkURL = $urlGenerator->generateUrl($link['params'], $link['options']);
 
@@ -817,7 +820,10 @@ class GalleryTemplateAdapter {
 				$linkAttrs = ' ';
 			}
 
-			$tag    = '<a href="' . $linkURL . '"' . $linkScript . $linkAttrs;
+			$tag = '<a href="' . $linkURL . '"'
+				   . $linkScript
+				   . $linkAttrs
+				   . ' alt="' . $text . '" title="' . $text . '"';
 			$endTag = '</a>';
 		}
 
@@ -826,8 +832,12 @@ class GalleryTemplateAdapter {
 				$tag .= " $key=\"$value\"";
 			}
 		}
+		$tag_content = "";
+		if (!$onlyIcon) {
+			$tag_content = $lowercase ? strtolower($text) : $text;
+		}
 
-		return $tag . '>' . ($lowercase ? strtolower($text) : $text) . $endTag;
+		return $tag . '>' . ($tag_content) . $endTag;
 	}
 
 	/**
