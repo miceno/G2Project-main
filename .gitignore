@@ -15,7 +15,8 @@ Thumbs.db
 # style guide #
 ##############
 .php_cs.cache
-wpcs
+composer_vendor
+
 
 # installed G2 #
 ##############

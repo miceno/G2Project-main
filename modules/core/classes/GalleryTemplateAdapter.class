@@ -752,15 +752,15 @@ class GalleryTemplateAdapter {
 			}
 		}
 
-		$tLinkId = GalleryTemplateAdapter::doStatic()->_safeCssName($linkId);
+		$tLinkName = GalleryTemplateAdapter::doStatic()->_safeCssName($linkId);
 
 		if (isset($fallbackLinkId)) {
-			$fLinkId = GalleryTemplateAdapter::doStatic()->_safeCssName($fallbackLinkId);
+			$fLinkName = GalleryTemplateAdapter::doStatic()->_safeCssName($fallbackLinkId);
 		} else {
-			$fLinkId = ' ';
+			$fLinkName = '';
 		}
 
-		return trim('gbAdminLink ' . $tLinkId . ' ' . $fLinkId);
+		return trim('gbAdminLink ' . $tLinkName . ' ' . $fLinkName);
 	}
 
 	/**
@@ -1353,7 +1353,8 @@ class GalleryTemplateAdapter {
 	 */
 	public function updateProgressBar($title, $description, $percentComplete) {
 		static $coreModule;
-
+		global $gallery;
+		
 		if (!isset($coreModule)) {
 			list($ret, $coreModule) = GalleryCoreApi::loadPlugin('module', 'core');
 
