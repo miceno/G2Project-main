@@ -260,11 +260,16 @@ class AdminFfmpegController extends GalleryController {
 
 	public function _removeWatermark(&$thumbnail) {
 		$operations = $thumbnail->getDerivativeOperations();
-		$thumbnail->setDerivativeOperations(rtrim(preg_replace(
-			'#(^|;)(composite\|[^;]*filmreel.png.*?(;|$))+#',
-			'$1',
-			$operations
-		), ';'));
+		$thumbnail->setDerivativeOperations(
+			rtrim(
+				preg_replace(
+					'#(^|;)(composite\|[^;]*filmreel.png.*?(;|$))+#',
+					'$1',
+					$operations
+				),
+				';'
+			)
+		);
 	}
 }
 
@@ -324,8 +329,8 @@ class AdminFfmpegView extends GalleryView {
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_BAD_PATH) {
 						$form['error']['path']['badPath'] = 1;
-						$tests                            = $mimeTypes = $mimeTypesEncoder = array();
-						$encoderCodecs                    = $version = array();
+						$tests                            = $mimeTypes                    = $mimeTypesEncoder                    = array();
+						$encoderCodecs                    = $version                    = array();
 					} else {
 						return array($ret, null);
 					}

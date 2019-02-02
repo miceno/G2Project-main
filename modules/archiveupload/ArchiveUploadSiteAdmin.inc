@@ -183,7 +183,7 @@ class ArchiveUploadSiteAdminView extends GalleryView {
 					'success' => true,
 				);
 			} elseif (isset($form['error']['unzipPath']['exec'])) {
-				$test                             = array(
+				$test = array(
 					'name'    => 'unzip',
 					'success' => false,
 				);
@@ -195,9 +195,12 @@ class ArchiveUploadSiteAdminView extends GalleryView {
 			}
 
 			if (isset($test)) {
-				$template->setVariable('ArchiveUploadSiteAdmin', array(
-					'tests' => array($test),
-				));
+				$template->setVariable(
+					'ArchiveUploadSiteAdmin',
+					array(
+						'tests' => array($test),
+					)
+				);
 			}
 		}
 

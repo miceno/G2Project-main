@@ -37,8 +37,9 @@ class Gallery {
 	public $_activeUser;
 
 	/**
-	 * Storage for all configuration variables, set in config.php.  The values contained here can't
-	 * be modified.  Well, they can be modified but they can't be saved so it's not a good idea.
+	 * Storage for all configuration variables, set in config.php.
+	 * The values contained here cannot be modified.
+	 * Well, they can be modified but they cannot be saved so it's not a good idea.
 	 * @var array
 	 * @access private
 	 */
@@ -171,20 +172,19 @@ class Gallery {
 
 		// Default config settings (can be overridden via config.php or embedded environment)
 		$this->_config = array(
-			'login'             => true,        // Offer UserAdmin links (Login/Logout/Your Account)
+			'login' => true,        // Offer UserAdmin links (Login/Logout/Your Account)
 
 			// UrlGenerator parameters for redirect URL to login page. Can be overridden.
-			'loginRedirect'     => array(
+			'loginRedirect' => array(
 				'view'    => 'core.UserAdmin',
 				'subView' => 'core.UserLogin',
 				'return'  => true,
 			),
 
-			'link'              => true,      // @deprecated - Allow item linking
+			'link'  => true,      // @deprecated - Allow item linking
 			// (now unused, there is a separate replica module
 
 			'showSidebarBlocks' => true, // Can we allow themes to show the sidebar?
-
 			'systemCharset'     => null,     // Specify system character set, skip autodetect
 			'defaultAlbumId'    => null,    // Initial album to display instead of root album
 			'breadcrumbRootId'  => null,  // Can omit parents above this id in fetchParentSequence
@@ -195,7 +195,7 @@ class Gallery {
 	/**
 	 * Register shutdown function to release any hanging locks.
 	 * This used to be done in the constructor, but moved here to avoid php4 vs php5 issue
-	 * ($gallery =& new Gallery() needed for php4, but this is deprecated in php5.3).
+	 * ($gallery = new Gallery() needed for php4, but this is deprecated in php5.3).
 	 */
 	public function init() {
 		// Set up a shutdown function to release any hanging locks
@@ -317,8 +317,8 @@ class Gallery {
 
 	/**
 	 * Get the Gallery session object.
-	 * Return a reference to the unique Gallery session object.  Any changes made to this object
-	 * will be saved in the session.
+	 * Return a reference to the unique Gallery session object.
+	 * Any changes made to this object will be saved in the session.
 	 *
 	 * @return GallerySession a session instance
 	 */

@@ -78,9 +78,9 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 
 		foreach (array(
 			'descriptions' => '[GalleryItem::description]',
-			'keywords'     => '[GalleryItem::keywords]',
-			'summaries'    => '[GalleryItem::summary]',
-			'titles'       => '[GalleryItem::title]',
+			'keywords'  => '[GalleryItem::keywords]',
+			'summaries' => '[GalleryItem::summary]',
+			'titles'    => '[GalleryItem::title]',
 		) as $key => $column) {
 			if (isset($options[$key])) {
 				$whereList[]        = "$column LIKE ?";
@@ -122,7 +122,8 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 		}
 		$aclMarkers = GalleryUtilities::makeMarkers(count($aclIds));
 
-		$countQuery = sprintf('
+		$countQuery = sprintf(
+			'
 	SELECT
 	  COUNT([GalleryItem::id])
 	FROM
@@ -133,15 +134,18 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 	  [GalleryItem::id] = [GalleryAccessSubscriberMap::itemId]
 	  AND
 	  [GalleryAccessSubscriberMap::accessListId] IN (%s)
-	', $aclMarkers);
+	',
+			$aclMarkers
+		);
 
-		$query = sprintf('
+		$query = sprintf(
+			'
 	SELECT
 	  [GalleryItem::id],
 	  [GalleryUser::fullName],
 	  [GalleryUser::userName],
 	  [GalleryEntity::modificationTimestamp], ' .
-		implode(', ', $selectList) . '
+			implode(', ', $selectList) . '
 	FROM
 	  [GalleryItem], [GalleryAccessSubscriberMap], [GalleryEntity], [GalleryUser]
 	WHERE
@@ -156,7 +160,9 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 	  [GalleryAccessSubscriberMap::accessListId] IN (%s)
 	ORDER BY
 	  [GalleryEntity::modificationTimestamp] DESC, [GalleryItem::id] DESC
-	', $aclMarkers);
+	',
+			$aclMarkers
+		);
 
 		$data = $whereData;
 		$data = array_merge($data, $aclIds);
@@ -206,9 +212,10 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 			foreach (array('title' => $text['title'],
 						   'summary' => $text['summary'],
 						   'keywords' => $text['keywords'],
-						   'description' => $text['description'])
+						   'description' => $text['description'], )
 				as $optionName => $fieldText) {
-				$columnName = '[GalleryItem::'. $optionName . ']';
+				$columnName = '[GalleryItem::' . $optionName . ']';
+
 				if (isset($selectMap[$columnName])) {
 					/*
 					 * Remember that our field columns start at column index 4

@@ -58,10 +58,12 @@ class ArchiveUploadHelper {
 			return array(false, 'badPath', null);
 		}
 
-		list($success, $results, $error) = $platform->exec(array(
-			array($unzipPath, '-v', dirname(__DIR__) . '/data/test.zip'),
-		));
-		$valid                           = false;
+		list($success, $results, $error) = $platform->exec(
+			array(
+				array($unzipPath, '-v', dirname(__DIR__) . '/data/test.zip'),
+			)
+		);
+		$valid = false;
 
 		foreach ($results as $resultLine) {
 			if (strpos($resultLine, 'test.txt') !== false) {

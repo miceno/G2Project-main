@@ -100,8 +100,7 @@ class ImageMagickToolkit extends GalleryToolkit {
 		if (isset($context['imagemagick.transform'])) {
 			$transform = $context['imagemagick.transform'];
 			$mimeType  = $context['imagemagick.mime'];
-			unset($context['imagemagick.transform']);
-			unset($context['imagemagick.mime']);
+			unset($context['imagemagick.transform'], $context['imagemagick.mime']);
 		} else {
 			$transform = array();
 		}
@@ -113,7 +112,7 @@ class ImageMagickToolkit extends GalleryToolkit {
 
 		// Use context look-ahead to see if we can queue up parameters to use later
 		$queueIt = in_array($operationName, $convertOps) &&
-		isset($context['next.toolkit']) && $context['next.toolkit'] == $this &&
+		isset($context['next.toolkit'])                  && $context['next.toolkit'] == $this                  &&
 		in_array($context['next.operation'], $convertOps);
 
 		/*

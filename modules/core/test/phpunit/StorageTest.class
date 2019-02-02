@@ -108,21 +108,21 @@ class StorageTest extends GalleryTestCase {
 			),
 			'GalleryEntity' => array(
 				'members' => array(
-					'id'                    => array(
+					'id' => array(
 						'type'            => STORAGE_TYPE_INTEGER | STORAGE_TYPE_ID,
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'creationTimestamp'     => array(
+					'creationTimestamp' => array(
 						'type'            => STORAGE_TYPE_INTEGER,
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_FULL,
 					),
-					'isLinkable'            => array(
+					'isLinkable' => array(
 						'type'    => STORAGE_TYPE_BOOLEAN,
 						'notNull' => 1,
 					),
-					'linkId'                => array(
+					'linkId' => array(
 						'type' => STORAGE_TYPE_INTEGER,
 					),
 					'modificationTimestamp' => array(
@@ -130,25 +130,25 @@ class StorageTest extends GalleryTestCase {
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'serialNumber'          => array(
+					'serialNumber' => array(
 						'type'            => STORAGE_TYPE_INTEGER,
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'entityType'            => array(
+					'entityType' => array(
 						'type'            => STORAGE_TYPE_STRING,
 						'notNull'         => 1,
 						'size'            => STORAGE_SIZE_SMALL,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'onLoadHandlers'        => array(
+					'onLoadHandlers' => array(
 						'type' => STORAGE_TYPE_STRING,
 						'size' => STORAGE_SIZE_MEDIUM,
 					),
 				),
-				'parent'  => null,
-				'module'  => 'core',
-				'linked'  => array(),
+				'parent' => null,
+				'module' => 'core',
+				'linked' => array(),
 			),
 		);
 
@@ -224,10 +224,13 @@ class StorageTest extends GalleryTestCase {
 		global $gallery;
 		$storage =& $gallery->getStorage();
 
-		$ret = $storage->addMapEntry('GalleryTestMap', array(
-			'field1' => 0,
-			'field2' => 1,
-		));
+		$ret = $storage->addMapEntry(
+			'GalleryTestMap',
+			array(
+				'field1' => 0,
+				'field2' => 1,
+			)
+		);
 
 		if ($ret) {
 			return $ret;
@@ -254,10 +257,14 @@ class StorageTest extends GalleryTestCase {
 		global $gallery;
 		$storage =& $gallery->getStorage();
 
-		$ret = $storage->addMapEntry('GalleryTestMap', array(
-			'field1' => 0,
-			'field2' => 1,
-		), true);
+		$ret = $storage->addMapEntry(
+			'GalleryTestMap',
+			array(
+				'field1' => 0,
+				'field2' => 1,
+			),
+			true
+		);
 
 		if ($ret) {
 			return $ret;
@@ -455,10 +462,13 @@ class StorageTest extends GalleryTestCase {
 		global $gallery;
 		$storage =& $gallery->getStorage();
 
-		$ret = $storage->addMapEntry('GalleryTestMap', array(
-			'field1' => array(1, 2, 3),
-			'field2' => array(4, 5, 6),
-		));
+		$ret = $storage->addMapEntry(
+			'GalleryTestMap',
+			array(
+				'field1' => array(1, 2, 3),
+				'field2' => array(4, 5, 6),
+			)
+		);
 
 		if ($ret) {
 			return $ret;
@@ -1385,10 +1395,12 @@ class StorageTest extends GalleryTestCase {
 		$storage =& $gallery->getStorage();
 
 		// Result for loadTableVersions
-		$tablesRecordSet    = new StorageTestRecordSet(array(
-			array('Entity', 1, 0),
-			array('AccessMap', 1, 6),
-		));
+		$tablesRecordSet    = new StorageTestRecordSet(
+			array(
+				array('Entity', 1, 0),
+				array('AccessMap', 1, 6),
+			)
+		);
 		$optimizeStatements = $storage->_getOptimizeStatements();
 		// Results for optimize statements
 		$expectedQueries = array();
@@ -1422,11 +1434,13 @@ class StorageTest extends GalleryTestCase {
 		$storage =& $gallery->getStorage();
 
 		// Result for loadTableVersions
-		$tablesRecordSet    = new StorageTestRecordSet(array(
-			array('Entity', 1, 0),
-			array('AccessMap', 1, 6),
-			array('Item', 2, 0),
-		));
+		$tablesRecordSet    = new StorageTestRecordSet(
+			array(
+				array('Entity', 1, 0),
+				array('AccessMap', 1, 6),
+				array('Item', 2, 0),
+			)
+		);
 		$optimizeStatements = $storage->_getOptimizeStatements();
 		// Results for optimize statements
 		$expectedQueries = array();
@@ -1541,16 +1555,16 @@ class StorageTest extends GalleryTestCase {
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'creationTimestamp'     => array(
+					'creationTimestamp' => array(
 						'type'            => STORAGE_TYPE_INTEGER,
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_FULL,
 					),
-					'isLinkable'            => array(
+					'isLinkable' => array(
 						'type'    => STORAGE_TYPE_BOOLEAN,
 						'notNull' => 1,
 					),
-					'linkId'                => array(
+					'linkId' => array(
 						'type' => STORAGE_TYPE_INTEGER,
 					),
 					'modificationTimestamp' => array(
@@ -1558,25 +1572,25 @@ class StorageTest extends GalleryTestCase {
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'serialNumber'          => array(
+					'serialNumber' => array(
 						'type'            => STORAGE_TYPE_INTEGER,
 						'notNull'         => 1,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'field4'                => array(
+					'field4' => array(
 						'type'            => STORAGE_TYPE_STRING,
 						'notNull'         => 1,
 						'size'            => STORAGE_SIZE_SMALL,
 						'external-access' => EXTERNAL_ACCESS_READ,
 					),
-					'onLoadHandlers'        => array(
+					'onLoadHandlers' => array(
 						'type' => STORAGE_TYPE_STRING,
 						'size' => STORAGE_SIZE_MEDIUM,
 					),
 				),
-				'parent'  => null,
-				'module'  => 'core',
-				'linked'  => array(),
+				'parent' => null,
+				'module' => 'core',
+				'linked' => array(),
 			),
 		);
 

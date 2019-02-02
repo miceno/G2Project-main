@@ -511,7 +511,7 @@ class GalleryDerivative extends GalleryChildEntity {
 		$this->setMimeType($mimeType);
 		$this->setDerivativeSize($size);
 
-		$data                               = array(
+		$data = array(
 			'derivativePath' => $destPath,
 			'derivativeType' => $this->getDerivativeType(),
 			'mimeType'       => $this->getMimeType(),
@@ -695,10 +695,12 @@ class GalleryDerivative extends GalleryChildEntity {
 	public function fetchPath() {
 		global $gallery;
 
-		$cacheFile = GalleryDataCache::getCachePath(array(
-			'type'   => 'derivative',
-			'itemId' => $this->getId(),
-		));
+		$cacheFile = GalleryDataCache::getCachePath(
+			array(
+				'type'   => 'derivative',
+				'itemId' => $this->getId(),
+			)
+		);
 
 		return array(null, $cacheFile);
 	}

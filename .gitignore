@@ -15,14 +15,14 @@ Thumbs.db
 # style guide #
 ##############
 .php_cs.cache
-composer_vendor
+dev_vendor
 
 
 # installed G2 #
 ##############
 g2data
 config.php
-.htaccess
+/.htaccess
 authFile.txt
 login.txt
 

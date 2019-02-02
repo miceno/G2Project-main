@@ -49,18 +49,18 @@ class CodeAuditTest extends CodeAuditTestCase {
 			),
 			'GET' => array(
 				'modules/core/classes/GalleryUtilities.class' => 1,
-				'modules/core/ShowItem.inc' => 1,
-				'main.php'                  => 1,
-				'modules/core/classes/Gallery.class' => 1,
+				'modules/core/ShowItem.inc'                   => 1,
+				'main.php'                                    => 1,
+				'modules/core/classes/Gallery.class'          => 1,
 			),
 			'COOKIE' => array(
-				'modules/core/classes/GallerySession.class' => 1,
+				'modules/core/classes/GallerySession.class'   => 1,
 				'modules/core/classes/GalleryUtilities.class' => 1,
 			),
 			'SERVER' => array(
 				'modules/core/classes/GalleryUtilities.class' => 1,
-				'modules/rewrite/data/path_info/index.php' => 1,
-				'main.php' => 1,
+				'modules/rewrite/data/path_info/index.php'    => 1,
+				'main.php'                                    => 1,
 			),
 		);
 
@@ -89,14 +89,14 @@ class CodeAuditTest extends CodeAuditTestCase {
 		);
 
 		$this->_exception['errorHandler'] = array(
-			'init.inc' => 1,
-			'main.php' => 1,
+			'init.inc'                                => 1,
+			'main.php'                                => 1,
 			'modules/core/classes/GalleryEmbed.class' => 1,
 		);
 
 		$this->_exception['longLineCount'] = array(
 			'modules/core/test/phpunit/Php43IllegalFunctions.inc' => 1,
-			'modules/gd/test/phpunit/GdFunctionMatrix.inc' => 600,
+			'modules/gd/test/phpunit/GdFunctionMatrix.inc'        => 600,
 		);
 
 		$this->_longLineFiles = array();
@@ -253,12 +253,14 @@ class CodeAuditTest extends CodeAuditTestCase {
 			) {
 				foreach (array_unique($matches[1]) as $item) {
 					$this->_errorCount++;
-					$this->fail(sprintf(
-						'%s gets %s by value instead of by reference on line %d',
-						$fileName,
-						$item,
-						$i + 1
-					));
+					$this->fail(
+						sprintf(
+							'%s gets %s by value instead of by reference on line %d',
+							$fileName,
+							$item,
+							$i + 1
+						)
+					);
 				}
 			}
 
@@ -283,13 +285,15 @@ class CodeAuditTest extends CodeAuditTestCase {
 					}
 
 					$this->_errorCount++;
-					$this->fail(sprintf(
-						'%s uses the %s superglobal instead of ' .
-						'its helper on line %d',
-						$fileName,
-						$item,
-						$i + 1
-					));
+					$this->fail(
+						sprintf(
+							'%s uses the %s superglobal instead of ' .
+							'its helper on line %d',
+							$fileName,
+							$item,
+							$i + 1
+						)
+					);
 				}
 			}
 

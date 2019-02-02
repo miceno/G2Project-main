@@ -69,9 +69,11 @@ GalleryEmbed::done();
 //----------------------------------------------------------------------
 function g2Connect() {
 	include_once '../../embed.php';
-	$ret = GalleryEmbed::init(array(
-		'fullInit' => true,
-	));
+	$ret = GalleryEmbed::init(
+		array(
+			'fullInit' => true,
+		)
+	);
 
 	if ($ret) {
 		return '<div class="error center"><h2>Could not activate Gallery2 API.</h2></div><div class="error left">' . $ret->getAsHtml() . '</div>';
@@ -122,24 +124,24 @@ function process($renderType, $args = array()) {
 					if (!$err) {
 						$tables  = array(
 							'AccessSubscriberMap' => 'itemId',
-							'AlbumItem'          => 'id',
-							'AnimationItem'      => 'id',
-							'ChildEntity'        => 'id',
-							'ChildEntity'        => 'parentId',
-							'DataItem'           => 'id',
-							'Derivative'         => 'derivativeSourceId',
-							'DerivativePrefsMap' => 'itemId',
+							'AlbumItem'           => 'id',
+							'AnimationItem'       => 'id',
+							'ChildEntity'         => 'id',
+							'ChildEntity'         => 'parentId',
+							'DataItem'            => 'id',
+							'Derivative'          => 'derivativeSourceId',
+							'DerivativePrefsMap'  => 'itemId',
 							'DescendentCountsMap' => 'itemId',
-							'Entity'             => 'id',
-							'FileSystemEntity'   => 'id',
-							'ImageBlockCacheMap' => 'itemId',
-							'Item'               => 'id',
-							'ItemAttributesMap'  => 'itemId',
-							'LinkItem'           => 'id',
-							'MovieItem'          => 'id',
-							'PhotoItem'          => 'id',
-							'UnknownItem'        => 'id',
-							'User'               => 'id',
+							'Entity'              => 'id',
+							'FileSystemEntity'    => 'id',
+							'ImageBlockCacheMap'  => 'itemId',
+							'Item'                => 'id',
+							'ItemAttributesMap'   => 'itemId',
+							'LinkItem'            => 'id',
+							'MovieItem'           => 'id',
+							'PhotoItem'           => 'id',
+							'UnknownItem'         => 'id',
+							'User'                => 'id',
 						);
 						$display = (count($ids)) ? '<p>Total Missing entities: <strong>' . count($ids) . '</strong></p>' : '';
 

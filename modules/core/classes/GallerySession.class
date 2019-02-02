@@ -280,7 +280,7 @@ class GallerySession {
 
 		// Initialize the secure flag if HTTPS
 		if ($this->_isPersistent) {
-			$isSecure = (boolean)$this->get('secure');
+			$isSecure = (bool)$this->get('secure');
 			$isHttps  = $this->_isHttps();
 
 			if ($isSecure !== $isHttps) {
@@ -391,11 +391,11 @@ class GallerySession {
 							'id' => $this->_sessionId,
 						),
 						array(
-							'userId'            => $this->_userId,
-							'remoteIdentifier'  => serialize($this->_remoteIdentifier),
-							'creationTimestamp' => $this->_creationTime,
+							'userId'                => $this->_userId,
+							'remoteIdentifier'      => serialize($this->_remoteIdentifier),
+							'creationTimestamp'     => $this->_creationTime,
 							'modificationTimestamp' => $this->_modificationTime,
-							'data'              => serialize($this->_sessionData),
+							'data'                  => serialize($this->_sessionData),
 						),
 						$useNonTransactionalConnection
 					);
@@ -823,12 +823,12 @@ class GallerySession {
 			 *                          userId is not == anonymousUserId
 			 * - authToken: we only check the authToken for persistent sessions
 			 */
-			unset($sessionDataCopy['core.lastViewed']);
-			unset($sessionDataCopy['permissionCache']);
-			unset($sessionDataCopy['core.navigation']);
-			unset($sessionDataCopy['embed.id.externalUser']);
-			unset($sessionDataCopy['core.authToken']);
-			unset($sessionDataCopy['secure']);
+			unset($sessionDataCopy['core.lastViewed'], $sessionDataCopy['permissionCache'], $sessionDataCopy['core.navigation'], $sessionDataCopy['embed.id.externalUser'], $sessionDataCopy['core.authToken'], $sessionDataCopy['secure']);
+
+
+
+
+
 			list(
 				$ret,
 				$detectedLanguageCode
@@ -1385,14 +1385,16 @@ class GallerySession {
 	 * @access private
 	 */
 	public function _getSerializedSession() {
-		return serialize(array(
-			$this->_sessionId,
-			$this->_userId,
-			serialize($this->_remoteIdentifier),
-			$this->_creationTime,
-			$this->_modificationTime,
-			serialize($this->_sessionData),
-		));
+		return serialize(
+			array(
+				$this->_sessionId,
+				$this->_userId,
+				serialize($this->_remoteIdentifier),
+				$this->_creationTime,
+				$this->_modificationTime,
+				serialize($this->_sessionData),
+			)
+		);
 	}
 
 	/**

@@ -232,9 +232,7 @@ class GalleryUtilities {
 		if ($prefix) {
 			$key = GALLERY_FORM_VARIABLE_PREFIX . $key;
 		}
-		unset($_POST[$key]);
-		unset($_FILES[$key]);
-		unset($_GET[$key]);
+		unset($_POST[$key], $_FILES[$key], $_GET[$key]);
 	}
 
 	/**
@@ -438,8 +436,7 @@ class GalleryUtilities {
 	/**
 	 * Convert a filesystem path inside the Gallery directory to an absolute URL.
 	 *
-	 * ie. /path/to/gallery/themes/classic/styles/style.css =>
-	 *     http://example.com/gallery/themes/classic/styles/style.css
+	 * ie. /path/to/gallery/themes/classic/styles/style.css =>   *     http://example.com/gallery/themes/classic/styles/style.css
 	 *
 	 * @param string $path path to a file in the Gallery directory tree
 	 * @param array $options (optional) options to pass to UrlGenerator
@@ -465,9 +462,12 @@ class GalleryUtilities {
 		// Prepend the Gallery base URL
 		$urlGenerator =& $gallery->getUrlGenerator();
 
-		return $urlGenerator->generateUrl(array(
-			'href' => $relativePath,
-		), $options);
+		return $urlGenerator->generateUrl(
+			array(
+				'href' => $relativePath,
+			),
+			$options
+		);
 	}
 
 	/**
@@ -605,7 +605,7 @@ class GalleryUtilities {
 			$charArrayLength = count($charArray);
 
 			// if $length < 0, then it's really the end index
-			$cookedStart  = ($start < 0) ? $charArrayLength + $start : $start;
+			$cookedStart  = ($start < 0) ? $charArrayLength                 + $start : $start;
 			$cookedLength = ($length < 0) ? $charArrayLength - $cookedStart + $length : $length;
 
 			// We now have the proper begin/end indices, so grab that slice
@@ -1053,9 +1053,12 @@ class GalleryUtilities {
 	 * @return boolean
 	 */
 	public static function isTrustedProxy($addr) {
-		return (boolean)preg_match('/^((10\.\d{1,3}\.\d{1,3}\.\d{1,3})|'
-		. '(172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3})|'
-		. '(192\.168\.\d{1,3}\.\d{1,3}))$/', $addr);
+		return (bool)preg_match(
+			'/^((10\.\d{1,3}\.\d{1,3}\.\d{1,3})|'
+			. '(172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3})|'
+			. '(192\.168\.\d{1,3}\.\d{1,3}))$/',
+			$addr
+		);
 	}
 
 	/**

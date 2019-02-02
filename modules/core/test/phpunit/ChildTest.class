@@ -38,9 +38,12 @@ class ChildTest extends GalleryTestCase {
 		}
 
 		// Create a little tree of mixed items/entities
-		list($ret, $this->_root) = $this->_createRandomAlbum($this->_getRootId(), array(
-			'orderBy' => 'orderWeight',
-		));
+		list($ret, $this->_root) = $this->_createRandomAlbum(
+			$this->_getRootId(),
+			array(
+				'orderBy' => 'orderWeight',
+			)
+		);
 
 		if ($ret) {
 			return $ret;
@@ -193,16 +196,16 @@ class ChildTest extends GalleryTestCase {
 		}
 
 		foreach (array(
-			'title'                   => array(ORDER_ASCENDING, 2, 3, 1),
-			'summary'                 => array(ORDER_DESCENDING, 2, 1, 3),
-			'description'             => array(ORDER_ASCENDING, 3, 2, 1),
-			'keywords'                => array(ORDER_DESCENDING, 3, 1, 2),
-			'originationTimestamp'    => array(ORDER_ASCENDING, 1, 3, 2),
-			'creationTimestamp'       => array(ORDER_DESCENDING, 3, 2, 1),
-			'viewCount'               => array(ORDER_DESCENDING, 2, 3, 1), // Tie break by Id
-			'pathComponent'           => array(ORDER_ASCENDING, '?'),
-			'random'                  => array(ORDER_ASCENDING, '?'),
-			'viewedFirst|summary'     => array(ORDER_ASCENDING, 3, 2, 1),
+			'title'     => array(ORDER_ASCENDING, 2, 3, 1),
+			'summary'   => array(ORDER_DESCENDING, 2, 1, 3),
+			'description' => array(ORDER_ASCENDING, 3, 2, 1),
+			'keywords'  => array(ORDER_DESCENDING, 3, 1, 2),
+			'originationTimestamp' => array(ORDER_ASCENDING, 1, 3, 2),
+			'creationTimestamp' => array(ORDER_DESCENDING, 3, 2, 1),
+			'viewCount' => array(ORDER_DESCENDING, 2, 3, 1), // Tie break by Id
+			'pathComponent' => array(ORDER_ASCENDING, '?'),
+			'random'    => array(ORDER_ASCENDING, '?'),
+			'viewedFirst|summary' => array(ORDER_ASCENDING, 3, 2, 1),
 			'albumsFirst|description' => array(ORDER_DESCENDING, 2, 1, 3),
 		) as $orderBy => $data) {
 			$album->setOrderBy($orderBy);
@@ -229,11 +232,15 @@ class ChildTest extends GalleryTestCase {
 				sort($childIds);
 			}
 
-			$this->assertEquals(array(
-				$child[$data[0]]->getId(),
-				$child[$data[1]]->getId(),
-				$child[$data[2]]->getId(),
-			), $childIds, $orderBy);
+			$this->assertEquals(
+				array(
+					$child[$data[0]]->getId(),
+					$child[$data[1]]->getId(),
+					$child[$data[2]]->getId(),
+				),
+				$childIds,
+				$orderBy
+			);
 		}
 
 		$ret = GalleryCoreApi::releaseLocks($lockId);

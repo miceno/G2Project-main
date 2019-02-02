@@ -1248,7 +1248,7 @@ class GalleryStorage {
 	 * avoid conflicting with a reserved word.
 	 *
 	 * eg:
-	 * Comment   => array(g2_Comment, null, Comment)
+	 * Comment => array(g2_Comment, null, Comment)
 	 * Comment=1 => array(g2_Comment, C0, Comment)
 	 *
 	 * @param string $tableName the name of a table

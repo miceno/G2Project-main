@@ -70,13 +70,15 @@ class ImageMagickToolkitHelper {
 
 		// Scale
 		$operations['scale'] = array(
-			'params'      => array(
+			'params'    => array(
 				array(
 					'type'        => 'int',
-					'description' => $gallery->i18n(array(
-						'text'    => 'target width (# pixels or #% of full size)',
-						'cFormat' => false,
-					)),
+					'description' => $gallery->i18n(
+						array(
+							'text'    => 'target width (# pixels or #% of full size)',
+							'cFormat' => false,
+						)
+					),
 				),
 				array(
 					'type'        => 'int',
@@ -88,7 +90,7 @@ class ImageMagickToolkitHelper {
 			'description' => $gallery->i18n(
 				'Scale the image to the target size, maintain aspect ratio'
 			),
-			'mimeTypes'   => $mimeTypes,
+			'mimeTypes' => $mimeTypes,
 		);
 
 		// Thumbnail is an alias for scale
@@ -96,20 +98,24 @@ class ImageMagickToolkitHelper {
 
 		// Resize
 		$operations['resize'] = array(
-			'params'      => array(
+			'params'    => array(
 				array(
 					'type'        => 'int',
-					'description' => $gallery->i18n(array(
-						'text'    => 'target width (# pixels or #% of full size)',
-						'cFormat' => false,
-					)),
+					'description' => $gallery->i18n(
+						array(
+							'text'    => 'target width (# pixels or #% of full size)',
+							'cFormat' => false,
+						)
+					),
 				),
 				array(
 					'type'        => 'int',
-					'description' => $gallery->i18n(array(
-						'text'    => 'target height (# pixels or #% of full size)',
-						'cFormat' => false,
-					)),
+					'description' => $gallery->i18n(
+						array(
+							'text'    => 'target height (# pixels or #% of full size)',
+							'cFormat' => false,
+						)
+					),
 				),
 			),
 			'description' => $gallery->i18n('Resize the image to the target dimensions'),
@@ -118,7 +124,7 @@ class ImageMagickToolkitHelper {
 
 		// Rotate
 		$operations['rotate'] = array(
-			'params'      => array(
+			'params'    => array(
 				array(
 					'type'        => 'int',
 					'description' => $gallery->i18n('rotation degrees'),
@@ -130,7 +136,7 @@ class ImageMagickToolkitHelper {
 
 		// Crop
 		$operations['crop'] = array(
-			'params'      => array(
+			'params'    => array(
 				array(
 					'type'        => 'float',
 					'description' => $gallery->i18n('left edge %'),
@@ -154,7 +160,7 @@ class ImageMagickToolkitHelper {
 
 		// Composite
 		$operations['composite'] = array(
-			'params'      => array(
+			'params'    => array(
 				array(
 					'type'        => 'string',
 					'description' => $gallery->i18n('overlay path'),
@@ -201,7 +207,7 @@ class ImageMagickToolkitHelper {
 
 		if (!empty($multiPageMimeTypes)) {
 			$operations['select-page'] = array(
-				'params'      => array(
+				'params' => array(
 					array(
 						'type'        => 'int',
 						'description' => $gallery->i18n('page number'),
@@ -217,7 +223,7 @@ class ImageMagickToolkitHelper {
 
 		if (!empty($qualityMimeTypes)) {
 			$operations['compress'] = array(
-				'params'      => array(
+				'params' => array(
 					array(
 						'type'        => 'int',
 						'description' => $gallery->i18n('target size in kb'),
@@ -768,8 +774,13 @@ class ImageMagickToolkitHelper {
 			|| !@$platform->is_dir($imageMagickPath)
 		) {
 			return array(
-				GalleryCoreApi::error(ERROR_BAD_PATH, null, null, '"' . $imageMagickPath
-				. '" is not a directory or is not specified in open_basedir.'),
+				GalleryCoreApi::error(
+					ERROR_BAD_PATH,
+					null,
+					null,
+					'"' . $imageMagickPath
+					. '" is not a directory or is not specified in open_basedir.'
+				),
 				null,
 			);
 		}

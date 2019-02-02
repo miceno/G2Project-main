@@ -1700,11 +1700,13 @@ class adoSchema {
 		// Process the file
 		while ($data = fread($fp, 4096)) {
 			if (!xml_parse($xmlParser, $data, feof($fp))) {
-				die(sprintf(
-					'XML error: %s at line %d',
-					xml_error_string(xml_get_error_code($xmlParser)),
-					xml_get_current_line_number($xmlParser)
-				));
+				die(
+					sprintf(
+						'XML error: %s at line %d',
+						xml_error_string(xml_get_error_code($xmlParser)),
+						xml_get_current_line_number($xmlParser)
+					)
+				);
 			}
 		}
 
@@ -1747,11 +1749,13 @@ class adoSchema {
 		$xmlParser = $this->create_parser();
 
 		if (!xml_parse($xmlParser, $xmlstring, true)) {
-			die(sprintf(
-				'XML error: %s at line %d',
-				xml_error_string(xml_get_error_code($xmlParser)),
-				xml_get_current_line_number($xmlParser)
-			));
+			die(
+				sprintf(
+					'XML error: %s at line %d',
+					xml_error_string(xml_get_error_code($xmlParser)),
+					xml_get_current_line_number($xmlParser)
+				)
+			);
 		}
 
 		xml_parser_free($xmlParser);
@@ -2027,7 +2031,7 @@ class adoSchema {
 
 	public function TransformSchema($schema, $xsl, $schematype = 'string') {
 		// Fail if XSLT extension is not available
-		if (! function_exists('xslt_create')) {
+		if (!function_exists('xslt_create')) {
 			return false;
 		}
 

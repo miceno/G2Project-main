@@ -169,8 +169,8 @@ class GalleryPluginHelper_simple {
 			) {
 				$s = $status[$pluginId];
 
-				if (isset($s['active'])
-					&& isset($s['version'])
+				if (isset($s['active'], $s['version'])
+
 					&& ($s['version'] != $plugin->getVersion()
 					|| !GalleryPluginHelper_simple::isPluginCompatibleWithApis($plugin))
 				) {
@@ -355,7 +355,7 @@ class GalleryPluginHelper_simple {
 		}
 
 		// Check cache
-		$data      = $queryIds = array();
+		$data      = $queryIds      = array();
 		$itemIds   = is_array($itemId) ? $itemId : array($itemId);
 		$cacheBase = "GalleryPluginHelper::fetchAllParameters($pluginType, $pluginId, ";
 

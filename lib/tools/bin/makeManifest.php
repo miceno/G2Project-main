@@ -94,7 +94,7 @@ function makeManifest($filterPath = '') {
 		chdir($baseDir);
 	}
 	// Just so we are consistent lets standardize on Unix path sepearators
-	$baseDir  = str_replace('\\', '/', $baseDir);
+	$baseDir = str_replace('\\', '/', $baseDir);
 	$baseDir .= substr($baseDir, -1) == '/' ? '' : '/';
 
 	quiet_print('Finding all files...');
@@ -135,7 +135,7 @@ function makeManifest($filterPath = '') {
 			$oldRevision = preg_match('/Revision: (\d+\s*)\$/', $oldLines[0], $matches) ? $matches[1] : '';
 		}
 
-		$newContent  = '# $Revi' . "sion: $oldRevision\$$nl";
+		$newContent = '# $Revi' . "sion: $oldRevision\$$nl";
 		$newContent .= "# File crc32 crc32(crlf) size size(crlf)  or  R File$nl";
 
 		$deleted = $seen = array();
@@ -168,8 +168,8 @@ function makeManifest($filterPath = '') {
 					$size_crlf = strlen($data_crlf);
 				}
 
-				$cksum       = crc32($data);
-				$cksum_crlf  = crc32($data_crlf);
+				$cksum      = crc32($data);
+				$cksum_crlf = crc32($data_crlf);
 				$newContent .= sprintf(
 					"$relativeFilePath\t%u\t%u\t%d\t%d$nl",
 					$cksum,

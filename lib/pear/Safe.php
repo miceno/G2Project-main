@@ -50,7 +50,7 @@ if (class_exists('HTML_Safe')) {
  *
  * <b>Example:</b>
  * <pre>
- * $parser =& new HTML_Safe();
+ * $parser = new HTML_Safe();
  * $result = $parser->parse($doc);
  * </pre>
  *

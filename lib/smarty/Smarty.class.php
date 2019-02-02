@@ -225,8 +225,8 @@ class Smarty {
 	 * @var array
 	 */
 	public $security_settings = array(
-		'PHP_HANDLING'        => false,
-		'IF_FUNCS'            => array(
+		'PHP_HANDLING' => false,
+		'IF_FUNCS'     => array(
 			'array',
 			'list',
 			'isset',
@@ -838,8 +838,7 @@ class Smarty {
 	 * @param callback $function
 	 */
 	public function register_prefilter($function) {
-		$this->_plugins['prefilter'][$this->_get_filter_name($function)]
-			= array($function, null, null, false);
+		$this->_plugins['prefilter'][$this->_get_filter_name($function)] = array($function, null, null, false);
 	}
 
 	/**
@@ -858,8 +857,7 @@ class Smarty {
 	 * @param callback $function
 	 */
 	public function register_postfilter($function) {
-		$this->_plugins['postfilter'][$this->_get_filter_name($function)]
-			= array($function, null, null, false);
+		$this->_plugins['postfilter'][$this->_get_filter_name($function)] = array($function, null, null, false);
 	}
 
 	/**
@@ -878,8 +876,7 @@ class Smarty {
 	 * @param callback $function
 	 */
 	public function register_outputfilter($function) {
-		$this->_plugins['outputfilter'][$this->_get_filter_name($function)]
-			= array($function, null, null, false);
+		$this->_plugins['outputfilter'][$this->_get_filter_name($function)] = array($function, null, null, false);
 	}
 
 	/**
@@ -1352,11 +1349,14 @@ class Smarty {
 	 */
 	public function config_load($file, $section = null, $scope = 'global') {
 		include_once $this->_get_plugin_filepath('function', 'config_load');
-		smarty_function_config_load(array(
-			'file'    => $file,
-			'section' => $section,
-			'scope'   => $scope,
-		), $this);
+		smarty_function_config_load(
+			array(
+				'file'    => $file,
+				'section' => $section,
+				'scope'   => $scope,
+			),
+			$this
+		);
 	}
 
 	/**
@@ -1471,10 +1471,16 @@ class Smarty {
 			// if a _cache_serial was set, we also have to write an include-file:
 			if ($this->_cache_include_info) {
 				include_once SMARTY_CORE_DIR . 'core.write_compiled_include.php';
-				smarty_core_write_compiled_include(array_merge($this->_cache_include_info, array(
-					'compiled_content' => $_compiled_content,
-					'resource_name'    => $resource_name,
-				)), $this);
+				smarty_core_write_compiled_include(
+					array_merge(
+						$this->_cache_include_info,
+						array(
+							'compiled_content' => $_compiled_content,
+							'resource_name'    => $resource_name,
+						)
+					),
+					$this
+				);
 			}
 
 			$_params = array(
@@ -1533,7 +1539,7 @@ class Smarty {
 		$smarty_compiler->_config                  = $this->_config;
 		$smarty_compiler->request_use_auto_globals = $this->request_use_auto_globals;
 
-		if (isset($cache_include_path) && isset($this->_cache_serials[$cache_include_path])) {
+		if (isset($cache_include_path, $this->_cache_serials[$cache_include_path])) {
 			$smarty_compiler->_cache_serial = $this->_cache_serials[$cache_include_path];
 		}
 		$smarty_compiler->_cache_include = $cache_include_path;
@@ -1883,13 +1889,13 @@ class Smarty {
 		$line = null,
 		$error_type = E_USER_ERROR
 	) {
-		if (isset($file) && isset($line)) {
+		if (isset($file, $line)) {
 			$info = ' (' . basename($file) . ", line $line)";
 		} else {
 			$info = '';
 		}
 
-		if (isset($tpl_line) && isset($tpl_file)) {
+		if (isset($tpl_line, $tpl_file)) {
 			$this->trigger_error('[in ' . $tpl_file . ' line ' . $tpl_line . "]: $error_msg$info", $error_type);
 		} else {
 			$this->trigger_error($error_msg . $info, $error_type);

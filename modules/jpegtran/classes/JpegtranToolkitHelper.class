@@ -57,7 +57,7 @@ class JpegtranToolkitHelper {
 		foreach ($testResults as $result) {
 			if ($result['name'] == 'rotate' && $result['success']) {
 				$operations['rotate'] = array(
-					'params'      => array(
+					'params' => array(
 						array(
 							'type'        => 'int',
 							'description' => $gallery->i18n('rotation degrees'),
@@ -68,7 +68,7 @@ class JpegtranToolkitHelper {
 				);
 			} elseif ($result['name'] == 'crop' && $result['success']) {
 				$operations['crop'] = array(
-					'params'      => array(
+					'params' => array(
 						array(
 							'type'        => 'float',
 							'description' => $gallery->i18n('left edge %'),
@@ -125,8 +125,13 @@ class JpegtranToolkitHelper {
 			|| !@$platform->is_file($jpegtranPath)
 		) {
 			return array(
-				GalleryCoreApi::error(ERROR_BAD_PATH, null, null, '"' . $jpegtranPath
-								. '" is not a file or is not specified in open_basedir.'),
+				GalleryCoreApi::error(
+					ERROR_BAD_PATH,
+					null,
+					null,
+					'"' . $jpegtranPath
+					. '" is not a file or is not specified in open_basedir.'
+				),
 				null,
 			);
 		}

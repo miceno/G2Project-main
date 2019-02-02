@@ -367,12 +367,12 @@ class DatabaseSetupStep extends InstallStep {
 			$templateData['config'] = $this->_config;
 
 			foreach (array(
-				$mysqltType  => 'MySQL (v3.23.34a and newer)',
-				'mysql'      => 'MySQL (versions before v3.23.34a)',
-				'postgres7'  => 'PostgreSQL v7.x and newer',
-				'oci8po'     => 'Oracle (9i and newer)',
-				'db2'        => 'IBM DB2 (v9.x and newer)',
-				'ado_mssql'  => 'Microsoft SQL Server 2005 and newer',
+				$mysqltType => 'MySQL (v3.23.34a and newer)',
+				'mysql' => 'MySQL (versions before v3.23.34a)',
+				'postgres7' => 'PostgreSQL v7.x and newer',
+				'oci8po' => 'Oracle (9i and newer)',
+				'db2'   => 'IBM DB2 (v9.x and newer)',
+				'ado_mssql' => 'Microsoft SQL Server 2005 and newer',
 				'pdo_sqlite' => 'SQLite v3.x (Experimental!)',
 			) as $key => $value) {
 				$templateData['dbList'][$key] = $value;
@@ -558,7 +558,7 @@ class DatabaseSetupStep extends InstallStep {
 	 * Avoid using GalleryInitFirstPass (as this is called even for fresh installs)
 	 *
 	 * @return array ('installed' => string the storage versions.dat version,
-	 *                'codebase'  => string the codebase version)
+	 *                'codebase' => string the codebase version)
 	 */
 	public function _getVersions() {
 		global $galleryStub;
@@ -572,7 +572,7 @@ class DatabaseSetupStep extends InstallStep {
 		$coreModule   = new CoreModule();
 		$instVersions = $coreModule->getInstalledVersions();
 
-		if (isset($instVersions) && isset($instVersions['core'])
+		if (isset($instVersions, $instVersions['core'])
 			&& !empty($instVersions['core'])
 		) {
 			$versions['installed'] = $instVersions['core'];
@@ -667,8 +667,11 @@ class DatabaseSetupStep extends InstallStep {
 				$galleryStub->getConfig('plugins.dirname')
 			);
 			$GLOBALS['gallery']->setConfig('data.gallery.version', $configPath . 'versions.dat');
-			$GLOBALS['gallery']->setConfig('data.gallery.locale', $configPath . 'locale'
-				   . DIRECTORY_SEPARATOR);
+			$GLOBALS['gallery']->setConfig(
+				'data.gallery.locale',
+				$configPath . 'locale'
+				. DIRECTORY_SEPARATOR
+			);
 		}
 		global $gallery;
 
@@ -703,9 +706,11 @@ class DatabaseSetupStep extends InstallStep {
 			if (!defined('GALLERY_FORM_VARIABLE_PREFIX')) {
 				define('GALLERY_FORM_VARIABLE_PREFIX', 'g2_');
 			}
-			$ret     = GalleryInitFirstPass(array(
-				'noDatabase' => true,
-			));
+			$ret     = GalleryInitFirstPass(
+				array(
+					'noDatabase' => true,
+				)
+			);
 			$success = !$ret;
 
 			GalleryDataCache::setFileCachingEnabled(false);

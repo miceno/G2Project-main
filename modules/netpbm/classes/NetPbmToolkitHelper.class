@@ -79,10 +79,12 @@ class NetPbmToolkitHelper {
 		// Scale
 		$operations['scale']['params'][]    = array(
 			'type'        => 'int',
-			'description' => $gallery->i18n(array(
-				'text'    => 'target width (# pixels or #% of full size)',
-				'cFormat' => false,
-			)),
+			'description' => $gallery->i18n(
+				array(
+					'text'    => 'target width (# pixels or #% of full size)',
+					'cFormat' => false,
+				)
+			),
 		);
 		$operations['scale']['params'][]    = array(
 			'type'        => 'int',
@@ -97,17 +99,21 @@ class NetPbmToolkitHelper {
 		// Resize
 		$operations['resize']['params'][]    = array(
 			'type'        => 'int',
-			'description' => $gallery->i18n(array(
-				'text'    => 'target width (# pixels or #% of full size)',
-				'cFormat' => false,
-			)),
+			'description' => $gallery->i18n(
+				array(
+					'text'    => 'target width (# pixels or #% of full size)',
+					'cFormat' => false,
+				)
+			),
 		);
 		$operations['resize']['params'][]    = array(
 			'type'        => 'int',
-			'description' => $gallery->i18n(array(
-				'text'    => 'target height (# pixels or #% of full size)',
-				'cFormat' => false,
-			)),
+			'description' => $gallery->i18n(
+				array(
+					'text'    => 'target height (# pixels or #% of full size)',
+					'cFormat' => false,
+				)
+			),
 		);
 		$operations['resize']['description'] = $gallery->i18n('Resize the image to the target dimensions');
 		$operations['resize']['mimeTypes']   = $mimeTypes;
@@ -177,7 +183,7 @@ class NetPbmToolkitHelper {
 
 		if (!empty($qualityMimeTypes)) {
 			$operations['compress'] = array(
-				'params'      => array(
+				'params' => array(
 					array(
 						'type'        => 'int',
 						'description' => $gallery->i18n('target size in kb'),
@@ -281,8 +287,13 @@ class NetPbmToolkitHelper {
 		 */
 		if ($isRestrictedPath || !@$platform->is_dir($netPbmPath)) {
 			return array(
-				GalleryCoreApi::error(ERROR_BAD_PATH, null, null, '"' . $netPbmPath
-								. '" is not a directory or is not specified in open_basedir.'),
+				GalleryCoreApi::error(
+					ERROR_BAD_PATH,
+					null,
+					null,
+					'"' . $netPbmPath
+					. '" is not a directory or is not specified in open_basedir.'
+				),
 				null,
 				null,
 			);
@@ -290,7 +301,7 @@ class NetPbmToolkitHelper {
 
 
 		$binaryData = array(
-			''                       => array(
+			''          => array(
 				'pnmscale',
 				'pnmcut|pamcut',
 				'pnmfile|pamfile',
@@ -303,9 +314,9 @@ class NetPbmToolkitHelper {
 				'ppmtogif',
 				'exist' => 'ppmquant|pnmquant',
 			),
-			'image/png'              => array('pngtopnm', 'pnmtopng'),
-			'image/tiff'             => array('tifftopnm', 'pnmtotiff|pamtotiff'),
-			'image/bmp'              => array(
+			'image/png'  => array('pngtopnm', 'pnmtopng'),
+			'image/tiff' => array('tifftopnm', 'pnmtotiff|pamtotiff'),
+			'image/bmp'  => array(
 				'bmptopnm|bmptoppm',
 				'ppmtobmp',
 				'exist' => 'ppmquant|pnmquant',

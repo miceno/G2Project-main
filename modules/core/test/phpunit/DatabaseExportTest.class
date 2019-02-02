@@ -117,10 +117,10 @@ class DatabaseExportTest extends GalleryTestCase {
 				'requiredModuleApi' => array(3, 6),
 			),
 			'core' => array(
-				'available'         => 1,
-				'version'           => '1.2.12',
-				'active'            => '1',
-				'callbacks'         => 'registerEventListeners|getItemLinks|'
+				'available' => 1,
+				'version'   => '1.2.12',
+				'active'    => '1',
+				'callbacks' => 'registerEventListeners|getItemLinks|'
 				. 'getSystemLinks|getSiteAdminViews|'
 				. 'getUserAdminViews|getItemAdminViews',
 				'requiredCoreApi'   => array(7, 27),
@@ -226,9 +226,11 @@ class DatabaseExportTest extends GalleryTestCase {
 			),
 			array(
 				null,
-				new UnitTestStorageSearchResults(array(
-					array('Create Sql Statement', 'testModule', 'map', 'test data'),
-				)),
+				new UnitTestStorageSearchResults(
+					array(
+						array('Create Sql Statement', 'testModule', 'map', 'test data'),
+					)
+				),
 			)
 		);
 
@@ -566,9 +568,12 @@ class DatabaseExportTest extends GalleryTestCase {
 	public function testOpenBackupFileForWriting() {
 		global $gallery;
 		$gallery->setConfig('data.gallery.backup', '/path/');
-		$gallery->setConfig('storage.config', array(
-			'database' => 'TEST-DB',
-		));
+		$gallery->setConfig(
+			'storage.config',
+			array(
+				'database' => 'TEST-DB',
+			)
+		);
 		$gallery->_platform->setReply('file_exists', array('/path/'), true);
 		$gallery->_platform->setReply('is_dir', array('/path/'), true);
 		$gallery->_phpVm->setReply('rand', array(null, null), 'RAW-RND');
@@ -594,9 +599,12 @@ class DatabaseExportTest extends GalleryTestCase {
 	public function testOpenBackupFileForWritingSqLitePathsGetTrimmed() {
 		global $gallery;
 		$gallery->setConfig('data.gallery.backup', '/path/');
-		$gallery->setConfig('storage.config', array(
-			'database' => '/full/sqlite/path/to/TEST-DB',
-		));
+		$gallery->setConfig(
+			'storage.config',
+			array(
+				'database' => '/full/sqlite/path/to/TEST-DB',
+			)
+		);
 		$gallery->_platform->setReply('file_exists', array('/path/'), true);
 		$gallery->_platform->setReply('is_dir', array('/path/'), true);
 		$gallery->_phpVm->setReply('rand', array(null, null), 'RAW-RND');

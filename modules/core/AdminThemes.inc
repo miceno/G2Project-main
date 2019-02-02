@@ -379,8 +379,8 @@ class AdminThemesView extends GalleryView {
 							$entry['action'][] = array(
 								'text'   => $module->translate('install'),
 								'params' => array(
-									'controller' => 'core.AdminThemes',
-									'themeId'    => $id,
+									'controller'            => 'core.AdminThemes',
+									'themeId'               => $id,
 									'form[action][install]' => 1,
 								),
 							);
@@ -389,8 +389,8 @@ class AdminThemesView extends GalleryView {
 							$entry['action'][] = array(
 								'text'   => $module->translate('upgrade'),
 								'params' => array(
-									'controller' => 'core.AdminThemes',
-									'themeId'    => $id,
+									'controller'            => 'core.AdminThemes',
+									'themeId'               => $id,
 									'form[action][upgrade]' => 1,
 								),
 							);
@@ -400,16 +400,16 @@ class AdminThemesView extends GalleryView {
 						$entry['action'][] = array(
 							'text'   => $module->translate('activate'),
 							'params' => array(
-								'controller' => 'core.AdminThemes',
-								'themeId'    => $id,
+								'controller'             => 'core.AdminThemes',
+								'themeId'                => $id,
 								'form[action][activate]' => 1,
 							),
 						);
 						$entry['action'][] = array(
 							'text'   => $module->translate('uninstall'),
 							'params' => array(
-								'controller' => 'core.AdminThemes',
-								'themeId'    => $id,
+								'controller'              => 'core.AdminThemes',
+								'themeId'                 => $id,
 								'form[action][uninstall]' => 1,
 							),
 						);
@@ -421,8 +421,8 @@ class AdminThemesView extends GalleryView {
 						$entry['action'][] = array(
 							'text'   => $module->translate('deactivate'),
 							'params' => array(
-								'controller' => 'core.AdminThemes',
-								'themeId'    => $id,
+								'controller'               => 'core.AdminThemes',
+								'themeId'                  => $id,
 								'form[action][deactivate]' => 1,
 							),
 						);
@@ -432,8 +432,8 @@ class AdminThemesView extends GalleryView {
 						$entry['action'][] = array(
 							'text'   => $module->translate('upgrade'),
 							'params' => array(
-								'controller' => 'core.AdminThemes',
-								'themeId'    => $id,
+								'controller'            => 'core.AdminThemes',
+								'themeId'               => $id,
 								'form[action][upgrade]' => 1,
 							),
 						);

@@ -780,7 +780,7 @@ END;
 		// Let Oracle return the name of the columns
 		$q_fields = 'SELECT * FROM (' . $sql . ') WHERE NULL = NULL';
 
-		if (! $stmt_arr = $this->Prepare($q_fields)) {
+		if (!$stmt_arr = $this->Prepare($q_fields)) {
 			return false;
 		}
 		$stmt = $stmt_arr[1];

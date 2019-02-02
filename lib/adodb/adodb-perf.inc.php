@@ -34,7 +34,7 @@ $ADODB_PERF_MIN = 0.05; // log only if >= minimum number of secs to run
 // returns in K the memory of current process, or 0 if not known
 function adodb_getmem() {
 	if (function_exists('memory_get_usage')) {
-		return (integer)((memory_get_usage() + 512) / 1024);
+		return (int)((memory_get_usage() + 512) / 1024);
 	}
 
 	$pid = getmypid();
@@ -57,7 +57,7 @@ function adodb_getmem() {
 	$memarr = explode(' ', $output[0]);
 
 	if (sizeof($memarr) >= 2) {
-		return (integer)$memarr[1];
+		return (int)$memarr[1];
 	}
 
 	return 0;
@@ -230,13 +230,15 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 					$ok = $conn->Execute($isql, $arr);
 				}
 			} else {
-				$ok = $conn->Execute("create table $perf_table (
+				$ok = $conn->Execute(
+					"create table $perf_table (
 				created varchar(50),
 				sql0 varchar(250),
 				sql1 varchar(4000),
 				params varchar(3000),
 				tracer varchar(500),
-				timer decimal(16,6))");
+				timer decimal(16,6))"
+				);
 			}
 
 			if (!$ok) {
@@ -440,7 +442,7 @@ class adodb_perf {
 		}
 
 		if (strncmp(PHP_OS, 'WIN', 3) == 0) {
-			return (integer)$info[0];
+			return (int)$info[0];
 		}
 
 		if (empty($this->_lastLoad)) {
@@ -544,7 +546,7 @@ class adodb_perf {
 		$saveE                 = $this->conn->fnExecute;
 		$this->conn->fnExecute = false;
 
-		if (isset($_GET['exps']) && isset($_GET['sql'])) {
+		if (isset($_GET['exps'], $_GET['sql'])) {
 			$partial = !empty($_GET['part']);
 			echo '<a name=explain></a>' . $this->Explain($_GET['sql'], $partial) . "\n";
 		}
@@ -632,7 +634,7 @@ class adodb_perf {
 		$saveE                 = $this->conn->fnExecute;
 		$this->conn->fnExecute = false;
 
-		if (isset($_GET['expe']) && isset($_GET['sql'])) {
+		if (isset($_GET['expe'], $_GET['sql'])) {
 			$partial = !empty($_GET['part']);
 			echo '<a name=explain></a>' . $this->Explain($_GET['sql'], $partial) . "\n";
 		}
@@ -712,7 +714,7 @@ class adodb_perf {
 		$arr[0] = (float)$this->DBParameter('data cache hit ratio');
 		$arr[1] = (float)$this->DBParameter('data reads');
 		$arr[2] = (float)$this->DBParameter('data writes');
-		$arr[3] = (integer)$this->DBParameter('current connections');
+		$arr[3] = (int)$this->DBParameter('current connections');
 
 		return $arr;
 	}
@@ -855,7 +857,7 @@ class adodb_perf {
 
 		if (isset($_GET['nsql'])) {
 			if ($_GET['nsql'] > 0) {
-				$nsql = $_SESSION['ADODB_PERF_SQL'] = (integer)$_GET['nsql'];
+				$nsql = $_SESSION['ADODB_PERF_SQL'] = (int)$_GET['nsql'];
 			}
 		}
 		echo "<title>ADOdb Performance Monitor on $app</title><body bgcolor=white>";
@@ -1185,7 +1187,7 @@ class adodb_perf {
 					rs2html($rs);
 				}
 			} else {
-				$e1 = (integer)$this->conn->ErrorNo();
+				$e1 = (int)$this->conn->ErrorNo();
 				$e2 = $this->conn->ErrorMsg();
 
 				if (($e1) || ($e2)) {
@@ -1249,11 +1251,11 @@ class adodb_perf {
 		}
 
 		$mode    = ADODB_OPT_LOW;
-		$lastArg = $args[ $numArgs - 1];
+		$lastArg = $args[$numArgs - 1];
 
 		if (!is_string($lastArg)) {
 			$mode = $lastArg;
-			unset($args[ $numArgs - 1]);
+			unset($args[$numArgs - 1]);
 		}
 
 		foreach ($args as $table) {

@@ -314,8 +314,8 @@ class MainTest extends GalleryTestCase {
 
 		// Make sure the redirect has no sessionId in it
 		GalleryUtilities::removeRequestVariable(SESSION_ID_PARAMETER);
-		unset($_COOKIE[SESSION_ID_PARAMETER]);
-		unset($_SERVER['HTTP_COOKIE']);
+		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
+
 		$session = new GallerySession();
 		$ret     = $session->init();
 
@@ -350,8 +350,8 @@ class MainTest extends GalleryTestCase {
 	public function testDoRedirectRemoveTrailingQMark() {
 		// Make sure the redirect has no sessionId in it
 		GalleryUtilities::removeRequestVariable(SESSION_ID_PARAMETER);
-		unset($_COOKIE[SESSION_ID_PARAMETER]);
-		unset($_SERVER['HTTP_COOKIE']);
+		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
+
 		$session = new GallerySession();
 		$ret     = $session->init();
 
@@ -498,9 +498,13 @@ class MainTest extends GalleryTestCase {
 			return $ret;
 		}
 
-		$this->assertEquals(array(
-			'isDone' => true,
-		), $g2Data, 'returned data');
+		$this->assertEquals(
+			array(
+				'isDone' => true,
+			),
+			$g2Data,
+			'returned data'
+		);
 		$this->assertEquals(
 			array(
 				'location' => "Location: $expectedUrl",
@@ -555,9 +559,13 @@ class MainTest extends GalleryTestCase {
 			return $ret;
 		}
 
-		$this->assertEquals(array(
-			'isDone' => true,
-		), $g2Data, 'returned data');
+		$this->assertEquals(
+			array(
+				'isDone' => true,
+			),
+			$g2Data,
+			'returned data'
+		);
 		$this->assertEquals(
 			array(
 				'location' => "Location: $expectedUrl",
@@ -702,9 +710,13 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$this->assertEquals(array(
-			'isDone' => true,
-		), $g2Data, 'returned data');
+		$this->assertEquals(
+			array(
+				'isDone' => true,
+			),
+			$g2Data,
+			'returned data'
+		);
 		$this->assertTrue(
 			$this->_hasCacheControlNoCacheHeader($_REQUEST['header']),
 			'wrong Cache-Control header: ' . implode(', ', $_REQUEST['header'])
@@ -730,9 +742,13 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$this->assertEquals(array(
-			'isDone' => true,
-		), $g2Data, 'returned data');
+		$this->assertEquals(
+			array(
+				'isDone' => true,
+			),
+			$g2Data,
+			'returned data'
+		);
 		$this->assertTrue(
 			!$this->_hasCacheControlNoCacheHeader($_REQUEST['header']),
 			'wrong Cache-Control header: ' . implode(', ', $_REQUEST['header'])

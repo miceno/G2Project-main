@@ -22,7 +22,7 @@ if (!defined('ADODB_DIR')) {
 	die();
 }
 
-if (! defined('_ADODB_CSV_LAYER')) {
+if (!defined('_ADODB_CSV_LAYER')) {
 	define('_ADODB_CSV_LAYER', 1);
 
 	include_once ADODB_DIR . '/adodb-csvlib.inc.php';
@@ -99,7 +99,7 @@ if (! defined('_ADODB_CSV_LAYER')) {
 
 			if ($at === false) {
 				$this->_errorMsg = $err;
-				$this->_errorNo  = (integer)$err;
+				$this->_errorNo  = (int)$err;
 			} else {
 				$this->_errorMsg = substr($err, $at + 4, 1024);
 				$this->_errorNo  = -9999;
@@ -163,7 +163,7 @@ if (! defined('_ADODB_CSV_LAYER')) {
 
 			if ($at === false) {
 				$this->_errorMsg = $err;
-				$this->_errorNo  = (integer)$err;
+				$this->_errorNo  = (int)$err;
 			} else {
 				$this->_errorMsg = substr($err, $at + 4, 1024);
 				$this->_errorNo  = -9999;

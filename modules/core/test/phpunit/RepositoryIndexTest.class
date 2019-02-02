@@ -292,8 +292,7 @@ class RepositoryIndexTest extends GalleryTestCase {
 		if (isset($this->_testStorage->_updatedMapData['GalleryPluginParameterMap'])) {
 			$timestampWritten = true;
 
-			$updateTimestamp = $this->_testStorage->_updatedMapData
-			['GalleryPluginParameterMap'][0]['change']['parameterValue'];
+			$updateTimestamp = $this->_testStorage->_updatedMapData['GalleryPluginParameterMap'][0]['change']['parameterValue'];
 		} elseif (isset($this->_testStorage->_addedMapData['GalleryPluginParameterMap'])) {
 			$addedData = $this->_testStorage->_addedMapData['GalleryPluginParameterMap'][0];
 
@@ -400,10 +399,13 @@ class RepositoryIndexTest extends GalleryTestCase {
 			$ret->getErrorCode() & ERROR_BAD_PARAMETER,
 			'Should return ERROR_BAD_PARMETER'
 		);
-		$this->assertEquals(array(
-			'modules' => array(),
-			'themes'  => array(),
-		), $index->_index);
+		$this->assertEquals(
+			array(
+				'modules' => array(),
+				'themes'  => array(),
+			),
+			$index->_index
+		);
 		$this->assertTrue(!$index->_isLoaded, 'GalleryRepositoryIndex::isLoaded is set.');
 		$this->assertTrue($platform->isComplete(), $platform->getRemaining());
 	}
@@ -525,11 +527,14 @@ class RepositoryIndexTest extends GalleryTestCase {
 	public function testGetAvailableLanguagesInPluginFiltered() {
 		// Load the cache for testing
 		$cacheKey = 'GalleryTranslator::SupportedLanguages';
-		GalleryDataCache::put($cacheKey, array(
-			'en' => array(
-				'US' => array('US English'),
-			),
-		));
+		GalleryDataCache::put(
+			$cacheKey,
+			array(
+				'en' => array(
+					'US' => array('US English'),
+				),
+			)
+		);
 
 		$cacheKey = 'GalleryPluginHelper::getAllPluginIds(module)';
 		GalleryDataCache::put($cacheKey, array('testModule'));
@@ -609,8 +614,7 @@ class RepositoryIndexTest extends GalleryTestCase {
 				'pluginId'        => 'testTheme',
 				'package'         => 'lang-en_US',
 				'expectedVersion' => $sampleStringsRevision,
-				'expectedBuild'   => $this->_sampleIndex['themes']['testTheme']
-				['languages'][$sampleStringsRevision]['en_US'],
+				'expectedBuild'   => $this->_sampleIndex['themes']['testTheme']['languages'][$sampleStringsRevision]['en_US'],
 			),
 		);
 
@@ -914,9 +918,12 @@ class RepositoryIndexTest extends GalleryTestCase {
 		);
 
 		$utilities = new UnitTestRepositoryUtilities();
-		$this->_setUpRepositoryUtilitiesResponses($utilities, array(
-			'noTheme' => 1,
-		));
+		$this->_setUpRepositoryUtilitiesResponses(
+			$utilities,
+			array(
+				'noTheme' => 1,
+			)
+		);
 		$this->_index->_utilities =& $utilities;
 
 		$ret = $gallery->setActiveLanguageCode('en_GB');
@@ -1038,7 +1045,7 @@ class RepositoryIndexTest extends GalleryTestCase {
 
 		if (empty($options['noTheme'])) {
 			$installedPackages = array(
-				'base'       => array(
+				'base' => array(
 					'locked'  => false,
 					'version' => '1.0.0',
 					'build'   => '11111',

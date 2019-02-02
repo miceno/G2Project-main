@@ -103,8 +103,7 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 							list($ret, $language, $country) = $translator->getLanguageAndCountryFromLanguageCode($matches[1]);
 
 							if (!empty($supportedLanguages[$language][$country])) {
-								$installPackages[$baseSource][$pluginType][$pluginId][$packageName]
-								= 1;
+								$installPackages[$baseSource][$pluginType][$pluginId][$packageName] = 1;
 							}
 						}
 					}
@@ -251,7 +250,7 @@ class AdminRepositoryDownloadView extends GalleryView {
 			list(
 				$ret,
 				$upgradeData['repositoryName']
-			)                             = GalleryRepository::doStatic()->translateRepositoryName($source);
+			) = GalleryRepository::doStatic()->translateRepositoryName($source);
 
 			if ($ret) {
 				return array($ret, null);

@@ -15,7 +15,7 @@
 function smarty_core_load_plugins($params, &$smarty) {
 	foreach ($params['plugins'] as $_plugin_info) {
 		list($_type, $_name, $_tpl_file, $_tpl_line, $_delayed_loading) = $_plugin_info;
-		$_plugin = &$smarty->_plugins[$_type][$_name];
+		$_plugin                                                        = &$smarty->_plugins[$_type][$_name];
 
 		/*
 		 * We do not load plugin more than once for each instance of Smarty.
@@ -61,7 +61,7 @@ function smarty_core_load_plugins($params, &$smarty) {
 
 		$_plugin_file = $smarty->_get_plugin_filepath($_type, $_name);
 
-		if (! $_found = ($_plugin_file != false)) {
+		if (!$_found = ($_plugin_file != false)) {
 			$_message = "could not load plugin file '$_type.$_name.php'\n";
 		}
 

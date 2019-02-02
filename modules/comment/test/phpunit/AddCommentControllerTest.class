@@ -106,10 +106,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results
 		);
@@ -131,8 +131,11 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 			$this->assertEquals('this is a subject', $comments[0]->getSubject());
 			$this->assertEquals($gallery->getActiveUserId(), $comments[0]->getCommenterId());
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost());
-			$this->assertTrue($comments[0]->getDate() >= $this->_startTime &&
-			  $comments[0]->getDate() <= time(), 'date');
+			$this->assertTrue(
+				$comments[0]->getDate() >= $this->_startTime &&
+				$comments[0]->getDate() <= time(),
+				'date'
+			);
 		}
 	}
 
@@ -153,10 +156,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results,
 			'First Comment'
@@ -169,8 +172,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array('form[error][comment][flood]'),
+				'status' => array(),
+				'error'  => array('form[error][comment][flood]'),
 			),
 			$results,
 			'Flood Comment'
@@ -195,10 +198,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results,
 			'First Comment'
@@ -213,10 +216,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results,
 			'Second Comment'
@@ -258,10 +261,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results
 		);
@@ -282,8 +285,11 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 			$this->assertEquals('this is an author', $comments[0]->getAuthor());
 			$this->assertEquals($gallery->getActiveUserId(), $comments[0]->getCommenterId());
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost());
-			$this->assertTrue($comments[0]->getDate() >= $this->_startTime &&
-			  $comments[0]->getDate() <= time(), 'date');
+			$this->assertTrue(
+				$comments[0]->getDate() >= $this->_startTime &&
+				$comments[0]->getDate() <= time(),
+				'date'
+			);
 		}
 	}
 
@@ -303,8 +309,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array(),
+				'status' => array(),
+				'error'  => array(),
 			),
 			$results
 		);
@@ -344,8 +350,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array(),
+				'status' => array(),
+				'error'  => array(),
 			),
 			$results
 		);
@@ -367,8 +373,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array('form[error][comment][missing]'),
+				'status' => array(),
+				'error'  => array('form[error][comment][missing]'),
 			),
 			$results
 		);
@@ -398,8 +404,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array('form[error][comment][missing]'),
+				'status' => array(),
+				'error'  => array('form[error][comment][missing]'),
 			),
 			$results
 		);
@@ -446,10 +452,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results
 		);
@@ -468,10 +474,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results
 		);
@@ -572,10 +578,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results
 		);
@@ -616,8 +622,11 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'user 1'
 			);
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost(), 'host 1');
-			$this->assertTrue($comments[0]->getDate() >= $this->_startTime
-			  && $comments[0]->getDate() <= time(), 'time 1');
+			$this->assertTrue(
+				$comments[0]->getDate() >= $this->_startTime
+				&& $comments[0]->getDate() <= time(),
+				'time 1'
+			);
 		}
 	}
 
@@ -635,8 +644,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'core.ShowItem',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(),
-				'error'    => array(),
+				'status' => array(),
+				'error'  => array(),
 			),
 			$results
 		);
@@ -675,8 +684,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array('form[error][AddCommentTestValidation]'),
+				'status' => array(),
+				'error'  => array('form[error][AddCommentTestValidation]'),
 			),
 			$results
 		);
@@ -706,8 +715,8 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'delegate' => array(
 					'view' => 'comment.AddComment',
 				),
-				'status'   => array(),
-				'error'    => array('form[error][AddCommentTestValidation]'),
+				'status' => array(),
+				'error'  => array('form[error][AddCommentTestValidation]'),
 			),
 			$results
 		);
@@ -741,10 +750,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 					'view'   => 'comment.CommentChangeConfirmation',
 					'itemId' => $this->_item->getId(),
 				),
-				'status'   => array(
+				'status' => array(
 					'added' => 1,
 				),
-				'error'    => array(),
+				'error' => array(),
 			),
 			$results
 		);
@@ -764,8 +773,11 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 			$this->assertEquals('test', $comments[0]->getSubject());
 			$this->assertEquals($gallery->getActiveUserId(), $comments[0]->getCommenterId());
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost());
-			$this->assertTrue($comments[0]->getDate() >= $this->_startTime &&
-			  $comments[0]->getDate() <= time(), 'date');
+			$this->assertTrue(
+				$comments[0]->getDate() >= $this->_startTime &&
+				$comments[0]->getDate() <= time(),
+				'date'
+			);
 		}
 	}
 

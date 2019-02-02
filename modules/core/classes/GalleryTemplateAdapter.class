@@ -291,9 +291,9 @@ class GalleryTemplateAdapter {
 		}
 
 		return '<input type="checkbox" id="' . $params['module'] . '_ChangeInDescendents" name="'
-		 . GalleryUtilities::prefixFormVariable(
-			 'form[changeInDescendents][' . $params['module'] . ']'
-		 ) . '"/> <label for="'
+		. GalleryUtilities::prefixFormVariable(
+			'form[changeInDescendents][' . $params['module'] . ']'
+		) . '"/> <label for="'
 		 . $params['module'] . '_ChangeInDescendents"> ' . $text . '</label>';
 	}
 
@@ -357,8 +357,8 @@ class GalleryTemplateAdapter {
 			list($item, $entity) = $results;
 		}
 
-		unset($params['item']);
-		unset($params['image']);
+		unset($params['item'], $params['image']);
+
 
 		if (isset($params['fallback'])) {
 			$fallback = $params['fallback'];
@@ -434,9 +434,11 @@ class GalleryTemplateAdapter {
 				foreach (array_keys($head['javascript']) as $file) {
 					$output[] = sprintf(
 						'<script type="text/javascript" src="%s"></script>',
-						$urlGenerator->generateUrl(array(
-							'href' => $file,
-						))
+						$urlGenerator->generateUrl(
+							array(
+								'href' => $file,
+							)
+						)
 					);
 				}
 			}
@@ -533,18 +535,23 @@ class GalleryTemplateAdapter {
 				}
 				$output[] = sprintf(
 					$pattern,
-					$urlGenerator->generateUrl(array(
-						'href' => $file,
-					))
+					$urlGenerator->generateUrl(
+						array(
+							'href' => $file,
+						)
+					)
 				);
 			}
 		}
 
 		if ($filteredFiles) {
-			$output[] = sprintf($pattern, $this->_buildCombinedJavascriptFileAndGenerateUrl(
-				$filteredFiles,
-				$key
-			));
+			$output[] = sprintf(
+				$pattern,
+				$this->_buildCombinedJavascriptFileAndGenerateUrl(
+					$filteredFiles,
+					$key
+				)
+			);
 		}
 	}
 
@@ -784,11 +791,11 @@ class GalleryTemplateAdapter {
 		$text      = isset($params['text']) ? $params['text'] : $link['text'];
 		$onlyIcon  = isset($params['onlyIcon']) ? $params['onlyIcon'] : false;
 
-		unset($params['link']);
-		unset($params['type']);
-		unset($params['lowercase']);
-		unset($params['text']);
-		unset($params['onlyIcon']);
+		unset($params['link'], $params['type'], $params['lowercase'], $params['text'], $params['onlyIcon']);
+
+
+
+
 
 		$linkURL = $urlGenerator->generateUrl($link['params'], $link['options']);
 
@@ -803,9 +810,11 @@ class GalleryTemplateAdapter {
 		} else {
 			if (!array_key_exists('class', $params)) {
 				// Use default classes
-				$params['class'] = $this->linkId(array(
-					'urlParams' => $link['params'],
-				));
+				$params['class'] = $this->linkId(
+					array(
+						'urlParams' => $link['params'],
+					)
+				);
 			}
 
 			if (isset($link['script'])) {
@@ -833,6 +842,7 @@ class GalleryTemplateAdapter {
 			}
 		}
 		$tag_content = "";
+
 		if (!$onlyIcon) {
 			$tag_content = $lowercase ? strtolower($text) : $text;
 		}
@@ -923,7 +933,7 @@ class GalleryTemplateAdapter {
 			return;
 		}
 		$linkTarget       = empty($params['target']) ? '' : (' target="' . $params['target'] . '"');
-		$isAdminOrShowAll = $isAdmin || (isset($params['showToAll']) && $params['showToAll']);
+		$isAdminOrShowAll = $isAdmin                || (isset($params['showToAll']) && $params['showToAll']);
 		$useLink          = !isset($params['link']) || $params['link'];
 
 		switch ($params['type']) {
@@ -944,9 +954,11 @@ class GalleryTemplateAdapter {
 				return sprintf(
 					'%s<img src="%s" alt="%s" title="%s" style="%s" width="80" height="15"/>%s',
 					$useLink ? ('<a href="http://gallery.sourceforge.net"' . $linkTarget . '>') : '',
-					$urlGenerator->generateUrl(array(
-						'href' => 'images/gallery.gif',
-					)),
+					$urlGenerator->generateUrl(
+						array(
+							'href' => 'images/gallery.gif',
+						)
+					),
 					$version,
 					$version,
 					'border-style: none',
@@ -987,9 +999,11 @@ class GalleryTemplateAdapter {
 				return sprintf(
 					'%s<img src="%s" alt="%s" title="%s" style="%s" width="80" height="15"/>%s',
 					$useLink ? ('<a href="' . $validationUri . '"' . $linkTarget . '>') : '',
-					$urlGenerator->generateUrl(array(
-						'href' => 'images/xhtml10.png',
-					)),
+					$urlGenerator->generateUrl(
+						array(
+							'href' => 'images/xhtml10.png',
+						)
+					),
 					$core->translate('This page is valid XHTML 1.0'),
 					$core->translate('This page is valid XHTML 1.0'),
 					'border-style: none',
@@ -1006,9 +1020,11 @@ class GalleryTemplateAdapter {
 					'%s<img src="%s" alt="%s" title="%s" style="%s" width="80" height="15"/>%s',
 					$useLink ? ('<a href="http://gallery.sourceforge.net/donate.php?donate_tag=' .
 					$installedVersions['gallery'] . '"' . $linkTarget . '>') : '',
-					$urlGenerator->generateUrl(array(
-						'href' => 'modules/core/data/donate.png',
-					)),
+					$urlGenerator->generateUrl(
+						array(
+							'href' => 'modules/core/data/donate.png',
+						)
+					),
 					$core->translate('Donate to the Gallery project'),
 					$core->translate('Donate to the Gallery project'),
 					'border-style: none',
@@ -1073,7 +1089,7 @@ class GalleryTemplateAdapter {
 	/**
 	 * Perform a theme related function.  Possible parameters are
 	 *   include => file to include inside the theme's templates/ dir
-	 *   url  => url to a file inside the themes dir
+	 *   url => url to a file inside the themes dir
 	 *
 	 * @param array $params ('include' => ..., 'url' => ...)
 	 * @param Smarty $smarty the smarty instance
@@ -1084,10 +1100,12 @@ class GalleryTemplateAdapter {
 		if (isset($params['include'])) {
 			// Guard template vars so that the include doesn't pollute our namespace
 			$save = $smarty->_tpl_vars;
-			$smarty->_smarty_include(array(
-				'smarty_include_tpl_file' => 'gallery:themes/' . $this->_theme->getId() . '/templates/' . $params['include'],
-				'smarty_include_vars'     => $params,
-			));
+			$smarty->_smarty_include(
+				array(
+					'smarty_include_tpl_file' => 'gallery:themes/' . $this->_theme->getId() . '/templates/' . $params['include'],
+					'smarty_include_vars'     => $params,
+				)
+			);
 			$smarty->_tpl_vars = $save;
 		} elseif (isset($params['url'])) {
 			/*
@@ -1113,9 +1131,11 @@ class GalleryTemplateAdapter {
 				$target = $params['url'];
 			}
 
-			return $urlGenerator->generateUrl(array(
-				'href' => $base . $target,
-			));
+			return $urlGenerator->generateUrl(
+				array(
+					'href' => $base . $target,
+				)
+			);
 		}
 	}
 
@@ -1354,7 +1374,7 @@ class GalleryTemplateAdapter {
 	public function updateProgressBar($title, $description, $percentComplete) {
 		static $coreModule;
 		global $gallery;
-		
+
 		if (!isset($coreModule)) {
 			list($ret, $coreModule) = GalleryCoreApi::loadPlugin('module', 'core');
 
@@ -1510,8 +1530,11 @@ class GalleryTemplateAdapter {
 			 * Redirect after a short delay giving the server time to store the session before
 			 * the next page is requested.
 			 */
-			printf('<script type="text/javascript">'
-			. 'setTimeout(\'document.location.href = "%s";\', 2000);</script>', $continueUrl);
+			printf(
+				'<script type="text/javascript">'
+				. 'setTimeout(\'document.location.href = "%s";\', 2000);</script>',
+				$continueUrl
+			);
 		}
 	}
 }

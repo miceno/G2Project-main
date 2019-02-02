@@ -256,7 +256,7 @@ class AdminNetPbmView extends GalleryView {
 			} else {
 				$gallery->startRecordingDebugSnippet();
 				list($ret, $jheadTests, $jheadMimeTypes) = NetPbmToolkitHelper::testJhead($form['jheadPath']);
-				$debugSnippet                           .= $gallery->stopRecordingDebugSnippet();
+				$debugSnippet .= $gallery->stopRecordingDebugSnippet();
 
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_BAD_PATH) {

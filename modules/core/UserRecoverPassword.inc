@@ -171,7 +171,7 @@ class UserRecoverPasswordController extends GalleryController {
 									'userName' => $user->getUserName(),
 								),
 								array(
-									'authString' => $authString,
+									'authString'     => $authString,
 									'requestExpires' => $requestExpires,
 								)
 							);

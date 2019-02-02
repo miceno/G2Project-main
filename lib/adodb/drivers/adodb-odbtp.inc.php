@@ -566,7 +566,7 @@ class ADODB_odbtp extends ADOConnection {
 	}
 
 	public function Prepare($sql) {
-		if (! $this->_bindInputArray) {
+		if (!$this->_bindInputArray) {
 			return $sql; // no binding
 		}
 

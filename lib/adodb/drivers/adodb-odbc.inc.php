@@ -436,7 +436,7 @@ class ADODB_odbc extends ADOConnection {
 	#define SQL_UNICODE_LONGVARCHAR                 (-97)
 	*/
 	public function ODBCTypes($t) {
-		switch ((integer)$t) {
+		switch ((int)$t) {
 			case 1:
 			case 12:
 			case 0:
@@ -603,7 +603,7 @@ class ADODB_odbc extends ADOConnection {
 	}
 
 	public function Prepare($sql) {
-		if (! $this->_bindInputArray) {
+		if (!$this->_bindInputArray) {
 			return $sql; // no binding
 		}
 		$stmt = odbc_prepare($this->_connectionID, $sql);
@@ -634,7 +634,7 @@ class ADODB_odbc extends ADOConnection {
 				}
 			}
 
-			if (! odbc_execute($stmtid, $inputarr)) {
+			if (!odbc_execute($stmtid, $inputarr)) {
 				//@odbc_free_result($stmtid);
 				if ($this->_haserrorfunctions) {
 					$this->_errorMsg  = odbc_errormsg();

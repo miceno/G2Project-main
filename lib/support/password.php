@@ -8,9 +8,11 @@ if (!defined('G2_SUPPORT')) {
 // Connect to Gallery2
 function connect() {
 	include_once '../../embed.php';
-	$ret = GalleryEmbed::init(array(
-		'fullInit' => true,
-	));
+	$ret = GalleryEmbed::init(
+		array(
+			'fullInit' => true,
+		)
+	);
 
 	if (isset($ret)) {
 		return '<div class=\"error center\">Could not load Gallery2 API Framework.</center><br>' . $ret->getAsHtml() . '</div>';
@@ -351,15 +353,17 @@ GalleryEmbed::done();
 			<fieldset>
 				<form action="<?php echo basename($_SERVER['PHP_SELF']); ?>" method="POST">
 				<?php $caches = getCacheDirs(); ?>
-				<?php foreach ($caches as $key => $info) : ?>
+				<?php foreach ($caches as $key => $info) {
+					?>
 						<?php
-						if (isset($info[0])) :
+						if (isset($info[0])) {
 							?>
 							<input type="hidden" name="target[<?php echo $key; ?>]" value=true
 							<?php
-						endif; ?>
+						} ?>
 						>
-				<?php endforeach; ?>
+				<?php
+				} ?>
 					<input type="hidden" name="advance" value=true><br>
 								<?php
 								if (isset($user_name)) {
@@ -387,15 +391,17 @@ GalleryEmbed::done();
 			<fieldset>
 				<form action="<?php echo basename($_SERVER['PHP_SELF']); ?>" onSubmit="return confirm('Reset admin username and password?');" method="POST">
 								<?php $caches = getCacheDirs(); ?>
-								<?php foreach ($caches as $key => $info) : ?>
+								<?php foreach ($caches as $key => $info) {
+						?>
 									<?php
-									if (isset($info[0])) :
+									if (isset($info[0])) {
 										?>
 							<input type="hidden" name="target[<?php echo $key; ?>]" value=true
 										<?php
-									endif; ?>
+									} ?>
 						>
-								<?php endforeach; ?>
+								<?php
+					} ?>
 					<input type="hidden" name="advance" value=true>
 					<input type="hidden" name="admin_change" id="admin_change" value="admin_change">
 					<input type="hidden" name="user_name" id="user_name" value="Admin">
@@ -415,25 +421,33 @@ GalleryEmbed::done();
 				<?php
 			}
 			?>
-<?php if (isset($output)) : ?>
+<?php if (isset($output)) {
+				?>
 	<hr class="faint">
 	<?php echo $output; ?>
-	<?php if (!empty($status)) : ?>
+	<?php if (!empty($status)) {
+					?>
 		<hr class="faint">
 		<div class="warning">
-			<?php foreach ($status as $line) : ?>
+			<?php foreach ($status as $line) {
+						?>
 				<pre class="<?php echo $line[0]; ?>"><?php echo $line[1]; ?></pre>
-			<?php endforeach; ?>
+			<?php
+					} ?>
 		</div>
-		<?php if (isset($captcha)) : ?>
+		<?php if (isset($captcha)) {
+						?>
 			<hr class="faint">
 			<div class="warning center">
 				The Captcha Module has been deactivated.<br>
 				Please reactivate it in the G2 Admin Interface.
 			</div>
-		<?php endif; ?>
-	<?php endif; ?>
-<?php endif; ?>
+		<?php
+					} ?>
+	<?php
+				} ?>
+<?php
+			} ?>
 </div>
 </body>
 </html>

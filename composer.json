@@ -1,8 +1,8 @@
 {
-    "name": "dayo/g2project-main",
+    "name": "dakanji/G2Project-main",
     "description": "Community Update of Gallery2 - A web based photo album viewer and editor",
     "type": "project",
-    "license": "GPL v2",
+    "license": "GPL-2.0",
     "authors": [
         {
             "name": "Contributors",
@@ -13,7 +13,7 @@
         "issues": "https://github.com/dakanji/G2Project-main/issues"
     },
     "config": {
-    	"vendor-dir": "composer_vendor"
+    	"vendor-dir": "dev_vendor"
     },
     "require": {
     	"php": ">=5.3.3"
@@ -23,17 +23,16 @@
         "friendsofphp/php-cs-fixer": "^2.14",
         "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.0",
         "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
         "wp-coding-standards/wpcs": "^2.0",
         "phpunit/php-invoker": "^2.0",
         "symfony/lock": "^3.4"
     },
     "scripts": {
-        "post-update-cmd": [
-            "chmod +x ./dev_scripts/symlink.sh && ./dev_scripts/symlink.sh"
-        ],
         "post-install-cmd": [
-            "chmod +x ./dev_scripts/symlink.sh && ./dev_scripts/symlink.sh"
+            "chmod +x ./dev_scripts/hooks/pre-commit && chmod +x ./dev_scripts/setup.sh && ./dev_scripts/setup.sh"
+        ],
+        "post-update-cmd": [
+            "chmod +x ./dev_scripts/hooks/pre-commit && chmod +x ./dev_scripts/setup.sh && ./dev_scripts/setup.sh"
         ]
-    }    
+    }
 }

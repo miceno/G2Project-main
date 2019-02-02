@@ -568,9 +568,9 @@ class ADODB_mssqlnative extends ADOConnection {
 
 		if ($retErrors != null) {
 			foreach ($retErrors as $arrError) {
-				$this->_errorMsg .= 'SQLState: ' . $arrError[ 'SQLSTATE'] . "\n";
-				$this->_errorMsg .= 'Error Code: ' . $arrError[ 'code'] . "\n";
-				$this->_errorMsg .= 'Message: ' . $arrError[ 'message'] . "\n";
+				$this->_errorMsg .= 'SQLState: ' . $arrError['SQLSTATE'] . "\n";
+				$this->_errorMsg .= 'Error Code: ' . $arrError['code'] . "\n";
+				$this->_errorMsg .= 'Message: ' . $arrError['message'] . "\n";
 			}
 		}
 
@@ -873,8 +873,7 @@ class ADODB_mssqlnative extends ADOConnection {
 
 		$sql = "select distinct k.column_name,ordinal_position from information_schema.key_column_usage k,
 		information_schema.table_constraints tc
-		where tc.constraint_name = k.constraint_name and tc.constraint_type =
-		'PRIMARY KEY' and k.table_name = '$table' $schema order by ordinal_position ";
+		where tc.constraint_name = k.constraint_name and tc.constraint_type = 		'PRIMARY KEY' and k.table_name = '$table' $schema order by ordinal_position ";
 
 		$savem            = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;

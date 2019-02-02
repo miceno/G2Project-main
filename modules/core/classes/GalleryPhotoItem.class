@@ -222,7 +222,7 @@ class GalleryPhotoItem extends GalleryDataItem {
 		if ($localized) {
 			list($ret, $core) = GalleryCoreApi::loadPlugin('module', 'core');
 
-			if (! $ret) {
+			if (!$ret) {
 				return array($core->translate('Photo'), $core->translate('photo'));
 			}
 		}
@@ -251,14 +251,16 @@ class GalleryPhotoItem extends GalleryDataItem {
 				);
 				list($width, $height) = array($this->getWidth(), $this->getHeight());
 
-				/* Set a default value for params */
+				// Set a default value for params
 				$params['class'] .= ' gcPhotoImage';
-				if (!key_exists('lazyload', $params)){
+
+				if (!key_exists('lazyload', $params)) {
 					$params['lazyload'] = false;
 				}
-				if ($params['lazyload']){
+
+				if ($params['lazyload']) {
 					$data_src = $src;
-					$src = "/install/images/background.png";
+					$src      = "/install/images/background.png";
 					$params['class'] .= " lazyload";
 				}
 
@@ -271,8 +273,8 @@ class GalleryPhotoItem extends GalleryDataItem {
 				$sizeStr = '';
 
 				if ($width > 0 && $height > 0) {
-					if($height > $width){
-						/* Image orientation is portrait */
+					if ($height > $width) {
+						// Image orientation is portrait
 						$params['class'] .= ' giPortrait';
 					}
 					$sizeStr = sprintf(' width="%s" height="%s"', $width, $height);
@@ -284,16 +286,16 @@ class GalleryPhotoItem extends GalleryDataItem {
 
 				$html = sprintf('<img src="%s"%s', $src, $sizeStr);
 
-				if ($params['lazyload']){
+				if ($params['lazyload']) {
 					$html .= sprintf(' data-src="%s"', $data_src);
 				}
-				unset($params['lazyload']);
+				unset($params['lazyload'], $params['fallback'], $params['forceFullUrl'], $params['forceRawImage']);
 
-				unset($params['fallback']);
-				unset($params['forceFullUrl']);
-				unset($params['forceRawImage']);
 
-				$classes = " class=\"". $params['class'] . "\"";
+
+
+
+				$classes = " class=\"" . $params['class'] . "\"";
 				$html .= $classes;
 				unset($params['class']);
 

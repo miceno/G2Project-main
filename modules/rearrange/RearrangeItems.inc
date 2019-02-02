@@ -190,7 +190,7 @@ class RearrangeItemsView extends GalleryView {
 			}
 			$RearrangeItems['children']  = $children;
 			$RearrangeItems['count']     = count($children);
-			$RearrangeItems['maxWidth']  = $maxWidth + 5;
+			$RearrangeItems['maxWidth']  = $maxWidth  + 5;
 			$RearrangeItems['maxHeight'] = $maxHeight + 5;
 
 			// See if the album's theme has "rows" and/or "columns"

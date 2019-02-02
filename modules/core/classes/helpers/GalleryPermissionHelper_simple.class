@@ -476,8 +476,8 @@ class GalleryPermissionHelper_simple {
 							if (($permission['flags'] & GALLERY_PERMISSION_COMPOSITE) == 0) {
 								if (($permission['bits'] & $leftoverBits) == $permission['bits']) {
 									$results[]     = array(
-										'id'     => $id,
-										'module' => $permission['module'],
+										'id'          => $id,
+										'module'      => $permission['module'],
 										'description' => $permission['description'],
 									);
 									$leftoverBits &= ~$permission['bits'];

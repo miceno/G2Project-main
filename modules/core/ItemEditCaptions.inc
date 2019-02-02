@@ -90,13 +90,16 @@ class ItemEditCaptionsController extends GalleryController {
 							$form['items'][$id]['summary']     = GalleryUtilities::htmlSafe($form['items'][$id]['summary'], true);
 							$form['items'][$id]['description'] = GalleryUtilities::htmlSafe($form['items'][$id]['description'], true);
 						}
+
 						if (!empty($form['items'][$id]['originationTimestampSplit'])) {
-							$newOriginationTimestamp = mktime($form['items'][$id]['originationTimestampSplit']['Time_Hour'],
+							$newOriginationTimestamp = mktime(
+								$form['items'][$id]['originationTimestampSplit']['Time_Hour'],
 															  $form['items'][$id]['originationTimestampSplit']['Time_Minute'],
 															  $form['items'][$id]['originationTimestampSplit']['Time_Second'],
 															  $form['items'][$id]['originationTimestampSplit']['Date_Month'],
 															  $form['items'][$id]['originationTimestampSplit']['Date_Day'],
-															  $form['items'][$id]['originationTimestampSplit']['Date_Year']);
+															  $form['items'][$id]['originationTimestampSplit']['Date_Year']
+							);
 						}
 
 						$item->setTitle($form['items'][$id]['title']);
@@ -104,7 +107,7 @@ class ItemEditCaptionsController extends GalleryController {
 						$item->setKeywords($form['items'][$id]['keywords']);
 						$item->setDescription($form['items'][$id]['description']);
 
-						/* Change the originationTimestamp */
+						// Change the originationTimestamp
 						if (!empty($newOriginationTimestamp)) {
 							$item->setOriginationTimestamp($newOriginationTimestamp);
 						}
@@ -285,20 +288,22 @@ class ItemEditCaptionsView extends GalleryView {
 				$childId                 = $child->getId();
 				$form['items'][$childId] = (array)$child;
 
-				/* The originateTimestamp that we can get from our toolkits */
-				list ($ret, $originationTimestamp) = GalleryCoreApi::fetchOriginationTimestamp($child);
+				// The originateTimestamp that we can get from our toolkits
+				list($ret, $originationTimestamp) = GalleryCoreApi::fetchOriginationTimestamp($child);
+
 				if ($ret) {
 					return array($ret, null, null);
 				}
+
 				if ($originationTimestamp > 0) {
 					$form['items'][$childId]['originationTimestamp'] = array(
-						'timestamp' => $originationTimestamp,
-						'Time_Hour' => $platform->strftime('%H', $originationTimestamp),
+						'timestamp'   => $originationTimestamp,
+						'Time_Hour'   => $platform->strftime('%H', $originationTimestamp),
 						'Time_Minute' => $platform->strftime('%M', $originationTimestamp),
 						'Time_Second' => $platform->strftime('%S', $originationTimestamp),
-						'Date_Day' => ltrim($platform->strftime('%d', $originationTimestamp), '0'),
-						'Date_Month' => $platform->strftime('%m', $originationTimestamp),
-						'Date_Year' => $platform->strftime('%Y', $originationTimestamp),
+						'Date_Day'    => ltrim($platform->strftime('%d', $originationTimestamp), '0'),
+						'Date_Month'  => $platform->strftime('%m', $originationTimestamp),
+						'Date_Year'   => $platform->strftime('%Y', $originationTimestamp),
 					);
 				}
 
@@ -322,7 +327,7 @@ class ItemEditCaptionsView extends GalleryView {
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		$ItemEditCaptions              = array();
-		$ItemEditCaptions['canCancel'] = (boolean)GalleryUtilities::getRequestVariables('return');
+		$ItemEditCaptions['canCancel'] = (bool)GalleryUtilities::getRequestVariables('return');
 		$ItemEditCaptions['page']      = $page;
 		$ItemEditCaptions['numPages']  = $numPages;
 

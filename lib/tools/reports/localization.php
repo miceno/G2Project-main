@@ -233,7 +233,7 @@ function parsePoFiles($poFiles) {
 			$percentDone = $exactPercentDone = 0;
 		} else {
 			$percentDone      = floor(($translated - $fuzzy) * 100 * $pow / $total) / $pow;
-			$exactPercentDone = ($translated - $fuzzy) * 100 / $total;
+			$exactPercentDone = ($translated - $fuzzy) * 100                        / $total;
 		}
 		$poData[$locale]['plugins'][$plugin] = array(
 			'translated'       => $translated,
@@ -285,7 +285,7 @@ function parsePoFiles($poFiles) {
 			$poData[$locale]['percentDone'] = $poData[$locale]['exactPercentDone'] = 0;
 		} else {
 			$poData[$locale]['percentDone']      = floor($pluginTotal * 100 * $pow / $overallTotal) / $pow;
-			$poData[$locale]['exactPercentDone'] = $pluginTotal * 100 / $overallTotal;
+			$poData[$locale]['exactPercentDone'] = $pluginTotal * 100                               / $overallTotal;
 		}
 
 		foreach (array('translated', 'untranslated', 'fuzzy', 'obsolete') as $key) {
@@ -322,7 +322,7 @@ function sortByPercentDone($a, $b) {
 	}
 
 	if ($a['exactPercentDone'] == $b['exactPercentDone']) {
-		if (isset($a['name']) && isset($b['name'])) {
+		if (isset($a['name'], $b['name'])) {
 			return ($a['name'] < $b['name']) ? -1 : 1;
 		}
 

@@ -284,8 +284,10 @@ class ADODB_db2 extends ADOConnection {
 	}
 
 	public function ServerInfo() {
-		$row = $this->GetRow('SELECT service_level, fixpack_num FROM TABLE(sysproc.env_get_inst_info())
-			as INSTANCEINFO');
+		$row = $this->GetRow(
+			'SELECT service_level, fixpack_num FROM TABLE(sysproc.env_get_inst_info())
+			as INSTANCEINFO'
+		);
 
 
 		if ($row) {
@@ -614,7 +616,7 @@ class ADODB_db2 extends ADOConnection {
 	#define SQL_UNICODE_LONGVARCHAR                 (-97)
 	*/
 	public function DB2Types($t) {
-		switch ((integer)$t) {
+		switch ((int)$t) {
 			case 1:
 			case 12:
 			case 0:
@@ -774,7 +776,7 @@ class ADODB_db2 extends ADOConnection {
 	}
 
 	public function Prepare($sql) {
-		if (! $this->_bindInputArray) {
+		if (!$this->_bindInputArray) {
 			return $sql; // no binding
 		}
 		$stmt = db2_prepare($this->_connectionID, $sql);
@@ -805,7 +807,7 @@ class ADODB_db2 extends ADOConnection {
 				}
 			}
 
-			if (! db2_execute($stmtid, $inputarr)) {
+			if (!db2_execute($stmtid, $inputarr)) {
 				if ($this->_haserrorfunctions) {
 					$this->_errorMsg  = db2_stmt_errormsg();
 					$this->_errorCode = db2_stmt_error();

@@ -496,8 +496,10 @@ class GalleryTestResult extends TestResult {
 				$text     = 'r.cells[4].firstChild.style.display="inline";';
 				$failure  = $this->_testsFailed++ ? '' : '<h2>Failure Details</h2><ol>';
 				$failure .= '<li><a href="?filter=' .
-				urlencode('^' . $test->getModuleId() . '.' . $test->classname() . '.' .
-				$test->name() . '$') .
+				urlencode(
+					'^' . $test->getModuleId() . '.' . $test->classname() . '.' .
+					$test->name() . '$'
+				) .
 				'" name="fail' . $this->fRunTests . '">' . $test->classname() . '.' .
 				$test->name() . "</a></li><ul>\n";
 
@@ -634,12 +636,12 @@ $incorrectDevEnv       = array();
 $desiredErrorReporting = E_ALL & ~E_STRICT;
 
 foreach (array(
-	'error_reporting'                => array($desiredErrorReporting),
+	'error_reporting'  => array($desiredErrorReporting),
 	'allow_call_time_pass_reference' => array('off', 0),
-	'register_globals'               => array('off', 0),
-	'display_errors'                 => array('on', 1),
-	'allow_url_fopen'                => array('off', 0),
-	'include_path'                   => array('/bogus'),
+	'register_globals' => array('off', 0),
+	'display_errors'   => array('on', 1),
+	'allow_url_fopen'  => array('off', 0),
+	'include_path'     => array('/bogus'),
 ) as $key => $expected) {
 	$actual = ini_get($key);
 

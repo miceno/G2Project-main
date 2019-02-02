@@ -305,8 +305,8 @@ LyteBox.prototype.start                 = function (imageLink, doSlide, doFrame)
 		myLytebox.togglePlayPause("lbPause", "lbPlay"); return false; }
 	this.doc.getElementById('lbPlay').onclick    = function () {
 		myLytebox.togglePlayPause("lbPlay", "lbPause"); return false; }
-	this.isSlideshow                             = doSlide;
-	this.isPaused                                = (this.slideNum != 0 ? true : false);
+	this.isSlideshow = doSlide;
+	this.isPaused    = (this.slideNum != 0 ? true : false);
 	if (this.isSlideshow && this.showPlayPause && this.isPaused) {
 		this.doc.getElementById('lbPlay').style.display  = '';
 		this.doc.getElementById('lbPause').style.display = 'none';
@@ -495,16 +495,16 @@ LyteBox.prototype.updateDetails         = function () {
 	this.doc.getElementById('lbDetailsContainer').style.display = '';
 	object = this.doc.getElementById('lbNumberDisplay');
 	if (this.isSlideshow && this.slideArray.length > 1) {
-		object.style.display                                  = '';
-		object.innerHTML                                      = "Image " + eval(this.activeSlide + 1) + " of " + this.slideArray.length;
+		object.style.display = '';
+		object.innerHTML     = "Image " + eval(this.activeSlide + 1) + " of " + this.slideArray.length;
 		this.doc.getElementById('lbNavDisplay').style.display = (this.navType == 2 && this.showNavigation ? '' : 'none');
 	} else if (this.imageArray.length > 1 && !this.isLyteframe) {
-		object.style.display                                  = '';
-		object.innerHTML                                      = "Image " + eval(this.activeImage + 1) + " of " + this.imageArray.length;
+		object.style.display = '';
+		object.innerHTML     = "Image " + eval(this.activeImage + 1) + " of " + this.imageArray.length;
 		this.doc.getElementById('lbNavDisplay').style.display = (this.navType == 2 ? '' : 'none');
 	} else if (this.frameArray.length > 1 && this.isLyteframe) {
-		object.style.display                                  = '';
-		object.innerHTML                                      = "Page " + eval(this.activeFrame + 1) + " of " + this.frameArray.length;
+		object.style.display = '';
+		object.innerHTML     = "Page " + eval(this.activeFrame + 1) + " of " + this.frameArray.length;
 		this.doc.getElementById('lbNavDisplay').style.display = '';
 	} else {
 		this.doc.getElementById('lbNavDisplay').style.display = 'none';

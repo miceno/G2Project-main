@@ -42,8 +42,10 @@ class CommentModule extends GalleryModule {
 		$this->setVersion('1.1.14'); // Update upgrade() function below too
 		$this->_templateVersion = 1;
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
-		$this->setCallbacks('getItemLinks|getItemSummaries|' .
-				'getSiteAdminViews|getItemAdminViews');
+		$this->setCallbacks(
+			'getItemLinks|getItemSummaries|' .
+			'getSiteAdminViews|getItemAdminViews'
+		);
 		$this->setRequiredCoreApi(array(7, 41));
 		$this->setRequiredModuleApi(array(3, 9));
 	}
@@ -98,10 +100,10 @@ class CommentModule extends GalleryModule {
 				}
 
 				foreach (array(
-					'comments.show'     => 10,
-					'comments.latest'   => 1,
+					'comments.show' => 10,
+					'comments.latest' => 1,
 					'comments.moderate' => 0,
-					'validation.level'  => 'HIGH',
+					'validation.level' => 'HIGH',
 				) as $key => $value) {
 					$ret = $this->setParameter($key, $value);
 
@@ -146,9 +148,9 @@ class CommentModule extends GalleryModule {
 			case '1.0.4':
 			case '1.0.5':
 				foreach (array(
-					'comments.show'    => 10,
+					'comments.show' => 10,
 					'comments.captcha' => 0,
-					'comments.latest'  => 1,
+					'comments.latest' => 1,
 				) as $key => $value) {
 					$ret = $this->setParameter($key, $value);
 
@@ -386,10 +388,12 @@ class CommentModule extends GalleryModule {
 
 			if (isset($permissions[$item->getId()]['comment.view'])) {
 				if (!empty($commentCounts[$item->getId()])) {
-					$summaries[$item->getId()] = $this->translate(array(
-						'text' => 'Comments: %d',
-						'arg1' => $commentCounts[$item->getId()],
-					));
+					$summaries[$item->getId()] = $this->translate(
+						array(
+							'text' => 'Comments: %d',
+							'arg1' => $commentCounts[$item->getId()],
+						)
+					);
 				}
 			}
 		}

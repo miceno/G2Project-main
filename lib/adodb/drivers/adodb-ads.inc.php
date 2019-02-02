@@ -387,7 +387,7 @@ class ADODB_ads extends ADOConnection {
 	#define SQL_UNICODE_LONGVARCHAR                 (-97)
 	*/
 	public function ODBCTypes($t) {
-		switch ((integer)$t) {
+		switch ((int)$t) {
 			case 1:
 			case 12:
 			case 0:
@@ -574,7 +574,7 @@ class ADODB_ads extends ADOConnection {
 	}
 
 	public function Prepare($sql) {
-		if (! $this->_bindInputArray) {
+		if (!$this->_bindInputArray) {
 			return $sql; // no binding
 		}
 		$stmt = ads_prepare($this->_connectionID, $sql);
@@ -605,7 +605,7 @@ class ADODB_ads extends ADOConnection {
 				}
 			}
 
-			if (! ads_execute($stmtid, $inputarr)) {
+			if (!ads_execute($stmtid, $inputarr)) {
 				//@ads_free_result($stmtid);
 				if ($this->_haserrorfunctions) {
 					$this->_errorMsg  = ads_errormsg();
@@ -680,7 +680,7 @@ class ADODB_ads extends ADOConnection {
 			return false;
 		}
 
-		if (! ads_execute($stmtid, array($val), array(SQL_BINARY))) {
+		if (!ads_execute($stmtid, array($val), array(SQL_BINARY))) {
 			if ($this->_haserrorfunctions) {
 				$this->_errorMsg  = ads_errormsg();
 				$this->_errorCode = ads_error();

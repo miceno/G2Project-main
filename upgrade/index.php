@@ -95,10 +95,12 @@ if (!empty($storageConfig)) {
 	// We want to avoid using the cache
 	GalleryDataCache::setFileCachingEnabled(false);
 
-	$ret = GalleryInitFirstPass(array(
-		'debug'      => 'buffered',
-		'noDatabase' => 1,
-	));
+	$ret = GalleryInitFirstPass(
+		array(
+			'debug'      => 'buffered',
+			'noDatabase' => 1,
+		)
+	);
 
 	if ($ret) {
 		echo $ret->getAsHtml();
@@ -175,7 +177,7 @@ if (isset($_GET['step'])) {
 
 // Make sure all steps up to the current one are ok
 for ($i = 0; $i < $stepNumber; $i++) {
-	if (!$steps[$i]->isComplete() && ! $steps[$i]->isOptional()) {
+	if (!$steps[$i]->isComplete() && !$steps[$i]->isOptional()) {
 		$stepNumber = $i;
 
 		break;

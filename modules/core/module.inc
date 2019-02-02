@@ -191,10 +191,14 @@ class CoreModule extends GalleryModule {
 				if (!function_exists('smarty_modifier_escape')) {
 					GalleryCoreApi::requireOnce('lib/smarty/plugins/modifier.escape.php');
 				}
-				$title                   = smarty_modifier_escape(GalleryUtilities::markup(
-					$item->getTitle(),
-					'strip'
-				), 'javascript', 'UTF-8');
+				$title                   = smarty_modifier_escape(
+					GalleryUtilities::markup(
+						$item->getTitle(),
+						'strip'
+					),
+					'javascript',
+					'UTF-8'
+				);
 				list($thisItemId, $page) = GalleryUtilities::getRequestVariables('itemId', 'page');
 				// If no page item defined, we will navigate to the parent of the deleted item
 				if (empty($thisItemId)) {
@@ -220,7 +224,7 @@ class CoreModule extends GalleryModule {
 					)
 				);
 				$links[$itemId][] = array(
-					'text'   => $this->_translate(
+					'text' => $this->_translate(
 						array(
 							'text' => 'Delete %s',
 							'arg1' => $itemTypeNames[0],
@@ -286,7 +290,7 @@ class CoreModule extends GalleryModule {
 				$links[$itemId][] = $link;
 			}
 
-			if (!$isRoot && isset($thumbTable[$itemId]) && isset($parentPermissions['core.edit'])) {
+			if (!$isRoot && isset($thumbTable[$itemId], $parentPermissions['core.edit'])) {
 				$links[$itemId][] = array(
 					'text'   => $this->_translate('Make Highlight'),
 					'params' => array(
@@ -599,10 +603,14 @@ class CoreModule extends GalleryModule {
 				if (!function_exists('smarty_modifier_escape')) {
 					GalleryCoreApi::requireOnce('lib/smarty/plugins/modifier.escape.php');
 				}
-				$title = smarty_modifier_escape(GalleryUtilities::markup(
-					$item->getTitle(),
-					'strip'
-				), 'javascript', 'UTF-8');
+				$title = smarty_modifier_escape(
+					GalleryUtilities::markup(
+						$item->getTitle(),
+						'strip'
+					),
+					'javascript',
+					'UTF-8'
+				);
 				// This is ItemAdmin view, hence page item is the one we are deleting
 				$thisItemId   = $itemId;
 				$urlGenerator =& $gallery->getUrlGenerator();
@@ -622,7 +630,7 @@ class CoreModule extends GalleryModule {
 					)
 				);
 				$views[]      = array(
-					'name'   => $this->_translate(
+					'name' => $this->_translate(
 						array(
 							'text' => 'Delete %s',
 							'arg1' => $itemTypeNames[0],

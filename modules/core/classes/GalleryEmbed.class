@@ -69,7 +69,7 @@ class GalleryEmbed {
 	 * @param array $initParams (optional--required before calling handleRequest) (
 	 *   'embedUri' => URI to access G2 via CMS application
 	 *                 (example: /portal/index.php?module=gallery2)
-	 *   'g2Uri'    =  URL path to G2
+	 *   'g2Uri' =  URL path to G2
 	 *                 (example: /gallery2/, see extended docs for special character '|')
 	 *   'loginRedirect' => (optional) URI for redirect to CMS login view (example: /cms/index.php)
 	 *   'embedSessionString' => (optional) To support cookieless browsing, pass in key=value for
@@ -974,8 +974,7 @@ class GalleryEmbed {
 	/**
 	 * Get HTML for an image block
 	 * Example:
-	 *   list ($ret, $html, $headHtml) =
-	 *       GalleryEmbed::getImageBlock(array('blocks' => 'randomImage', 'show' => 'title|date'));
+	 *   list ($ret, $html, $headHtml) =     *       GalleryEmbed::getImageBlock(array('blocks' => 'randomImage', 'show' => 'title|date'));
 	 *
 	 * @param array $params ('blocks' => string, 'show' => string,
 	 *        (optional)'itemId' => int, (optional)'maxSize' => int, (optional)'exactSize' => int,
@@ -1325,8 +1324,10 @@ class GalleryEmbed {
 					$phpVm->header('X-G2-EMBED-PATH: ' . GALLERY_CONFIG_DIR . '/embed.php');
 				} else {
 					// Fallback if G2 isn't installed yet
-					$phpVm->header('X-G2-EMBED-PATH: '
-					. GalleryCoreApi::getCodeBasePath('embed.php'));
+					$phpVm->header(
+						'X-G2-EMBED-PATH: '
+						. GalleryCoreApi::getCodeBasePath('embed.php')
+					);
 				}
 			}
 		}

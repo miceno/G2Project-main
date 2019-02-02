@@ -110,8 +110,8 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 	public function SelectLimit($sql, $nrows = -1, $offset = -1, $inputarr = false, $secs2cache = 0) {
 		$nrows     = (int)$nrows;
 		$offset    = (int)$offset;
-		$offsetStr = ($offset >= 0) ? ' OFFSET ' . ((integer)$offset) : '';
-		$limitStr  = ($nrows >= 0) ? ' LIMIT ' . ((integer)$nrows) : '';
+		$offsetStr = ($offset >= 0) ? ' OFFSET ' . ((int)$offset) : '';
+		$limitStr  = ($nrows >= 0) ? ' LIMIT ' . ((int)$nrows) : '';
 
 		if ($secs2cache) {
 			$rs = $this->CacheExecute($secs2cache, $sql . "$limitStr$offsetStr", $inputarr);
@@ -238,7 +238,7 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 	}
 
 	public function _query($sql, $inputarr = false) {
-		if (! $this->_bindInputArray) {
+		if (!$this->_bindInputArray) {
 			// We don't have native support for parameterized queries, so let's emulate it at the parent
 			return ADODB_postgres64::_query($sql, $inputarr);
 		}

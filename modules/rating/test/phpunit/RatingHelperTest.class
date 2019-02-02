@@ -84,8 +84,7 @@ class RatingHelperTest extends GalleryTestCase {
 		$this->_origSession = $gallery->_session;
 
 		GalleryUtilities::removeRequestVariable(SESSION_ID_PARAMETER);
-		unset($_COOKIE[SESSION_ID_PARAMETER]);
-		unset($_SERVER['HTTP_COOKIE']);
+		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
 	}
 
 	public function tearDown() {
@@ -246,7 +245,7 @@ class RatingHelperTest extends GalleryTestCase {
 		}
 		$this->assertEquals(
 			$average,
-			(double)$RatingData[$this->_item->getId()]['rating'],
+			(float)$RatingData[$this->_item->getId()]['rating'],
 			'Average rating test failed.'
 		);
 
@@ -334,7 +333,7 @@ class RatingHelperTest extends GalleryTestCase {
 		}
 		$this->assertEquals(
 			$average,
-			(double)$RatingData[$this->_item->getId()]['rating'],
+			(float)$RatingData[$this->_item->getId()]['rating'],
 			'average for guest that has rated'
 		);
 		$this->assertEquals(
@@ -364,7 +363,7 @@ class RatingHelperTest extends GalleryTestCase {
 		}
 		$this->assertEquals(
 			$average,
-			(double)$RatingData[$this->_item->getId()]['rating'],
+			(float)$RatingData[$this->_item->getId()]['rating'],
 			'Average rating test failed.'
 		);
 		$this->assertTrue(!isset($RatingData['userRating']), 'no user rating');
@@ -458,8 +457,8 @@ class RatingHelperTest extends GalleryTestCase {
 		);
 
 		// Get the item summary again, but without having the permissions
-		unset($content);
-		unset($template);
+		unset($content, $template);
+
 		$template            = new GalleryTemplate(__DIR__ . '/../../../..');
 		list($ret, $content) = $module->getItemSummaries(
 			array($this->_item),

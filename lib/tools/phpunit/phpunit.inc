@@ -78,7 +78,7 @@ function PHPUnit_error_handler($errno, $errstr, $errfile, $errline) {
 			// Trace with call_user_func may miss file/line in an entry
 			$buf = ' <B>in</B> ' . (isset($traceEntry['file']) ? $traceEntry['file'] : '??');
 
-			if (isset($traceEntry['class']) && isset($traceEntry['function'])) {
+			if (isset($traceEntry['class'], $traceEntry['function'])) {
 				$buf .= " ($traceEntry[class]::$traceEntry[function]) ";
 			} elseif (isset($traceEntry['function'])) {
 				$buf .= " ($traceEntry[function]) ";
@@ -691,7 +691,7 @@ class Assert_X {
 	}
 
 	public function assertRegexp($regexp, $actual, $message = false) {
-		if (! preg_match($regexp, $actual)) {
+		if (!preg_match($regexp, $actual)) {
 			$this->failNotEquals($regexp, $actual, 'pattern', $message);
 		}
 	}
