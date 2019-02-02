@@ -33,6 +33,30 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryToolkit.class');
  */
 class JpegtranToolkit extends GalleryToolkit {
 	/**
+	 * Round to the nearest smaller multiple of MCU
+	 *
+	 * @param float $value
+	 * @param float $mcu
+	 *
+	 * @return float rounded rounded value
+	 **/
+	public function round_mcu($value, $mcu = 16) {
+		$result = round($value);
+		$modulo = $result % $mcu;
+
+		if ($modulo != 0) {
+			// Move to nearest smaller MCU
+			$result = $result - $modulo;
+
+			if ($result < 0) {
+				$result = 0;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * @see GalleryToolkit::performOperation()
 	 */
 	public function performOperation(
@@ -63,6 +87,9 @@ class JpegtranToolkit extends GalleryToolkit {
 			// This can happen if the $tmpDir path is bad
 			return array(GalleryCoreApi::error(ERROR_BAD_PATH), null, null);
 		}
+
+		$width  = null;
+		$height = null;
 
 		if (isset($context['width'])) {
 			$width  = $context['width'];
@@ -145,6 +172,12 @@ class JpegtranToolkit extends GalleryToolkit {
 
 		$cmd = array_merge($cmd, array('-outfile', $tmpFilename, $sourceFilename));
 
+		// Source dimensions are required to convert from percentages to pixels
+		$pixelX = $this->round_mcu($parameters[0] / 100 * $width);
+		$pixelY = $this->round_mcu($parameters[1] / 100 * $height);
+		$width  = round($parameters[2] / 100 * $width);
+		$height = round($parameters[3] / 100 * $height);
+
 		$gallery->guaranteeTimeLimit(90);
 		$oldCwd = $platform->getcwd();
 		$platform->chdir($tmpDir);
@@ -154,7 +187,7 @@ class JpegtranToolkit extends GalleryToolkit {
 			@$platform->unlink($tmpFilename);
 			$platform->chdir($oldCwd);
 
-			return array(GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE), null, null);
+			return array(GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE, null, null, $output), null, null);
 		}
 		$platform->chdir($oldCwd);
 
@@ -186,12 +219,16 @@ class JpegtranToolkit extends GalleryToolkit {
 
 	/**
 	 * Get the dimensions of a jpeg image.
+	 *
 	 * @param string $filename
+	 *
 	 * @return array GalleryStatus a status code,
 	 *               int width,
 	 *               int height
 	 */
-	public function _getImageDimensions($filename) {
+	public function _getImageDimensions(
+		$filename
+	) {
 		global $gallery;
 
 		/*
@@ -225,8 +262,8 @@ class JpegtranToolkit extends GalleryToolkit {
 		$oldCwd = $platform->getcwd();
 		$platform->chdir($tmpDir);
 
-		$cmd                              = array($jpegtran, '-verbose', '-outfile', $tmpFilename, $filename);
-		list($success, $ignored, $output) = $platform->exec(array($cmd));
+		$cmd                      = array($jpegtran, '-verbose', '-outfile', $tmpFilename, $filename);
+		list($success, , $output) = $platform->exec(array($cmd));
 		@$platform->unlink($tmpFilename);
 		$platform->chdir($oldCwd);
 

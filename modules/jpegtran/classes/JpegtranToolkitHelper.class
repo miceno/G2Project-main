@@ -57,7 +57,7 @@ class JpegtranToolkitHelper {
 		foreach ($testResults as $result) {
 			if ($result['name'] == 'rotate' && $result['success']) {
 				$operations['rotate'] = array(
-					'params' => array(
+					'params'      => array(
 						array(
 							'type'        => 'int',
 							'description' => $gallery->i18n('rotation degrees'),
@@ -68,7 +68,7 @@ class JpegtranToolkitHelper {
 				);
 			} elseif ($result['name'] == 'crop' && $result['success']) {
 				$operations['crop'] = array(
-					'params' => array(
+					'params'      => array(
 						array(
 							'type'        => 'float',
 							'description' => $gallery->i18n('left edge %'),
@@ -104,6 +104,7 @@ class JpegtranToolkitHelper {
 	 * Test if the given path has a working jpegtran binary.
 	 *
 	 * @param string path to the jpegtran binary
+	 *
 	 * @return array GalleryStatus general status of tests
 	 *               array ('name' => string: the name of the operation,
 	 *                      'success' => boolean: test successful?
