@@ -211,8 +211,8 @@ class JpegtranToolkitTest extends GalleryTestCase {
 		}
 
 		$this->assertEquals(array(
-			'width'  => 60,
-			'height' => 323,
+			'width'  => 60.0,
+			'height' => 323.0,
 		), $context, 'context');
 		$this->assertEquals('image/jpeg', $mimeType, 'output mimetype != input mimetype');
 	}
@@ -236,8 +236,8 @@ class JpegtranToolkitTest extends GalleryTestCase {
 		}
 
 		$this->assertEquals(array(
-			'width'  => 120,
-			'height' => 20,
+			'width'  => 120.0,
+			'height' => 20.0,
 		), $context, 'context');
 		$this->assertEquals('image/jpeg', $mimeType, 'output mimetype != input mimetype');
 	}
