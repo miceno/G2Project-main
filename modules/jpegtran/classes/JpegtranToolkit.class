@@ -172,12 +172,6 @@ class JpegtranToolkit extends GalleryToolkit {
 
 		$cmd = array_merge($cmd, array('-outfile', $tmpFilename, $sourceFilename));
 
-		// Source dimensions are required to convert from percentages to pixels
-		$pixelX = $this->round_mcu($parameters[0] / 100 * $width);
-		$pixelY = $this->round_mcu($parameters[1] / 100 * $height);
-		$width  = round($parameters[2] / 100 * $width);
-		$height = round($parameters[3] / 100 * $height);
-
 		$gallery->guaranteeTimeLimit(90);
 		$oldCwd = $platform->getcwd();
 		$platform->chdir($tmpDir);
