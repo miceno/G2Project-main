@@ -31,99 +31,77 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 	/**
 	 * @see GallerySearchInterface_1_0.getSearchModuleInfo
 	 */
-	public function getSearchModuleInfo() {
+    function getSearchModuleInfo() {
 		global $gallery;
-
+		
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
-
 		if ($ret) {
-			return array($ret, null);
+	    return array($ret, null);
 		}
-
-		$info = array(
-			'name'        => $module->translate('Gallery Core'),
+		
+	$info = array('name' => $module->translate('Gallery Core'),
 			'description' => $module->translate('Gallery Core Module'),
-			'options'     => array(
+			'options' => array(
 				'descriptions' => array(
 					'description' => $module->translate('Search descriptions'),
-					'enabled'     => 1,
-				),
+			      'enabled' => 1),
 				'keywords' => array(
 					'description' => $module->translate('Search keywords'),
-					'enabled'     => 1,
-				),
+			      'enabled' => 1),
 				'summaries' => array(
 					'description' => $module->translate('Search summaries'),
-					'enabled'     => 1,
-				),
-				'titles' => array(
-					'description' => $module->translate('Search titles'),
-					'enabled'     => 1,
-				),
-			),
-		);
-
-		return array(null, $info);
+			      'enabled' => 1),
+			  'titles' => array('description' => $module->translate('Search titles'),
+					    'enabled' => 1)));
+	    return array(null, $info);
 	}
-
+	
 	/**
 	 * @see GallerySearchInterface_1_0.search
 	 */
-	public function search($options, $criteria, $offset = 0, $count = -1) {
+    function search($options, $criteria, $offset=0, $count=-1) {
 		global $gallery;
-
-		$whereList    = array();
-		$whereData    = array();
+		
+		$whereList = array();
+		$whereData = array();
 		$columnNumber = 0;
-
-		foreach (array(
-			'descriptions' => '[GalleryItem::description]',
-			'keywords'  => '[GalleryItem::keywords]',
+	foreach (array('descriptions' => '[GalleryItem::description]',
+			'keywords' => '[GalleryItem::keywords]',
 			'summaries' => '[GalleryItem::summary]',
-			'titles'    => '[GalleryItem::title]',
-		) as $key => $column) {
+		       'titles' => '[GalleryItem::title]')
+		 as $key => $column) {
+
 			if (isset($options[$key])) {
-				$whereList[]        = "$column LIKE ?";
-				$whereData[]        = '%' . $criteria . '%';
-				$selectMap[$column] = $columnNumber++;
-				$selectList[]       = $column;
+				$whereList[] = "$column LIKE ?";
+				$whereData[] = '%' . $criteria . '%';
+		$selectMap[$column] = $columnNumber++;;
+				$selectList[] = $column;
 			}
 		}
-
-		// Always select back title and summary
-		foreach (array('[GalleryItem::title]', '[GalleryItem::summary]') as $column) {
+		
+		/* Always select back title and summary */
+	foreach (array('[GalleryItem::title]', '[GalleryItem::summary]') as $column) {
 			if (!isset($selectMap[$column])) {
 				$selectMap[$column] = $columnNumber++;
-				$selectList[]       = $column;
+				$selectList[] = $column;
 			}
 		}
-
+		
 		$storage =& $gallery->getStorage();
-
-		list($ret, $aclIds) = GalleryCoreApi::fetchAccessListIds(
-			'core.view',
-			$gallery->getActiveUserId()
-		);
-
+		
+	list ($ret, $aclIds) = GalleryCoreApi::fetchAccessListIds(
+	    'core.view', $gallery->getActiveUserId());
 		if ($ret) {
-			return array($ret, null);
+	    return array($ret, null);
 		}
-
 		if (empty($aclIds)) {
-			return array(
-				null,
-				array(
-					'start'   => 0,
-					'end'     => '0',
-					'count'   => 0,
-					'results' => array(),
-				),
-			);
+	    return array(null,
+			 array('start' => 0, 'end' => '0',
+			       'count' => 0, 'results' => array()));
 		}
 		$aclMarkers = GalleryUtilities::makeMarkers(count($aclIds));
-
-		$countQuery = sprintf(
-			'
+		
+		$countQuery = sprintf('
 	SELECT
 	  COUNT([GalleryItem::id])
 	FROM
@@ -134,18 +112,15 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 	  [GalleryItem::id] = [GalleryAccessSubscriberMap::itemId]
 	  AND
 	  [GalleryAccessSubscriberMap::accessListId] IN (%s)
-	',
-			$aclMarkers
-		);
-
-		$query = sprintf(
-			'
+	', $aclMarkers);
+		
+		$query = sprintf('
 	SELECT
 	  [GalleryItem::id],
 	  [GalleryUser::fullName],
 	  [GalleryUser::userName],
 	  [GalleryEntity::modificationTimestamp], ' .
-			implode(', ', $selectList) . '
+	    implode(', ', $selectList) . '
 	FROM
 	  [GalleryItem], [GalleryAccessSubscriberMap], [GalleryEntity], [GalleryUser]
 	WHERE
@@ -160,90 +135,74 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 	  [GalleryAccessSubscriberMap::accessListId] IN (%s)
 	ORDER BY
 	  [GalleryEntity::modificationTimestamp] DESC, [GalleryItem::id] DESC
-	',
-			$aclMarkers
-		);
-
+	', $aclMarkers);
+		
 		$data = $whereData;
 		$data = array_merge($data, $aclIds);
-
-		// Find the total
+		
+		/* Find the total */
 		list($ret, $results) = $gallery->search($countQuery, $data);
-
 		if ($ret) {
-			return array($ret, null);
+	    return array($ret, null);
 		}
-		$result  = $results->nextResult();
-		$numRows = (int)$result[0];
-
-		// Get the results that we're interested in
-		list($ret, $results) = $gallery->search(
-			$query,
-			$data,
-			array(
-				'limit' => array(
-					'offset' => $offset,
-					'count'  => $count,
-				),
-			)
-		);
-
+		$result = $results->nextResult();
+		$numRows = (int) $result[0];
+		
+		/* Get the results that we're interested in */
+	list ($ret, $results) = $gallery->search(
+	    $query, $data, array('limit' => array('offset' => $offset, 'count' => $count)));
 		if ($ret) {
-			return array($ret, null);
+	    return array($ret, null);
 		}
-
+		
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
-
 		if ($ret) {
-			return array($ret, null);
+	    return array($ret, null);
 		}
-
+		
 		$text['description'] = $module->translate('Description');
-		$text['keywords']    = $module->translate('Keywords');
-		$text['summary']     = $module->translate('Summary');
-		$text['title']       = $module->translate('Title');
-		$text['owner']       = $module->translate('Owner');
-
+		$text['keywords'] = $module->translate('Keywords');
+		$text['summary'] = $module->translate('Summary');
+		$text['title'] = $module->translate('Title');
+		$text['owner'] = $module->translate('Owner');
+		
 		$searchResults = array();
-
 		while ($result = $results->nextResult()) {
 			$fields = array();
-
-			foreach (array(
-				'[GalleryItem::title]' => $text['title'],
-				'[GalleryItem::summary]' => $text['summary'],
-				'[GalleryItem::keywords]' => $text['keywords'],
-				'[GalleryItem::description]' => $text['description'],
-			) as $columnName => $fieldText) {
+			foreach (array('title' => $text['title'],
+				   'summary' => $text['summary'],
+				   'keywords' => $text['keywords'],
+				   'description' => $text['description'])
+				 as $optionName => $fieldText) {
+				$columnName = '[GalleryItem::' . $optionName . ']';
 				if (isset($selectMap[$columnName])) {
 					/*
-					 * Remember that our field columns start at column index 4
-					 * (id, date, full name, username are columns 0-3)
-					 */
+	                 * Remember that our field columns start at column index 4
+	                 * (id, date, full name, username are columns 0-3)
+	                 * We also add the field name, so we can later use it
+	                 * on templates.
+	                 */
 					$fields[] = array(
-						'key'   => $fieldText,
-						'value' => $result[$selectMap[$columnName] + 4],
-					);
+						'key' => $fieldText,
+						'field' => $optionName,
+						'value' => $result[$selectMap[$columnName] + 4]);
 				}
 			}
-
-			$fields[]        = array(
-				'key'   => $text['owner'],
+			$fields[] = array(
+				'key' => $text['owner'],
 				'value' => !empty($result[1]) ? $result[1] : $result[2],
-			);
+				'field' => 'owner');
 			$searchResults[] = array(
-				'itemId' => (int)$result[0],
-				'fields' => $fields,
+				'itemId' => (int) $result[0],
+				'fields' => $fields
 			);
 		}
-
-		$data = array(
-			'start'   => $numRows == 0 ? 0 : $offset + 1,
-			'end'     => $numRows == 0 ? 0 : $offset + sizeof($searchResults),
-			'count'   => $numRows,
-			'results' => $searchResults,
-		);
-
-		return array(null, $data);
+		
+	$data = array('start' => $numRows == 0 ? 0 : $offset+1,
+			'end' => $numRows == 0 ? 0 : $offset + sizeof($searchResults),
+			'count' => $numRows,
+		      'results' => $searchResults);
+	return array(null, $data);
 	}
 }
+?>
