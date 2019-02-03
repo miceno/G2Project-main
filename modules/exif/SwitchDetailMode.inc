@@ -102,10 +102,17 @@ class SwitchDetailModeView extends GalleryView {
 		$template->setVariable('l10Domain', 'modules_exif');
 		$template->setVariable('ajax', true);
 		$template->setVariable('item', (array)$item);
+		$activeUser               = $gallery->getActiveUserId();
+		list($ret, $isAnonymous)  = GalleryCoreApi::isAnonymousUser();
+
+		if ($ret) {
+			return $ret;
+		}
 		$template->setVariable(
 			'theme',
 			array(
-				'actingUserId' => $gallery->getActiveUserId(),
+				'actingUserId'     => $activeUser,
+				'isRegisteredUser' => !$isAnonymous,
 			)
 		);
 
