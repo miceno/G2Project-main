@@ -22,10 +22,7 @@ APPLICATION ?= $(shell basename "$(TYPE_DIR)")_$(shell basename "$(MODULE_DIR)")
 PHP ?= php
 
 # Let PHP parse the config.php file to get the g2data directory.
-G2DATA = $(shell echo '<?php require '$(GALLERYDIR)/lib/support/GallerySetupUtilities.class';
-$$gallery = new GallerySetupUtilitiesStub();
-@require '$(GALLERYDIR)/config.php';
-echo $$gallery->getConfig('data.gallery.base'); ?>' | $(PHP) -q 2>&1)
+G2DATA = $(shell echo '<?php require "$(GALLERYDIR)/lib/support/GallerySetupUtilities.class";$$gallery = new GallerySetupUtilitiesStub();@require "$(GALLERYDIR)/config.php";echo $$gallery->getConfig("data.gallery.base"); ?>' | $(PHP) -q 2>&1)
 
 ifdef QUIET
 	MSGFMT_FLAGS =
