@@ -153,6 +153,7 @@ class SystemChecksStep extends UpgradeStep {
 				'title'   => 'FILE Directive',
 				'success' => true,
 			);
+			$fileDirectiveWorks      = true;
 		}
 
 		// Make sure that safe mode is not enabled
