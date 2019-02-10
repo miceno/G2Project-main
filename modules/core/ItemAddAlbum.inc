@@ -120,6 +120,8 @@ class ItemAddAlbumController extends GalleryController {
 
 				$status['editMessage'] = $module->translate('Album created successfully.');
 			}
+		} else {
+			$results['return'] = 1;
 		}
 
 		$ret = GalleryCoreApi::releaseLocks($lockIds);
