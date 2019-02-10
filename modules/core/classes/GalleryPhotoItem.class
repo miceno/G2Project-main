@@ -259,9 +259,9 @@ class GalleryPhotoItem extends GalleryDataItem {
 				}
 
 				if ($params['lazyload']) {
-					$data_src = $src;
-					$src      = "/install/images/background.png";
-					$params['class'] .= " lazyload";
+					$data_src         = $src;
+					$src              = '/install/images/background.png';
+					$params['class'] .= ' lazyload';
 				}
 
 				// Shrink our dimensions if necessary
@@ -291,12 +291,8 @@ class GalleryPhotoItem extends GalleryDataItem {
 				}
 				unset($params['lazyload'], $params['fallback'], $params['forceFullUrl'], $params['forceRawImage']);
 
-
-
-
-
-				$classes = " class=\"" . $params['class'] . "\"";
-				$html .= $classes;
+				$classes = ' class="' . $params['class'] . '"';
+				$html   .= $classes;
 				unset($params['class']);
 
 				foreach ($params as $attr => $value) {

@@ -39,7 +39,7 @@ class RatingSiteAdminController extends GalleryController {
 		$status = $error = array();
 
 		if (isset($form['action']['save'])) {
-			list($ret, $themeSettingsId) = 		GalleryCoreApi::getPluginParameter('module', 'rating', 'themeSettingsId');
+			list($ret, $themeSettingsId) = GalleryCoreApi::getPluginParameter('module', 'rating', 'themeSettingsId');
 
 			if ($ret) {
 				return array($ret, null);
@@ -64,12 +64,12 @@ class RatingSiteAdminController extends GalleryController {
 
 		if (isset($form['action']['save']) && empty($error)) {
 			foreach (array('allowAlbumRating' => empty($form['allowAlbumRating']) ? 0 : 1,
-			   'themeId' => $form['themeId'],
-			   'orderBy' => (empty($form['presort']) ? '' : $form['presort'] . '|')
+			   'themeId'                      => $form['themeId'],
+			   'orderBy'                      => (empty($form['presort']) ? '' : $form['presort'] . '|')
 					. $form['orderBy'],
-			   'orderDirection' => $form['orderDirection'],
-			   'minLimit' => $form['minLimit'],
-			   'description' => $form['description'], )
+			   'orderDirection'               => $form['orderDirection'],
+			   'minLimit'                     => $form['minLimit'],
+			   'description'                  => $form['description'], )
 			as $key => $value) {
 				$ret = GalleryCoreApi::setPluginParameter('module', 'rating', $key, $value);
 
@@ -82,9 +82,9 @@ class RatingSiteAdminController extends GalleryController {
 
 		$method  = empty($error) ? 'redirect' : 'delegate';
 		$results = array($method => array('view' => 'core.SiteAdmin',
-					  'subView'                           => 'rating.RatingSiteAdmin', ),
-			 'status' => $status,
-			 'error'  => $error, );
+					  'subView'                  => 'rating.RatingSiteAdmin', ),
+			 'status'            => $status,
+			 'error'             => $error, );
 
 		return array(null, $results);
 	}
@@ -109,7 +109,7 @@ class RatingSiteAdminView extends GalleryView {
 		if ($form['formName'] != 'RatingSiteAdmin') {
 			foreach (array('allowAlbumRating', 'themeId', 'orderBy', 'orderDirection', 'minLimit',
 			   'description', ) as $key) {
-				list($ret, $form[$key]) = 			GalleryCoreApi::getPluginParameter('module', 'rating', $key);
+				list($ret, $form[$key]) = GalleryCoreApi::getPluginParameter('module', 'rating', $key);
 
 				if ($ret) {
 					return array($ret, null);
@@ -138,7 +138,7 @@ class RatingSiteAdminView extends GalleryView {
 
 		// Set up sort order selection list
 		GalleryCoreApi::requireOnce('modules/core/classes/GallerySortInterface_1_2.class');
-		list($ret, $orderByList, $presortList, $orderDirectionList) = 		GallerySortInterface_1_2::getAllSortOrders();
+		list($ret, $orderByList, $presortList, $orderDirectionList) = GallerySortInterface_1_2::getAllSortOrders();
 
 		if ($ret) {
 			return array($ret, null);
@@ -170,7 +170,7 @@ class RatingSiteAdminView extends GalleryView {
 		'themeList'          => $themeList, );
 
 		// Set up theme settings
-		list($ret, $themeSettingsId) = 		GalleryCoreApi::getPluginParameter('module', 'rating', 'themeSettingsId');
+		list($ret, $themeSettingsId) = GalleryCoreApi::getPluginParameter('module', 'rating', 'themeSettingsId');
 
 		if ($ret) {
 			return array($ret, null);

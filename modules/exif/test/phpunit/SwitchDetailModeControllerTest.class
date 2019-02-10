@@ -45,8 +45,8 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 				'redirect' => array(
 					'view' => 'core.ShowItem',
 				),
-				'status' => array(),
-				'error'  => array(),
+				'status'   => array(),
+				'error'    => array(),
 			),
 			$results
 		);
@@ -72,8 +72,8 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 				'redirect' => array(
 					'view' => 'core.ShowItem',
 				),
-				'status' => array(),
-				'error'  => array(),
+				'status'   => array(),
+				'error'    => array(),
 			),
 			$results
 		);
@@ -99,8 +99,8 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 				'redirect' => array(
 					'view' => 'core.ShowItem',
 				),
-				'status' => array(),
-				'error'  => array(),
+				'status'   => array(),
+				'error'    => array(),
 			),
 			$results
 		);
@@ -166,7 +166,7 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 			} else {
 				$filter = EXIF_SUMMARY;
 			}
-			$expModeSet           = $expDataSet = true;
+			$expModeSet           = $expDataSet           = true;
 			list($ret, $exifData) = ExifHelper::getExifData($path, $filter);
 
 			if ($ret) {

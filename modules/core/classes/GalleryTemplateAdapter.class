@@ -793,10 +793,6 @@ class GalleryTemplateAdapter {
 
 		unset($params['link'], $params['type'], $params['lowercase'], $params['text'], $params['onlyIcon']);
 
-
-
-
-
 		$linkURL = $urlGenerator->generateUrl($link['params'], $link['options']);
 
 		// Hack for TemplateAdapterTest.testItemLink Unit Test
@@ -829,7 +825,7 @@ class GalleryTemplateAdapter {
 				$linkAttrs = ' ';
 			}
 
-			$tag = '<a href="' . $linkURL . '"'
+			$tag    = '<a href="' . $linkURL . '"'
 				   . $linkScript
 				   . $linkAttrs
 				   . ' alt="' . $text . '" title="' . $text . '"';
@@ -841,7 +837,7 @@ class GalleryTemplateAdapter {
 				$tag .= " $key=\"$value\"";
 			}
 		}
-		$tag_content = "";
+		$tag_content = '';
 
 		if (!$onlyIcon) {
 			$tag_content = $lowercase ? strtolower($text) : $text;
@@ -1070,7 +1066,7 @@ class GalleryTemplateAdapter {
 
 			if ($profiling) {
 				$storage =& $gallery->getStorage();
-				$buf .= '</pre><span>' . $storage->getProfilingHtml() . '</span><pre>';
+				$buf    .= '</pre><span>' . $storage->getProfilingHtml() . '</span><pre>';
 			}
 			$buf .= '</pre></div>';
 		}
@@ -1383,7 +1379,7 @@ class GalleryTemplateAdapter {
 				 * Unlikely this will ever be used.. but do update it if exact form of
 				 * translate() calls (with text+arg1+arg2) in this function ever change.
 				 */
-				$gallery->runEval(
+				GalleryUtilities::doEval(
 					'class GalleryTemplateAdapterFallbackCoreModule {
 						function translate($x) {
 							return sprintf($x[\'text\'], $x[\'arg1\'], $x[\'arg2\']);

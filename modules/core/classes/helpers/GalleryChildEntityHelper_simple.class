@@ -329,8 +329,8 @@ class GalleryChildEntityHelper_simple {
 		}
 		// Don't self join
 		$baseId = '[' . $baseTable . '::' . $baseIdColumn . ']';
-		unset($join['INNER JOIN [' . $baseTable . '] ON [BASE::ID] = ' . $baseId]);
-		unset($join['LEFT JOIN [' . $baseTable . '] ON [BASE::ID] = ' . $baseId]);
+		unset($join['INNER JOIN [' . $baseTable . '] ON [BASE::ID] = ' . $baseId], $join['LEFT JOIN [' . $baseTable . '] ON [BASE::ID] = ' . $baseId]);
+
 
 		// Postgres requires the order by column to be in the select list
 		$select = empty($select) ? '' : ', ' . implode(', ', $select);
@@ -586,7 +586,10 @@ class GalleryChildEntityHelper_simple {
 
 		$directionList = explode('|', $orderDirection);
 		$direction     = '';
-		$order         = $select = $condition = $join = array();
+		$order         = array();
+		$select        = array();
+		$condition     = array();
+		$join          = array();
 
 		foreach (explode('|', $orderBy) as $orderType) {
 			if (!empty($directionList)) {

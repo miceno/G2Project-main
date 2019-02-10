@@ -224,7 +224,7 @@ class CoreModule extends GalleryModule {
 					)
 				);
 				$links[$itemId][] = array(
-					'text' => $this->_translate(
+					'text'   => $this->_translate(
 						array(
 							'text' => 'Delete %s',
 							'arg1' => $itemTypeNames[0],
@@ -630,7 +630,7 @@ class CoreModule extends GalleryModule {
 					)
 				);
 				$views[]      = array(
-					'name' => $this->_translate(
+					'name'   => $this->_translate(
 						array(
 							'text' => 'Delete %s',
 							'arg1' => $itemTypeNames[0],

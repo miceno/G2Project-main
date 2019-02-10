@@ -786,8 +786,7 @@ class GalleryUtilities {
 			}
 		} else {
 			// Unsanitize dangerous html entities
-			// bugs.php.net/bug.php?id=22014 - TODO: remove empty check when min php is 4.3.2+
-			$value = empty($value) ? $value : html_entity_decode($value);
+			$value = html_entity_decode($value);
 
 			// Redo the damage caused by magic_quotes
 			if ($adaptForMagicQuotes) {
@@ -1351,8 +1350,8 @@ class GalleryUtilities {
 					);
 				} else {
 					list($file, $cksum, $cksum_crlf, $size, $size_crlf) = $line;
-					$file                                               = trim($file);
-					$manifest[$file]                                    = array(
+					$file            = trim($file);
+					$manifest[$file] = array(
 						'checksum'      => $cksum,
 						'checksum_crlf' => $cksum_crlf,
 						'size'          => $size,
@@ -1847,5 +1846,25 @@ class GalleryUtilities {
 		}
 
 		return $strArray;
+	}
+
+	/**
+	 * Replacement function for PHP Eval
+	 */
+	public static function doEval($code) {
+		// Temp override
+		return eval($code);
+
+		$tempfile = tempnam(sys_get_temp_dir(), 'EVL');
+		file_put_contents($tempfile, "<?php\n" . $code);
+
+		ob_start();
+
+		include $tempfile;
+		$data = ob_get_contents();
+		ob_end_clean();
+		unlink($tempfile);
+
+		return $data;
 	}
 }

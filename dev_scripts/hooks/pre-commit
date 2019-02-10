@@ -1,7 +1,8 @@
 #!/bin/sh
 
 PHP_CBF_BIN=dev_vendor/bin/phpcbf
-PHP_CBF_CONFIG=phpcs.xml
+PHP_CBF_CONFIG_START=phpcs.xml
+PHP_CBF_CONFIG_END=phpcs-end.xml
 
 PHP_FIX_BIN=dev_vendor/bin/php-cs-fixer
 PHP_FIX_CONFIG=.php_cs.dist
@@ -10,7 +11,7 @@ PROJECT=$(php -r "echo dirname(dirname(dirname(realpath('$0'))));")
 STAGED_PHP_FILES=$(git diff-index --name-only --cached --diff-filter=ACMRT HEAD -- | egrep '\.php$|\.inc$|\.class$')
 STAGED_FIX_FILES=$(git diff-index --name-only --cached --diff-filter=ACMRT HEAD -- | egrep '\.php$|\.inc$|\.class$|\.css$|\.js$|\.xml$|\.xaml$|\.html$')
 
-# Determine if file list present
+# Get file list
 if [ "$#" -eq 1 ]
 then
 	oIFS=$IFS
@@ -20,6 +21,7 @@ then
 	IFS=$oIFS
 fi
 
+# Filter file list
 PHP_FILES=${FILE_LIST:-$STAGED_PHP_FILES}
 ALL_FILES=${FILE_LIST:-$STAGED_FIX_FILES}
 
@@ -30,12 +32,12 @@ if [ "$PHP_FILES" != "" ]; then
 	echo ""
 	for PHP_FILE in $PHP_FILES
 	do
-		php -l -d display_errors=0 $PROJECT/$PHP_FILE
+		RET=$(php -l -d display_errors=0 $PROJECT/$PHP_FILE)
 		if [ $? != 0 ]
 		then
 			echo ""
 			echo "PHP Syntax Errors Found ... Aborting"
-			git reset HEAD $PROJECT/$PHP_FILE
+			RET=$(git reset HEAD $PROJECT/$PHP_FILE)
 			echo ""
 			echo "Please Fix Errors and Repeat Commit"
 			exit 1
@@ -43,7 +45,7 @@ if [ "$PHP_FILES" != "" ]; then
 	done
 fi
 
-# Check if PHP-CS-FIXER and PHPCBF are set up correctly
+# Check if PHP-CS-FIXER is set up correctly
 if [ ! -x $PHP_FIX_BIN ]; then
 	echo ""
 	echo ""
@@ -51,6 +53,7 @@ if [ ! -x $PHP_FIX_BIN ]; then
 	echo ""
 	exit 1
 else
+	# Check if PHPCBF is set up correctly
 	if [ ! -x $PHP_CBF_BIN ]; then
 		echo ""
 		echo ""
@@ -69,8 +72,9 @@ else
 			RET=$(git reset HEAD $PROJECT/$TARGET_FILE)
 
 			# Apply coding style to target file
-			RET=$($PHP_CBF_BIN --standard=$PHP_CBF_CONFIG $PROJECT/$TARGET_FILE)
+			RET=$($PHP_CBF_BIN --standard=$PHP_CBF_CONFIG_START $PROJECT/$TARGET_FILE)
 			RET=$($PHP_FIX_BIN fix --config "$PHP_FIX_CONFIG" $PROJECT/$TARGET_FILE)
+			RET=$($PHP_CBF_BIN --standard=$PHP_CBF_CONFIG_END $PROJECT/$TARGET_FILE)
 
 			# Stage target file
 			git add $PROJECT/$TARGET_FILE

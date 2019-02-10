@@ -78,9 +78,9 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 
 		foreach (array(
 			'descriptions' => '[GalleryItem::description]',
-			'keywords'  => '[GalleryItem::keywords]',
-			'summaries' => '[GalleryItem::summary]',
-			'titles'    => '[GalleryItem::title]',
+			'keywords'     => '[GalleryItem::keywords]',
+			'summaries'    => '[GalleryItem::summary]',
+			'titles'       => '[GalleryItem::title]',
 		) as $key => $column) {
 			if (isset($options[$key])) {
 				$whereList[]        = "$column LIKE ?";
@@ -209,11 +209,13 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 		while ($result = $results->nextResult()) {
 			$fields = array();
 
-			foreach (array('title' => $text['title'],
-						   'summary' => $text['summary'],
-						   'keywords' => $text['keywords'],
-						   'description' => $text['description'], )
-				as $optionName => $fieldText) {
+			foreach (array(
+				'title'       => $text['title'],
+				'summary'     => $text['summary'],
+				'keywords'    => $text['keywords'],
+				'description' => $text['description'],
+			)
+			as $optionName => $fieldText) {
 				$columnName = '[GalleryItem::' . $optionName . ']';
 
 				if (isset($selectMap[$columnName])) {
@@ -229,7 +231,7 @@ class GalleryCoreSearch extends GallerySearchInterface_1_0 {
 				}
 			}
 
-			$fields[] = array(
+			$fields[]        = array(
 				'key'   => $text['owner'],
 				'field' => 'owner',
 				'value' => !empty($result[1]) ? $result[1] : $result[2],

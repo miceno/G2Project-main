@@ -536,7 +536,7 @@ if (isset($_GET['filter'])) {
 	$filter = trim($_GET['filter']);
 
 	if (substr($filter, -5) == ':1by1') {
-		$testOneByOne   = $compactView = 1;
+		$testOneByOne   = $compactView   = 1;
 		$_GET['filter'] = $filter = substr($filter, 0, -3) . '-1';
 	} elseif (!empty($_GET['onebyone'])) {
 		$testOneByOne = $compactView = (int)substr($filter, strrpos($filter, '-') + 1);
@@ -636,12 +636,12 @@ $incorrectDevEnv       = array();
 $desiredErrorReporting = E_ALL & ~E_STRICT;
 
 foreach (array(
-	'error_reporting'  => array($desiredErrorReporting),
+	'error_reporting'                => array($desiredErrorReporting),
 	'allow_call_time_pass_reference' => array('off', 0),
-	'register_globals' => array('off', 0),
-	'display_errors'   => array('on', 1),
-	'allow_url_fopen'  => array('off', 0),
-	'include_path'     => array('/bogus'),
+	'register_globals'               => array('off', 0),
+	'display_errors'                 => array('on', 1),
+	'allow_url_fopen'                => array('off', 0),
+	'include_path'                   => array('/bogus'),
 ) as $key => $expected) {
 	$actual = ini_get($key);
 

@@ -225,8 +225,8 @@ class Smarty {
 	 * @var array
 	 */
 	public $security_settings = array(
-		'PHP_HANDLING' => false,
-		'IF_FUNCS'     => array(
+		'PHP_HANDLING'        => false,
+		'IF_FUNCS'            => array(
 			'array',
 			'list',
 			'isset',
@@ -2006,9 +2006,7 @@ class Smarty {
 	 * wrapper for eval() retaining $this
 	 */
 	public function _eval($code, $params = null) {
-		global $gallery;
-
-		return $gallery->runEval($code);
+		return GalleryUtilities::doEval($code);
 	}
 
 	/**

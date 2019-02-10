@@ -232,12 +232,13 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 			} else {
 				$ok = $conn->Execute(
 					"create table $perf_table (
-				created varchar(50),
-				sql0 varchar(250),
-				sql1 varchar(4000),
-				params varchar(3000),
-				tracer varchar(500),
-				timer decimal(16,6))"
+						created varchar(50),
+						sql0 varchar(250),
+						sql1 varchar(4000),
+						params varchar(3000),
+						tracer varchar(500),
+						timer decimal(16,6)
+					)"
 				);
 			}
 

@@ -126,6 +126,8 @@ function extractStrings($filename) {
 	$localStrings                 = array();
 	$data                         = file_get_contents($filename);
 
+	include_once __DIR__ . '/../../../modules/core/classes/GalleryUtilities.class';
+
 	/*
 	 * class|inc|php are module and core PHP files.
 	 * Parse .html as PHP for installer/upgrader templates/*.html files.
@@ -188,7 +190,7 @@ function extractStrings($filename) {
 						$ignore = $parenCount;
 					}
 				}
-				$param = eval('return ' . $buf . ';');
+				$param = GalleryUtilities::doEval('return ' . $buf . ';');
 
 				if (is_string($param)) {
 					// Escape double quotes and newlines
@@ -215,9 +217,9 @@ function extractStrings($filename) {
 							$param[$key] = strtr(
 								$param[$key],
 								array(
-									'"'     => '\\"',
-									"\r\n"  => '\n',
-									"\n"    => '\n',
+									'"'    => '\\"',
+									"\r\n" => '\n',
+									"\n"   => '\n',
 								)
 							);
 						}
@@ -231,12 +233,12 @@ function extractStrings($filename) {
 
 					if (isset($param['cFormat'])) {
 						$string = '/* xgettext:'
-								  . ($param['cFormat'] ? '' : 'no-') . "c-format */\n$string";
+						. ($param['cFormat'] ? '' : 'no-') . "c-format */\n$string";
 					}
 
 					if (!empty($param['hint'])) {
 						$string = '// HINT: ' . str_replace("\n", "\n// ", $param['hint'])
-								  . "\n$string";
+						. "\n$string";
 					}
 
 					if (!isset($strings[$string])) {
@@ -290,7 +292,7 @@ function extractStrings($filename) {
 			}
 
 			// Hint for translators
-			$translatorHint = preg_match('/\shint=((["\']).*?[^\\\\]\2)/s', $string, $matches) ? eval('return ' . $matches[1] . ';') : '';
+			$translatorHint = preg_match('/\shint=((["\']).*?[^\\\\]\2)/s', $string, $matches) ? GalleryUtilities::doEval('return ' . $matches[1] . ';') : '';
 
 			// c-format hint for xgettext
 			$cFormatHint = preg_match('/\sc[Ff]ormat=(true|false)/s', $string, $matches) ? '/* xgettext:' . ($matches[1] == 'false' ? 'no-' : '') . "c-format */\n" : '';
@@ -312,13 +314,13 @@ function extractStrings($filename) {
 						"\n"   => '\n',
 					)
 				) . '", "'
-						. strtr(
-							$many,
-							array(
-								"\r\n" => '\n',
-								"\n"   => '\n',
-							)
-						) . '")';
+				. strtr(
+					$many,
+					array(
+						"\r\n" => '\n',
+						"\n"   => '\n',
+					)
+				) . '")';
 			} else {
 				// Parse error
 				$string = str_replace("\n", '\n> ', $string);
@@ -353,5 +355,4 @@ function errorExit($message) {
 
 	exit(1);
 }
-
 ?>

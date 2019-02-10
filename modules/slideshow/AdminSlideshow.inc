@@ -50,7 +50,7 @@ class AdminSlideshowController extends GalleryController {
 
 		// Allow our helper to be injected as a dependency for ease in testing
 		$picLensHelper = isset($this->_picLensHelper) ? $this->_picLensHelper : new PicLensHelper();
-		$error         = $status = array();
+		$error         = $status         = array();
 
 		if (isset($form['action']['install'])) {
 			list($ret, $version) = $picLensHelper->install();
@@ -117,8 +117,8 @@ class AdminSlideshowController extends GalleryController {
 					'view'    => 'core.SiteAdmin',
 					'subView' => 'slideshow.AdminSlideshow',
 				),
-				'status' => $status,
-				'error'  => $error,
+				'status'   => $status,
+				'error'    => $error,
 			),
 		);
 	}

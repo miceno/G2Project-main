@@ -271,7 +271,7 @@ class RewriteHelper {
 				// Merge with default options.  Later values override defaults.
 				$rules[$ruleId]['options'] = array_merge(
 					array(
-						'forceDirect' => isset($rules[$ruleId]['queryString']['view'])
+						'forceDirect'            => isset($rules[$ruleId]['queryString']['view'])
 									&& $rules[$ruleId]['queryString']['view'] == 'watermark.DownloadItem',
 						'forceServerRelativeUrl' => true,
 						'forceSessionId'         => false,

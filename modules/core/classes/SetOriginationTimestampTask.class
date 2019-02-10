@@ -43,7 +43,7 @@ class SetOriginationTimestampTask extends MaintenanceTask {
 				'Update capture date stored in Gallery for all items with an available ' .
 				 'date in the original data file (usually from EXIF data).'
 			),
-			'confirmRun' => true,
+			'confirmRun'  => true,
 		);
 	}
 
@@ -76,7 +76,8 @@ class SetOriginationTimestampTask extends MaintenanceTask {
 			return array($ret, null, null);
 		}
 
-		$i          = $updated = 0;
+		$i          = 0;
+		$updated    = 0;
 		$toolkitMap = array();
 		$total      = $results->resultCount();
 

@@ -39,7 +39,7 @@ class SetupRewriteController extends GalleryController {
 		GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteHelper.class');
 		global $gallery;
 		$platform =& $gallery->getPlatform();
-		$status   = $error = array();
+		$status   = $error   = array();
 		$results  = array(
 			'redirect' => array(
 				'view'    => 'core.SiteAdmin',
@@ -77,7 +77,7 @@ class SetupRewriteController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
-		} elseif (isset($form['action']['save']) && isset($form['parser'])) {
+		} elseif (isset($form['action']['save'], $form['parser'])) {
 			if (!in_array($form['parser'], $this->_parserIds)) {
 				return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
 			}

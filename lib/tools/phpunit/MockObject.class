@@ -68,7 +68,7 @@ class MockObject {
 
 	public function _makeReply($function, $request) {
 		while ($expected = array_shift($_GET[$this->_className]['replies'])) {
-			if ($expected[0] == $function && $this->_parametersMatch($expected[1], $request)) {
+			if (($expected[0] == $function) && ($this->_parametersMatch($expected[1], $request))) {
 				$this->_called[$function][] = $request;
 
 				return $expected[2];
@@ -116,7 +116,7 @@ class MockObject {
 		$i = 0;
 
 		foreach ($expected as $key => $value) {
-			if ($i >= count($actual)) {
+			if ($i > count($actual)) {
 				return false;
 			}
 

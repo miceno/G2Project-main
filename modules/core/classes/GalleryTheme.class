@@ -140,7 +140,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'size' => 2,
 				),
-				'value' => $params['rows'],
+				'value'      => $params['rows'],
 			);
 		}
 
@@ -152,7 +152,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'size' => 2,
 				),
-				'value' => $params['columns'],
+				'value'      => $params['columns'],
 			);
 		}
 
@@ -164,7 +164,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'size' => 2,
 				),
-				'value' => $params['perPage'],
+				'value'      => $params['perPage'],
 			);
 		}
 
@@ -176,7 +176,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'size' => 3,
 				),
-				'value' => $params['rowHeight'],
+				'value'      => $params['rowHeight'],
 			);
 		}
 
@@ -188,7 +188,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'size' => 3,
 				),
-				'value' => $params['columnWidth'],
+				'value'      => $params['columnWidth'],
 			);
 		}
 
@@ -227,7 +227,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'packType' => 'block-list',
 				),
-				'value' => $params['sidebarBlocks'],
+				'value'      => $params['sidebarBlocks'],
 			);
 		}
 
@@ -239,7 +239,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'packType' => 'block-list',
 				),
-				'value' => $params['albumBlocks'],
+				'value'      => $params['albumBlocks'],
 			);
 		}
 
@@ -251,7 +251,7 @@ class GalleryTheme extends GalleryPlugin {
 				'typeParams' => array(
 					'packType' => 'block-list',
 				),
-				'value' => $params['photoBlocks'],
+				'value'      => $params['photoBlocks'],
 			);
 		}
 
@@ -267,7 +267,7 @@ class GalleryTheme extends GalleryPlugin {
 						'Separate link to original album'
 					),
 				),
-				'value' => $params['dynamicLinks'],
+				'value'   => $params['dynamicLinks'],
 			);
 		}
 
@@ -1403,7 +1403,7 @@ class GalleryTheme extends GalleryPlugin {
 		 * Initialize
 		 */
 		$theme =& $template->getVariableByReference('theme');
-		$load  = $childItems = $childData = array();
+		$load  = $childItems  = $childData  = array();
 
 		foreach ($dataToLoad as $key) {
 			$load[$key] = true;
@@ -1819,8 +1819,8 @@ class GalleryTheme extends GalleryPlugin {
 				$required = false;
 
 				foreach (array(
-					'systemLinks' => 'getSystemLinks',
-					'itemLinks' => 'getItemLinks',
+					'systemLinks'   => 'getSystemLinks',
+					'itemLinks'     => 'getItemLinks',
 					'itemSummaries' => 'getItemSummaries',
 				) as $key => $callbackKey) {
 					if (isset($load[$key], $callbacks[$callbackKey])) {
@@ -1858,7 +1858,7 @@ class GalleryTheme extends GalleryPlugin {
 					}
 				}
 
-				if (isset($itemLinks, $callbacks['getItemLinks'])   && !empty($allItems)) {
+				if (isset($itemLinks, $callbacks['getItemLinks']) && !empty($allItems)) {
 					list($ret, $links) = $module->getItemLinks(
 						$allItems,
 						$wantsDetailedLinks,
@@ -1976,7 +1976,8 @@ class GalleryTheme extends GalleryPlugin {
 			}
 
 			if ($page < $theme['totalPages']) {
-				$navigator['next']['urlParams']         = $navigator['last']['urlParams'] = $theme['pageUrl'];
+				$navigator['next']['urlParams']         = $theme['pageUrl'];
+				$navigator['last']['urlParams']         = $theme['pageUrl'];
 				$navigator['next']['urlParams']['page'] = $page + 1;
 				$navigator['last']['urlParams']['page'] = $theme['totalPages'];
 			}

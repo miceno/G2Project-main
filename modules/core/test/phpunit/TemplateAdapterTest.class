@@ -177,7 +177,7 @@ class TemplateAdapterTest extends GalleryTestCase {
 				'params' => array(
 					'view' => 'fun.View',
 				),
-				'arg1' => 'foo=bar',
+				'arg1'   => 'foo=bar',
 			),
 			$this->_mockSmarty
 		);
@@ -202,7 +202,7 @@ class TemplateAdapterTest extends GalleryTestCase {
 					'foo' => 'foo',
 					'bar' => 'bar',
 				),
-				'foo' => 'bar',
+				'foo'     => 'bar',
 			),
 			$this->_mockSmarty
 		);
@@ -750,7 +750,7 @@ class TemplateAdapterTest extends GalleryTestCase {
 		$params                                    = array(
 			'type' => 'core.Bogus',
 		);
-		$ret    = GalleryCoreApi::setPluginParameter('module', 'core', 'smarty.compile_check', true);
+		$ret                                       = GalleryCoreApi::setPluginParameter('module', 'core', 'smarty.compile_check', true);
 
 		if ($ret) {
 			return $ret;
@@ -791,7 +791,7 @@ class TemplateAdapterTest extends GalleryTestCase {
 		$params                                    = array(
 			'type' => 'core.Bogus',
 		);
-		$ret    = GalleryCoreApi::setPluginParameter('module', 'core', 'smarty.compile_check', false);
+		$ret                                       = GalleryCoreApi::setPluginParameter('module', 'core', 'smarty.compile_check', false);
 
 		if ($ret) {
 			return $ret;
@@ -832,7 +832,7 @@ class TemplateAdapterTest extends GalleryTestCase {
 		$params                                    = array(
 			'type' => 'core.Bogus',
 		);
-		$ret    = GalleryCoreApi::setPluginParameter('module', 'core', 'smarty.compile_check', false);
+		$ret                                       = GalleryCoreApi::setPluginParameter('module', 'core', 'smarty.compile_check', false);
 
 		if ($ret) {
 			return $ret;
