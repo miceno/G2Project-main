@@ -40,7 +40,7 @@ class JpegtranToolkit extends GalleryToolkit {
 	 *
 	 * @return float rounded rounded value
 	 **/
-	public function round_mcu($value, $mcu = 16) {
+	public static function round_mcu($value, $mcu = 8) {
 		$result = round($value);
 		$modulo = $result % $mcu;
 
@@ -150,8 +150,8 @@ class JpegtranToolkit extends GalleryToolkit {
 				}
 
 				// Source dimensions are required to convert from percentages to pixels
-				$pixelX = round($parameters[0] / 100 * $width);
-				$pixelY = round($parameters[1] / 100 * $height);
+				$pixelX = JpegtranToolkit::round_mcu($parameters[0] / 100 * $width);
+				$pixelY = JpegtranToolkit::round_mcu($parameters[1] / 100 * $height);
 				$width  = round($parameters[2] / 100 * $width);
 				$height = round($parameters[3] / 100 * $height);
 
