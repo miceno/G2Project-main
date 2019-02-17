@@ -47,6 +47,7 @@ composer.phar
 modules/*
 !modules/albumselect
 !modules/archiveupload
+!modules/bulkexcelupload
 !modules/captcha
 !modules/cart
 !modules/colorpack
