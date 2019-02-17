@@ -30,7 +30,7 @@
   <div class="filter_table">
       <div class="filter_column">
   {/if}
-  <h3>{g->text text="Area to show on the Map"}</h3>
+  <h3>{g->text text="Area to show on the Map:"}</h3>
   {if isset($mapv3.ShowFilters) and ($mapv3.ShowFilters eq "top" or $mapv3.ShowFilters eq "bottom")}
       </div>
       <div class="filter_column">{/if}

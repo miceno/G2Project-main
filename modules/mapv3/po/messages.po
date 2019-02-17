@@ -22,10 +22,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: gallery-translations@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-03-30 01:08+0200\n"
+"POT-Creation-Date: 2019-02-17 20:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -82,7 +83,7 @@ msgstr ""
 msgid "Google Map"
 msgstr ""
 
-msgid "Google Map Module"
+msgid "Google Maps API v3 Module"
 msgstr ""
 
 msgid "Show items on a dynamic Google Map"
@@ -92,6 +93,9 @@ msgid "Gallery"
 msgstr ""
 
 msgid "[Google Map] Allow Coordinate Editing"
+msgstr ""
+
+msgid "Google Map v3"
 msgstr ""
 
 msgid "The ID of the group to show, No group will show the default Map"
@@ -151,7 +155,10 @@ msgstr ""
 msgid "Photo Fields"
 msgstr ""
 
-msgid "Search Google Map Fields"
+msgid "Google Map v3 Module"
+msgstr ""
+
+msgid "Search Google Map v3 Fields"
 msgstr ""
 
 msgid "General Settings"
@@ -252,20 +259,20 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#. HINT: Opposite of right
-msgid "Left"
+#. HINT: Opposite of bottom
+msgid "Top"
 msgstr ""
 
 #. HINT: Opposite of left
 msgid "Right"
 msgstr ""
 
-#. HINT: Opposite of bottom
-msgid "Top"
-msgstr ""
-
 #. HINT: Opposite of top
 msgid "Bottom"
+msgstr ""
+
+#. HINT: Opposite of right
+msgid "Left"
 msgstr ""
 
 msgid "Manual Filter List"
@@ -424,129 +431,6 @@ msgid "There are no Groups created, click"
 msgstr ""
 
 msgid "Add Group"
-msgstr ""
-
-msgid "Google Local"
-msgstr ""
-
-msgid "Zoom In"
-msgstr ""
-
-msgid "Zoom Out"
-msgstr ""
-
-msgid "Click to set zoom level"
-msgstr ""
-
-msgid "Drag to zoom"
-msgstr ""
-
-msgid "Go left"
-msgstr ""
-
-msgid "Go right"
-msgstr ""
-
-msgid "Go up"
-msgstr ""
-
-msgid "Go down"
-msgstr ""
-
-msgid "Return to the last result"
-msgstr ""
-
-msgid "(c)2007 Google"
-msgstr ""
-
-msgid "Map data (c)2007 "
-msgstr ""
-
-msgid "NAVTEQ(tm)"
-msgstr ""
-
-msgid "Tele Atlas"
-msgstr ""
-
-msgid "ZENRIN"
-msgstr ""
-
-msgid "Map (c)2007 "
-msgstr ""
-
-#. HINT: Short form for Map
-msgid "Map"
-msgstr ""
-
-msgid "Hybrid"
-msgstr ""
-
-#. HINT: Short form for Hybrid
-msgid "Hyb"
-msgstr ""
-
-msgid "New!"
-msgstr ""
-
-msgid "Terms of Use"
-msgstr ""
-
-msgid "Satellite"
-msgstr ""
-
-#. HINT: Short form for Satellite
-msgid "Sat"
-msgstr ""
-
-msgid "Imagery (c)2007 "
-msgstr ""
-
-msgid "Scale at the center of the map"
-msgstr ""
-
-msgid "km"
-msgstr ""
-
-msgid "mi"
-msgstr ""
-
-msgid "m"
-msgstr ""
-
-msgid "ft"
-msgstr ""
-
-#. HINT: Decimal point
-msgid "."
-msgstr ""
-
-#. HINT: Thousands separator
-msgid ","
-msgstr ""
-
-msgid ""
-"We are sorry, but we don't have maps at this zoom level for this region. Try "
-"zooming out for a broader look."
-msgstr ""
-
-msgid ""
-"We are sorry, but we don't have imagery at this zoom level for this region. "
-"Try zooming out for a broader look."
-msgstr ""
-
-msgid "http://www.google.com/intl/en_ALL/help/terms_local.html"
-msgstr ""
-
-msgid "http://www.google.com/intl/en_ALL/mapfiles/"
-msgstr ""
-
-msgid "google.com"
-msgstr ""
-
-msgid ""
-"The Google Maps API key used on this web site was registered for a different "
-"web site. You can generate a new key for this web site at http://www.google."
-"com/apis/maps/"
 msgstr ""
 
 msgid "Move history"
@@ -1262,12 +1146,6 @@ msgstr ""
 msgid "Loading, please wait..."
 msgstr ""
 
-msgid "MENU"
-msgstr ""
-
-msgid "Save these coordinates"
-msgstr ""
-
 #. HINT: Hints or suggestions
 msgid "Tips"
 msgstr ""
@@ -1284,10 +1162,25 @@ msgid ""
 "fields of the item."
 msgstr ""
 
-msgid "Current Coordinates"
+msgid "MENU"
 msgstr ""
 
-msgid "Current Zoomlevel"
+msgid "Save these coordinates"
+msgstr ""
+
+msgid "Coordinates"
+msgstr ""
+
+msgid "Zoom level"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Keywords"
 msgstr ""
 
 msgid "Google Map Administration"
@@ -1359,8 +1252,8 @@ msgstr ""
 msgid ""
 "This lets you choose the behavior for the \"Show Google Map\" Link.<br/><br/"
 "><b>Disable the link</b> will remove the link from all locations in your "
-"Gallery. You will need to point to main.php?g2_view=mapv3.ShowMap to view the "
-"map.<br/><br/><b>Show The Default Map</b> will simply show all items "
+"Gallery. You will need to point to main.php?g2_view=mapv3.ShowMap to view "
+"the map.<br/><br/><b>Show The Default Map</b> will simply show all items "
 "available in your gallery that have GPS coordinate set.<br/><br/><b>Dynamic "
 "Link</b> will show either the default map or a map filtered on the current "
 "album depending if there are items in the current album / sub-album.<br/"
@@ -1884,6 +1777,9 @@ msgid ""
 "they get lost."
 msgstr ""
 
+msgid "Loading..."
+msgstr ""
+
 #. HINT: Address not found
 msgid "Not found"
 msgstr ""
@@ -1937,16 +1833,16 @@ msgstr ""
 msgid "%s Location Map"
 msgstr ""
 
-msgid "Google Map Filters (Map View only)"
+msgid "Google Map v3 Filters (Map View only)"
 msgstr ""
 
-msgid "Google Map Marker Legend (Map View only)"
+msgid "Google Map v3 Marker Legend (Map View only)"
 msgstr ""
 
-msgid "Google Map Thumbnail Bar (Map View only)"
+msgid "Google Map v3 Thumbnail Bar (Map View only)"
 msgstr ""
 
-msgid "Item Map coordinates"
+msgid "Item Map coordinates v3"
 msgstr ""
 
 msgid "Coordinate display style"
@@ -1969,6 +1865,15 @@ msgstr ""
 
 #, c-format
 msgid "Map width (% or px)"
+msgstr ""
+
+msgid "Map"
+msgstr ""
+
+msgid "Satellite"
+msgstr ""
+
+msgid "Hybrid"
 msgstr ""
 
 msgid "Enable pan and zoom controls"
@@ -1995,8 +1900,11 @@ msgstr ""
 msgid "Quick edit coordinates"
 msgstr ""
 
-msgid "Area to show on the Map"
+msgid "Area to show on the Map:"
 msgstr ""
 
 msgid "No coordinates defined"
+msgstr ""
+
+msgid "Zoom In"
 msgstr ""

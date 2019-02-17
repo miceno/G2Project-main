@@ -1,24 +1,26 @@
 <style type="text/css">
-v\:* {ldelim}
+{literal}
+v\:* {
   behavior:url(#default#VML);
-{rdelim}
+}
+{/literal}
 
-{if $mapv3.fullScreen eq 3}
-html, body {ldelim}
+{if isset($mapv3) && $mapv3.fullScreen eq 3}
+{literal}
+
+html, body {
   height: 100%;
   overflow: hidden;
-{rdelim}
+}
 
-body {ldelim}
-  margin-top: 0px;
-  margin-right: 0px;
-  margin-left: 0px;
-  margin-bottom: 0px
-{rdelim}
+body {
+	margin: 0px;
+}
 
-div#gallery {ldelim}
+div#gallery {
   height: 100%;
-{rdelim}
+}
+{/literal}
 {/if}
 
 {literal}
@@ -119,5 +121,5 @@ div.thumbbar a:focus
 	filter:alpha(opacity=87);
 	opacity:.87;
 }
-</style>
 {/literal}
+</style>

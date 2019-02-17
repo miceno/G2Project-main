@@ -22,13 +22,14 @@ gettext("Bad coordinates, please verify") /* also in: templates/MapFilterAdmin.t
 gettext("Bad LookAt parameters, please verify")
 gettext("Changes saved successfully")
 gettext("GPS coordinates successfully entered and saved")
-gettext("Google Map") /* also in: module.inc classes/mapSearch.class */
+gettext("Google Map")
 
 /* module.inc */
-gettext("Google Map Module") /* also in: classes/mapSearch.class */
+gettext("Google Maps API v3 Module")
 gettext("Show items on a dynamic Google Map")
 gettext("Gallery")
 gettext("[Google Map] Allow Coordinate Editing")
+gettext("Google Map v3") /* also in: classes/mapv3Search.class */
 gettext("The ID of the group to show, No group will show the default Map")
 gettext("View in Google Earth")
 gettext("View Album on a Map")
@@ -50,13 +51,14 @@ gettext("This task will go through all the gallery items and populate the GPS in
 gettext("Inserting GPS coordinates into EXIF header")
 gettext("EXIF header information writen successfully")
 
-/* classes/mapHelper.class */
+/* classes/mapv3Helper.class */
 gettext("Common Fields")
 gettext("Album Fields")
 gettext("Photo Fields")
 
-/* classes/mapSearch.class */
-gettext("Search Google Map Fields")
+/* classes/mapv3Search.class */
+gettext("Google Map v3 Module")
+gettext("Search Google Map v3 Fields")
 
 /* templates/MapAdminTab.tpl */
 gettext("General Settings")
@@ -95,14 +97,14 @@ gettext("Cancel") /* also in: templates/MapGZoomAdmin.tpl templates/MapGoogleOve
 gettext("Filter Block Position")
 // HINT: Don't display
 gettext("Hide") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
-// HINT: Opposite of right
-gettext("Left") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
-// HINT: Opposite of left
-gettext("Right") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
 // HINT: Opposite of bottom
 gettext("Top") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
+// HINT: Opposite of left
+gettext("Right") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
 // HINT: Opposite of top
 gettext("Bottom") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
+// HINT: Opposite of right
+gettext("Left") /* also in: templates/MapLegendAdmin.tpl templates/MapThemeAdmin.tpl */
 gettext("Manual Filter List")
 gettext("Delete") /* also in: templates/MapMarkersAdmin.tpl */
 gettext("Edit")
@@ -162,50 +164,7 @@ gettext("There are no Groups created, click")
 gettext("Add Group")
 
 /* templates/MapHeader.tpl */
-gettext("Google Local")
-gettext("Zoom In") /* also in: templates/infowindow/centered.inc templates/infowindow/default.inc templates/infowindow/g2centered.inc templates/infowindow/g2default.inc templates/infowindow/g2tabbed.inc templates/infowindow/g2table.inc templates/infowindow/g3centered.inc templates/infowindow/g3default.inc templates/infowindow/g3tabbed.inc templates/infowindow/g3table.inc templates/infowindow/gcentered.inc templates/infowindow/gdefault.inc templates/infowindow/gtabbed.inc templates/infowindow/gtable.inc templates/infowindow/gvimage.inc templates/infowindow/orestes.inc templates/infowindow/tabbed.inc templates/infowindow/table.inc */
-gettext("Zoom Out")
-gettext("Click to set zoom level")
-gettext("Drag to zoom")
-gettext("Go left")
-gettext("Go right")
-gettext("Go up")
-gettext("Go down")
-gettext("Return to the last result")
-gettext("(c)2007 Google")
-gettext("Map data (c)2007 ")
-gettext("NAVTEQ(tm)")
-gettext("Tele Atlas")
-gettext("ZENRIN")
-gettext("Map (c)2007 ")
-gettext("Map") /* also in: templates/blocks/blocks.inc */
-// HINT: Short form for Map
-gettext("Map")
-gettext("Hybrid") /* also in: templates/blocks/blocks.inc */
-// HINT: Short form for Hybrid
-gettext("Hyb")
-gettext("New!")
-gettext("Terms of Use")
-gettext("Satellite") /* also in: templates/blocks/blocks.inc */
-// HINT: Short form for Satellite
-gettext("Sat")
-gettext("Imagery (c)2007 ")
-gettext("Scale at the center of the map")
-gettext("km")
-gettext("mi")
-gettext("m")
-gettext("ft")
-// HINT: Decimal point
-gettext(".")
-// HINT: Thousands separator
-gettext(",")
-gettext("We are sorry, but we don't have maps at this zoom level for this region. Try zooming out for a broader look.")
-gettext("We are sorry, but we don't have imagery at this zoom level for this region. Try zooming out for a broader look.")
-gettext("http://www.google.com/intl/en_ALL/help/terms_local.html")
-gettext("http://www.google.com/intl/en_ALL/mapfiles/")
-gettext("google.com")
-gettext("The Google Maps API key used on this web site was registered for a different web site. You can generate a new key for this web site at http://www.google.com/apis/maps/")
-gettext("Move history") /* also in: templates/ShowMap.tpl */
+gettext("Move history")
 gettext("move")
 gettext("zoom")
 gettext("start")
@@ -338,7 +297,7 @@ gettext("Item Information")
 gettext("Selected")
 gettext("Order")
 gettext("Title:")
-gettext("Date:") /* also in: templates/infowindow/centered.inc templates/infowindow/default.inc templates/infowindow/g2centered.inc templates/infowindow/g2default.inc templates/infowindow/g2tabbed.inc templates/infowindow/g2table.inc templates/infowindow/g3centered.inc templates/infowindow/g3default.inc templates/infowindow/g3tabbed.inc templates/infowindow/g3table.inc templates/infowindow/gcentered.inc templates/infowindow/gdefault.inc templates/infowindow/gtabbed.inc templates/infowindow/gtable.inc templates/infowindow/gvimage.inc templates/infowindow/orestes.inc templates/infowindow/tabbed.inc templates/infowindow/table.inc */
+gettext("Date:") /* also in: templates/infowindow/ahpn.inc templates/infowindow/centered.inc templates/infowindow/default.inc templates/infowindow/g2centered.inc templates/infowindow/g2default.inc templates/infowindow/g2tabbed.inc templates/infowindow/g2table.inc templates/infowindow/g3centered.inc templates/infowindow/g3default.inc templates/infowindow/g3tabbed.inc templates/infowindow/g3table.inc templates/infowindow/gcentered.inc templates/infowindow/gdefault.inc templates/infowindow/gtabbed.inc templates/infowindow/gtable.inc templates/infowindow/gvimage.inc templates/infowindow/tabbed.inc templates/infowindow/table.inc */
 gettext("There are no items with GPS coordinates, please add at least two entries to make a route")
 gettext("Save Route")
 
@@ -447,15 +406,18 @@ gettext("%sGo Back%s to the Album and add coordinates to items")
 gettext("Show me the %sdefault map%s")
 gettext("You do not have a profile setup for this website to use the Google Map. Review your settings in the %sAdmin Panel%s or %scheck the Wiki%s.")
 gettext("Loading, please wait...")
-gettext("MENU")
-gettext("Save these coordinates")
 // HINT: Hints or suggestions
 gettext("Tips")
 gettext("Click on the map to choose the point.")
 gettext("Each click will create a marker to ease aiming.")
 gettext("When you are satisfied with the coordinates, click <B>Save</B> above and the center of the map and the zoom level will be copied in the GPS and ZoomLevel fields of the item.")
-gettext("Current Coordinates")
-gettext("Current Zoomlevel")
+gettext("MENU")
+gettext("Save these coordinates")
+gettext("Coordinates")
+gettext("Zoom level")
+gettext("Summary")
+gettext("Description")
+gettext("Keywords")
 gettext("Google Map Administration")
 
 /* templates/helpfile.tpl */
@@ -557,6 +519,7 @@ gettext("This button only appears when an EXIF header is present and GPS coordin
 gettext("This will modify the photo and write the current coordinates to its EXIF header.<br><br>It can be used as a form of backup for the coordinates if they get lost.")
 
 /* templates/mapItemEdit.tpl */
+gettext("Loading...")
 // HINT: Address not found
 gettext("Not found")
 gettext("No Value")
@@ -582,10 +545,10 @@ gettext("When you click on this icon, it automatically zooms in to show the icon
 gettext("%s Location Map")
 
 /* templates/blocks/blocks.inc */
-gettext("Google Map Filters (Map View only)")
-gettext("Google Map Marker Legend (Map View only)")
-gettext("Google Map Thumbnail Bar (Map View only)")
-gettext("Item Map coordinates")
+gettext("Google Map v3 Filters (Map View only)")
+gettext("Google Map v3 Marker Legend (Map View only)")
+gettext("Google Map v3 Thumbnail Bar (Map View only)")
+gettext("Item Map coordinates v3")
 gettext("Coordinate display style")
 gettext("Decimal Degrees")
 gettext("Degrees Decimal Minutes")
@@ -594,6 +557,9 @@ gettext("Mini Google Map")
 gettext("Map height (pixels)")
 gettext("Map width (% or px)")
 gettext("Map type")
+gettext("Map")
+gettext("Satellite")
+gettext("Hybrid")
 gettext("Enable pan and zoom controls")
 gettext("Use parent album coordinates if item has none")
 gettext("Album page: Show album marker")
@@ -603,8 +569,11 @@ gettext("Show items in current album level")
 gettext("Show all album subitems")
 gettext("Quick edit coordinates")
 
-/* templates/blocks/map.tpl */
-gettext("Area to show on the Map")
+/* templates/blocks/mapFilter.tpl */
+gettext("Area to show on the Map:")
 
 /* templates/blocks/quickEdit.tpl */
 gettext("No coordinates defined")
+
+/* templates/infowindow/ahpn.inc */
+gettext("Zoom In") /* also in: templates/infowindow/centered.inc templates/infowindow/default.inc templates/infowindow/g2centered.inc templates/infowindow/g2default.inc templates/infowindow/g2tabbed.inc templates/infowindow/g2table.inc templates/infowindow/g3centered.inc templates/infowindow/g3default.inc templates/infowindow/g3tabbed.inc templates/infowindow/g3table.inc templates/infowindow/gcentered.inc templates/infowindow/gdefault.inc templates/infowindow/gtabbed.inc templates/infowindow/gtable.inc templates/infowindow/gvimage.inc templates/infowindow/tabbed.inc templates/infowindow/table.inc */

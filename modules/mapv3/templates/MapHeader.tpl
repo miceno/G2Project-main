@@ -10,8 +10,9 @@ a:hover {ldelim} outline: none; {rdelim}
 {/literal} *}
 
 {assign var=barPosition value="`$mapv3.ThumbBarPos`"}
-
-{include file="modules/mapv3/includes/GoogleMap.css"}
+{if isset($mapv3) }
+	{include file="modules/mapv3/includes/GoogleMap.css"}
+{/if}
 <!-- Google Maps script -->
 {if isset($mapv3.googleMapKey) and $mapv3.googleMapKey neq 'f'}
 <script src="//maps.googleapis.com/maps/api/js?file=api&amp;v=3&amp;key={$mapv3.googleMapKey}"
