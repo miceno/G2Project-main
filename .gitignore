@@ -66,6 +66,7 @@ modules/*
 !modules/keyalbum
 !modules/linkitem
 !modules/linksinthehead
+!modules/mapv3
 !modules/migrate
 !modules/mime
 !modules/netpbm
@@ -89,6 +90,7 @@ modules/*
 !modules/thumbpage
 !modules/useralbum
 
+modules/mapv3/images/routes/*
 
 # G2 Themes #
 #############
