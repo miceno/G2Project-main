@@ -362,7 +362,7 @@ class ItemAddBulkExcelUpload_helper {
 			$file_name = $form['tmp_name'][$file_field];
 
 			$is_valid = $is_valid && $platform->is_readable($file_name)
-															          && !$platform->is_dir($file_name);
+																	        && !$platform->is_dir($file_name);
 		}
 
 		return array($is_valid, $warning, $error);

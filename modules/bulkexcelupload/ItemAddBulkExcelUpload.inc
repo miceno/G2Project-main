@@ -65,7 +65,7 @@ class ItemAddBulkExcelUpload extends ItemAddPlugin {
 	public function handleRequest($form, &$item, &$addController = null) {
 		global $gallery;
 		$platform     =& $gallery->getPlatform();
-		$classes_path = 'modules/bulkexcelupload/classes/helpers/';
+		$classes_path = 'modules/bulkexcelupload/classes/';
 
 		$templateAdapter =& $gallery->getTemplateAdapter();
 		$storage         =& $gallery->getStorage();
