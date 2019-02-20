@@ -33,12 +33,25 @@ class DynamicAlbumModule extends GalleryModule {
 		$this->setDescription(
 			$gallery->i18n('Dynamic albums for newest, most viewed or random items')
 		);
-		$this->setVersion('1.0.3');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setCallbacks('getSiteAdminViews|getItemLinks');
 		$this->setRequiredCoreApi(array(7, 27));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new DynamicAlbumModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

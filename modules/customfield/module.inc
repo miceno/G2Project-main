@@ -34,12 +34,25 @@ class CustomFieldModule extends GalleryModule {
 		$this->setId('customfield');
 		$this->setName($gallery->i18n('Custom Fields'));
 		$this->setDescription($gallery->i18n('Create custom data fields for Gallery items'));
-		$this->setVersion('1.0.13');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
 		$this->setCallbacks('getSiteAdminViews|getItemSummaries');
 		$this->setRequiredCoreApi(array(7, 34));
 		$this->setRequiredModuleApi(array(3, 9));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new CustomFieldModule();
+		}
+
+		return $singleton;
 	}
 
 	/**
@@ -83,7 +96,7 @@ class CustomFieldModule extends GalleryModule {
 		GalleryCoreApi::requireOnce('lib/smarty_plugins/modifier.markup.php');
 		$summaries = array();
 
-		list($ret, $data) = CustomFieldHelper::fetchFieldValues($items, 'summary');
+		list($ret, $data) = CustomFieldHelper::doStatic()->fetchFieldValues($items, 'summary');
 
 		if ($ret) {
 			return array($ret, null);

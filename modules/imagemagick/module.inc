@@ -35,12 +35,25 @@ class ImageMagickModule extends GalleryModule {
 		$this->setId('imagemagick');
 		$this->setName($gallery->i18n('ImageMagick'));
 		$this->setDescription($gallery->i18n('ImageMagick / GraphicsMagick Graphics Toolkit'));
-		$this->setVersion('1.2.1');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('toolkits', $gallery->i18n('Graphics Toolkits'));
 		$this->setCallbacks('getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 20));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ImageMagickModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

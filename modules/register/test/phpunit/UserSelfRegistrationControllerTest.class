@@ -672,8 +672,14 @@ class RegisterDummyPlatform {
 		$subject,
 		$headers = null
 	) {
-		// Handle email..
-		$this->_handleMail($to, $subject, implode(',', $body), $headers);
+		// Stringify Email Body..
+		if (array_key_exists('l10Domain', $body)) {
+			unset($body['l10Domain']);
+		}
+		$body = implode("\n\n", $body);
+
+		// Handle Email..
+		$this->_handleMail($to, $subject, $body, $headers);
 	}
 
 	public function mail($to, $subject, $body, $headers = null) {

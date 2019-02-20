@@ -29,6 +29,19 @@
  */
 class RepositoryCallbackView extends GalleryView {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new RepositoryCallbackView();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryView::isImmediate
 	 */
 	public function isImmediate() {

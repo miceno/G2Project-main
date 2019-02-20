@@ -37,11 +37,24 @@ class LinksInTheHeadModule extends GalleryModule {
 		$this->setId('linksinthehead');
 		$this->setName($gallery->i18n('Links In The Head'));
 		$this->setDescription($gallery->i18n('Add links to the header menu.'));
-		$this->setVersion('0.1.2');
+		$this->setVersion('7.0.0');
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
 		$this->setCallbacks('getSystemLinks|getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 10));
 		$this->setRequiredModuleApi(array(3, 0));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new LinksInTheHeadModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

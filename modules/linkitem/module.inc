@@ -31,12 +31,25 @@ class LinkItemModule extends GalleryModule {
 		$this->setId('linkitem');
 		$this->setName($gallery->i18n('Link Items'));
 		$this->setDescription($gallery->i18n('Create links to other albums or external urls'));
-		$this->setVersion('1.1.7');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setCallbacks('getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 41));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new LinkItemModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

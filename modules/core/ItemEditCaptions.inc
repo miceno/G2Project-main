@@ -28,6 +28,19 @@
  */
 class ItemEditCaptionsController extends GalleryController {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemEditCaptionsController();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryController::handleRequest
 	 */
 	public function handleRequest($form) {
@@ -174,6 +187,19 @@ class ItemEditCaptionsController extends GalleryController {
  * This view will allow the user to edit many item captions at once.
  */
 class ItemEditCaptionsView extends GalleryView {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemEditCaptionsView();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * Returns sizes for "maxlength" in forms
 	 * @todo: this function is duplicated in ItemEdit.inc, so it needs to be consolidated somehow

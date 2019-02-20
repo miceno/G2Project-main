@@ -32,12 +32,25 @@ class NetPbmModule extends GalleryModule {
 		$this->setId('netpbm');
 		$this->setName($gallery->i18n('NetPBM'));
 		$this->setDescription($gallery->i18n('NetPBM Graphics Toolkit'));
-		$this->setVersion('1.2.0');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('toolkits', $gallery->i18n('Graphics Toolkits'));
 		$this->setCallbacks('getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 20));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new NetPbmModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

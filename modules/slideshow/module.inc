@@ -32,12 +32,25 @@ class SlideshowModule extends GalleryModule {
 		$this->setId('slideshow');
 		$this->setName($gallery->i18n('Slideshow'));
 		$this->setDescription($gallery->i18n('Slideshow'));
-		$this->setVersion('2.0.0');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setCallbacks('getItemLinks|getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 49));
 		$this->setRequiredModuleApi(array(3, 9));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new SlideshowModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

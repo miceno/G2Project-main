@@ -18,8 +18,12 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepository.class');
-GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepositoryUtilities.class');
+GalleryCoreApi::requireOnce(
+	'modules/core/classes/GalleryRepository.class'
+);
+GalleryCoreApi::requireOnce(
+	'modules/core/classes/GalleryRepositoryUtilities.class'
+);
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/AdminRepositoryDownloadAndInstallController.class'
 );
@@ -32,6 +36,19 @@ GalleryCoreApi::requireOnce(
  * @version $Revision: 17768 $
  */
 class AdminLanguageManagerController extends AdminRepositoryDownloadAndInstallController {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminLanguageManagerController();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * @see GalleryController::handleRequest
 	 */
@@ -126,11 +143,15 @@ class AdminLanguageManagerController extends AdminRepositoryDownloadAndInstallCo
 		}
 
 		if ($repositoryInitErrorCount) {
-			$status                                      =& $template->getVariableByReference('status');
+			$status =& $template->getVariableByReference('status');
+
 			$status['error']['repositoryInitErrorCount'] = $repositoryInitErrorCount;
 		}
 
-		list($ret, $installLanguages, $deleteLanguages) = $this->_getFormLanguages($form, $repositories);
+		list($ret, $installLanguages, $deleteLanguages) = $this->_getFormLanguages(
+			$form,
+			$repositories
+		);
 
 		if ($ret) {
 			return $ret;
@@ -139,7 +160,9 @@ class AdminLanguageManagerController extends AdminRepositoryDownloadAndInstallCo
 		$sourceFiles = array();
 
 		foreach ($repositories as $source => $repository) {
-			list($ret, $sourceFiles[$source]) = $repository->getLanguagePackageFiles($installLanguages);
+			list($ret, $sourceFiles[$source]) = $repository->getLanguagePackageFiles(
+				$installLanguages
+			);
 
 			if ($ret) {
 				return $ret;
@@ -181,7 +204,10 @@ class AdminLanguageManagerController extends AdminRepositoryDownloadAndInstallCo
 			}
 
 			// Delete old language packs
-			list($ret, $languagePacksDeleted, $failedToDeleteLanguage) = $this->_deleteLanguagePackages($deleteLanguages, $callback);
+			list($ret, $languagePacksDeleted, $failedToDeleteLanguage) = $this->_deleteLanguagePackages(
+				$deleteLanguages,
+				$callback
+			);
 
 			if ($ret) {
 				return $ret;
@@ -290,7 +316,9 @@ class AdminLanguageManagerController extends AdminRepositoryDownloadAndInstallCo
 				$locales[$actionType][$language] = 1;
 			} elseif (isset($languageData[$language])) {
 				foreach (array_keys($languageData[$language]) as $country) {
-					list($ret, $locale) = $translator->getLanguageCodeFromLocale($language . '_' . $country);
+					list($ret, $locale) = $translator->getLanguageCodeFromLocale(
+						$language . '_' . $country
+					);
 
 					if ($ret) {
 						return array($ret, null, null);
@@ -432,6 +460,19 @@ class AdminLanguageManagerController extends AdminRepositoryDownloadAndInstallCo
  * This view will show all repository-related features.
  */
 class AdminLanguageManagerView extends GalleryView {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminLanguageManagerView();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * @see GalleryView::loadTemplate
 	 */

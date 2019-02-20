@@ -166,7 +166,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 			$params['default.newAlbumsUseDefaults'],
 			'newAlbumsUseDefaults'
 		);
-		$this->assertTrue(!isset($params['default.doesNotExist']), 'parameter not whitelisted');
+		$this->assertFalse(isset($params['default.doesNotExist']), 'parameter not whitelisted');
 	}
 
 	public function testSaveDefaultsValidatesDefaultTheme() {
@@ -400,7 +400,7 @@ class TestThemeId1Theme extends GalleryTheme {
  */
 class TestThemeId2Theme extends GalleryTheme {
 	/**
-	 * Load Singleton
+	 * Load as Singleton
 	 */
 	public static function doStatic() {
 		static $singleton;

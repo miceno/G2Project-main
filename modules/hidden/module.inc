@@ -44,11 +44,24 @@ class HiddenModule extends GalleryModule {
 				'accessed with the right URL'
 			)
 		);
-		$this->setVersion('1.0.9');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('display', $this->translate('Display'));
 		$this->setRequiredCoreApi(array(7, 53));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new HiddenModule();
+		}
+
+		return $singleton;
 	}
 
 	/**
@@ -182,7 +195,7 @@ class HiddenModule extends GalleryModule {
 			}
 
 			foreach ($items as $item) {
-				$ret = HiddenHelper::unHideItem($item);
+				$ret = HiddenHelper::doStatic()->unHideItem($item);
 
 				if ($ret) {
 					return $ret;
@@ -242,7 +255,7 @@ class HiddenModule extends GalleryModule {
 					&& $item->isModified('parentId')
 					&& !$item->hasOnLoadHandler('Hidden')
 				) {
-					$ret = HiddenHelper::handleMoveItem($item);
+					$ret = HiddenHelper::doStatic()->handleMoveItem($item);
 
 					if ($ret) {
 						return array($ret, null);

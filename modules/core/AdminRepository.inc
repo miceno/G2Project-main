@@ -18,7 +18,9 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepository.class');
+GalleryCoreApi::requireOnce(
+	'modules/core/classes/GalleryRepository.class'
+);
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/AdminRepositoryDownloadAndInstallController.class'
 );
@@ -31,6 +33,19 @@ GalleryCoreApi::requireOnce(
  * @version $Revision: 17580 $
  */
 class AdminRepositoryController extends AdminRepositoryDownloadAndInstallController {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminRepositoryController();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * Get the repositories, but allow tests to inject their own version.
 	 * @see GalleryRepository::getRepositories
@@ -173,6 +188,19 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
  * This view will show all repository-related features.
  */
 class AdminRepositoryView extends GalleryView {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminRepositoryView();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * @see GalleryView::loadTemplate
 	 */

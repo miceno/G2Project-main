@@ -27,6 +27,19 @@
  */
 class ItemMakeHighlightController extends GalleryController {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemMakeHighlightController();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryController::handleRequest
 	 */
 	public function handleRequest($form) {
@@ -84,6 +97,19 @@ class ItemMakeHighlightController extends GalleryController {
  * This view will prompt for which ancestor album to set the highlight
  */
 class ItemMakeHighlightView extends GalleryView {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemMakeHighlightView();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * @see GalleryView::loadTemplate
 	 */

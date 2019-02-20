@@ -29,6 +29,19 @@
  */
 class CustomFieldInterface_1_0 {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new CustomFieldInterface_1_0();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * Create new custom fields
 	 *
 	 * @param array $fieldNames of string field names

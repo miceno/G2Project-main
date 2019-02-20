@@ -197,6 +197,19 @@ class GalleryStorage {
 	}
 
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new GalleryStorage();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * Connect to the database
 	 *
 	 * @return array GalleryStatus a status code

@@ -123,8 +123,8 @@ class PhpVmTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$this->assertTrue(!empty($session->_sessionId), 'persistent session preparation failed');
-		$url = GalleryUrlGenerator::appendParamsToUrl(
+		$this->assertFalse(empty($session->_sessionId), 'persistent session preparation failed');
+		$url = GalleryUrlGenerator::doStatic()->appendParamsToUrl(
 			$url,
 			array(
 				$session->getKey() => $session->getId(),
@@ -213,6 +213,6 @@ class PhpVmTest extends GalleryTestCase {
 
 	public function testClassExists() {
 		$this->assertTrue($this->_phpVm->class_exists('PhpVmTest'));
-		$this->assertTrue(!$this->_phpVm->class_exists('ThisIsAClassThatCanNeverExist'));
+		$this->assertFalse($this->_phpVm->class_exists('ThisIsAClassThatCanNeverExist'));
 	}
 }

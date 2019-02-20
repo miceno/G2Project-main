@@ -39,7 +39,7 @@ class CommentModule extends GalleryModule {
 		$this->setId('comment');
 		$this->setName($gallery->i18n('Comments'));
 		$this->setDescription($gallery->i18n('User commenting system'));
-		$this->setVersion('1.1.14'); // Update upgrade() function below too
+		$this->setVersion('7.0.0'); // Update upgrade() function below too
 		$this->_templateVersion = 1;
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
 		$this->setCallbacks(
@@ -48,6 +48,19 @@ class CommentModule extends GalleryModule {
 		);
 		$this->setRequiredCoreApi(array(7, 41));
 		$this->setRequiredModuleApi(array(3, 9));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new CommentModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

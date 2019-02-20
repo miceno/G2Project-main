@@ -36,11 +36,24 @@ class ThumbPageModule extends GalleryModule {
 		$this->setDescription(
 			$gallery->i18n('Select page/frame from a multipage file or movie for the thumbnail')
 		);
-		$this->setVersion('1.0.8');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setRequiredCoreApi(array(7, 34));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ThumbPageModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

@@ -27,6 +27,19 @@
  */
 class ItemAddFromBrowser extends ItemAddPlugin {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemAddFromBrowser();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see ItemAddPlugin::handleRequest
 	 */
 	public function handleRequest($form, &$item, &$addController = null) {

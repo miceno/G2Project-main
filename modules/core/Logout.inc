@@ -27,6 +27,19 @@
  */
 class LogoutController extends GalleryController {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new LogoutController();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryController::isAllowedInMaintenance
 	 */
 	public function isAllowedInMaintenance() {

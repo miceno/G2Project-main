@@ -39,12 +39,25 @@ class PermalinksModule extends GalleryModule {
 		$this->setDescription(
 			$gallery->i18n('Create simpler permanent aliases to your items space')
 		);
-		$this->setVersion('1.0.12');
+		$this->setVersion('7.0.0');
 		$this->_templateVersion = 1;
 		$this->setGroup('gallery', $gallery->i18n('Gallery'));
 		$this->setCallbacks('getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 34));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new PermalinksModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

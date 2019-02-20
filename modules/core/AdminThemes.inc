@@ -27,6 +27,19 @@
  */
 class AdminThemesController extends GalleryController {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminThemesController();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryController::handleRequest
 	 */
 	public function handleRequest($form) {
@@ -51,7 +64,7 @@ class AdminThemesController extends GalleryController {
 				$orderByList,
 				$presortList,
 				$orderDirectionList
-			) = GallerySortInterface_1_2::getAllSortOrders(false);
+			) = GallerySortInterface_1_2::doStatic()->getAllSortOrders(false);
 
 			if ($ret) {
 				return array($ret, null);
@@ -268,6 +281,19 @@ class AdminThemesController extends GalleryController {
  * This view will show administration options for available themes
  */
 class AdminThemesView extends GalleryView {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminThemesView();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * @see GalleryView::loadTemplate
 	 */
@@ -517,7 +543,7 @@ class AdminThemesView extends GalleryView {
 			$orderByList,
 			$presortList,
 			$orderDirectionList
-		) = GallerySortInterface_1_2::getAllSortOrders(false);
+		) = GallerySortInterface_1_2::doStatic()->getAllSortOrders(false);
 
 		if ($ret) {
 			return array($ret, null);

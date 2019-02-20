@@ -31,12 +31,25 @@ class IconsModule extends GalleryModule {
 		$this->setId('icons');
 		$this->setName($gallery->i18n('Icons'));
 		$this->setDescription($gallery->i18n('Display icons for links'));
-		$this->setVersion('1.1.5'); // Update upgrade() function below too
+		$this->setVersion('7.0.0'); // Update upgrade() function below too
 		$this->_templateVersion = 1;
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setCallbacks('getSiteAdminViews');
 		$this->setRequiredCoreApi(array(7, 20));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new IconsModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

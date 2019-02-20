@@ -39,10 +39,23 @@ class NotificationModule extends GalleryModule {
 			$gallery->i18n('Allow users to be notified of events by subscription.')
 		);
 		$this->setGroup('gallery', $gallery->i18n('Gallery'));
-		$this->setVersion('1.0.3');
+		$this->setVersion('7.0.0');
 		$this->setRequiredCoreApi(array(7, 37));
 		$this->setRequiredModuleApi(array(3, 9));
 		$this->setCallbacks('getSiteAdminViews|getUserAdminViews|getItemLinks|getItemAdminViews');
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new NotificationModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

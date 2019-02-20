@@ -43,6 +43,19 @@
  */
 class AdminDeleteUserController extends GalleryController {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminDeleteUserController();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryController::handleRequest
 	 */
 	public function handleRequest($form) {
@@ -54,8 +67,11 @@ class AdminDeleteUserController extends GalleryController {
 			return array($ret, null);
 		}
 
-		$results = $status = $error = array();
-		$userId  = GalleryUtilities::getRequestVariables('userId');
+		$results = array();
+		$status  = array();
+		$error   = array();
+
+		$userId = GalleryUtilities::getRequestVariables('userId');
 
 		if (isset($form['action']['cancel'])) {
 			// Go back to the AdminUsers view
@@ -63,7 +79,11 @@ class AdminDeleteUserController extends GalleryController {
 			$redirect['subView'] = 'core.AdminUsers';
 		} elseif (isset($form['action']['delete'])) {
 			// Get the anonymous user for checks
-			list($ret, $anonymousUserId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.anonymousUser');
+			list($ret, $anonymousUserId) = GalleryCoreApi::getPluginParameter(
+				'module',
+				'core',
+				'id.anonymousUser'
+			);
 
 			if ($ret) {
 				return array($ret, null);
@@ -173,6 +193,19 @@ class AdminDeleteUserController extends GalleryController {
  * This view will prompt for confirmation to delete a user
  */
 class AdminDeleteUserView extends GalleryView {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminDeleteUserView();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * @see GalleryView::loadTemplate
 	 */

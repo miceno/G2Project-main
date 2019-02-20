@@ -31,12 +31,25 @@ class RatingModule extends GalleryModule {
 		$this->setId('rating');
 		$this->setName($gallery->i18n('Rating'));
 		$this->setDescription($gallery->i18n('Item Rating Interface'));
-		$this->setVersion('1.0.13'); // Update upgrade() too
+		$this->setVersion('7.0.0'); // Update upgrade() too
 		$this->_templateVersion = 1;
 		$this->setCallbacks('getSiteAdminViews|getItemSummaries');
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
 		$this->setRequiredCoreApi(array(7, 41));
 		$this->setRequiredModuleApi(array(3, 6));
+	}
+
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new RatingModule();
+		}
+
+		return $singleton;
 	}
 
 	/**

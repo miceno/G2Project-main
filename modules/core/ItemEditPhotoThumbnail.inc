@@ -27,6 +27,19 @@
  */
 class ItemEditPhotoThumbnail extends ItemEditPlugin {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemEditPhotoThumbnail();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see ItemEditPlugin::handleRequest
 	 */
 	public function handleRequest($form, &$item, &$preferred) {

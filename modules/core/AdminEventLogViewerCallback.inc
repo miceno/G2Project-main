@@ -29,6 +29,19 @@
  */
 class AdminEventLogViewerCallbackView extends GalleryView {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminEventLogViewerCallbackView();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryView::isImmediate
 	 */
 	public function isImmediate() {

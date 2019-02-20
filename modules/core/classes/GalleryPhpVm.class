@@ -31,6 +31,19 @@
  */
 class GalleryPhpVm {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new GalleryPhpVm();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * Return true if the given function has been defined.
 	 *
 	 * @param string $functionName
@@ -255,15 +268,6 @@ class GalleryPhpVm {
 	 * @return string uncompressed data
 	 */
 	public function gzinflate($data = null, $length = null) {
-		if (preg_match('/^(\w+)[.:](\w+)$/', $viewName, $regs) == 1) {
-			return GalleryCoreApi::error(
-				ERROR_BAD_PARAMETER,
-				__FILE__,
-				__LINE__,
-				'Null Parameter'
-			);
-		}
-
 		if (isset($length)) {
 			return gzinflate($data, $length);
 		}

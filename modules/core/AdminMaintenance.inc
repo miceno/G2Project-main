@@ -29,6 +29,19 @@ GalleryCoreApi::requireOnce('modules/core/classes/helpers/MaintenanceHelper_simp
  */
 class AdminMaintenanceController extends GalleryController {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminMaintenanceController();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryController::handleRequest
 	 */
 	public function handleRequest($form) {
@@ -176,6 +189,19 @@ class AdminMaintenanceController extends GalleryController {
  */
 class AdminMaintenanceView extends GalleryView {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new AdminMaintenanceView();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryView::loadTemplate
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
@@ -262,6 +288,19 @@ class AdminMaintenanceView extends GalleryView {
  * @abstract
  */
 class MaintenanceTask {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new MaintenanceTask();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * Return internationalized text about this task
 	 * @return array('title' => ..., 'description' => ..., 'l10Domain' => ...)

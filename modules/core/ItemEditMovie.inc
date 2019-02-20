@@ -27,6 +27,19 @@
  */
 class ItemEditMovie extends ItemEditPlugin {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemEditMovie();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see ItemEditPlugin::handleRequest
 	 */
 	public function handleRequest($form, &$item, &$preferred) {

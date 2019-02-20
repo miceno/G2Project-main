@@ -27,6 +27,19 @@
  */
 class ItemEditTheme extends ItemEditPlugin {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemEditTheme();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see ItemEditPlugin::handleRequest
 	 */
 	public function handleRequest($form, &$item, &$preferred) {

@@ -35,17 +35,6 @@ class ItemAddController extends GalleryController {
 	public $_optionInstances;
 
 	/**
-	 * Tests can use this method to hardwire a specific set of option instances to use.
-	 * This avoids situations where some of the option instances will do unpredictable
-	 * things and derail the tests.
-	 *
-	 * @param array $optionInstances (optionId => ItemAddOption, ...)
-	 */
-	public function setOptionInstances($optionInstances) {
-		$this->_optionInstances = $optionInstances;
-	}
-
-	/**
 	 * Load as Singleton
 	 */
 	public static function doStatic() {
@@ -56,6 +45,17 @@ class ItemAddController extends GalleryController {
 		}
 
 		return $singleton;
+	}
+
+	/**
+	 * Tests can use this method to hardwire a specific set of option instances to use.
+	 * This avoids situations where some of the option instances will do unpredictable
+	 * things and derail the tests.
+	 *
+	 * @param array $optionInstances (optionId => ItemAddOption, ...)
+	 */
+	public function setOptionInstances($optionInstances) {
+		$this->_optionInstances = $optionInstances;
 	}
 
 	/**
@@ -292,7 +292,7 @@ class ItemAddController extends GalleryController {
 		$this->_processingItemsMessage = $this->_coreModule->translate('Processing items');
 
 		if (!isset($this->_optionInstances)) {
-			list($ret, $this->_optionInstances) = ItemAddOption::getAllAddOptions();
+			list($ret, $this->_optionInstances) = ItemAddOption::doStatic()->getAllAddOptions();
 
 			if ($ret) {
 				return array($ret, null);
@@ -696,6 +696,19 @@ class ItemAddController extends GalleryController {
  */
 class ItemAddView extends GalleryView {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemAddView();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * @see GalleryView::loadTemplate
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
@@ -757,7 +770,7 @@ class ItemAddView extends GalleryView {
 		}
 
 		// Get all the add options
-		list($ret, $optionInstances) = ItemAddOption::getAllAddOptions();
+		list($ret, $optionInstances) = ItemAddOption::doStatic()->getAllAddOptions();
 
 		if ($ret) {
 			return array($ret, null);
@@ -822,7 +835,11 @@ class ItemAddView extends GalleryView {
 		$ItemAdd['options'] = array();
 
 		foreach ($optionInstances as $option) {
-			list($ret, $entry['file'], $entry['l10Domain']) = $option->loadTemplate($template, $form, $item);
+			list($ret, $entry['file'], $entry['l10Domain']) = $option->loadTemplate(
+				$template,
+				$form,
+				$item
+			);
 
 			if ($ret) {
 				return array($ret, null);
@@ -882,6 +899,19 @@ class ItemAddView extends GalleryView {
  * @abstract
  */
 class ItemAddPlugin {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemAddPlugin();
+		}
+
+		return $singleton;
+	}
+
 	/**
 	 * Load the template with data from this plugin
 	 * @see GalleryView::loadTemplate
@@ -944,15 +974,30 @@ class ItemAddPlugin {
  */
 class ItemAddOption {
 	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new ItemAddOption();
+		}
+
+		return $singleton;
+	}
+
+	/**
 	 * Return all the available option plugins
 	 *
 	 * @return array GalleryStatus a status code
 	 *               array ItemAddOption instances
 	 * @static
 	 */
-	public static function getAllAddOptions() {
+	public function getAllAddOptions() {
 		// Get all the option plugins
-		list($ret, $allOptionIds) = GalleryCoreApi::getAllFactoryImplementationIds('ItemAddOption');
+		list($ret, $allOptionIds) = GalleryCoreApi::getAllFactoryImplementationIds(
+			'ItemAddOption'
+		);
 
 		if ($ret) {
 			return array($ret, null);
@@ -961,7 +1006,10 @@ class ItemAddOption {
 		$optionInstances = array();
 
 		foreach (array_keys($allOptionIds) as $optionId) {
-			list($ret, $option) = GalleryCoreApi::newFactoryInstanceById('ItemAddOption', $optionId);
+			list($ret, $option) = GalleryCoreApi::newFactoryInstanceById(
+				'ItemAddOption',
+				$optionId
+			);
 
 			if ($ret) {
 				return array($ret, null);

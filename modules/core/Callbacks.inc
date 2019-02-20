@@ -24,6 +24,19 @@
  * @version $Revision: 17580 $
  */
 class CoreCallbacks {
+	/**
+	 * Load as Singleton
+	 */
+	public static function doStatic() {
+		static $singleton;
+
+		if (!isset($singleton)) {
+			$singleton = new CoreCallbacks();
+		}
+
+		return $singleton;
+	}
+
 	public function callback($params, &$smarty, $callback, $userId = null) {
 		global $gallery;
 		$block =& $smarty->_tpl_vars['block'];
