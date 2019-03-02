@@ -107,11 +107,11 @@ class ItemEditCaptionsController extends GalleryController {
 						if (!empty($form['items'][$id]['originationTimestampSplit'])) {
 							$newOriginationTimestamp = mktime(
 								$form['items'][$id]['originationTimestampSplit']['Time_Hour'],
-															  $form['items'][$id]['originationTimestampSplit']['Time_Minute'],
-															  $form['items'][$id]['originationTimestampSplit']['Time_Second'],
-															  $form['items'][$id]['originationTimestampSplit']['Date_Month'],
-															  $form['items'][$id]['originationTimestampSplit']['Date_Day'],
-															  $form['items'][$id]['originationTimestampSplit']['Date_Year']
+								$form['items'][$id]['originationTimestampSplit']['Time_Minute'],
+								$form['items'][$id]['originationTimestampSplit']['Time_Second'],
+								$form['items'][$id]['originationTimestampSplit']['Date_Month'],
+								$form['items'][$id]['originationTimestampSplit']['Date_Day'],
+								$form['items'][$id]['originationTimestampSplit']['Date_Year']
 							);
 						}
 
@@ -315,11 +315,7 @@ class ItemEditCaptionsView extends GalleryView {
 				$form['items'][$childId] = (array)$child;
 
 				// The originateTimestamp that we can get from our toolkits
-				list($ret, $originationTimestamp) = GalleryCoreApi::fetchOriginationTimestamp($child);
-
-				if ($ret) {
-					return array($ret, null, null);
-				}
+				$originationTimestamp = $child->getOriginationTimestamp();
 
 				if ($originationTimestamp > 0) {
 					$form['items'][$childId]['originationTimestamp'] = array(
