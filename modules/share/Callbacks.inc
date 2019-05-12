@@ -16,15 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
- *//**
+ */
+
+/**
  * @package Share
  * @author Karl Newman
  * @author Orestes Sanchez <miceno.atreides@gmail.com>
  */
-class ShareCallbacks {
+class shareCallbacks {
 	public function callback($params, &$smarty, $callback, $userId = null) {
+		global $gallery;
+
 		switch ($callback) {
-			case 'ShareBlockParams':// Fetch all module parameters and store them in the $block variable
+			// Fetch all module parameters and store them in the $block variable
+			case 'ShareBlock':
+			case 'ShareBlockParams':
 				list($ret, $param) = GalleryCoreApi::fetchAllPluginParameters('module', 'share');
 
 				if ($ret) {
@@ -38,6 +44,8 @@ class ShareCallbacks {
 
 				return null;
 		}
+
+		$gallery->debug('BAD PARAMETER: ' . $callback);
 
 		return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 	}
