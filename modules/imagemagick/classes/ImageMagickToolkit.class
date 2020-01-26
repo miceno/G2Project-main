@@ -654,6 +654,18 @@ class ImageMagickToolkit extends GalleryToolkit {
 		}
 		$jpegQuality = (int)$jpegQuality;
 
+		// Add a memory limit for those servers with limited resources.
+		$memoryLimit = '32768';
+
+		$command[] = '-limit';
+		$command[] = 'area';
+		$command[] = $memoryLimit;
+
+		// Add a memory limit for those servers with limited resources.
+		$command[] = '-limit';
+		$command[] = 'memory';
+		$command[] = $memoryLimit;
+
 		switch ($outputMimeType) {
 			case 'image/jpeg':
 				$command[] = '-quality';
