@@ -63,9 +63,9 @@ class ItemDeleteJsView extends GalleryView {
 	/**
 	 * @see GalleryView::renderImmediate
 	 */
-	public function renderImmediate($status = null, $error = null) {
+	public function renderImmediate($status, $error) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
-		$template = new GalleryTemplate(dirname(dirname(__DIR__)));
+		$template = new GalleryTemplate(dirname(dirname(dirname(__FILE__))));
 		$template->setVariable('l10Domain', 'modules_core');
 
 		if (function_exists('getallheaders')) {
@@ -91,7 +91,7 @@ class ItemDeleteJsView extends GalleryView {
 					return $ret;
 				}
 				$inc = $gallery->getConfig('data.gallery.base')
-				. "locale/$lang/LC_MESSAGES/modules_core.mo";
+					   . "locale/$lang/LC_MESSAGES/modules_core.mo";
 
 				if ($platform->file_exists($inc)) {
 					if (($stat = $platform->stat($inc)) && $stat[9] > $when) {
@@ -100,7 +100,7 @@ class ItemDeleteJsView extends GalleryView {
 				} else {
 					$lang = substr($lang, 0, 2);
 					$inc  = $gallery->getConfig('data.gallery.base')
-					. "locale/$lang/LC_MESSAGES/modules_core.mo";
+							. "locale/$lang/LC_MESSAGES/modules_core.mo";
 
 					if ($platform->file_exists($inc) && ($stat = $platform->stat($inc))
 						&& $stat[9] > $when
@@ -121,7 +121,7 @@ class ItemDeleteJsView extends GalleryView {
 		header('Last-Modified: ' . GalleryUtilities::getHttpDate());
 		header('Expires: ' . GalleryUtilities::getHttpDate(time() + 2592000));
 
-		list($ret, $html) = $template->fetch('modules/core/templates/ItemDeleteJs.tpl');
+		list($ret, $html) = $template->fetch('gallery:modules/core/templates/ItemDeleteJs.tpl');
 
 		if ($ret) {
 			return $ret;
