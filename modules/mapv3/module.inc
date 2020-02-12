@@ -54,8 +54,8 @@ class mapv3Module extends GalleryModule {
 			'registerEventListeners|getSiteAdminViews|getItemSummaries'
 				. '|getItemLinks'
 		);
-		$this->setRequiredCoreApi(array(7, 54));
-		$this->setRequiredModuleApi(array(3, 0));
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
 	}
 
 	/**
@@ -607,7 +607,7 @@ class mapv3Module extends GalleryModule {
 
 						for ($i = 7; $i < count($routeinfos); $i++) {
 							// Search for the itemid from the coordinate and replace
-							$query               = '					    
+							$query               = '
 			SELECT
 			  [mapv3Map::itemId]
 			FROM
