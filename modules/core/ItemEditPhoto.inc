@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditPhoto extends ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditPhoto();
+		if (!isset($instance)) {
+			$instance = new ItemEditPhoto();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -70,12 +69,14 @@ class ItemEditPhoto extends ItemEditPlugin {
 
 			if (empty($error)) {
 				// Load existing resizes
-				$itemId              = $item->getId();
+				$itemId = $item->getId();
+
 				list($ret, $resizes) = GalleryCoreApi::fetchResizesByItemIds(array($itemId));
 
 				if ($ret) {
 					return array($ret, null, null, null);
 				}
+
 				$resizes      = isset($resizes[$itemId]) ? $resizes[$itemId] : array();
 				$resizesTable = array();
 
@@ -134,10 +135,12 @@ class ItemEditPhoto extends ItemEditPlugin {
 							$form['resizes'][$i]['mimeType']   = $newOutputMimeType;
 						}
 					}
+
 					// Add new resizes, using existing derivative entities until we run out
 					foreach ($form['resizes'] as $resizeData) {
 						if (!empty($resizesTable)) {
-							$derivative         = array_shift($resizesTable);
+							$derivative = array_shift($resizesTable);
+
 							list($ret, $lockId) = GalleryCoreApi::acquireWriteLock($derivative->getId());
 
 							if ($ret) {
@@ -189,9 +192,11 @@ class ItemEditPhoto extends ItemEditPlugin {
 							if ($ret) {
 								return array($ret, null, null, null);
 							}
+
 							$lockId = null;
 						}
 					}
+
 					// Remove any leftover resizes
 					foreach ($resizesTable as $resize) {
 						$ret = GalleryCoreApi::deleteEntityById($resize->getId(), 'GalleryDerivative');
@@ -207,6 +212,7 @@ class ItemEditPhoto extends ItemEditPlugin {
 				if ($ret) {
 					return array($ret, null, null, null);
 				}
+
 				$status = $module->translate('Changes saved successfully');
 			}
 		}
@@ -298,6 +304,7 @@ class ItemEditPhoto extends ItemEditPlugin {
 			} else {
 				$ItemEditPhoto['editPhoto']['hasPreferredSource'] = false;
 			}
+
 			$sourceMimeTypes[] = $preferred->getMimeType();
 		}
 

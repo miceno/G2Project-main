@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,16 +27,16 @@
  */
 class ItemEditCaptionsController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditCaptionsController();
+		if (!isset($instance)) {
+			$instance = new ItemEditCaptionsController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -51,9 +50,10 @@ class ItemEditCaptionsController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$itemId = $item->getId();
 
-		$status = $error = array();
+		$itemId = $item->getId();
+		$status = array();
+		$error  = array();
 
 		if (isset($form['action']['save'])) {
 			$ids = array_keys($form['items']);
@@ -64,7 +64,7 @@ class ItemEditCaptionsController extends GalleryController {
 				return array($ret, null);
 			}
 
-			// We'll check permissions one at a time below, but precache them now
+			// We will check permissions one at a time below, but precache them now
 			list($ret, $permissions) = GalleryCoreApi::fetchPermissionsForItems($ids);
 
 			if ($ret) {
@@ -77,7 +77,11 @@ class ItemEditCaptionsController extends GalleryController {
 				return array($ret, null);
 			}
 
-			list($ret, $markup) = GalleryCoreApi::getPluginParameter('module', 'core', 'misc.markup');
+			list($ret, $markup) = GalleryCoreApi::getPluginParameter(
+				'module',
+				'core',
+				'misc.markup'
+			);
 
 			if ($ret) {
 				return array($ret, null);
@@ -91,7 +95,7 @@ class ItemEditCaptionsController extends GalleryController {
 				$id = $item->getId();
 
 				if (!isset($permissions[$id]['core.view'])) {
-					// Avoid information disclosure, act as if the item didn't exist.
+					// Avoid information disclosure, act as if the item does not exist.
 					return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 				}
 
@@ -99,9 +103,20 @@ class ItemEditCaptionsController extends GalleryController {
 					if ($item->getSerialNumber() == $form['items'][$id]['serialNumber']) {
 						if ($markup == 'html') {
 							// Strip malicious content if html markup allowed
-							$form['items'][$id]['title']       = GalleryUtilities::htmlSafe($form['items'][$id]['title'], true);
-							$form['items'][$id]['summary']     = GalleryUtilities::htmlSafe($form['items'][$id]['summary'], true);
-							$form['items'][$id]['description'] = GalleryUtilities::htmlSafe($form['items'][$id]['description'], true);
+							$form['items'][$id]['title'] = GalleryUtilities::htmlSafe(
+								$form['items'][$id]['title'],
+								true
+							);
+
+							$form['items'][$id]['summary'] = GalleryUtilities::htmlSafe(
+								$form['items'][$id]['summary'],
+								true
+							);
+
+							$form['items'][$id]['description'] = GalleryUtilities::htmlSafe(
+								$form['items'][$id]['description'],
+								true
+							);
 						}
 
 						if (!empty($form['items'][$id]['originationTimestampSplit'])) {
@@ -130,6 +145,7 @@ class ItemEditCaptionsController extends GalleryController {
 						if ($ret) {
 							return array($ret, null);
 						}
+
 						$status[$id]['saved'] = 1;
 						$status['successCount']++;
 					} else {
@@ -176,6 +192,7 @@ class ItemEditCaptionsController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'core.ItemEditCaptions';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -188,16 +205,16 @@ class ItemEditCaptionsController extends GalleryController {
  */
 class ItemEditCaptionsView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditCaptionsView();
+		if (!isset($instance)) {
+			$instance = new ItemEditCaptionsView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -242,6 +259,7 @@ class ItemEditCaptionsView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		if ($form['formName'] != 'ItemEditCaption') {
@@ -262,7 +280,7 @@ class ItemEditCaptionsView extends GalleryView {
 			$numPages           = ceil(sizeof($childIds) / $form['numPerPage']);
 
 			if (empty($page) && !empty($selectedId)) {
-				// No page given.  Determine which page we're on from the selectedId
+				// No page given.  Determine which page we are on from the selectedId
 				for ($i = 0; $i < count($childIds); $i++) {
 					if ($childIds[$i] == $selectedId) {
 						$page = ceil(($i + 1) / $form['numPerPage']);
@@ -271,17 +289,19 @@ class ItemEditCaptionsView extends GalleryView {
 			}
 
 			if (empty($page) && !empty($albumPage)) {
-				// Still no page.  Determine which page we're on from albumPage
+				// Still no page.  Determine which page we are on from albumPage
 				list($ret, $theme) = $this->loadThemeForItem($item);
 
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				list($ret, $params) = $theme->fetchParameters($itemId);
 
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$albumPageSize = $theme->getPageSize($params);
 
 				if (!empty($albumPageSize)) {
@@ -330,6 +350,7 @@ class ItemEditCaptionsView extends GalleryView {
 				}
 
 				// While we're at it, attach thumbnails and resizes
+
 				if (isset($derivatives[$childId])) {
 					foreach ($derivatives[$childId] as $derivative) {
 						$type = $derivative->getDerivativeType();
@@ -346,8 +367,7 @@ class ItemEditCaptionsView extends GalleryView {
 			}
 		}
 
-		$urlGenerator =& $gallery->getUrlGenerator();
-
+		$urlGenerator                  =& $gallery->getUrlGenerator();
 		$ItemEditCaptions              = array();
 		$ItemEditCaptions['canCancel'] = (bool)GalleryUtilities::getRequestVariables('return');
 		$ItemEditCaptions['page']      = $page;
@@ -360,7 +380,9 @@ class ItemEditCaptionsView extends GalleryView {
 		}
 
 		$ItemEditCaptions['fieldLengths']          = array();
-		$ItemEditCaptions['fieldLengths']['title'] = $this->_getSizesForMaxLength($entityInfo['GalleryItem']['members']['title']['size']);
+		$ItemEditCaptions['fieldLengths']['title'] = $this->_getSizesForMaxLength(
+			$entityInfo['GalleryItem']['members']['title']['size']
+		);
 
 		$template->setVariable('ItemEditCaptions', $ItemEditCaptions);
 		$template->setVariable('controller', 'core.ItemEditCaptions');

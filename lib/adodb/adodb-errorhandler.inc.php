@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -12,7 +13,6 @@
  * Latest version is available at http://php.weblogs.com
  *
  */
-
 
 // added Claudio Bustos  clbustos#entelchile.net
 if (!defined('ADODB_ERROR_HANDLER_TYPE')) {
@@ -35,15 +35,15 @@ if (!defined('ADODB_ERROR_HANDLER')) {
  */
 function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnection) {
 	if (error_reporting() == 0) {
-		return; // obey @ protocol
+		// obey @ protocol
+		return;
 	}
 
 	switch ($fn) {
 		case 'EXECUTE':
 			$sql         = $p1;
 			$inputparams = $p2;
-
-			$s = "$dbms error: [$errno: $errmsg] in $fn(\"$sql\")\n";
+			$s           = "$dbms error: [$errno: $errmsg] in $fn(\"$sql\")\n";
 
 			break;
 
@@ -51,8 +51,7 @@ function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnec
 		case 'CONNECT':
 			$host     = $p1;
 			$database = $p2;
-
-			$s = "$dbms error: [$errno: $errmsg] in $fn($host, '****', '****', $database)\n";
+			$s        = "$dbms error: [$errno: $errmsg] in $fn($host, '****', '****', $database)\n";
 
 			break;
 
@@ -61,6 +60,7 @@ function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnec
 
 			break;
 	}
+
 	/*
 	 * Log connection error somewhere
 	 *	0 message is sent to PHP's system logger, using the Operating System's system
@@ -84,7 +84,6 @@ function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnec
 			error_log("($t) $s", ADODB_ERROR_LOG_TYPE);
 		}
 	}
-
 
 	//print "<p>$s</p>";
 	trigger_error($s, ADODB_ERROR_HANDLER_TYPE);

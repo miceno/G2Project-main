@@ -1,8 +1,10 @@
 <?php
+
 // Verification
 if (!defined('G2_SUPPORT_FILE')) {
 	die('Illegal Access');
 }
+
 /**
  * Change URL string that brought us here to the required format.
  *
@@ -13,15 +15,18 @@ if (!defined('G2_SUPPORT_FILE')) {
 // Get script filename
 $fileInfo = pathinfo($_SERVER['PHP_SELF']);
 $file     = $fileInfo['filename'] . '.' . $fileInfo['extension'];
+
 // Get original URL string
 $oldURL = $_SERVER['REQUEST_URI'];
+
 // Replace script filename with "index.php" and use a placeholder to represent "?" for later
 $newURL = str_replace($file, 'index.php{{={placeholder}=}}' . $fileInfo['filename'], $oldURL);
+
 // Replace any "?" in the string with "&"
 $newURL = str_replace('?', '&', $newURL);
+
 // Change placeholder to "?" to finalise the URL
 $newURL = str_replace('{{={placeholder}=}}', '?', $newURL);
-
 
 /**
  * If the request was a "POST" request, build page with a javascript auto self submitting form
@@ -39,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	foreach ($_POST as $k => $v) {
 		$str .= '<input type="hidden" name="' . $k . '" value="' . $v . '">';
 	}
+
 	$str .= '</form>';
 	$str .= '<script type="text/javascript">';
 	$str .= '    var rebounce_now = function () {';

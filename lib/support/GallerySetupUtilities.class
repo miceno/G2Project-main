@@ -1,32 +1,28 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 define('G2_SUPPORT_MAX_LOGIN_ATTEMPTS', 7);
 define('G2_SUPPORT_MAX_SESSION_LIFETIME', 2 * 60 * 60);
 define('G2_SETUP_SESSION_NAME', 'G2SETUPSID');
 
 require_once dirname(dirname(__DIR__)) . '/modules/core/classes/GalleryUtilities.class';
-
 require_once dirname(dirname(__DIR__)) . '/modules/core/classes/GalleryDataCache.class';
-
 require_once dirname(dirname(__DIR__)) . '/modules/core/classes/GallerySession.class';
-
 require_once dirname(dirname(__DIR__)) . '/modules/core/classes/GalleryPlatform.class';
 
 /**
@@ -47,14 +43,11 @@ class GallerySetupUtilitiesStub {
 		return null;
 	}
 
-	public function setDebug() {
-	}
+	public function setDebug() {}
 
-	public function setDebugLogFile() {
-	}
+	public function setDebugLogFile() {}
 
-	public function setProfile() {
-	}
+	public function setProfile() {}
 }
 
 class GallerySetupUtilities {
@@ -74,16 +67,20 @@ class GallerySetupUtilities {
 				$sessionData[$key] = $value;
 			}
 		}
+
 		// 2. Delete the old session
 		session_unset();
 		session_destroy();
+
 		// Create the new session with the old data, send cookie
 		session_id($newSessionId);
 		$sessionName = session_name();
+
 		// Make sure we do not use invalid data at a later point
 		foreach (array($_GET, $_POST, $_REQUEST, $_COOKIE) as $superGlobal) {
 			unset($superGlobal[$sessionName]);
 		}
+
 		session_start();
 
 		foreach ($sessionData as $key => $value) {
@@ -119,10 +116,11 @@ class GallerySetupUtilities {
 
 		if (!isset($gallery)) {
 			/*
-			 * Don't include embed.php in the global scope because it will initiate actions before
+			 * Do not include embed.php in the global scope because it will initiate actions before
 			 * we are ready for them (eg: redirect us to the installer if we have no config.php)
 			 */
 			include_once __DIR__ . '/../../embed.php';
+
 			$ret = GalleryEmbed::init(
 				array(
 					'fullInit' => false,
@@ -168,10 +166,11 @@ class GallerySetupUtilities {
 
 		if (!isset($gallery)) {
 			/*
-			 * Don't include embed.php in the global scope because it will initiate actions before
+			 * Do not include embed.php in the global scope because it will initiate actions before
 			 * we are ready for them (eg: redirect us to the installer if we have no config.php)
 			 */
 			include_once __DIR__ . '/../../embed.php';
+
 			$ret = GalleryEmbed::init(
 				array(
 					'fullInit' => false,
@@ -202,7 +201,8 @@ class GallerySetupUtilities {
 			}
 		} else {
 			$storage =& $gallery->getStorage();
-			$ret     = $storage->checkPoint();
+
+			$ret = $storage->checkPoint();
 
 			if ($ret) {
 				return false;
@@ -223,6 +223,7 @@ class GallerySetupUtilities {
 		if ($resetLoginAttempts) {
 			GallerySetupUtilities::setLoginAttempts(0);
 		}
+
 		GallerySetupUtilities::regenerateSession();
 	}
 
@@ -243,13 +244,14 @@ class GallerySetupUtilities {
 	 */
 	public static function redirectBackToSelf() {
 		include_once __DIR__ . '/../../modules/core/classes/GalleryUrlGenerator.class';
+
 		$urlGenerator = new GalleryUrlGenerator();
 		$url          = $urlGenerator->getCurrentUrl();
 
 		if (GallerySetupUtilities::isSessionAuthenticated()
 			&& !GallerySetupUtilities::areCookiesSupported()
 		) {
-			$url = GalleryUrlGenerator::doStatic()->appendParamsToUrl(
+			$url = GalleryUrlGenerator::getMe()->appendParamsToUrl(
 				$url,
 				array(
 					session_name() => session_id(),
@@ -257,6 +259,7 @@ class GallerySetupUtilities {
 				false
 			);
 		}
+
 		header('Location: ' . $url);
 	}
 
@@ -320,10 +323,7 @@ class GallerySetupUtilities {
 	 * @static
 	 */
 	public static function generateAuthenticationKey() {
-		for ($len = 64, $rand = '';
-		 strlen($rand) < $len;
-		 $rand .= chr(!mt_rand(0, 2) ? mt_rand(48, 57) : (!mt_rand(0, 1) ? mt_rand(65, 90) : mt_rand(97, 122)))) {
-		}
+		for ($len = 64, $rand = ''; strlen($rand) < $len; $rand .= chr(!mt_rand(0, 2) ? mt_rand(48, 57) : (!mt_rand(0, 1) ? mt_rand(65, 90) : mt_rand(97, 122)))) {}
 
 		return md5($rand);
 	}
@@ -332,8 +332,8 @@ class GallerySetupUtilities {
 	 * Create a downloadable text file of a specified name and contents.
 	 * Sets headers appropriately.
 	 *
-	 * @param string $name the file's name
-	 * @param string $contents the file's contents
+	 * @param string $name the file name
+	 * @param string $contents the file contents
 	 */
 	public static function generateTextFileForDownload($name, $contents) {
 		header('Content-Type: text/plain');
@@ -348,7 +348,7 @@ class GallerySetupUtilities {
 	 *
 	 * - Specify a session name (which translates into the id in the cookie, or in query params)
 	 * - Use an appropriate session handler
-	 * - Sanitize the session id to make sure we're not getting tricked with some malicious value
+	 * - Sanitize the session id to make sure we are not getting tricked with some malicious value
 	 * - Detect and thwart session fixation attacks
 	 *
 	 * @static
@@ -359,8 +359,8 @@ class GallerySetupUtilities {
 			session_unset();
 			session_destroy();
 		}
-		session_name(G2_SETUP_SESSION_NAME);
 
+		session_name(G2_SETUP_SESSION_NAME);
 		$sessionName = session_name();
 		$sessionId   = GalleryUtilities::getRequestVariablesNoPrefix($sessionName);
 
@@ -376,12 +376,14 @@ class GallerySetupUtilities {
 			if (function_exists('preg_replace')) {
 				$sessionId = preg_replace('/[^a-zA-Z0-9]/', '', $sessionId);
 			} else {
-				$sessionId = ereg_replace('/[^a-zA-Z0-9]/', '', $sessionId);
+				$sessionId = preg_replace('#/[^a-zA-Z0-9]/#D', '', $sessionId);
 			}
-			// Make sure we don't use invalid data at a later point
+
+			// Make sure we do not use invalid data at a later point
 			foreach (array($_GET, $_POST, $_REQUEST, $_COOKIE) as $superGlobal) {
 				unset($superGlobal[$sessionName]);
 			}
+
 			/*
 			 * md5 has a 128 bit (32 * 4bit) string, but we want to allow for other possible
 			 * hash functions too which possibly have hash strings of only 10 characters
@@ -403,17 +405,17 @@ class GallerySetupUtilities {
 		session_start();
 
 		/*
-		 * Detect the case where we have a session id, but the data that it's associated with is
-		 * not a session that we've created.  This can happen in the case of a session fixation
+		 * Detect the case where we have a session id, but the data that it is associated with is
+		 * not a session that we have created.  This can happen in the case of a session fixation
 		 * attack.  Either create a clean session, or if we detect that this session is clean,
-		 * sign it in a way that we'll recognize.
+		 * sign it in a way that we will recognize.
 		 */
-		$remoteId  = GallerySession::doStatic()->getRemoteIdentifier();
+		$remoteId  = GallerySession::getMe()->getRemoteIdentifier();
 		$cutoff    = time() - G2_SUPPORT_MAX_SESSION_LIFETIME;
 		$configDir = GallerySetupUtilities::getConfigDir();
 
 		if (!empty($sessionId) && (!isset($_SESSION['_remoteId'])
-			|| GallerySession::doStatic()->compareIdentifiers($_SESSION['_remoteId'], $remoteId) == 0
+			|| GallerySession::getMe()->compareIdentifiers($_SESSION['_remoteId'], $remoteId) == 0
 			|| !isset($_SESSION['_startTime']) || $_SESSION['_startTime'] < $cutoff
 			|| !isset($_SESSION['_path']) || $_SESSION['_path'] != $configDir)
 		) {
@@ -422,6 +424,7 @@ class GallerySetupUtilities {
 			 * id, delete all data from this session and bless the new session.
 			 */
 			GallerySetupUtilities::regenerateSession();
+
 			session_unset();
 			$sessionId = null;
 		}
@@ -444,7 +447,7 @@ class GallerySetupUtilities {
 		global $gallery;
 
 		/*
-		 * Don't include embed.php in the global scope because it will initiate actions before we
+		 * Do not include embed.php in the global scope because it will initiate actions before we
 		 * are ready for them (eg: it will redirect us to the installer if we have no config.php)
 		 */
 		include_once __DIR__ . '/../../embed.php';
@@ -464,16 +467,19 @@ class GallerySetupUtilities {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $adminUserIds) = GalleryCoreApi::fetchUsersForGroup($adminGroupId);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $adminUsers) = GalleryCoreApi::loadEntitiesById(array_keys($adminUserIds));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$toList = array();
 
 		foreach ($adminUsers as $admin) {
@@ -484,10 +490,11 @@ class GallerySetupUtilities {
 			}
 		}
 
-		// Note: we don't have localization for lib support yet, so this is not internationalized
+		// Note: we do not have localization for lib support yet, so this is not internationalized
 		if (!empty($toList)) {
 			$platform = new GalleryPlatform();
-			$ret      = $platform->sendEmail(
+
+			$ret = $platform->sendEmail(
 				'lib/support/templates/FailedPasswordEmail.tpl',
 				array(),
 				'',

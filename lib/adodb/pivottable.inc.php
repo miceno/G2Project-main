@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -29,7 +30,6 @@
  *
  * @returns			Sql generated
  */
-
 function PivotTableSQL(
 	&$db,
 	$tables,
@@ -48,10 +48,9 @@ function PivotTableSQL(
 	}
 
 	$iif = strpos($db->databaseType, 'access') !== false;
+
 	// note - vfp 6 still doesn' work even with IIF enabled || $db->databaseType == 'vfp';
-
 	//$hidecnt = false;
-
 	if ($where) {
 		$where = "\nWHERE $where";
 	}
@@ -85,6 +84,7 @@ function PivotTableSQL(
 			} else {
 				$vq = $v;
 			}
+
 			$v = trim($v);
 
 			if (strlen($v) == 0) {
@@ -101,6 +101,7 @@ function PivotTableSQL(
 				} else {
 					$label = "{$v}_$aggfield";
 				}
+
 				$sel .= $iif ? "\n\t$aggfn(IIF($colfield=$vq,$aggfield,0)) AS \"$label\", " : "\n\t$aggfn(CASE WHEN $colfield=$vq THEN $aggfield ELSE 0 END) AS \"$label\", ";
 			}
 		}
@@ -117,11 +118,9 @@ function PivotTableSQL(
 		$sel = substr($sel, 0, strlen($sel) - 2);
 	}
 
-
 	// Strip aliases
 	$rowfields = preg_replace('/ AS (\w+)/i', '', $rowfields);
-
-	$sql = "SELECT $sel \nFROM $tables $where \nGROUP BY $rowfields";
+	$sql       = "SELECT $sel \nFROM $tables $where \nGROUP BY $rowfields";
 
 	return $sql;
 }
@@ -129,14 +128,11 @@ function PivotTableSQL(
 // EXAMPLES USING MS NORTHWIND DATABASE
 if (0) {
 	// example1
-	//
 	// Query the main "product" table
 	// Set the rows to CompanyName and QuantityPerUnit
 	// and the columns to the Categories
 	// and define the joins to link to lookup tables
 	// "categories" and "suppliers"
-	//
-
 	$sql = PivotTableSQL(
 		$gDB,                                           // adodb connection
 		'products p ,categories c ,suppliers s',        // tables
@@ -144,13 +140,13 @@ if (0) {
 		'CategoryName',                                 // column fields
 		'p.CategoryID = c.CategoryID and s.SupplierID= p.SupplierID' // joins/where
 	);
+
 	echo "<pre>$sql";
 	$rs = $gDB->Execute($sql);
 	rs2html($rs);
 
 	/*
 	Generated SQL:
-
 	SELECT CompanyName,QuantityPerUnit,
 	SUM(CASE WHEN CategoryName='Beverages' THEN 1 ELSE 0 END) AS "Beverages",
 	SUM(CASE WHEN CategoryName='Condiments' THEN 1 ELSE 0 END) AS "Condiments",
@@ -164,16 +160,14 @@ if (0) {
 	FROM products p ,categories c ,suppliers s  WHERE p.CategoryID = c.CategoryID and s.SupplierID= p.SupplierID
 	GROUP BY CompanyName,QuantityPerUnit
 	*/
-	//=====================================================================
 
+	//=====================================================================
 	// example2
-	//
 	// Query the main "product" table
 	// Set the rows to CompanyName and QuantityPerUnit
 	// and the columns to the UnitsInStock for diiferent ranges
 	// and define the joins to link to lookup tables
 	// "categories" and "suppliers"
-	//
 	$sql = PivotTableSQL(
 		$gDB,                                       // adodb connection
 		'products p ,categories c ,suppliers s',    // tables
@@ -190,12 +184,13 @@ if (0) {
 		'UnitsInStock',                             // sum this field
 		'Sum'                                       // sum label prefix
 	);
+
 	echo "<pre>$sql";
 	$rs = $gDB->Execute($sql);
 	rs2html($rs);
+
 	/*
 	Generated SQL:
-
 	SELECT CompanyName,QuantityPerUnit,
 	SUM(CASE WHEN UnitsInStock <= 0 THEN UnitsInStock ELSE 0 END) AS "Sum  0 ",
 	SUM(CASE WHEN 0 < UnitsInStock and UnitsInStock <= 5 THEN UnitsInStock ELSE 0 END) AS "Sum 1 to 5",

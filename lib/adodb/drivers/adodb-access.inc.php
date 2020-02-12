@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,9 +8,7 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Microsoft Access data driver. Requires ODBC. Works only on MS Windows.
 */
 if (!defined('_ADODB_ODBC_LAYER')) {
@@ -44,6 +43,7 @@ if (!defined('_ADODB_ACCESS')) {
 			global $ADODB_EXTENSION;
 
 			$ADODB_EXTENSION = false;
+
 			parent::__construct();
 		}
 

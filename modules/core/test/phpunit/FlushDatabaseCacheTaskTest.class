@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/FlushDatabaseCacheTask.class');
 
 /**
@@ -36,8 +34,11 @@ class FlushDatabaseCacheTaskTest extends GalleryTestCase {
 		global $gallery;
 
 		$gallery->setConfig('data.gallery.cache', '/cache/');
+
 		$mockPlatform = new FlushDatabaseCacheTaskTestPlatform(array());
+
 		$gallery->setPlatform($mockPlatform);
+
 		$task = new FlushDatabaseCacheTask();
 
 		list($ret, $success, $details) = $task->run();
@@ -62,6 +63,7 @@ class FlushDatabaseCacheTaskTest extends GalleryTestCase {
 				)
 			);
 		}
+
 		$this->assertTrue($success, 'should have succeeded');
 		$this->assertEquals($details, $expected);
 		$this->assertEquals(
@@ -81,13 +83,16 @@ class FlushDatabaseCacheTaskTest extends GalleryTestCase {
 		global $gallery;
 
 		$gallery->setConfig('data.gallery.cache', '/cache/');
+
 		$mockPlatform = new FlushDatabaseCacheTaskTestPlatform(
 			array(
 				'file_exists(/cache/entity)',
 				'recursiveRmdir(/cache/theme)',
 			)
 		);
+
 		$gallery->setPlatform($mockPlatform);
+
 		$task = new FlushDatabaseCacheTask();
 
 		list($ret, $success, $details) = $task->run();
@@ -109,12 +114,14 @@ class FlushDatabaseCacheTaskTest extends GalleryTestCase {
 				'arg1' => '/cache/theme',
 			)
 		);
+
 		$expected[] = $module->translate(
 			array(
 				'text' => 'Successfully deleted directory: %s',
 				'arg1' => '/cache/module',
 			)
 		);
+
 		$this->assertFalse($success, 'should have failed');
 		$this->assertEquals($expected, $details);
 		$this->assertEquals(
@@ -133,12 +140,14 @@ class FlushDatabaseCacheTaskTest extends GalleryTestCase {
 class FlushDatabaseCacheTaskTestPlatform {
 	public function __construct($failedCalls) {
 		GalleryUtilities::putRequestVariable('calls', array());
+
 		$this->_failedCalls = $failedCalls;
 	}
 
 	public function _addCall($call) {
 		$calls   = GalleryUtilities::getRequestVariables('calls');
 		$calls[] = $call;
+
 		GalleryUtilities::putRequestVariable('calls', $calls);
 
 		return !in_array($call, $this->_failedCalls);

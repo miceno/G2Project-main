@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A Compatibility library with PHP 5.5's simplified password hashing API.
  *
@@ -7,7 +8,6 @@
  * @copyright 2012 The Authors
  */
 namespace {
-
 	if (!defined('PASSWORD_BCRYPT')) {
 		/**
 		 * PHPUnit Process isolation caches constants, but not function declarations.
@@ -21,7 +21,6 @@ namespace {
 	}
 
 	if (!function_exists('password_hash')) {
-
 		/**
 		 * Hash the password using the specified algorithm
 		 *
@@ -53,6 +52,7 @@ namespace {
 
 				return null;
 			}
+
 			$resultLength = 0;
 
 			switch ($algo) {
@@ -68,11 +68,14 @@ namespace {
 							return null;
 						}
 					}
+
 					// The length of salt to generate
 					$raw_salt_len = 16;
+
 					// The length required in the final serialization
 					$required_salt_len = 22;
-					$hash_format       = sprintf('$2y$%02d$', $cost);
+					$hash_format = sprintf('$2y$%02d$', $cost);
+
 					// The expected length of the final crypt() output
 					$resultLength = 60;
 
@@ -83,6 +86,7 @@ namespace {
 
 					return null;
 			}
+
 			$salt_requires_encoding = false;
 
 			if (isset($options['salt'])) {
@@ -102,7 +106,6 @@ namespace {
 
 							break;
 						}
-						// Fall Through
 					case 'array':
 					case 'resource':
 					default:
@@ -148,6 +151,7 @@ namespace {
 						$buffer .= fread($f, $raw_salt_len - $read);
 						$read = PasswordCompat\binary\_strlen($buffer);
 					}
+
 					fclose($f);
 
 					if ($read >= $raw_salt_len) {
@@ -166,7 +170,8 @@ namespace {
 						}
 					}
 				}
-				$salt                   = $buffer;
+
+				$salt = $buffer;
 				$salt_requires_encoding = true;
 			}
 
@@ -174,12 +179,11 @@ namespace {
 				// encode string with the Base64 variant used by crypt
 				$base64_digits   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 				$bcrypt64_digits = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
 				$base64_string = base64_encode($salt);
 				$salt          = strtr(rtrim($base64_string, '='), $base64_digits, $bcrypt64_digits);
 			}
-			$salt = PasswordCompat\binary\_substr($salt, 0, $required_salt_len);
 
+			$salt = PasswordCompat\binary\_substr($salt, 0, $required_salt_len);
 			$hash = $hash_format . $salt;
 
 			$ret = crypt($password, $hash);
@@ -215,9 +219,11 @@ namespace {
 			);
 
 			if (PasswordCompat\binary\_substr($hash, 0, 4) == '$2y$' && PasswordCompat\binary\_strlen($hash) == 60) {
-				$return['algo']            = PASSWORD_BCRYPT;
-				$return['algoName']        = 'bcrypt';
-				list($cost)                = sscanf($hash, '$2y$%d$');
+				$return['algo'] = PASSWORD_BCRYPT;
+				$return['algoName'] = 'bcrypt';
+
+				list($cost) = sscanf($hash, '$2y$%d$');
+
 				$return['options']['cost'] = $cost;
 			}
 
@@ -270,6 +276,7 @@ namespace {
 
 				return false;
 			}
+
 			$ret = crypt($password, $hash);
 
 			if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != PasswordCompat\binary\_strlen($hash) || PasswordCompat\binary\_strlen($ret) <= 13) {
@@ -285,13 +292,10 @@ namespace {
 			return $status === 0;
 		}
 	}
-
 }
 
 namespace PasswordCompat\binary {
-
 	if (!function_exists('PasswordCompat\\binary\\_strlen')) {
-
 		/**
 		 * Count the number of bytes in a string
 		 *
@@ -354,3 +358,4 @@ namespace PasswordCompat\binary {
 		}
 	}
 }
+

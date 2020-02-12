@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -43,6 +42,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][create]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -63,12 +63,14 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 
 		GalleryUtilities::putRequestVariable('form[action][editFromText]', 1);
 		GalleryUtilities::putRequestVariable('form[text][userName]', $user->getUserName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -87,6 +89,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::removeRequestVariable('form[text][userName]');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -107,6 +110,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -127,12 +131,14 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 
 		GalleryUtilities::putRequestVariable('form[action][deleteFromText]', 1);
 		GalleryUtilities::putRequestVariable('form[text][userName]', $user->getUserName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -151,6 +157,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::removeRequestVariable('form[text][userName]');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -171,6 +178,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -203,6 +211,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][userName]', $anonymousUser->getUserName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -225,6 +234,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][userName]', $self->getUserName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -259,6 +269,7 @@ class AdminUsersControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$ret = $user->save();
 
 		if ($ret) {

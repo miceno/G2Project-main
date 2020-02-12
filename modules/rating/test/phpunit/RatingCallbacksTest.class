@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GallerySmarty.class');
 GalleryCoreApi::requireOnce('modules/rating/Callbacks.inc');
 
@@ -38,8 +36,10 @@ class RatingCallbacksTest extends GalleryTestCase {
 	 */
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
-		$ret     = parent::setUp();
+
+		$ret = parent::setUp();
 
 		if ($ret) {
 			return $ret;
@@ -65,6 +65,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		list($ret, $this->_item) = $this->_createRandomDataItem(
@@ -111,6 +112,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 
 		$data    = $this->_smarty->_tpl_vars['block']['rating']['RatingData'];
 		$summary = $this->_smarty->_tpl_vars['block']['rating']['RatingSummary'];
+
 		$this->assertEquals(
 			array(
 				'ratingValues' => array(1, 2, 3, 4, 5),
@@ -120,6 +122,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 			$summary,
 			'Rating summary array does not match.'
 		);
+
 		$this->assertTrue(isset($data['rating']), 'Missing rating');
 		$this->assertTrue(isset($data['userRating']), 'Missing userRating');
 		$this->assertTrue(isset($data['stars']), 'Missing stars');
@@ -150,6 +153,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 
 		$data    = $this->_smarty->_tpl_vars['block']['rating']['RatingData'];
 		$summary = $this->_smarty->_tpl_vars['block']['rating']['RatingSummary'];
+
 		$this->assertEquals(
 			array(
 				'ratingValues' => array(1, 2, 3, 4, 5),
@@ -159,6 +163,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 			$summary,
 			'Rating summary array does not match.'
 		);
+
 		$this->assertTrue(isset($data['rating']), 'Missing rating');
 		$this->assertTrue(isset($data['userRating']), 'Missing userRating');
 		$this->assertTrue(isset($data['stars']), 'Missing stars');
@@ -227,6 +232,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$this->_userId,
@@ -259,6 +265,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$this->_userId,
@@ -268,6 +275,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$this->_userId,
@@ -293,6 +301,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 
 		$data    = $this->_smarty->_tpl_vars['block']['rating']['RatingData'];
 		$summary = $this->_smarty->_tpl_vars['block']['rating']['RatingSummary'];
+
 		$this->assertEquals(
 			array(
 				'ratingValues' => array(1, 2, 3, 4, 5),
@@ -302,6 +311,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 			$summary,
 			'Rating summary array does not match.'
 		);
+
 		$this->assertTrue(isset($data['rating']), 'Missing rating');
 		$this->assertTrue(isset($data['userRating']), 'Missing userRating');
 		$this->assertTrue(isset($data['stars']), 'Missing stars');
@@ -317,6 +327,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$this->_userId,
@@ -326,6 +337,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$this->_userId,
@@ -335,6 +347,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$this->_userId,
@@ -360,6 +373,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 
 		$data    = $this->_smarty->_tpl_vars['block']['rating']['RatingData'];
 		$summary = $this->_smarty->_tpl_vars['block']['rating']['RatingSummary'];
+
 		$this->assertEquals(
 			array(
 				'ratingValues' => array(1, 2, 3, 4, 5),
@@ -369,6 +383,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 			$summary,
 			'Rating summary array does not match.'
 		);
+
 		$this->assertTrue(isset($data['rating']), 'Missing rating');
 		$this->assertTrue(isset($data['userRating']), 'Missing userRating');
 		$this->assertTrue(isset($data['stars']), 'Missing stars');
@@ -403,6 +418,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse(isset($this->_smarty->_tpl_vars['block']), 'Received rating block.');
 	}
 
@@ -425,6 +441,7 @@ class RatingCallbacksTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse(isset($this->_smarty->_tpl_vars['block']), 'Received rating block.');
 	}
 }

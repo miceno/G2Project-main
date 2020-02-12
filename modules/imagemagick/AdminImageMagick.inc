@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/imagemagick/classes/ImageMagickToolkitHelper.class');
 
 /**
@@ -46,7 +44,7 @@ class AdminImageMagickController extends GalleryController {
 			if (empty($form['path'])) {
 				$error[] = 'form[error][path][missing]';
 			} else {
-				// Set the path.  Guarantee that it's got a trailing slash.
+				// Set the path.  Guarantee that it has got a trailing slash.
 				$platform     =& $gallery->getPlatform();
 				$slash        = $platform->getDirectorySeparator();
 				$form['path'] = trim($form['path']);
@@ -110,6 +108,7 @@ class AdminImageMagickController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$ret = GalleryCoreApi::setPluginParameter(
 					'module',
 					'imagemagick',
@@ -157,11 +156,13 @@ class AdminImageMagickController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				list($ret, $isActive) = $module->isActive();
 
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				/*
 				 * If path or cmykSupport has changed and the module is active then
 				 * reactivate to update supported mime types, operations, properties.
@@ -200,6 +201,7 @@ class AdminImageMagickController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'imagemagick.AdminImageMagick';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -216,6 +218,7 @@ class AdminImageMagickView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		$ret = GalleryCoreApi::assertUserIsSiteAdministrator();
@@ -224,7 +227,7 @@ class AdminImageMagickView extends GalleryView {
 			return array($ret, null);
 		}
 
-		// Load our default values if we didn't just come from this form.
+		// Load our default values if we did not just come from this form.
 		if ($form['formName'] != 'AdminImageMagick') {
 			foreach (array('path', 'jpegQuality', 'cmykSupport') as $key) {
 				list($ret, $form[$key]) = GalleryCoreApi::getPluginParameter('module', 'imagemagick', $key);
@@ -233,6 +236,7 @@ class AdminImageMagickView extends GalleryView {
 					return array($ret, null);
 				}
 			}
+
 			$form['formName'] = 'AdminImageMagick';
 		}
 
@@ -258,8 +262,10 @@ class AdminImageMagickView extends GalleryView {
 		if (isset($form['action']['test'])) {
 			if (!empty($form['path'])) {
 				$gallery->startRecordingDebugSnippet();
+
 				list($ret, $testResults) = ImageMagickToolkitHelper::testBinaries($form['path']);
-				$debugSnippet            = $gallery->stopRecordingDebugSnippet();
+
+				$debugSnippet = $gallery->stopRecordingDebugSnippet();
 
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_BAD_PATH) {
@@ -276,6 +282,7 @@ class AdminImageMagickView extends GalleryView {
 							$success = false;
 							$failCount++;
 						}
+
 						$tests[] = $testResult;
 					}
 
@@ -315,6 +322,7 @@ class AdminImageMagickView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $isActive) = $module->isActive();
 
 		if ($ret) {

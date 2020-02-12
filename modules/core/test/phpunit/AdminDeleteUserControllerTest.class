@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryDataCache.class');
 
 /**
@@ -32,7 +30,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		parent::__construct($methodName, 'core.AdminDeleteUser');
 	}
 
-	// We're creating a tree of test items owned by the user
+	// We are creating a tree of test items owned by the user
 	public function setUp($x1 = null) {
 		global $gallery;
 
@@ -48,11 +46,12 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		$this->_userIds = array();
 
-		// Save activeUser, we're gonna change it during the tests
+		// Save activeUser as it will be changed during the tests
 		$this->_activeUserBackup = $gallery->getActiveUser();
 	}
 
@@ -69,6 +68,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 					'userId' => $userId,
 				)
 			);
+
 			$ret[] = GalleryCoreApi::removeMapEntry(
 				'GalleryAccessMap',
 				array(
@@ -92,7 +92,9 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 	public function testCancel() {
 		GalleryUtilities::putRequestVariable('form[action][cancel]', 1);
+
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -110,19 +112,20 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 	 * Create and delete a user, no items created/deleted
 	 */
 	public function testDeleteUser() {
-
 		// Create a user that we can delete
 		list($ret, $user) = $this->_createRandomUser();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markUserForCleanup($user);
 
 		GalleryUtilities::putRequestVariable('userId', $user->getId());
 		GalleryUtilities::putRequestVariable('form[action][delete]', 1);
 
 		$results = $this->handleRequest();
+
 		GalleryDataCache::reset();
 
 		$this->assertEquals(
@@ -162,7 +165,9 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][delete]', 1);
 
 		$results = $this->handleRequest();
+
 		GalleryDataCache::reset();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -220,12 +225,14 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 		$this->_markUserForCleanup($user);
 
-		// Get a username that doesn't exist
+		// Get a username that does not exist
 		while (true) {
-			$name                  = 'testuser-' . mt_rand();
+			$name = 'testuser-' . mt_rand();
+
 			list($ret, $dummyUser) = GalleryCoreApi::fetchUserByUserName($name);
 
 			if ($ret) {
@@ -257,6 +264,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 			),
 			$results
 		);
+
 		// Verify the user still exists
 		list($ret, $user) = $user->refresh();
 
@@ -267,6 +275,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 				return $ret;
 			}
 		}
+
 		// The teardown code takes care of deleting the user
 	}
 
@@ -282,6 +291,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 		$this->_markUserForCleanup($user);
 
@@ -316,6 +326,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 				return $ret;
 			}
 		}
+
 		// The teardown code takes care of deleting the user
 	}
 
@@ -331,6 +342,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 		$this->_markUserForCleanup($user);
 
@@ -340,6 +352,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $anonymousUser) = GalleryCoreApi::loadEntitiesById($anonymousUserId, 'GalleryUser');
 
 		if ($ret) {
@@ -377,6 +390,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 				return $ret;
 			}
 		}
+
 		// The teardown code takes care of the deletion of the user
 	}
 
@@ -392,6 +406,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markUserForCleanup($user);
 
 		// Add an item to this user
@@ -408,11 +423,13 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		}
 
 		$gallery->setActiveUser($user);
+
 		list($ret, $item) = $this->_createRandomDataItem($this->_album->getId());
 
 		if ($ret) {
 			return $ret;
 		}
+
 		// Add permission to delete the item to the new user/owner
 		$ret = GalleryCoreApi::addUserPermission(
 			$item->getId(),
@@ -427,6 +444,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 		// Now execute the request
 		$gallery->setActiveUser($this->_activeUserBackup);
+
 		GalleryUtilities::putRequestVariable('userId', $user->getId());
 		GalleryUtilities::putRequestVariable('form[action][delete]', 1);
 		GalleryUtilities::putRequestVariable('form[deletionVariant]', 'deleteItems');
@@ -456,6 +474,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		// Verify the item is gone
 		$ret = $this->_verifyMissing($item->getId());
 
@@ -466,7 +485,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 	/**
 	 * Create a user, add 1 item, delete the user
-	 * The user doesn't have the permission to delete the item
+	 * The user does not have the permission to delete the item
 	 * The item should have a new owner, Site Admin
 	 */
 	public function testDeleteUserDeleteItemWithoutPermission() {
@@ -478,6 +497,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markUserForCleanup($user);
 
 		// Add an item to this user
@@ -494,6 +514,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		}
 
 		$gallery->setActiveUser($user);
+
 		list($ret, $item) = $this->_createRandomDataItem($this->_album->getId());
 
 		if ($ret) {
@@ -502,6 +523,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 		// Now execute the request
 		$gallery->setActiveUser($this->_activeUserBackup);
+
 		GalleryUtilities::putRequestVariable('userId', $user->getId());
 		GalleryUtilities::putRequestVariable('form[action][delete]', 1);
 		GalleryUtilities::putRequestVariable('form[deletionVariant]', 'deleteItems');
@@ -531,6 +553,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		// Verify the item still exists
 		list($ret, $item) = $item->refresh();
 
@@ -541,18 +564,22 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 			return $ret;
 		}
+
 		// Verify the new owner of the item
 		list($ret, $groupIds) = GalleryCoreApi::fetchGroupsForUser($item->getOwnerId());
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $siteAdminGroupId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.adminGroup');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue(isset($groupIds[$siteAdminGroupId]), 'The new ownerId of the item is wrong.');
+
 		// The teardown method takes care of the item deletion
 	}
 
@@ -569,13 +596,16 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markUserForCleanup($user);
+
 		// Create a new owner
 		list($ret, $newOwner) = $this->_createRandomUser();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($newOwner);
 		$this->_markUserForCleanup($newOwner);
 
@@ -593,6 +623,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		}
 
 		$gallery->setActiveUser($user);
+
 		list($ret, $item) = $this->_createRandomAlbum($this->_album->getId());
 
 		if ($ret) {
@@ -601,6 +632,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 		// Now execute the request
 		$gallery->setActiveUser($this->_activeUserBackup);
+
 		GalleryUtilities::putRequestVariable('userId', $user->getId());
 		GalleryUtilities::putRequestVariable('form[action][delete]', 1);
 		GalleryUtilities::putRequestVariable('form[text][newOwner]', $newOwner->getuserName());
@@ -631,6 +663,7 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		// Verify the item still exists
 		list($ret, $item) = $item->refresh();
 
@@ -641,11 +674,13 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 
 			return $ret;
 		}
+
 		// Verify the new owner of the item
 		$this->assertTrue(
 			$item->getOwnerId() == $newOwner->getId(),
 			'The new owner of the item is wrong.'
 		);
+
 		// Verify the permissions were transfered correctly
 		list($ret, $userPermissions) = GalleryCoreApi::fetchPermissionsForItems(
 			array($item->getId()),
@@ -655,10 +690,12 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue(
 			isset($userPermissions[$item->getId()]['core.addAlbumItem']),
 			'Not all permissions were transfered correctly.'
 		);
+
 		// The teardown method takes care of deletion of the item + new owner
 	}
 
@@ -675,10 +712,11 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue(count($groupIds) == 0, 'Not all group memberships were removed');
 
 		// Verify all permission maps for this user are gone
-		$query                     = '
+		$query = '
 		SELECT
 		COUNT([GalleryAccessMap::accessListId])
 		FROM
@@ -686,13 +724,17 @@ class AdminDeleteUserControllerTest extends GalleryControllerTestCase {
 		WHERE
 		[GalleryAccessMap::userOrGroupId] = ?
 		';
+
 		list($ret, $searchResults) = $gallery->search($query, array($userId));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(1, (int)$searchResults->resultCount());
+
 		$result = $searchResults->nextResult();
+
 		$this->assertEquals(0, (int)$result[0], 'Not all permissions were removed');
 
 		// Verify the user is gone

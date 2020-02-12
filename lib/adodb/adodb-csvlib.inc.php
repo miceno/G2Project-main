@@ -6,10 +6,10 @@ if (!defined('ADODB_DIR')) {
 }
 
 global $ADODB_INCLUDED_CSV;
+
 $ADODB_INCLUDED_CSV = 1;
 
 /*
-
   @version   v5.20.12  30-Mar-2018
   @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
   @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
@@ -17,30 +17,29 @@ $ADODB_INCLUDED_CSV = 1;
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Library for CSV serialization. This is used by the csv/proxy driver and is the
   CacheExecute() serialization format. ==== NOTE ====
   Format documented at http://php.weblogs.com/ADODB_CSV ==============
 */
 
-	/**
-	 * convert a recordset into special format
-	 *
-	 * @param rs    the recordset
-	 *
-	 * @return  the CSV formated data
-	 */
+/**
+ * convert a recordset into special format
+ *
+ * @param rs    the recordset
+ *
+ * @return  the CSV formated data
+ */
 function _rs2serialize(&$rs, $conn = false, $sql = '') {
 	$max = ($rs) ? $rs->FieldCount() : 0;
 
 	if ($sql) {
 		$sql = urlencode($sql);
 	}
-	// metadata setup
 
-	if ($max <= 0 || $rs->dataProvider == 'empty') { // is insert/update/delete
+	// metadata setup
+	if ($max <= 0 || $rs->dataProvider == 'empty') {
+		// is insert/update/delete
 		if (is_object($conn)) {
 			$sql .= ',' . $conn->Affected_Rows();
 			$sql .= ',' . $conn->Insert_ID();
@@ -52,6 +51,7 @@ function _rs2serialize(&$rs, $conn = false, $sql = '') {
 
 		return $text;
 	}
+
 	$tt = ($rs->timeCreated) ? $rs->timeCreated : time();
 
 	// changed format from ====0 to ====1
@@ -64,6 +64,7 @@ function _rs2serialize(&$rs, $conn = false, $sql = '') {
 
 		while (!$rs->EOF) {
 			$rows[] = $rs->fields;
+
 			$rs->MoveNext();
 		}
 	}
@@ -73,13 +74,17 @@ function _rs2serialize(&$rs, $conn = false, $sql = '') {
 		$flds[] = $o;
 	}
 
-	$savefetch        = isset($rs->adodbFetchMode) ? $rs->adodbFetchMode : $rs->fetchMode;
-	$class            = $rs->connection->arrayClass;
-	$rs2              = new $class();
-	$rs2->timeCreated = $rs->timeCreated; // memcache fix
+	$savefetch = isset($rs->adodbFetchMode) ? $rs->adodbFetchMode : $rs->fetchMode;
+	$class     = $rs->connection->arrayClass;
+	$rs2       = new $class();
+
+	// memcache fix
+	$rs2->timeCreated = $rs->timeCreated;
 	$rs2->sql         = $rs->sql;
 	$rs2->oldProvider = $rs->dataProvider;
+
 	$rs2->InitArrayFields($rows, $flds);
+
 	$rs2->fetchMode = $savefetch;
 
 	return $line . serialize($rs2);
@@ -106,6 +111,7 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 		return $false;
 	}
+
 	@flock($fp, LOCK_SH);
 	$arr = array();
 	$ttl = 0;
@@ -118,10 +124,10 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 			return $false;
 		}
+
 		// check for meta data
 		// $meta[0] is -1 means return an empty recordset
 		// $meta[1] contains a time
-
 		if (strncmp($meta[0], '====', 4) === 0) {
 			if ($meta[0] == '====-1') {
 				if (sizeof($meta) < 5) {
@@ -130,6 +136,7 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 					return $false;
 				}
+
 				fclose($fp);
 
 				if ($timeout > 0) {
@@ -149,10 +156,10 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 				return $rs;
 			}
+
 			// Under high volume loads, we want only 1 thread/process to _write_file
-			// so that we don't have 50 processes queueing to write the same data.
+			// so that we do not have 50 processes queueing to write the same data.
 			// We use probabilistic timeout, ahead of time.
-			//
 			// -4 sec before timeout, give processes 1/32 chance of timing out
 			// -2 sec before timeout, give processes 1/16 chance of timing out
 			// -1 sec after timeout give processes 1/4 chance of timing out
@@ -201,22 +208,24 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 								return $false;
 						} // switch
 					} // if check flush cache
-				}// (timeout>0)
+				} // (timeout>0)
+
 				$ttl = $meta[1];
 			}
+
 			//================================================
 			// new cache format - use serialize extensively...
 			if ($meta[0] === '====1') {
 				// slurp in the data
 				$MAXSIZE = 128000;
-
-				$text = fread($fp, $MAXSIZE);
+				$text    = fread($fp, $MAXSIZE);
 
 				if (strlen($text)) {
 					while ($txt = fread($fp, $MAXSIZE)) {
 						$text .= $txt;
 					}
 				}
+
 				fclose($fp);
 				$rs = unserialize($text);
 
@@ -224,6 +233,7 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 					$rs->timeCreated = $ttl;
 				} else {
 					$err = 'Unable to unserialize recordset';
+
 					//echo htmlspecialchars($text),' !--END--!<p>';
 				}
 
@@ -253,6 +263,7 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 				break;
 			}
+
 			$fld             = new ADOFieldObject();
 			$fld->name       = urldecode($o2[0]);
 			$fld->type       = $o2[1];
@@ -268,8 +279,7 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 	// slurp in the data
 	$MAXSIZE = 128000;
-
-	$text = '';
+	$text    = '';
 
 	while ($txt = fread($fp, $MAXSIZE)) {
 		$text .= $txt;
@@ -277,6 +287,7 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 	fclose($fp);
 	@$arr = unserialize($text);
+
 	//var_dump($arr);
 	if (!is_array($arr)) {
 		$err = 'Recordset had unexpected EOF (in serialized recordset)';
@@ -287,8 +298,10 @@ function csv2rs($url, &$err, $timeout = 0, $rsclass = 'ADORecordSet_array') {
 
 		return $false;
 	}
+
 	$rs              = new $rsclass();
 	$rs->timeCreated = $ttl;
+
 	$rs->InitArrayFields($arr, $flds);
 
 	return $rs;
@@ -313,6 +326,7 @@ function adodb_write_file($filename, $contents, $debug = false) {
 	if (strncmp(PHP_OS, 'WIN', 3) === 0) {
 		// skip the decimal place
 		$mtime = substr(str_replace(' ', '_', microtime()), 2);
+
 		// getmypid() actually returns 0 on Win98 - never mind!
 		$tmpname = $filename . uniqid($mtime) . getmypid();
 
@@ -325,10 +339,12 @@ function adodb_write_file($filename, $contents, $debug = false) {
 		} else {
 			$ok = false;
 		}
+
 		fclose($fd);
 
 		if ($ok) {
 			@chmod($tmpname, 0644);
+
 			// the tricky moment
 			@unlink($filename);
 
@@ -357,6 +373,7 @@ function adodb_write_file($filename, $contents, $debug = false) {
 		} else {
 			$ok = false;
 		}
+
 		fclose($fd);
 		@chmod($filename, 0644);
 	} else {
@@ -365,6 +382,7 @@ function adodb_write_file($filename, $contents, $debug = false) {
 		if ($debug) {
 			ADOConnection::outp(" Failed acquiring lock for $filename<br>\n");
 		}
+
 		$ok = false;
 	}
 

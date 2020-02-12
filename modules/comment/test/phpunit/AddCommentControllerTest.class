@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/comment/classes/GalleryCommentHelper.class');
 
 /**
@@ -34,6 +32,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -45,6 +44,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_item);
 
 		list($ret, $this->_saveMarkup) = GalleryCoreApi::getPluginParameter('module', 'core', 'misc.markup');
@@ -52,21 +52,25 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = $this->_markPluginParametersForCleanup('module', 'comment');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::setPluginParameter('module', 'comment', 'validation.level', 'OFF');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::setPluginParameter('module', 'comment', 'comments.moderate', 0);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_startTime = time();
 	}
 
@@ -100,6 +104,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -115,7 +120,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Grab the comment and take a look at it
-		list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments(
+		list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments(
 			$this->_item->getId()
 		);
 
@@ -131,6 +136,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 			$this->assertEquals('this is a subject', $comments[0]->getSubject());
 			$this->assertEquals($gallery->getActiveUserId(), $comments[0]->getCommenterId());
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost());
+
 			$this->assertTrue(
 				$comments[0]->getDate() >= $this->_startTime &&
 				$comments[0]->getDate() <= time(),
@@ -150,6 +156,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -167,6 +174,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the second request and verify that we prevented flooding
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -185,6 +193,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Use valid inputs
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
 		GalleryUtilities::putRequestVariable('itemId', $this->_item->getId());
 		GalleryUtilities::putRequestVariable('form[action][add]', 1);
 		GalleryUtilities::putRequestVariable('form[subject]', 'this is a subject');
@@ -192,6 +201,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -210,6 +220,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		// Perform the second request from different IP and verify that we succeeded
 		$_SERVER['REMOTE_ADDR'] = '1.2.3.4';
 		$results                = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -234,6 +245,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addGroupPermission(
 			$this->_item->getId(),
 			$everybodyGroupId,
@@ -255,6 +267,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -270,7 +283,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Grab the comment and take a look at it
-		list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments($this->_item->getId());
+		list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments($this->_item->getId());
 
 		if ($ret) {
 			return $ret;
@@ -285,6 +298,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 			$this->assertEquals('this is an author', $comments[0]->getAuthor());
 			$this->assertEquals($gallery->getActiveUserId(), $comments[0]->getCommenterId());
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost());
+
 			$this->assertTrue(
 				$comments[0]->getDate() >= $this->_startTime &&
 				$comments[0]->getDate() <= time(),
@@ -304,6 +318,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -324,6 +339,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addGroupPermission(
 			$this->_item->getId(),
 			$everybodyGroupId,
@@ -345,6 +361,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -368,6 +385,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -380,11 +398,12 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Verify that there are no comments
-		list($ret, $counts) = GalleryCommentHelper::doStatic()->fetchCommentCounts(array($this->_item->getId()));
+		list($ret, $counts) = GalleryCommentHelper::getMe()->fetchCommentCounts(array($this->_item->getId()));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue(empty($counts[$this->_item->getId()]));
 	}
 
@@ -399,6 +418,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -411,18 +431,21 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Verify that there are no comments
-		list($ret, $counts) = GalleryCommentHelper::doStatic()->fetchCommentCounts(array($this->_item->getId()));
+		list($ret, $counts) = GalleryCommentHelper::getMe()->fetchCommentCounts(array($this->_item->getId()));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue(empty($counts[$this->_item->getId()]));
 	}
 
 	public function testAddMaliciousComment() {
 		global $gallery;
+
 		$gallery->_phpVm = new CommentTestPhpVm();
-		$ret             = GalleryCoreApi::setPluginParameter('module', 'core', 'misc.markup', 'bbcode');
+
+		$ret = GalleryCoreApi::setPluginParameter('module', 'core', 'misc.markup', 'bbcode');
 
 		if ($ret) {
 			return $ret;
@@ -446,6 +469,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -466,8 +490,10 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		sleep(1);
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -483,7 +509,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Grab the comment and take a look at it
-		list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments($this->_item->getId());
+		list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments($this->_item->getId());
 
 		if ($ret) {
 			return $ret;
@@ -513,6 +539,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if (!$comments[1]) {
 			return $this->fail('second result is missing!');
 		}
+
 		$this->assertEquals(
 			'this is a subject with  in it.',
 			$comments[1]->getSubject(),
@@ -536,6 +563,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addGroupPermission(
 			$this->_item->getId(),
 			$everybodyGroupId,
@@ -572,6 +600,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -587,7 +616,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Grab the comment and take a look at it
-		list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments($this->_item->getId());
+		list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments($this->_item->getId());
 
 		if ($ret) {
 			return $ret;
@@ -622,6 +651,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 				'user 1'
 			);
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost(), 'host 1');
+
 			$this->assertTrue(
 				$comments[0]->getDate() >= $this->_startTime
 				&& $comments[0]->getDate() <= time(),
@@ -638,6 +668,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -661,7 +692,9 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		$this->_controller->_pluginInstances = array(new AddCommentTestValidation());
 
 		global $gallery;
+
 		$this->_becomeGuestUser();
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$gallery->getActiveUserId(),
@@ -679,6 +712,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify validation plugin got error
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -701,6 +735,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		$this->_controller->_pluginInstances = array(new AddCommentTestValidation());
 
 		global $gallery;
+
 		$gallery->setConfig('anonymousUserId', $gallery->getActiveUserId());
 
 		GalleryUtilities::putRequestVariable('itemId', $this->_item->getId());
@@ -710,6 +745,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify validation plugin got error
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -726,7 +762,9 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		$this->_controller->_pluginInstances = array(new AddCommentTestValidation());
 
 		global $gallery;
+
 		$this->_becomeGuestUser();
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$gallery->getActiveUserId(),
@@ -744,6 +782,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify comment was added (validation plugin skipped)
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -759,7 +798,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		// Grab the comment and take a look at it
-		list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments($this->_item->getId());
+		list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments($this->_item->getId());
 
 		if ($ret) {
 			return $ret;
@@ -773,6 +812,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 			$this->assertEquals('test', $comments[0]->getSubject());
 			$this->assertEquals($gallery->getActiveUserId(), $comments[0]->getCommenterId());
 			$this->assertEquals($_SERVER['REMOTE_ADDR'], $comments[0]->getHost());
+
 			$this->assertTrue(
 				$comments[0]->getDate() >= $this->_startTime &&
 				$comments[0]->getDate() <= time(),
@@ -786,6 +826,7 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Use valid inputs
 		$itemId = $this->_item->getId();
+
 		GalleryUtilities::putRequestVariable('itemId', $itemId);
 		GalleryUtilities::putRequestVariable('form[action][add]', 1);
 		GalleryUtilities::putRequestVariable('form[subject]', 'this is a subject');
@@ -805,13 +846,15 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we fail
 		$results = $this->handleRequest(ERROR_MISSING_OBJECT);
+
 		$this->assertEquals(null, $results, 'controller results');
 
-		list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments($this->_item->getId());
+		list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments($this->_item->getId());
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), $comments, 'no comments');
 	}
 }
@@ -821,13 +864,14 @@ class AddCommentControllerTest extends GalleryControllerTestCase {
  */
 class CommentTestPhpVm {
 	public function time() {
-		list($ret, $commentTime) = GalleryCommentHelper::doStatic()->getLatestCommentTime(
+		list($ret, $commentTime) = GalleryCommentHelper::getMe()->getLatestCommentTime(
 			GalleryUtilities::getRemoteHostAddress()
 		);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$commentTime += 1000;
 
 		return $commentTime;
@@ -835,6 +879,7 @@ class CommentTestPhpVm {
 }
 
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryValidationPlugin.class');
+
 class AddCommentTestValidation extends GalleryValidationPlugin {
 	public function performValidation(&$form, $options = array()) {
 		return array(

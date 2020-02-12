@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/exif/classes/ExifInterface_1_0.class');
 
 /**
@@ -34,6 +32,7 @@ class ExifExtractor extends ExifInterface_1_0 {
 	 */
 	public static function getMetaData($itemIds, $properties = array()) {
 		global $gallery;
+
 		GalleryCoreApi::requireOnce('modules/exif/lib/exifer/exif.inc');
 
 		if (!is_array($itemIds)) {
@@ -52,20 +51,25 @@ class ExifExtractor extends ExifInterface_1_0 {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			// Only look at JPEG/RAW DataItems..
 			if (!GalleryUtilities::isA($item, 'GalleryDataItem')
 				|| !preg_match('{^image/(p?jpeg(-cmyk)?|x-dcraw)$}', $item->getMimeType())
 			) {
 				continue;
 			}
+
 			list($ret, $path) = $item->fetchPath();
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$data[$itemId] = array();
 			$rawExifData   = read_exif_data_raw($path, false);
+
 			GalleryCoreApi::requireOnce('modules/exif/classes/ExifHelper.class');
+
 			list($ret, $iptcObj) = ExifHelper::getIptcObject($path);
 
 			if ($ret) {
@@ -91,8 +95,7 @@ class ExifExtractor extends ExifInterface_1_0 {
 					}
 
 					if (isset($value)) {
-						$value = ExifHelper::postProcessValue($property, $value);
-
+						$value                    = ExifHelper::postProcessValue($property, $value);
 						$data[$itemId][$property] = array(
 							'title' => $keyData[0],
 							'value' => $value,

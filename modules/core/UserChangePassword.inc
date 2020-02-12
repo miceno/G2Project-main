@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class UserChangePasswordController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserChangePasswordController();
+		if (!isset($instance)) {
+			$instance = new UserChangePasswordController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -44,6 +43,7 @@ class UserChangePasswordController extends GalleryController {
 	 */
 	public function handleRequest($form) {
 		global $gallery;
+
 		$user = $gallery->getActiveUser();
 
 		list($ret, $isAnonymous) = GalleryCoreApi::isAnonymousUser();
@@ -75,23 +75,25 @@ class UserChangePasswordController extends GalleryController {
 
 				if (!$user->isCorrectPassword($form['currentPassword'])) {
 					$error[] = 'form[error][currentPassword][incorrect]';
+					$event   = GalleryCoreApi::newEvent('Gallery::FailedLogin');
 
-					$event = GalleryCoreApi::newEvent('Gallery::FailedLogin');
 					$event->setData(
 						array(
 							'userName' => $user->getUserName(),
 						)
 					);
+
 					list($ret, $ignored) = GalleryCoreApi::postEvent($event);
 
 					if ($ret) {
 						return array($ret, null);
 					}
 				}
+
 				/*
 				 * To be consistent, we really should post a Gallery::Login event here to show
-				 * that the user successfully authenticated.  But they're not really logging in so
-				 * that's misleading.  Perhaps we should rename the events to Gallery::Authenticate
+				 * that the user successfully authenticated.  But they are not really logging in so
+				 * that is misleading.  Perhaps we should rename the events to Gallery::Authenticate
 				 * and Gallery::FailedAuthenticate to be more accurate, and then post those here?
 				 *
 				 * @see UserPreferencesController::handleRequest
@@ -128,6 +130,7 @@ class UserChangePasswordController extends GalleryController {
 				}
 
 				GalleryUtilities::unsanitizeInputValues($form['password1'], false);
+
 				$user->changePassword($form['password1']);
 
 				$ret = $user->save();
@@ -155,6 +158,7 @@ class UserChangePasswordController extends GalleryController {
 			$results['delegate']['view']    = 'core.UserAdmin';
 			$results['delegate']['subView'] = 'core.UserChangePassword';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -167,16 +171,16 @@ class UserChangePasswordController extends GalleryController {
  */
 class UserChangePasswordView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserChangePasswordView();
+		if (!isset($instance)) {
+			$instance = new UserChangePasswordView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**

@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/GalleryRepository.class'
 );
@@ -37,16 +35,16 @@ GalleryCoreApi::requireOnce(
  */
 class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstallController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminRepositoryDownloadController();
+		if (!isset($instance)) {
+			$instance = new AdminRepositoryDownloadController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -54,6 +52,7 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 	 */
 	public function handleRequest($form) {
 		global $gallery;
+
 		$translator =& $gallery->getTranslator();
 
 		$ret = GalleryCoreApi::assertUserIsSiteAdministrator();
@@ -75,6 +74,7 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 				null,
 			);
 		}
+
 		$pluginType = $form['pluginType'];
 		$pluginId   = $form['pluginId'];
 
@@ -97,8 +97,8 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 		} elseif (isset($form['action']['download'])) {
 			// Create package list.
 			$installPackages = array();
+			$utils           = new GalleryRepositoryUtilities();
 
-			$utils                      = new GalleryRepositoryUtilities();
 			list($ret, $pluginPackages) = $utils->getPluginPackages($pluginType, $pluginId);
 
 			if ($ret) {
@@ -107,8 +107,10 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 
 			if (!empty($form['base'])) {
 				list($languages, $defaultCountry) = $translator->getLanguageData();
-				list($baseSource, $baseNewBuild)  = explode(':', $form['base']);
-				$supportedLanguages               = GalleryCoreApi::getSupportedLanguages();
+
+				list($baseSource, $baseNewBuild) = explode(':', $form['base']);
+
+				$supportedLanguages = GalleryCoreApi::getSupportedLanguages();
 
 				if (empty($pluginPackages['base']['build'])
 					|| $pluginPackages['base']['build'] != $baseNewBuild
@@ -140,17 +142,19 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 				list(
 					$ret,
 					$repositories
-				) = GalleryRepository::doStatic()->getRepositories();
+				) = GalleryRepository::getMe()->getRepositories();
 
 				if ($ret) {
 					return array(null, $ret);
 				}
 
 				$templateAdapter =& $gallery->getTemplateAdapter();
+
 				$templateAdapter->registerTrailerCallback(
 					array($this, 'performDownloadAndInstallation'),
 					array($installPackages, $repositories)
 				);
+
 				$delegate['view'] = 'core.ProgressBar';
 			}
 		}
@@ -165,6 +169,7 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
 				$results['delegate'] = $delegate;
 			}
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -177,16 +182,16 @@ class AdminRepositoryDownloadController extends AdminRepositoryDownloadAndInstal
  */
 class AdminRepositoryDownloadView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminRepositoryDownloadView();
+		if (!isset($instance)) {
+			$instance = new AdminRepositoryDownloadView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -194,6 +199,7 @@ class AdminRepositoryDownloadView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$translator =& $gallery->getTranslator();
 
 		$ret = GalleryCoreApi::assertUserIsSiteAdministrator();
@@ -207,7 +213,7 @@ class AdminRepositoryDownloadView extends GalleryView {
 		}
 
 		// Init repository.
-		list($ret, $repositories) = GalleryRepository::doStatic()->getRepositories();
+		list($ret, $repositories) = GalleryRepository::getMe()->getRepositories();
 
 		if ($ret) {
 			return array($ret, null);
@@ -220,7 +226,8 @@ class AdminRepositoryDownloadView extends GalleryView {
 			'pluginType' => $pluginType,
 		);
 
-		$utils                      = new GalleryRepositoryUtilities();
+		$utils = new GalleryRepositoryUtilities();
+
 		list($ret, $pluginPackages) = $utils->getPluginPackages($pluginType, $pluginId);
 
 		if ($ret) {
@@ -274,6 +281,7 @@ class AdminRepositoryDownloadView extends GalleryView {
 					}
 				}
 			}
+
 			$upgradeData['languages']     = $condensedData;
 			$upgradeData['languageCount'] = count($upgradeData['languages']);
 			$upgradeData['repository']    = $source;
@@ -281,7 +289,7 @@ class AdminRepositoryDownloadView extends GalleryView {
 			list(
 				$ret,
 				$upgradeData['repositoryName']
-			) = GalleryRepository::doStatic()->translateRepositoryName($source);
+			) = GalleryRepository::getMe()->translateRepositoryName($source);
 
 			if ($ret) {
 				return array($ret, null);
@@ -293,6 +301,7 @@ class AdminRepositoryDownloadView extends GalleryView {
 				$AdminRepositoryDownload['pluginName'] = $upgradeData['pluginName'];
 			}
 		}
+
 		usort($AdminRepositoryDownload['upgradeData'], array($this, 'versionComparator'));
 
 		if (!empty($AdminRepositoryDownload['upgradeData'][0]['base']['currentVersion'])) {
@@ -302,14 +311,15 @@ class AdminRepositoryDownloadView extends GalleryView {
 				}
 
 				if ($AdminRepositoryDownload['upgradeData'][$i]['base']['relation'] == 'older') {
-					$newEntry['pluginName']    = $AdminRepositoryDownload['pluginName'];
-					$newEntry['base']          = array(
+					$newEntry['pluginName'] = $AdminRepositoryDownload['pluginName'];
+					$newEntry['base']       = array(
 						'newVersion'     => $pluginPackages['base']['version'],
 						'newBuild'       => $pluginPackages['base']['build'],
 						'currentVersion' => $pluginPackages['base']['version'],
 						'currentBuild'   => $pluginPackages['base']['build'],
 						'relation'       => 'equal',
 					);
+
 					$newEntry['repository']    = 'installed';
 					$newEntry['languages']     = array();
 					$newEntry['languageCount'] = 0;

@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryToolkit.class');
 
 /**
@@ -42,6 +40,7 @@ class NetPbmToolkit extends GalleryToolkit {
 						null,
 					);
 				}
+
 				$results = array($width, $height);
 
 				break;
@@ -65,6 +64,7 @@ class NetPbmToolkit extends GalleryToolkit {
 		$context = array()
 	) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Check context for any operations that have been queued up..
@@ -86,12 +86,14 @@ class NetPbmToolkit extends GalleryToolkit {
 		}
 
 		// Use context look-ahead to see if we can queue up parameters to use later..
-		$queueIt = isset($context['next.toolkit']) && $context['next.toolkit'] == $this
-																																	            && $operationName != 'compress'          && $context['next.operation'] != 'compress';
-
+		$queueIt    = isset($context['next.toolkit'])
+			&& $context['next.toolkit'] == $this
+			&& $operationName != 'compress'
+			&& $context['next.operation'] != 'compress';
 		$usePercent = in_array($operationName, array('thumbnail', 'scale', 'resize'))
-		&& (substr($parameters[0], -1) == '%'
-			|| (isset($parameters[1]) && substr($parameters[1], -1) == '%'));
+			&& (substr($parameters[0], -1) == '%'
+			|| (isset($parameters[1])
+			&& substr($parameters[1], -1) == '%'));
 
 		if (!isset($width) && ($queueIt || $usePercent
 			|| in_array($operationName, array('thumbnail', 'crop')))
@@ -118,15 +120,14 @@ class NetPbmToolkit extends GalleryToolkit {
 
 		switch ($operationName) {
 			case 'thumbnail':
-				// Don't enlarge images for a thumbnail
+				// Do not enlarge images for a thumbnail
 				$preserveMetaData = false;
 
 				if ($width <= $parameters[0] && $height <= $parameters[0]) {
 					break;
 				}
+
 				// fall through to scale
-
-
 				// Fall Through
 			case 'scale':
 				$ysize       = empty($parameters[1]) ? $parameters[0] : $parameters[1];
@@ -259,9 +260,9 @@ class NetPbmToolkit extends GalleryToolkit {
 						null,
 					);
 				}
-				$context['netpbm.tmp'][] = $tmpOverlay;
 
-				$tmpAlpha = $platform->tempnam($tmpDir, 'npbm_');
+				$context['netpbm.tmp'][] = $tmpOverlay;
+				$tmpAlpha                = $platform->tempnam($tmpDir, 'npbm_');
 
 				if (empty($tmpAlpha)) {
 					// This can happen if the $tmpDir path is bad
@@ -276,6 +277,7 @@ class NetPbmToolkit extends GalleryToolkit {
 						null,
 					);
 				}
+
 				$context['netpbm.tmp'][] = $tmpAlpha;
 
 				switch ($compositeOverlayMimeType) {
@@ -287,7 +289,8 @@ class NetPbmToolkit extends GalleryToolkit {
 							'>',
 							$tmpOverlay,
 						);
-						$getAlphaCmd   = array(
+
+						$getAlphaCmd = array(
 							$this->_pnmCmd('pngtopnm'),
 							'-alpha',
 							$compositeOverlayPath,
@@ -324,7 +327,7 @@ class NetPbmToolkit extends GalleryToolkit {
 					case 'image/tiff':
 						/*
 						 * This is only because my decomposed alpha was "all black", and
-						 * made it seem like it wasn't doing anything
+						 * made it seem like it was not doing anything
 						 */
 						$useAlpha      = 0;
 						$getOverlayCmd = array(
@@ -388,6 +391,7 @@ class NetPbmToolkit extends GalleryToolkit {
 						);
 					}
 				}
+
 				$pnmcomp = array($this->_pnmCmd('pnmcomp'));
 
 				switch ($compositeAlignmentType) {
@@ -466,9 +470,8 @@ class NetPbmToolkit extends GalleryToolkit {
 						$compositeAlignX = max(0, $compositeAlignX);
 						$compositeAlignY = min($compositeAlignY, $height - $compositeHeight);
 						$compositeAlignY = max(0, $compositeAlignY);
-
-						$pnmcomp[] = '-xoff=' . $compositeAlignX;
-						$pnmcomp[] = '-yoff=' . $compositeAlignY;
+						$pnmcomp[]       = '-xoff=' . $compositeAlignX;
+						$pnmcomp[]       = '-yoff=' . $compositeAlignY;
 
 						break;
 
@@ -494,20 +497,26 @@ class NetPbmToolkit extends GalleryToolkit {
 				$pnmcomp[]   = $tmpOverlay;
 				$transform[] = $pnmcomp;
 
-				break; // case composite
+				// case composite
+				break;
 
 			case 'compress':
 				$targetSize = $parameters[0];
-				$fileSize   = $platform->filesize($sourceFilename) >> 10; // Size in KB
+
+				// Size in KB
+				$fileSize = $platform->filesize($sourceFilename) >> 10;
+
 				if ($fileSize <= $targetSize) {
 					break;
 				}
+
 				// Use module quality parameter as initial guess
 				list($ret, $quality) = GalleryCoreApi::getPluginParameter('module', 'netpbm', 'jpegQuality');
 
 				if ($ret) {
 					return array($ret, null, null);
 				}
+
 				$maxQuality = 100;
 				$minQuality = 5;
 
@@ -525,6 +534,7 @@ class NetPbmToolkit extends GalleryToolkit {
 					if ($ret) {
 						return array($ret, null, null);
 					}
+
 					clearstatcache();
 					$fileSize = $platform->filesize($destFilename) >> 10;
 
@@ -535,6 +545,7 @@ class NetPbmToolkit extends GalleryToolkit {
 					if ($fileSize <= $targetSize) {
 						$minQuality = $quality;
 					}
+
 					$quality = round(($minQuality + $maxQuality) / 2);
 				} while ($maxQuality - $minQuality > 2 &&
 					 abs(($fileSize - $targetSize) / $targetSize) > 0.02);
@@ -617,6 +628,7 @@ class NetPbmToolkit extends GalleryToolkit {
 	public function _deleteTempFiles(&$context) {
 		if (!empty($context['netpbm.tmp'])) {
 			global $gallery;
+
 			$platform =& $gallery->getPlatform();
 
 			foreach ($context['netpbm.tmp'] as $tmpFile) {
@@ -624,6 +636,7 @@ class NetPbmToolkit extends GalleryToolkit {
 					@$platform->unlink($tmpFile);
 				}
 			}
+
 			unset($context['netpbm.tmp']);
 		}
 	}
@@ -635,8 +648,8 @@ class NetPbmToolkit extends GalleryToolkit {
 		global $gallery;
 
 		/*
-		 * Run it through PHP first, it's faster and more portable.  If it runs
-		 * afoul of open_basedir it'll return false and we can try NetPBM.
+		 * Run it through PHP first, it is faster and more portable.  If it runs
+		 * afoul of open_basedir it will return false and we can try NetPBM.
 		 */
 		$platform =& $gallery->getPlatform();
 		$results  = $platform->getimagesize($filename);
@@ -661,6 +674,7 @@ class NetPbmToolkit extends GalleryToolkit {
 			if (!empty($convertToPnmCmd)) {
 				$cmd[] = $convertToPnmCmd;
 			}
+
 			$cmd[] = array($this->_pnmCmd('pnmfile'), '--allimages');
 		}
 
@@ -701,6 +715,7 @@ class NetPbmToolkit extends GalleryToolkit {
 		$jpegQuality = null
 	) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Figure out our convert-to-pnm command
@@ -736,8 +751,8 @@ class NetPbmToolkit extends GalleryToolkit {
 			/*
 			 * The source file was PPM already so we have no conversion command.  Attach the file as
 			 * input to the first command in the chain.  If the first command is in the middle of
-			 * a sequence, we can just add the filename to the end of the command.  If it's at
-			 * the end of the sequence, then we're redirecting output to a file so we have to add
+			 * a sequence, we can just add the filename to the end of the command.  If it is at
+			 * the end of the sequence, then we are redirecting output to a file so we have to add
 			 * the input file before the '>' redirect.
 			 */
 			for ($i = 0; $i < sizeof($command[0]); $i++) {
@@ -773,7 +788,8 @@ class NetPbmToolkit extends GalleryToolkit {
 			}
 
 			if (!empty($jheadPath)) {
-				$cmd                         = array($jheadPath . 'jhead', '-te', $sourceFilename, $tmpFilename);
+				$cmd = array($jheadPath . 'jhead', '-te', $sourceFilename, $tmpFilename);
+
 				list($ret, $stdout, $stderr) = $this->_exec(array($cmd));
 
 				if ($ret) {
@@ -796,6 +812,7 @@ class NetPbmToolkit extends GalleryToolkit {
 				"Failed renaming $tmpFilename -> $destFilename"
 			);
 		}
+
 		$platform->chmod($destFilename);
 
 		return null;
@@ -985,6 +1002,7 @@ class NetPbmToolkit extends GalleryToolkit {
 	 */
 	public function _pnmCmd($cmd) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($ret, $netPbmPath) = GalleryCoreApi::getPluginParameter('module', 'netpbm', 'path');

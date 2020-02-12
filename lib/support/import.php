@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 if (!defined('G2_SUPPORT')) {
 	define('G2_SUPPORT_FILE', true);
@@ -30,16 +29,12 @@ if (!defined('G2_SUPPORT')) {
 $g2Base = dirname(dirname(__DIR__)) . '/';
 
 require_once $g2Base . 'modules/core/classes/GalleryCoreApi.class';
-
 require_once $g2Base . 'modules/core/classes/GalleryStorage.class';
-
 require_once $g2Base . 'modules/core/classes/GalleryUtilities.class';
-
 require_once $g2Base . 'lib/support/SupportStatusTemplate.class';
 
 $templateData = array();
-
-$template = new SupportStatusTemplate('Database Import');
+$template     = new SupportStatusTemplate('Database Import');
 
 if (defined('GALLERY_CONFIG_DIR')) {
 	$configFilePath = GALLERY_CONFIG_DIR . '/config.php';
@@ -62,13 +57,13 @@ $ret = GalleryEmbed::init(
 if ($ret) {
 	$templateData['errors'][] = $ret->getAsHtml();
 } else {
-	$platform =& $gallery->getPlatform();
-	$storage  =& $gallery->getStorage();
-
+	$platform                 =& $gallery->getPlatform();
+	$storage                  =& $gallery->getStorage();
 	$templateData['warnings'] = array();
 
 	if (isset($_REQUEST['importDatabase'])) {
 		$importFile = $_REQUEST['importFile'];
+
 		// Sanitize the input
 		GalleryUtilities::sanitizeInputValues($importFile);
 
@@ -82,6 +77,7 @@ if ($ret) {
 		}
 
 		$verifiedFile = $_REQUEST['verifiedFile'];
+
 		// Sanitize the input
 		GalleryUtilities::sanitizeInputValues($verifiedFile);
 
@@ -98,7 +94,8 @@ if ($ret) {
 			$template->renderStatusMessage('Restoring Gallery Database', '', 0);
 
 			// Do the database import
-			$importer           = $storage->getDatabaseImporter();
+			$importer = $storage->getDatabaseImporter();
+
 			list($ret, $errors) = $importer->importToDb($verifiedFile, 'importProgressCallback');
 
 			if ($ret) {
@@ -154,10 +151,9 @@ if ($renderFullPage) {
  * @return boolean true if there are no verification messages to display.
  */
 function verifyVersions(&$templateData, $importFile) {
-	global $gallery;
-	global $template;
-	$storage =& $gallery->getStorage();
+	global $gallery,  $template;
 
+	$storage  =& $gallery->getStorage();
 	$importer = $storage->getDatabaseImporter();
 	$errors   = $importer->verifyVersions($importFile);
 
@@ -192,17 +188,16 @@ function verifyVersions(&$templateData, $importFile) {
  */
 function getBackupFiles(&$templateData) {
 	global $gallery;
-	$platform =& $gallery->getPlatform();
 
+	$platform    =& $gallery->getPlatform();
 	$backupFiles = $gallery->getConfig('data.gallery.backup') . '*.xml';
-
-	$files = array();
+	$files       = array();
 
 	foreach ($platform->glob($backupFiles) as $fileName) {
 		$files[filectime($fileName) . $fileName] = $fileName;
 	}
-	krsort($files);
 
+	krsort($files);
 	$templateData['backupFiles'] = $files;
 
 	if (count($files) == 0) {
@@ -216,5 +211,6 @@ function getBackupFiles(&$templateData) {
  */
 function importProgressCallback($percentage) {
 	global $template;
+
 	$template->renderStatusMessage('Importing Gallery Database', '', $percentage);
 }

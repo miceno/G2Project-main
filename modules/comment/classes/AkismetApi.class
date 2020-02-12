@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,7 +28,7 @@
  */
 class AkismetApi {
 	/**
-	 * Check a comment to see if it's spam.
+	 * Check a comment to see if it is spam.
 	 * @param GalleryComment $comment a reference to a GalleryComment instance
 	 * @return array GalleryStatus a status code
 	 *               true if the comment is spam.
@@ -79,6 +78,7 @@ class AkismetApi {
 	 */
 	public function verifyApiKey($apiKey) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$baseUrl      = $urlGenerator->generateUrl(
 			array(),
@@ -87,8 +87,7 @@ class AkismetApi {
 			)
 		);
 
-		$url = 'http://rest.akismet.com/1.1/verify-key';
-
+		$url                   = 'http://rest.akismet.com/1.1/verify-key';
 		list($ret, $userAgent) = $this->_getUserAgent();
 
 		if ($ret) {
@@ -154,6 +153,7 @@ class AkismetApi {
 	 */
 	public function _request($type, &$comment, $includeBrowserSpecificDetails) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$baseUrl      = $urlGenerator->generateUrl(
 			array(),
@@ -168,20 +168,20 @@ class AkismetApi {
 			return array($ret, null, null, null);
 		}
 
-		// We can't operate without an API key
+		// We cannot operate without an API key
 		if (empty($apiKey)) {
 			return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null, null, 'Missing API key');
 		}
 
 		// Generate the target URL based on the API Key and the request-type
-		$url = sprintf('http://%s.rest.akismet.com/1.1/%s', $apiKey, $type);
-
+		$url                      = sprintf('http://%s.rest.akismet.com/1.1/%s', $apiKey, $type);
 		$postDataArray['blog']    = $baseUrl;
 		$postDataArray['user_ip'] = $comment->getHost();
 
 		if ($includeBrowserSpecificDetails) {
 			$postDataArray['user_agent'] = GalleryUtilities::getServerVar('HTTP_USER_AGENT');
 		}
+
 		$postDataArray['comment_type']         = $comment->getEntityType();
 		$postDataArray['comment_author']       = $comment->getAuthor();
 		$postDataArray['comment_author_email'] = '';
@@ -250,6 +250,7 @@ class AkismetApi {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$galleryVersion = $core->getGalleryVersion();
 
 		list($ret, $comment) = GalleryCoreApi::loadPlugin('module', 'comment', true);

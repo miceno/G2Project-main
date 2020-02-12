@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version     $Id: crypt.php 20992 2012-04-01 20:10:53Z bharat $
  * @package     Joomla.Platform
@@ -30,8 +31,9 @@ class JCrypt {
 	 */
 	public function genRandomBytes($length = 16) {
 		$sslStr = '';
+
 		/*
-		 * if a secure randomness generator exists and we don't
+		 * if a secure randomness generator exists and we do not
 		 * have a buggy PHP version use it.
 		 */
 		if (function_exists('openssl_random_pseudo_bytes')
@@ -70,12 +72,14 @@ class JCrypt {
 		while ($length > strlen($randomStr)) {
 			$bytes  = ($total > $shaHashLength) ? $shaHashLength : $total;
 			$total -= $bytes;
+
 			/*
 			 * Collect any entropy available from the PHP system and filesystem.
-			 * If we have ssl data that isn't strong, we use it once.
+			 * If we have ssl data that is not strong, we use it once.
 			 */
 			$entropy  = mt_rand() . uniqid(mt_rand(), true) . $sslStr;
 			$entropy .= implode('', @fstat(fopen(__FILE__, 'r')));
+
 			//$entropy .= memory_get_usage();
 			$sslStr = '';
 
@@ -85,7 +89,7 @@ class JCrypt {
 			} else {
 				/*
 				 * There is no external source of entropy so we repeat calls
-				 * to mt_rand until we are assured there's real randomness in
+				 * to mt_rand until we are assured there is real randomness in
 				 * the result.
 				 *
 				 * Measure the time that the operations will take on average.
@@ -100,14 +104,17 @@ class JCrypt {
 					for ($count = 0; $count < 50; ++$count) {
 						$hash = sha1($hash);
 					}
+
 					$microEnd = microtime(true) * 1000000;
 					$entropy .= $microStart . $microEnd;
 
 					if ($microStart > $microEnd) {
 						$microEnd += 1000000;
 					}
+
 					$duration += $microEnd - $microStart;
 				}
+
 				$duration = $duration / $samples;
 
 				/*
@@ -129,6 +136,7 @@ class JCrypt {
 					for ($count = 0; $count < $rounds; ++$count) {
 						$hash = sha1($hash);
 					}
+
 					$entropy .= $microStart . microtime(true);
 				}
 			}

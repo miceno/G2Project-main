@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -64,6 +63,7 @@ class PluginParameterTest extends GalleryTestCase {
 
 	public function testAddParameter() {
 		global $gallery;
+
 		$key   = 'testParameter';
 		$value = 'testValue';
 
@@ -95,6 +95,7 @@ class PluginParameterTest extends GalleryTestCase {
 
 	public function testUpdateParameter() {
 		global $gallery;
+
 		$key   = 'testParameter';
 		$value = 'testValue';
 
@@ -122,6 +123,7 @@ class PluginParameterTest extends GalleryTestCase {
 
 	public function testFetchAllParameters() {
 		global $gallery;
+
 		$key   = 'testParameter';
 		$value = 'testValue';
 
@@ -151,6 +153,7 @@ class PluginParameterTest extends GalleryTestCase {
 
 	public function testAddItemParameters() {
 		global $gallery;
+
 		$key   = 'testParameter';
 		$value = 'testValue';
 
@@ -241,6 +244,7 @@ class PluginParameterTest extends GalleryTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals($param, $val, 'Parameter "foo1" (' . $item . ') should be ' . $val);
 		}
 
@@ -270,12 +274,14 @@ class PluginParameterTest extends GalleryTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals($param, $val, 'Parameter "foo1" (' . $item . ') should be ' . $val);
 		}
 	}
 
 	public function testAddPluginParameterFieldTypes() {
 		global $gallery;
+
 		$gallery->_storage = new PluginParameterTestMockStorage($this);
 
 		// Prevent a db query by mocking up some GDC data
@@ -300,6 +306,7 @@ class PluginParameterTest extends GalleryTestCase {
 
 	public function testUpdatePluginParameterFieldTypes() {
 		global $gallery;
+
 		$gallery->_storage = new PluginParameterTestMockStorage($this);
 
 		// Prevent a db query by mocking up some GDC data
@@ -346,6 +353,7 @@ class PluginParameterTestMockStorage {
 			'parameterValue' => '99',
 		) as $field => $value) {
 			$tc->assertTrue(!empty($entry[$field]), "check if field $field is specified");
+
 			// assertEquals checks with === (including type)
 			$tc->assertEquals(
 				$value,
@@ -353,6 +361,7 @@ class PluginParameterTestMockStorage {
 				"type / value '$value' for field $field"
 			);
 		}
+
 		$tc->assertEquals('GalleryPluginParameterMap', $map, 'map name');
 
 		return null;
@@ -374,6 +383,7 @@ class PluginParameterTestMockStorage {
 				"type/value '$value' for field $field"
 			);
 		}
+
 		$tc->assertEquals('GalleryPluginParameterMap', $map, 'map name');
 		$tc->assertTrue(!empty($change['parameterValue']), 'parameterValue must be set');
 		$tc->assertEquals('55', $change['parameterValue'], 'type of parameterValue');

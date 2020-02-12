@@ -14,30 +14,20 @@
 
 /*
 In ADOdb, named quotes for MS SQL Server use ". From the MSSQL Docs:
-
 	Note Delimiters are for identifiers only. Delimiters cannot be used for keywords,
 	whether or not they are marked as reserved in SQL Server.
-
 	Quoted identifiers are delimited by double quotation marks ("):
 	SELECT * FROM "Blanks in Table Name"
-
 	Bracketed identifiers are delimited by brackets ([ ]):
 	SELECT * FROM [Blanks In Table Name]
-
 	Quoted identifiers are valid only when the QUOTED_IDENTIFIER option is set to ON. By default,
 	the Microsoft OLE DB Provider for SQL Server and SQL Server ODBC driver set QUOTED_IDENTIFIER ON
 	when they connect.
-
 	In Transact-SQL, the option can be set at various levels using SET QUOTED_IDENTIFIER,
 	the quoted identifier option of sp_dboption, or the user options option of sp_configure.
-
 	When SET ANSI_DEFAULTS is ON, SET QUOTED_IDENTIFIER is enabled.
-
 	Syntax
-
 		SET QUOTED_IDENTIFIER { ON | OFF }
-
-
 */
 
 // security - hide paths
@@ -50,11 +40,12 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 	public $dropIndex    = 'DROP INDEX %1$s ON %2$s';
 	public $renameTable  = "EXEC sp_rename '%s','%s'";
 	public $renameColumn = "EXEC sp_rename '%s.%s','%s'";
-	public $typeX        = 'TEXT';  // Alternatively, set it to VARCHAR(4000)
-	public $typeXL       = 'TEXT';
+
+	// Alternatively, set it to VARCHAR(4000)
+	public $typeX  = 'TEXT';
+	public $typeXL = 'TEXT';
 
 	//var $alterCol = ' ALTER COLUMN ';
-
 	public function MetaType($t, $len = -1, $fieldobj = false) {
 		if (is_object($t)) {
 			$fieldobj = $t;
@@ -68,27 +59,22 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 			-154 => 'D',
 			-2   => 'D',
 			91   => 'D',
-
 			12   => 'C',
 			1    => 'C',
 			-9   => 'C',
 			-8   => 'C',
-
 			-7   => 'L',
 			-6   => 'I2',
 			-5   => 'I8',
 			-11  => 'I',
 			4    => 'I',
 			5    => 'I4',
-
 			-1   => 'X',
 			-10  => 'X',
-
 			2    => 'N',
 			3    => 'N',
 			6    => 'N',
 			7    => 'N',
-
 			-152 => 'X',
 			-151 => 'X',
 			-4   => 'X',
@@ -109,7 +95,9 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 				return (isset($this)) ? $this->typeXL : 'TEXT';
 
 			case 'X':
-				return (isset($this)) ? $this->typeX : 'TEXT'; // could be varchar(8000), but we want compat with oracle
+				// could be varchar(8000), but we want compat with oracle
+				return (isset($this)) ? $this->typeX : 'TEXT';
+
 			case 'C2':
 				return 'NVARCHAR';
 
@@ -158,14 +146,17 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 	}
 
 	public function AddColumnSQL($tabname, $flds) {
-		$tabname            = $this->TableName($tabname);
-		$f                  = array();
+		$tabname = $this->TableName($tabname);
+		$f       = array();
+
 		list($lines, $pkey) = $this->_GenFields($flds);
-		$s                  = "ALTER TABLE $tabname $this->addCol";
+
+		$s = "ALTER TABLE $tabname $this->addCol";
 
 		foreach ($lines as $v) {
 			$f[] = "\n $v";
 		}
+
 		$s    .= implode(', ', $f);
 		$sql[] = $s;
 
@@ -193,7 +184,8 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 		$sql     = array();
 
 		list($lines, $pkey, $idxs) = $this->_GenFields($flds);
-		$alter                     = 'ALTER TABLE ' . $tabname . $this->alterCol . ' ';
+
+		$alter = 'ALTER TABLE ' . $tabname . $this->alterCol . ' ';
 
 		foreach ($lines as $v) {
 			$not_null = false;
@@ -204,8 +196,9 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 
 			if (preg_match('/^([^ ]+) .*DEFAULT (\'[^\']+\'|\"[^\"]+\"|[^ ]+)/', $v, $matches)) {
 				list(, $colname, $default) = $matches;
-				$v                         = preg_replace('/^' . preg_quote($colname) . '\s/', '', $v);
-				$t                         = trim(str_replace('DEFAULT ' . $default, '', $v));
+
+				$v = preg_replace('/^' . preg_quote($colname) . '\s/', '', $v);
+				$t = trim(str_replace('DEFAULT ' . $default, '', $v));
 
 				if ($constraintname = $this->DefaultConstraintname($tabname, $colname)) {
 					$sql[] = 'ALTER TABLE ' . $tabname . ' DROP CONSTRAINT ' . $constraintname;
@@ -216,6 +209,7 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 				} else {
 					$sql[] = $alter . $colname . ' ' . $t;
 				}
+
 				$sql[] = 'ALTER TABLE ' . $tabname
 					. ' ADD CONSTRAINT DF__' . $tabname . '__' . $colname . '__' . dechex(mt_rand())
 					. ' DEFAULT ' . $default . ' FOR ' . $colname;
@@ -260,6 +254,7 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 		if (!is_array($flds)) {
 			$flds = explode(',', $flds);
 		}
+
 		$f = array();
 		$s = 'ALTER TABLE ' . $tabname;
 
@@ -267,8 +262,10 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 			if ($constraintname = $this->DefaultConstraintname($tabname, $v)) {
 				$sql[] = 'ALTER TABLE ' . $tabname . ' DROP CONSTRAINT ' . $constraintname;
 			}
+
 			$f[] = ' DROP COLUMN ' . $this->NameQuote($v);
 		}
+
 		$s    .= implode(', ', $f);
 		$sql[] = $s;
 
@@ -306,13 +303,10 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 	( { < column_definition >
 		| column_name AS computed_column_expression
 		| < table_constraint > ::= [ CONSTRAINT constraint_name ] }
-
 			| [ { PRIMARY KEY | UNIQUE } [ ,...n ]
 	)
-
 	[ ON { filegroup | DEFAULT } ]
 	[ TEXTIMAGE_ON { filegroup | DEFAULT } ]
-
 	< column_definition > ::= { column_name data_type }
 	[ COLLATE < collation_name > ]
 	[ [ DEFAULT constant_expression ]
@@ -320,7 +314,6 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 	]
 	[ ROWGUIDCOL]
 	[ < column_constraint > ] [ ...n ]
-
 	< column_constraint > ::= [ CONSTRAINT constraint_name ]
 	{ [ NULL | NOT NULL ]
 		| [ { PRIMARY KEY | UNIQUE }
@@ -355,7 +348,6 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 		( search_conditions )
 	}
 
-
 	*/
 
 	/*
@@ -370,6 +362,7 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 			STATISTICS_NORECOMPUTE |
 			SORT_IN_TEMPDB
 		}
+
 	*/
 	public function _IndexSQL($idxname, $tabname, $flds, $idxoptions) {
 		$sql = array();
@@ -392,12 +385,12 @@ class ADODB2_mssqlnative extends ADODB_DataDict {
 		if (is_array($flds)) {
 			$flds = implode(', ', $flds);
 		}
+
 		$s = 'CREATE' . $unique . $clustered . ' INDEX ' . $idxname . ' ON ' . $tabname . ' (' . $flds . ')';
 
 		if (isset($idxoptions[$this->upperName])) {
 			$s .= $idxoptions[$this->upperName];
 		}
-
 
 		$sql[] = $s;
 

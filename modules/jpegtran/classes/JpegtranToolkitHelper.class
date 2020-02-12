@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -114,13 +113,14 @@ class JpegtranToolkitHelper {
 	 */
 	public static function testBinary($jpegtranPath) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$slash    = $platform->getDirectorySeparator();
 		$dataPath = dirname(__DIR__) . "${slash}data${slash}";
 
 		/*
-		 * If the path is not restricted by open_basedir, then verify that it's legal.  Else just
-		 * hope that it's valid and use it.
+		 * If the path is not restricted by open_basedir, then verify that it is legal.
+		 * Else assume it is valid and use it.
 		 */
 		if ($platform->isRestrictedByOpenBaseDir($jpegtranPath)
 			|| !@$platform->is_file($jpegtranPath)
@@ -144,7 +144,7 @@ class JpegtranToolkitHelper {
 			return array($ret, null);
 		}
 
-		// To test the binary we'll try to rotate a small jpeg file.
+		// To test the binary we will try to rotate a small jpeg file.
 		$tmpDir      = $gallery->getConfig('data.gallery.tmp');
 		$tmpFilename = $platform->tempnam($tmpDir, 'jpgt_');
 		$command     = array(
@@ -220,7 +220,7 @@ class JpegtranToolkitHelper {
 		}
 
 		// Test the optional crop support (only patched versions of jpegtran can crop)
-		$command                         = array(
+		$command = array(
 			$jpegtranPath,
 			'-verbose',
 			'-copy',
@@ -231,6 +231,7 @@ class JpegtranToolkitHelper {
 			$tmpFilename,
 			$dataPath . 'test.jpg',
 		);
+
 		list($success, $stdout, $stderr) = $platform->exec(array($command));
 
 		if (!$success) {

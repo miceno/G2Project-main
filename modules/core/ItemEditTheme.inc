@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditTheme extends ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditTheme();
+		if (!isset($instance)) {
+			$instance = new ItemEditTheme();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -47,7 +46,8 @@ class ItemEditTheme extends ItemEditPlugin {
 			$error = array();
 
 			if (!empty($form['theme'])) {
-				$themeId           = $form['theme'];
+				$themeId = $form['theme'];
+
 				list($ret, $theme) = GalleryCoreApi::loadPlugin('theme', $themeId);
 
 				if ($ret) {
@@ -77,6 +77,7 @@ class ItemEditTheme extends ItemEditPlugin {
 
 			$item->setSerialNumber($form['serialNumber']);
 			$item->setTheme($themeId);
+
 			$ret = $item->save();
 
 			if ($ret) {
@@ -115,6 +116,7 @@ class ItemEditTheme extends ItemEditPlugin {
 						if (isset($form['changeInDescendents']['theme'])) {
 							$album->setTheme($form['theme']);
 						}
+
 						$ret = $album->save();
 
 						if ($ret) {
@@ -123,6 +125,7 @@ class ItemEditTheme extends ItemEditPlugin {
 							return array($ret, null, null, null);
 						}
 					}
+
 					$ret = GalleryCoreApi::releaseLocks($lockId);
 
 					if ($ret) {
@@ -138,6 +141,7 @@ class ItemEditTheme extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null, null);
 			}
+
 			list($ret, $error, $status) = GalleryCoreApi::handleThemeSettingsRequest(
 				$themeId,
 				$item->getId(),
@@ -202,6 +206,7 @@ class ItemEditTheme extends ItemEditPlugin {
 		if ($ret) {
 			return array($ret, null, null);
 		}
+
 		$themeList = array(
 			'' => $module->translate('&laquo; default theme &raquo;'),
 		);
@@ -215,14 +220,16 @@ class ItemEditTheme extends ItemEditPlugin {
 
 			if ($ret) {
 				if ($ret->getErrorCode() & (ERROR_BAD_PARAMETER | ERROR_PLUGIN_VERSION_MISMATCH)) {
-					// Ignore incompatible themes (but don't list them either)
+					// Ignore incompatible themes (but do not list them either)
 					continue;
 				}
 
 				return array($ret, null, null);
 			}
+
 			$themeList[$id] = $tmp->translate($tmp->getName());
 		}
+
 		$ItemEditTheme['themeList'] = $themeList;
 		$ItemEditTheme['theme']     = $themeId;
 

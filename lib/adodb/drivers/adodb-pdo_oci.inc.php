@@ -1,6 +1,5 @@
 <?php
 
-
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -9,20 +8,19 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 8.
-
 */
-
 class ADODB_pdo_oci extends ADODB_pdo_base {
 	public $concat_operator = '||';
 	public $sysDate         = 'TRUNC(SYSDATE)';
 	public $sysTimeStamp    = 'SYSDATE';
-	public $NLS_DATE_FORMAT = 'YYYY-MM-DD';  // To include time, use 'RRRR-MM-DD HH24:MI:SS'
+
+	// To include time, use 'RRRR-MM-DD HH24:MI:SS'
+	public $NLS_DATE_FORMAT = 'YYYY-MM-DD';
 	public $random          = 'abs(mod(DBMS_RANDOM.RANDOM,10000001)/10000000)';
 	public $metaTablesSQL   = "select table_name,table_type from cat where table_type in ('TABLE','VIEW')";
 	public $metaColumnsSQL  = "select cname,coltype,width, SCALE, PRECISION, NULLS, DEFAULTVAL from col where tname='%s' order by colno";
-
-	public $_initdate = true;
-	public $_hasdual  = true;
+	public $_initdate       = true;
+	public $_hasdual        = true;
 
 	public function _init($parentDriver) {
 		$parentDriver->_bindInputArray = true;
@@ -39,6 +37,7 @@ class ADODB_pdo_oci extends ADODB_pdo_base {
 			$mask                 = $this->qstr(strtoupper($mask));
 			$this->metaTablesSQL .= " AND table_name like $mask";
 		}
+
 		$ret = ADOConnection::MetaTables($ttype, $showSchema);
 
 		if ($mask) {
@@ -64,14 +63,17 @@ class ADODB_pdo_oci extends ADODB_pdo_base {
 		if (isset($savem)) {
 			$this->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!$rs) {
 			return $false;
 		}
+
 		$retarr = array();
 
-		while (!$rs->EOF) { //print_r($rs->fields);
+		while (!$rs->EOF) {
+			//print_r($rs->fields);
 			$fld             = new ADOFieldObject();
 			$fld->name       = $rs->fields[0];
 			$fld->type       = $rs->fields[1];
@@ -82,6 +84,7 @@ class ADODB_pdo_oci extends ADODB_pdo_base {
 				$fld->type       = 'INT';
 				$fld->max_length = $rs->fields[4];
 			}
+
 			$fld->not_null      = (strncmp($rs->fields[5], 'NOT', 3) === 0);
 			$fld->binary        = (strpos($fld->type, 'BLOB') !== false);
 			$fld->default_value = $rs->fields[6];
@@ -91,8 +94,10 @@ class ADODB_pdo_oci extends ADODB_pdo_base {
 			} else {
 				$retarr[strtoupper($fld->name)] = $fld;
 			}
+
 			$rs->MoveNext();
 		}
+
 		$rs->Close();
 
 		if (empty($retarr)) {

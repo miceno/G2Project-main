@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class');
 
 /**
@@ -32,6 +30,7 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class');
 class Db2Storage extends GalleryStorage {
 	public function __construct($config) {
 		parent::__construct($config);
+
 		$this->_isTransactional = true;
 	}
 
@@ -65,6 +64,7 @@ class Db2Storage extends GalleryStorage {
 		$statements[] = 'DROP FUNCTION BIT_AND(SMALLINT, SMALLINT)';
 		$statements[] = 'DROP FUNCTION G2_LIKE(VARCHAR(8000), VARCHAR(8000))';
 		$statements[] = 'DROP FUNCTION G2_BIT_OR(INTEGER, VARCHAR(32))';
+
 		/*
 		 * Unregister the Jar file; use ODBC delimiters, see
 		 * http://gallery.menalto.com/node/37648?from=850#comment-172690
@@ -73,13 +73,16 @@ class Db2Storage extends GalleryStorage {
 
 		foreach ($statements as $sql) {
 			$this->_traceStart();
+
 			$recordSet = $tmpDb->Execute($sql);
+
 			$this->_traceStop();
 
 			if (empty($recordSet)) {
 				return GalleryCoreApi::error(ERROR_STORAGE_FAILURE);
 			}
 		}
+
 		$tmpDb->Close();
 
 		return null;
@@ -115,8 +118,11 @@ class Db2Storage extends GalleryStorage {
 			 */
 			$sql = "{CALL SQLJ.INSTALL_JAR('file:" . __DIR__ . $slash .
 			"g2_db2.jar',  'g2_db2_jar')}";
+
 			$this->_traceStart();
+
 			$recordSet = $tmpDb->Execute($sql);
+
 			$this->_traceStop();
 
 			if (empty($recordSet)) {
@@ -171,6 +177,7 @@ class Db2Storage extends GalleryStorage {
 	 */
 	public function removeAllMapEntries($mapName, $useNonTransactionalConnection = false) {
 		$extras =& $this->_getExtras();
+
 		// DB2 does not support TRUNCATE
 		return $extras->removeAllMapEntries($mapName, $useNonTransactionalConnection, false);
 	}
@@ -189,6 +196,7 @@ class Db2Storage extends GalleryStorage {
 				foreach ($args as $key => $value) {
 					$args[$key] = 'RTRIM(CHAR(' . $value . '))';
 				}
+
 				$sql = implode(' || ', $args);
 
 				break;
@@ -253,6 +261,7 @@ class Db2Storage extends GalleryStorage {
 				while (count($args) > 1) {
 					$sql[] = 'WHEN ' . array_shift($args) . ' THEN ' . array_shift($args);
 				}
+
 				$sql = 'CASE ' . implode(' ', $sql) . ' ELSE ' . $args[0] . ' END';
 
 				break;
@@ -307,6 +316,7 @@ class Db2Storage extends GalleryStorage {
 	 */
 	public function getVersion() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($success, $results) = $platform->exec(array(array('db2level')));

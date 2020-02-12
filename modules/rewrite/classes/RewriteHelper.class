@@ -1,28 +1,29 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 // General status codes
 define('REWRITE_STATUS_OK', 0);
 define('REWRITE_STATUS_BAD_KEYWORD', 1);
 define('REWRITE_STATUS_MULTISITE', 2);
-define('REWRITE_STATUS_DUPE_SHORT_URL', 3); // Deprecated
+
+// Deprecated
+define('REWRITE_STATUS_DUPE_SHORT_URL', 3);
 define('REWRITE_STATUS_INVALID_PATTERN', 4);
 define('REWRITE_STATUS_EMPTY_VALUE', 5);
 
@@ -45,6 +46,7 @@ class RewriteHelper {
 	public static function getRewriteParser($new = false) {
 		global $gallery;
 		static $rewriteParser;
+
 		$platform =& $gallery->getPlatform();
 
 		if (!isset($rewriteParser) || $new) {
@@ -67,6 +69,7 @@ class RewriteHelper {
 			if ($platform->file_exists(GalleryCoreApi::getCodeBasePath($path))) {
 				GalleryCoreApi::requireOnce($path);
 			}
+
 			$class         = $rewriteParserId . 'Parser';
 			$rewriteParser = new $class();
 		}
@@ -95,6 +98,7 @@ class RewriteHelper {
 		$flags = null
 	) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		if (!is_array($activeRules)) {
@@ -111,6 +115,7 @@ class RewriteHelper {
 		if ($ret) {
 			return array($ret, null, null, null, null);
 		}
+
 		$accessList                                     = unserialize($accessList);
 		$ourHostNames[$urlGenerator->getHostName()]     = true;
 		$ourHostNames[$urlGenerator->getHostName(true)] = true;
@@ -160,6 +165,7 @@ class RewriteHelper {
 				if ($ret) {
 					return array($ret, null, null, null, null);
 				}
+
 				unset($activeRules[$moduleId]);
 
 				continue;
@@ -486,6 +492,7 @@ class RewriteHelper {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$history = empty($history) ? array() : unserialize($history);
 
 		return array(null, $history);

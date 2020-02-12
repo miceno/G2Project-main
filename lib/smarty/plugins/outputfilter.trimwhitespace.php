@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -17,7 +18,11 @@
  *           up code and saving bandwidth. Does not affect
  *           <<PRE>></PRE> and <SCRIPT></SCRIPT> blocks.<br>
  * Install:  Drop into the plugin directory, call
+ *
+ *
  *           <code>$smarty->load_filter('output','trimwhitespace');</code>
+ *
+ *
  *           from application.
  * @author   Monte Ohrt <monte at ohrt dot com>
  * @author Contributions from Lars Noschinski <lars@usenet.noschinski.de>

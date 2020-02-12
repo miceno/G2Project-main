@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -26,8 +25,11 @@
  * The body of each mimicked method should contain a call to MockObject::_makeReply, like this:
  *
  *
+ *
  *  function describeMap($mapName, $tryAllModules=false) {
  *      return $this->_makeReply('describeMap', array($mapName, $tryAllModules));
+ *
+ *
  *  }
  *
  * @package Gallery
@@ -50,7 +52,8 @@ class MockObject {
 
 	public function isComplete() {
 		foreach ($_GET[$this->_className]['replies'] as $reply) {
-			if (!$reply[3]) { // ignore optional replies
+			if (!$reply[3]) {
+				// ignore optional replies
 				$incomplete = true;
 
 				break;
@@ -75,28 +78,32 @@ class MockObject {
 			}
 
 			if (!$expected[3]) {
-				break; // Not optional -- error
+				// Not optional -- error
+				break;
 			}
 		}
 
 		$_GET[$this->_className]['errorCount']++;
-		$ret = GalleryCoreApi::error(ERROR_UNKNOWN, null, null, 'Unhandled reply in MockObject');
-		echo '<br/><br/>' . $ret->getAsHtml();
 
+		$ret = GalleryCoreApi::error(ERROR_UNKNOWN, null, null, 'Unhandled reply in MockObject');
+
+		echo '<br/><br/>' . $ret->getAsHtml();
 		printf(
 			'<br/><b>Mismatch At</b>: %s<br/>',
 			htmlspecialchars(
-				GalleryTestCase::doStatic()->DeepCompare(
+				GalleryTestCase::getMe()->DeepCompare(
 					$request,
 					$expected[1]
 				)
 			)
 		);
+
 		printf(
 			"Expected:<br/>\nFunction: <b>%s</b><br/>\nRequest: <pre>%s</pre><br/>\n",
 			$expected[0],
 			print_r($expected[1], true)
 		);
+
 		printf(
 			"Received:<br/>\nFunction: <b>%s</b><br/>\nRequest: <pre>%s</pre><br/>\n",
 			$function,

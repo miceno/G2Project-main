@@ -1,4 +1,5 @@
 <?php
+
 /*
  @version   v5.20.12  30-Mar-2018
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,7 +8,6 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 4.
-
   Postgres9 support.
 */
 
@@ -29,3 +29,4 @@ class ADORecordSet_postgres9 extends ADORecordSet_postgres8 {
 class ADORecordSet_assoc_postgres9 extends ADORecordSet_assoc_postgres8 {
 	public $databaseType = 'postgres9';
 }
+

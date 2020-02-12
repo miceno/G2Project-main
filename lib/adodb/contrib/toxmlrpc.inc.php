@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * Helper functions to convert between ADODB recordset objects and XMLRPC values.
 	 * Uses John Lim's AdoDB and Edd Dumbill's phpxmlrpc libs
@@ -14,9 +15,9 @@
 	 *       - null values
 	 */
 
-	/**
-	 * Include the main libraries
-	 */
+/**
+ * Include the main libraries
+ */
 	require_once 'xmlrpc.inc';
 
 if (!defined('ADODB_DIR')) {
@@ -79,14 +80,15 @@ function rs2xmlrpcval_header($adodbrs) {
 		if (isset($fld->default_value)) {
 			$fieldarray['default_value'] = new xmlrpcval($fld->default_value);
 		}
+
 		$fieldstruct[$i] = new xmlrpcval($fieldarray, 'struct');
 	}
+
 	$fieldcount  = new xmlrpcval($numfields, 'int');
 	$recordcount = new xmlrpcval($numrecords, 'int');
 	$sql         = new xmlrpcval($adodbrs->sql);
 	$fieldinfo   = new xmlrpcval($fieldstruct, 'array');
-
-	$header = new xmlrpcval(
+	$header      = new xmlrpcval(
 		array(
 			'fieldcount'  => $fieldcount,
 			'recordcount' => $recordcount,
@@ -108,10 +110,12 @@ function rs2xmlrpcval_body($adodbrs) {
 
 	// build structure containing recordset data
 	$adodbrs->MoveFirst();
+
 	$rows = array();
 
 	while (!$adodbrs->EOF) {
 		$columns = array();
+
 		// This should work on all cases of fetch mode: assoc, num, both or default
 		if ($adodbrs->fetchMode == 'ADODB_FETCH_BOTH' || count($adodbrs->fields) == 2 * $adodbrs->FieldCount()) {
 			for ($i = 0; $i < $numfields; $i++) {
@@ -135,6 +139,7 @@ function rs2xmlrpcval_body($adodbrs) {
 
 		$adodbrs->MoveNext();
 	}
+
 	$body = new xmlrpcval($rows, 'array');
 
 	return $body;
@@ -163,16 +168,14 @@ function xmlrpcval2rs(&$xmlrpcval) {
 	$data_array   = array();
 
 	// rebuild column information
-	$header = $xmlrpcval->structmem('header');
-
+	$header     = $xmlrpcval->structmem('header');
 	$numfields  = $header->structmem('fieldcount');
 	$numfields  = $numfields->scalarval();
 	$numrecords = $header->structmem('recordcount');
 	$numrecords = $numrecords->scalarval();
 	$sqlstring  = $header->structmem('sql');
 	$sqlstring  = $sqlstring->scalarval();
-
-	$fieldinfo = $header->structmem('fieldinfo');
+	$fieldinfo  = $header->structmem('fieldinfo');
 
 	for ($i = 0; $i < $numfields; $i++) {
 		$temp = $fieldinfo->arraymem($i);
@@ -203,6 +206,7 @@ function xmlrpcval2rs(&$xmlrpcval) {
 				$fld->default_value = $value->scalarval();
 			}
 		} // while
+
 		$fields_array[] = $fld;
 	} // for
 
@@ -221,6 +225,7 @@ function xmlrpcval2rs(&$xmlrpcval) {
 
 	// finally build in-memory recordset object and return it
 	$rs = new ADORecordSet_array();
+
 	$rs->InitArrayFields($data_array, $fields_array);
 
 	return $rs;

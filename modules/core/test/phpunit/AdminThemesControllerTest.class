@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryTheme.class');
 
 /**
@@ -39,7 +37,8 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 			return $ret;
 		}
 
-		$this->_testTheme = AdminThemesControllerTestTheme::doStatic();
+		$this->_testTheme = AdminThemesControllerTestTheme::getMe();
+
 		$this->_testTheme->resetCalls();
 
 		$ret = $this->_markPluginParametersForCleanup('module', 'core');
@@ -57,6 +56,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -72,7 +72,8 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-		$map =& TestThemeId2Theme::doStatic()->getMap();
+		$map =& TestThemeId2Theme::getMe()->getMap();
+
 		$this->assertEquals(2, (int)$map['rows']);
 		$this->assertEquals(4, (int)$map['columns']);
 	}
@@ -85,6 +86,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -109,6 +111,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -137,6 +140,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -186,6 +190,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we get an error
 		$results = $this->handleRequest(ERROR_BAD_PARAMETER);
+
 		$this->assertEquals(null, $results);
 
 		// Verify that the default theme has not changed
@@ -209,7 +214,8 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Prepare the observed value
 		$originalOrderBy = 'albumsFirst|viewCount';
-		$ret             = GalleryCoreApi::setPluginParameter(
+
+		$ret = GalleryCoreApi::setPluginParameter(
 			'module',
 			'core',
 			'default.orderBy',
@@ -222,6 +228,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we get an error
 		$results = $this->handleRequest(ERROR_BAD_PARAMETER);
+
 		$this->assertEquals(null, $results);
 
 		// Verify that the value has not changed
@@ -245,7 +252,8 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Prepare the observed value
 		$originalOrderBy = 'albumsFirst|viewCount';
-		$ret             = GalleryCoreApi::setPluginParameter(
+
+		$ret = GalleryCoreApi::setPluginParameter(
 			'module',
 			'core',
 			'default.orderBy',
@@ -258,6 +266,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we get an error
 		$results = $this->handleRequest(ERROR_BAD_PARAMETER);
+
 		$this->assertEquals(null, $results);
 
 		// Verify that the value has not changed
@@ -281,7 +290,8 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Prepare the observed value
 		$originalOrderDirection = 'desc';
-		$ret                    = GalleryCoreApi::setPluginParameter(
+
+		$ret = GalleryCoreApi::setPluginParameter(
 			'module',
 			'core',
 			'default.orderDirection',
@@ -294,6 +304,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we get an error
 		$results = $this->handleRequest(ERROR_BAD_PARAMETER);
+
 		$this->assertEquals(null, $results);
 
 		// Verify that the value has not changed
@@ -317,7 +328,8 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Prepare the observed value
 		$originalNewAlbumDefaults = 'true';
-		$ret                      = GalleryCoreApi::setPluginParameter(
+
+		$ret = GalleryCoreApi::setPluginParameter(
 			'module',
 			'core',
 			'default.newAlbumsUseDefaults',
@@ -330,6 +342,7 @@ class AdminThemesControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we get an error
 		$results = $this->handleRequest(ERROR_BAD_PARAMETER);
+
 		$this->assertEquals(null, $results);
 
 		// Verify that the value has not changed
@@ -361,6 +374,7 @@ class TestThemeId1Theme extends GalleryTheme {
 			),
 			'value'      => 4,
 		);
+
 		$settings[] = array(
 			'key'        => 'columns',
 			'name'       => 'Columns per album page',
@@ -400,16 +414,16 @@ class TestThemeId1Theme extends GalleryTheme {
  */
 class TestThemeId2Theme extends GalleryTheme {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new TestThemeId2Theme();
+		if (!isset($instance)) {
+			$instance = new TestThemeId2Theme();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	public function &getMap() {
@@ -448,6 +462,7 @@ class TestThemeId2Theme extends GalleryTheme {
 			),
 			'value'      => 4,
 		);
+
 		$settings[] = array(
 			'key'        => 'columns',
 			'name'       => 'Columns per album page',
@@ -473,19 +488,18 @@ class TestThemeId2Theme extends GalleryTheme {
 	}
 }
 
-
 /**
  * Test theme
  */
 class AdminThemesControllerTestTheme {
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminThemesControllerTestTheme();
+		if (!isset($instance)) {
+			$instance = new AdminThemesControllerTestTheme();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	public function getId() {
@@ -527,36 +541,36 @@ class AdminThemesControllerTestTheme {
 	}
 
 	public function _setCalled($function) {
-		$singleton                      = $this->doStatic();
-		$singleton->_callMap[$function] = 1;
+		$instance                      = $this->getMe();
+		$instance->_callMap[$function] = 1;
 	}
 
 	public function wasCalled($function) {
-		$singleton = $this->doStatic();
+		$instance = $this->getMe();
 
-		return isset($singleton->_callMap[$function]);
+		return isset($instance->_callMap[$function]);
 	}
 
 	public function resetCalls() {
-		$singleton           = $this->doStatic();
-		$singleton->_callMap = array();
+		$instance           = $this->getMe();
+		$instance->_callMap = array();
 	}
 
 	public function _set($key, $val) {
-		$singleton       = $this->doStatic();
-		$singleton->$key = $val;
+		$instance       = $this->getMe();
+		$instance->$key = $val;
 	}
 
 	public function isActive() {
-		$singleton = $this->doStatic();
+		$instance = $this->getMe();
 
-		return array(null, $singleton->_isActive);
+		return array(null, $instance->_isActive);
 	}
 
 	public function isAdvancedSettings() {
-		$singleton = $this->doStatic();
+		$instance = $this->getMe();
 
-		return $singleton->_isAdvancedSettings;
+		return $instance->_isAdvancedSettings;
 	}
 
 	public function translate($str) {

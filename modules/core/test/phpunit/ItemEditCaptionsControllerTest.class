@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -45,6 +44,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		// create 3 random items
@@ -65,6 +65,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		foreach ($this->_items as $item) {
 			$id = $item->getId();
+
 			GalleryUtilities::putRequestVariable("form[items][$id][title]", "title $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][summary]", "summary $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][keywords]", "keywords $id");
@@ -77,10 +78,12 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 				$item->getSerialNumber()
 			);
 		}
+
 		GalleryUtilities::putRequestVariable('form[action][save][done]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'return'   => 1,
@@ -110,7 +113,8 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		// Verify that the changes happened
 		foreach ($this->_items as $item) {
-			$id               = $item->getId();
+			$id = $item->getId();
+
 			list($ret, $item) = $item->refresh();
 
 			if ($ret) {
@@ -130,6 +134,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		foreach ($this->_items as $item) {
 			$id = $item->getId();
+
 			GalleryUtilities::putRequestVariable("form[items][$id][title]", "title $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][summary]", "summary $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][keywords]", "keywords $id");
@@ -142,10 +147,12 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 				$item->getSerialNumber()
 			);
 		}
+
 		GalleryUtilities::putRequestVariable('form[action][save][next]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -174,7 +181,8 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		// Verify that the changes happened
 		foreach ($this->_items as $item) {
-			$id               = $item->getId();
+			$id = $item->getId();
+
 			list($ret, $item) = $item->refresh();
 
 			if ($ret) {
@@ -194,6 +202,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		foreach ($this->_items as $item) {
 			$id = $item->getId();
+
 			GalleryUtilities::putRequestVariable("form[items][$id][title]", "title $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][summary]", "summary $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][keywords]", "keywords $id");
@@ -206,10 +215,12 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 				$item->getSerialNumber()
 			);
 		}
+
 		GalleryUtilities::putRequestVariable('form[action][save][previous]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -238,7 +249,8 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		// Verify that the changes happened
 		foreach ($this->_items as $item) {
-			$id               = $item->getId();
+			$id = $item->getId();
+
 			list($ret, $item) = $item->refresh();
 
 			if ($ret) {
@@ -259,6 +271,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -295,6 +308,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		foreach ($this->_items as $item) {
 			$id = $item->getId();
+
 			GalleryUtilities::putRequestVariable("form[items][$id][title]", "title $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][summary]", "summary $id");
 			GalleryUtilities::putRequestVariable("form[items][$id][keywords]", "keywords $id");
@@ -307,6 +321,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 				$item->getSerialNumber()
 			);
 		}
+
 		GalleryUtilities::putRequestVariable('form[action][save][done]', 1);
 
 		// Remove permissions from one item
@@ -315,6 +330,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_items[0]->getId(),
 			$gallery->getActiveUserId(),
@@ -325,15 +341,14 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 			return $ret;
 		}
 
-		// Screw up one serial number
 		GalleryUtilities::putRequestVariable(
-			'form[items][' .
-			$this->_items[2]->getId() . '][serialNumber]',
+			'form[items][' . $this->_items[2]->getId() . '][serialNumber]',
 			99
 		);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -362,7 +377,8 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 		// Verify that the appropriate changes happened
 		for ($i = 0; $i < count($this->_items); $i++) {
-			$item                = $this->_items[$i];
+			$item = $this->_items[$i];
+
 			list($ret, $newItem) = $item->refresh();
 
 			if ($ret) {
@@ -372,6 +388,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 			if ($i == 1) {
 				// Success
 				$id = $item->getId();
+
 				$this->assertEquals("title $id", $newItem->getTitle());
 				$this->assertEquals("summary $id", $newItem->getSummary());
 				$this->assertEquals("keywords $id", $newItem->getKeywords());
@@ -416,9 +433,11 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 				$item->getSerialNumber()
 			);
 		}
+
 		GalleryUtilities::putRequestVariable('form[action][save][done]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'return'   => 1,
@@ -447,7 +466,8 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 		);
 
 		foreach ($this->_items as $item) {
-			$id               = $item->getId();
+			$id = $item->getId();
+
 			list($ret, $item) = $item->refresh();
 
 			if ($ret) {
@@ -456,6 +476,7 @@ class ItemEditCaptionsControllerTest extends GalleryControllerTestCase {
 
 			$this->assertEquals('title here', $item->getTitle());
 			$this->assertEquals('summary &lt;p&gt;yy&lt;/p&gt;', $item->getSummary());
+
 			$this->assertEquals('', $item->getKeywords(), 'keywords');
 			$this->assertEquals('description ', $item->getDescription());
 		}

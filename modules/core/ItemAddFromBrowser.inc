@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemAddFromBrowser extends ItemAddPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemAddFromBrowser();
+		if (!isset($instance)) {
+			$instance = new ItemAddFromBrowser();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -45,9 +44,10 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 	public function handleRequest($form, &$item, &$addController = null) {
 		global $gallery;
 
-		$status             = array();
-		$error              = array();
-		$uploaded           = false;
+		$status   = array();
+		$error    = array();
+		$uploaded = false;
+
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
 
 		if ($ret) {
@@ -94,10 +94,9 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 					$description = empty($form['set']['description']) ? '' : $file['caption'];
 
 					/*
-					 * Don't use uploaded files, because the framework cannot safely copy them.
+					 * Do not use uploaded files, because the framework cannot safely copy them.
 					 * Move it to our temporary directory first.
 					 */
-
 					$platform =& $gallery->getPlatform();
 
 					if ($platform->is_uploaded_file($file['tmp_name'])) {
@@ -106,6 +105,7 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 						if (!$tmpFile) {
 							return array(GalleryCoreApi::error(ERROR_PLATFORM_FAILURE), null, null);
 						}
+
 						$needToDeleteTmpFile = true;
 					} else {
 						$tmpFile             = $file['tmp_name'];
@@ -136,7 +136,8 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 						'id'       => $newItem->getId(),
 						'warnings' => array(),
 					);
-					$uploaded               = true;
+
+					$uploaded = true;
 				} elseif (!empty($form['name'][$i])) {
 					$error[] = 'form[error][upload][' . $i . ']';
 
@@ -184,6 +185,7 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 								)
 							);
 					}
+
 					$status['addedFiles'][] = array(
 						'fileName' => $form['name'][$i],
 						'id'       => null,
@@ -225,6 +227,7 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 		if (preg_match('/(\d+)M/', $maxFileSize, $matches)) {
 			$maxFileSize = $matches[1] * 1024 * 1024;
 		}
+
 		$status = GalleryUtilities::getRequestVariables('ItemAddFromBrowserStatus');
 
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
@@ -256,11 +259,12 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 		}
 
 		if ($form['formName'] != 'ItemAddFromBrowser') {
-			$form['set']      = array(
+			$form['set'] = array(
 				'title'       => 'filename',
 				'summary'     => 1,
 				'description' => 1,
 			);
+
 			$form['formName'] = 'ItemAddFromBrowser';
 		}
 
@@ -281,12 +285,13 @@ class ItemAddFromBrowser extends ItemAddPlugin {
 			)
 		);
 
-		// Set the ItemAdmin form's encoding type specially since we're uploading binary files
+		// Set the ItemAdmin form's encoding type specially since we are uploading binary files
 		if ($template->hasVariable('ItemAdmin')) {
 			$ItemAdmin            =& $template->getVariableByReference('ItemAdmin');
 			$ItemAdmin['enctype'] = 'multipart/form-data';
 		} else {
 			$ItemAdmin['enctype'] = 'multipart/form-data';
+
 			$template->setVariable('ItemAdmin', $ItemAdmin);
 		}
 

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class AdminEditUserController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminEditUserController();
+		if (!isset($instance)) {
+			$instance = new AdminEditUserController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -50,20 +49,25 @@ class AdminEditUserController extends GalleryController {
 		}
 
 		$results = $status = $error = array();
+		$userId  = (int)GalleryUtilities::getRequestVariables('userId');
 
-		$userId           = (int)GalleryUtilities::getRequestVariables('userId');
 		list($ret, $user) = GalleryCoreApi::loadEntitiesById($userId, 'GalleryUser');
 
 		if ($ret) {
 			return array($ret, null);
 		}
 
-		// We treat anonymous users differently, so see if we're editing the anonymous user
-		list($ret, $anonymousUserId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.anonymousUser');
+		// We treat anonymous users differently, so see if we are editing the anonymous user
+		list($ret, $anonymousUserId) = GalleryCoreApi::getPluginParameter(
+			'module',
+			'core',
+			'id.anonymousUser'
+		);
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$isAnonymous = ($userId == $anonymousUserId);
 
 		if (isset($form['action']['cancel'])) {
@@ -77,7 +81,6 @@ class AdminEditUserController extends GalleryController {
 			$redirect['userId']  = $userId;
 		} elseif (isset($form['action']['save'])) {
 			// Validate our data before we continue.
-
 			// username is required and might conflict
 			if (empty($form['userName'])) {
 				$error[] = 'form[error][userName][missing]';
@@ -96,9 +99,7 @@ class AdminEditUserController extends GalleryController {
 			}
 
 			// full name is optional for everybody
-
 			// language is optional for everybody
-
 			// email is suggested, but optional for administrator edits
 			if (!empty($form['email'])) {
 				$form['email'] = trim($form['email']);
@@ -151,6 +152,7 @@ class AdminEditUserController extends GalleryController {
 
 					if (!empty($form['password1'])) {
 						GalleryUtilities::unsanitizeInputValues($form['password1'], false);
+
 						$user->changePassword($form['password1']);
 					}
 				}
@@ -180,6 +182,7 @@ class AdminEditUserController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'core.AdminEditUser';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -192,16 +195,16 @@ class AdminEditUserController extends GalleryController {
  */
 class AdminEditUserView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminEditUserView();
+		if (!isset($instance)) {
+			$instance = new AdminEditUserView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -216,7 +219,8 @@ class AdminEditUserView extends GalleryView {
 			return array($ret, null);
 		}
 
-		$userId           = GalleryUtilities::getRequestVariables('userId');
+		$userId = GalleryUtilities::getRequestVariables('userId');
+
 		list($ret, $user) = GalleryCoreApi::loadEntitiesById($userId, 'GalleryUser');
 
 		if ($ret) {

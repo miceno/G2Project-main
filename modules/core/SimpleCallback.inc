@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,16 +28,16 @@
  */
 class SimpleCallbackView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new SimpleCallbackView();
+		if (!isset($instance)) {
+			$instance = new SimpleCallbackView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -59,7 +58,8 @@ class SimpleCallbackView extends GalleryView {
 	 * @see GalleryView::renderImmediate
 	 */
 	public function renderImmediate($status = null, $error = null) {
-		list($command, $prefix)  = GalleryUtilities::getRequestVariables('command', 'prefix');
+		list($command, $prefix) = GalleryUtilities::getRequestVariables('command', 'prefix');
+
 		list($ret, $isAnonymous) = GalleryCoreApi::isAnonymousUser();
 
 		if ($ret) {
@@ -98,8 +98,11 @@ class SimpleCallbackView extends GalleryView {
 
 				if (!$ret && $isSiteAdmin) {
 					GalleryUtilities::unsanitizeInputValues($prefix, false);
+
 					$dirs = implode("\n", $this->_getDirectoryListing($prefix, false));
+
 					GalleryUtilities::sanitizeInputValues($dirs, false);
+
 					echo $dirs;
 				}
 
@@ -110,8 +113,11 @@ class SimpleCallbackView extends GalleryView {
 
 				if (!$ret && $isSiteAdmin) {
 					GalleryUtilities::unsanitizeInputValues($prefix, false);
+
 					$files = implode("\n", $this->_getDirectoryListing($prefix));
+
 					GalleryUtilities::sanitizeInputValues($files, false);
+
 					echo $files;
 				}
 
@@ -123,6 +129,7 @@ class SimpleCallbackView extends GalleryView {
 
 	public function _getDirectoryListing($path, $getFiles = true) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// $path is UTF-8, we need it in the system charset for filesystem interactions
@@ -167,6 +174,7 @@ class SimpleCallbackView extends GalleryView {
 				) {
 					continue;
 				}
+
 				$file = $path . $file;
 
 				if ($platform->is_dir($file)) {
@@ -176,7 +184,9 @@ class SimpleCallbackView extends GalleryView {
 					$fileList[] = GalleryCoreApi::convertToUtf8($file);
 				}
 			}
+
 			$platform->closedir($dir);
+
 			sort($dirList);
 			sort($fileList);
 		} else {

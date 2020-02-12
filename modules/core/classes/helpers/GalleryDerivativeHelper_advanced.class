@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -34,6 +33,7 @@ class GalleryDerivativeHelper_advanced {
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/helpers/GalleryDerivativeHelper_simple.class'
 		);
+
 		list($ret, $results) = GalleryDerivativeHelper_simple::_loadDerivatives(null, $ids, $types);
 
 		if ($ret) {
@@ -70,16 +70,18 @@ class GalleryDerivativeHelper_advanced {
 	public static function adjustDependentDerivatives($id, $operation, $reverse = false) {
 		global $gallery;
 
-		$ids       = array(
+		$ids = array(
 			(int)$id => 1,
 		);
+
 		$lastCount = 0;
 
 		// Discover the entire derivative dependency tree
 		while (sizeof($ids) > $lastCount) {
 			$lastCount = sizeof($ids);
 			$idMarkers = GalleryUtilities::makeMarkers(sizeof($ids));
-			$query     = '
+
+			$query = '
 			SELECT
 			[GalleryDerivative::id]
 			FROM
@@ -99,6 +101,7 @@ class GalleryDerivativeHelper_advanced {
 				$ids[$result[0]] = 1;
 			}
 		}
+
 		unset($ids[$id]);
 		$ids = array_keys($ids);
 
@@ -145,12 +148,14 @@ class GalleryDerivativeHelper_advanced {
 
 			foreach ($derivatives as $derivative) {
 				foreach ($toolkits as $toolkitId => $toolkit) {
-					$currentOperations             = $derivative->getDerivativeOperations();
+					$currentOperations = $derivative->getDerivativeOperations();
+
 					list($success, $newOperations) = $toolkit->applyTransform($operation, $currentOperations, $reverse);
 
 					if ($success) {
-						// It might not have changed, but setting it here won't hurt
+						// It might not have changed, but setting it here would not hurt
 						$derivative->setDerivativeOperations($newOperations);
+
 						$ret = $derivative->save();
 
 						if ($ret) {
@@ -194,11 +199,12 @@ class GalleryDerivativeHelper_advanced {
 			if ($ret) {
 				return $ret;
 			}
+
 			$isLinked   = false;
 			$isLinkedTo = !empty($linkedIds);
 		}
 
-		// Force us to preserve original if we're a link
+		// Force us to preserve original if we are a link
 		if (!$preserveOriginal && ($isLinked || $isLinkedTo)) {
 			$preserveOriginal = true;
 		}
@@ -207,7 +213,7 @@ class GalleryDerivativeHelper_advanced {
 
 		if (empty($preferred) && !$preserveOriginal) {
 			/*
-			 * We have no preferred photo, and we're not preserving the original.  So, we're
+			 * We have no preferred photo, and we are not preserving the original.  So, we are
 			 * changing the original photo here.  Make the appropriate change, then expire the
 			 * derivative tree.
 			 * Note that we are explicitly not allowing linked items to execute this code!
@@ -259,6 +265,7 @@ class GalleryDerivativeHelper_advanced {
 
 				return $ret;
 			}
+
 			$item->setMimeType($outputMimeType);
 
 			// Get the item to rescan its data object
@@ -282,7 +289,7 @@ class GalleryDerivativeHelper_advanced {
 				return $ret;
 			}
 
-			// Save the item, if it's modified
+			// Save the item, if it is modified
 			if ($item->isModified()) {
 				if (isset($serialNumber)) {
 					$item->setSerialNumber($serialNumber);
@@ -347,7 +354,8 @@ class GalleryDerivativeHelper_advanced {
 				}
 			}
 
-			$operationString        = $operation . '|' . join(',', $args);
+			$operationString = $operation . '|' . join(',', $args);
+
 			list($ret, $operations) = GalleryCoreApi::mergeDerivativeOperations(
 				$preferred->getDerivativeOperations(),
 				$operationString
@@ -356,6 +364,7 @@ class GalleryDerivativeHelper_advanced {
 			if ($ret) {
 				return $ret;
 			}
+
 			$preferred->setDerivativeOperations($operations);
 
 			// Let our change ripple down the derivative tree, if necessary
@@ -432,6 +441,7 @@ class GalleryDerivativeHelper_advanced {
 		if ($originalSourceId == $newSourceId) {
 			return null;
 		}
+
 		$originalSourceId = (int)$originalSourceId;
 		$newSourceId      = (int)$newSourceId;
 
@@ -480,6 +490,7 @@ class GalleryDerivativeHelper_advanced {
 			// Remap each derivative
 			foreach ($derivatives as $derivative) {
 				$derivative->setDerivativeSourceId($newSourceId);
+
 				$ret = $derivative->expireCache();
 
 				if ($ret) {
@@ -540,6 +551,7 @@ class GalleryDerivativeHelper_advanced {
 			$derivativeType       = array_fill(0, count($itemId), $derivativeType);
 			$derivativeOperations = array_fill(0, count($itemId), $derivativeOperations);
 		}
+
 		$ret = GalleryCoreApi::addMapEntry(
 			'GalleryDerivativePreferencesMap',
 			array(
@@ -668,7 +680,8 @@ class GalleryDerivativeHelper_advanced {
 					);
 				} else {
 					list($op, $args) = explode('|', $opString);
-					$operations1[]   = array(
+
+					$operations1[] = array(
 						'op'   => $op,
 						'args' => explode(',', $args),
 					);
@@ -683,7 +696,8 @@ class GalleryDerivativeHelper_advanced {
 					);
 				} else {
 					list($op, $args) = explode('|', $opString);
-					$operations2[]   = array(
+
+					$operations2[] = array(
 						'op'   => $op,
 						'args' => explode(',', $args),
 					);
@@ -740,6 +754,7 @@ class GalleryDerivativeHelper_advanced {
 				if (!empty($operations1[$i]['args'])) {
 					$op .= '|' . join(',', $operations1[$i]['args']);
 				}
+
 				$resultsArray[] = $op;
 			}
 
@@ -765,6 +780,7 @@ class GalleryDerivativeHelper_advanced {
 					$newOperations[] = $opString;
 				}
 			}
+
 			$operationSet = join(';', $newOperations);
 		}
 
@@ -784,6 +800,7 @@ class GalleryDerivativeHelper_advanced {
 		foreach ($ids as $idx => $id) {
 			$ids[$idx] = (int)$id;
 		}
+
 		$idMarkers = GalleryUtilities::makeMarkers($ids);
 
 		$query = '
@@ -940,7 +957,7 @@ class GalleryDerivativeHelper_advanced {
 			return array($ret, null);
 		}
 
-		// Check to see if we're a broken derivative.
+		// Check to see if we are a broken derivative.
 		$sourceId = $derivative->getDerivativeSourceId();
 
 		if (empty($sourceId)) {
@@ -957,7 +974,7 @@ class GalleryDerivativeHelper_advanced {
 			return array($ret, null);
 		}
 
-		// If the source is a derivative, make sure it's current
+		// If the source is a derivative, make sure it is current
 		if (GalleryUtilities::isA($source, 'GalleryDerivative')) {
 			list($ret, $source) = GalleryCoreApi::rebuildDerivativeCacheIfNotCurrent($source->getId(), true);
 

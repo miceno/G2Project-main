@@ -9,15 +9,16 @@
 	  <h3> Generated: <?php echo strftime('%x %X'); ?> <br/>
 	   Most Recent PO: <?php echo strftime('%x %X', $mostRecentPoDate); ?> <br/>
 	   Total Translated Strings: <?php echo $totalTranslated; ?> </h3>
-
 	  <center>
 	View: <b> summary </b> | <a href="?type=detail"> detail </a>
 	<table class="report">
 		<?php $index = 0; ?>
 		<?php
+
 		foreach ($reportData as $locale => $localeData) {
 			?>
 			<?php
+
 			if (!($index % 20)) {
 				?>
 				<?php include __DIR__ . '/row_header_summary.inc'; ?>
@@ -61,6 +62,7 @@
 		</tr>
 			<?php
 		}
+
 		?>
 	</table>
 	  </center>

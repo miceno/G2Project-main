@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -46,6 +45,7 @@ class RewriteSimpleHelper {
 			if ($ret) {
 				return $ret;
 			}
+
 			GalleryUtilities::putRequestVariable('itemId', $itemId);
 		}
 
@@ -62,6 +62,7 @@ class RewriteSimpleHelper {
 	 */
 	public static function parsePath(&$url, &$params, &$entity) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		if (!isset($entity) && ($entity = $urlGenerator->loadEntity($params['itemId'])) == null
@@ -69,6 +70,7 @@ class RewriteSimpleHelper {
 		) {
 			return false;
 		}
+
 		list($ret, $path) = $entity->fetchLogicalPath();
 
 		if ($ret) {
@@ -93,10 +95,10 @@ class RewriteSimpleHelper {
 			str_replace('%2F', '/', urlencode(substr($path, 1))),
 			$url
 		);
+
 		unset($params['itemId'], $params['path']);
+
 		// If the generated url is built by old request variables unset the old path
-
-
 		return true;
 	}
 
@@ -116,6 +118,7 @@ class RewriteSimpleHelper {
 	 */
 	public static function parseLanguage(&$url, &$params, &$entity) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		if (empty($urlGenerator->_language)) {
@@ -128,7 +131,7 @@ class RewriteSimpleHelper {
 			$language = explode('_', $activeLanguage);
 
 			if (isset($language[0], $language[1])) {
-				list($defaultLanguageCode, $null) = GalleryTranslator::doStatic()->getSupportedLanguageCode($language[0], false);
+				list($defaultLanguageCode, $null) = GalleryTranslator::getMe()->getSupportedLanguageCode($language[0], false);
 
 				if ($defaultLanguageCode == $activeLanguage) {
 					unset($language[1]);
@@ -148,11 +151,13 @@ class RewriteSimpleHelper {
 	 */
 	public static function parseSerialNumber(&$url, &$params, &$entity) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		if (!isset($entity) && ($entity = $urlGenerator->loadEntity($params['itemId'])) == null) {
 			return false;
 		}
+
 		$url = str_replace('%serialNumber%', $entity->getSerialNumber(), $url);
 		unset($params['serialNumber']);
 
@@ -164,16 +169,19 @@ class RewriteSimpleHelper {
 	 */
 	public static function parseFileName(&$url, &$params, &$entity) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		if (!isset($entity) && ($entity = $urlGenerator->loadEntity($params['itemId'])) == null) {
 			return false;
 		}
+
 		list($ret, $pseudoFileName) = GalleryUtilities::getPseudoFileName($entity);
 
 		if ($ret) {
 			return false;
 		}
+
 		$url = str_replace('%fileName%', urlencode($pseudoFileName), $url);
 
 		return true;

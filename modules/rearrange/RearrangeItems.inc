@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -35,6 +34,7 @@ class RearrangeItemsController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Check permissions
@@ -55,6 +55,7 @@ class RearrangeItemsController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			// Verify valid input
 			if (count($list) != count($childIds)) {
 				return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
@@ -82,7 +83,9 @@ class RearrangeItemsController extends GalleryController {
 			}
 
 			$event = GalleryCoreApi::newEvent('Gallery::ItemOrder');
+
 			$event->setData($itemId);
+
 			list($ret) = GalleryCoreApi::postEvent($event);
 
 			if ($ret) {
@@ -97,8 +100,9 @@ class RearrangeItemsController extends GalleryController {
 			'subView' => 'rearrange.RearrangeItems',
 			'itemId'  => $itemId,
 		);
-		$results['status']   = $status;
-		$results['error']    = $error;
+
+		$results['status'] = $status;
+		$results['error']  = $error;
 
 		return array(null, $results);
 	}
@@ -117,6 +121,7 @@ class RearrangeItemsView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Check permissions
@@ -149,11 +154,13 @@ class RearrangeItemsView extends GalleryView {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $childItems) = GalleryCoreApi::loadEntitiesById($childIds, 'GalleryItem');
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $thumbnails) = GalleryCoreApi::fetchThumbnailsByItemIds($childIds);
 
 			if ($ret) {
@@ -177,17 +184,22 @@ class RearrangeItemsView extends GalleryView {
 							return array($ret, null);
 						}
 					}
+
 					$child['thumbnail'] = (array)$thumb;
-					list($w, $h)        = GalleryUtilities::shrinkDimensionsToFit(
+
+					list($w, $h) = GalleryUtilities::shrinkDimensionsToFit(
 						$thumb->getWidth(),
 						$thumb->getHeight(),
 						100
 					);
-					$maxWidth           = max($w, $maxWidth);
-					$maxHeight          = max($h, $maxHeight);
+
+					$maxWidth  = max($w, $maxWidth);
+					$maxHeight = max($h, $maxHeight);
 				}
+
 				$children[] = $child;
 			}
+
 			$RearrangeItems['children']  = $children;
 			$RearrangeItems['count']     = count($children);
 			$RearrangeItems['maxWidth']  = $maxWidth  + 5;
@@ -199,16 +211,19 @@ class RearrangeItemsView extends GalleryView {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $theme) = GalleryCoreApi::loadPlugin('theme', $themeId);
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $params) = $theme->fetchParameters($item->getId());
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$RearrangeItems['rows']    = empty($params['rows']) ? 0 : $params['rows'];
 			$RearrangeItems['columns'] = empty($params['columns']) ? 0 : $params['columns'];
 		}

@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/GalleryRepository.class'
 );
@@ -34,16 +32,16 @@ GalleryCoreApi::requireOnce(
  */
 class AdminRepositoryController extends AdminRepositoryDownloadAndInstallController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminRepositoryController();
+		if (!isset($instance)) {
+			$instance = new AdminRepositoryController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -56,7 +54,7 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 			return array(null, $this->_repositories);
 		}
 
-		return GalleryRepository::doStatic()->getRepositories();
+		return GalleryRepository::getMe()->getRepositories();
 	}
 
 	/**
@@ -79,7 +77,10 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 			 * manager.
 			 */
 			foreach (array('module', 'theme') as $pluginType) {
-				list($ret, $pluginStatus[$pluginType]) = GalleryCoreApi::fetchPluginStatus($pluginType, true);
+				list($ret, $pluginStatus[$pluginType]) = GalleryCoreApi::fetchPluginStatus(
+					$pluginType,
+					true
+				);
 
 				if ($ret) {
 					return array($ret, null);
@@ -100,6 +101,7 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 					$data[$key] = 1;
 				}
 			}
+
 			$ret = GalleryCoreApi::setPluginParameter(
 				'module',
 				'core',
@@ -112,7 +114,8 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 			}
 
 			// Remove the default repositories from the data cache
-			GalleryRepository::doStatic()->clearRepositoryCache();
+			GalleryRepository::getMe()->clearRepositoryCache();
+
 			list($ret, $repositories) = $this->_getRepositories();
 
 			if ($ret) {
@@ -132,6 +135,7 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 					),
 				)
 			);
+
 			$delegate['view'] = 'core.ProgressBar';
 		} elseif (isset($form['action']['upgradeAll'])) {
 			list($ret, $repositories) = $this->_getRepositories();
@@ -158,11 +162,14 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 			} else {
 				// Start upgrade process and show progress bar.
 				GalleryCoreApi::requireOnce('modules/core/AdminRepositoryDownload.inc');
+
 				$templateAdapter =& $gallery->getTemplateAdapter();
+
 				$templateAdapter->registerTrailerCallback(
 					array($this, 'performDownloadAndInstallation'),
 					array($packages, $repositories)
 				);
+
 				$delegate['view'] = 'core.ProgressBar';
 			}
 		}
@@ -177,6 +184,7 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
 				$results['delegate'] = $delegate;
 			}
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -189,16 +197,16 @@ class AdminRepositoryController extends AdminRepositoryDownloadAndInstallControl
  */
 class AdminRepositoryView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminRepositoryView();
+		if (!isset($instance)) {
+			$instance = new AdminRepositoryView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -206,6 +214,7 @@ class AdminRepositoryView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$session  =& $gallery->getSession();
 
@@ -222,7 +231,7 @@ class AdminRepositoryView extends GalleryView {
 			$ret,
 			$repositories,
 			$repositoryInitErrorCount
-		) = GalleryRepository::doStatic()->getRepositories();
+		) = GalleryRepository::getMe()->getRepositories();
 
 		if ($ret) {
 			return array($ret, null);
@@ -230,12 +239,18 @@ class AdminRepositoryView extends GalleryView {
 
 		if ($form['formName'] != 'AdminRepository') {
 			// Set some defaults
-			$form['formName']    = 'AdminRepository';
-			list($ret, $sources) = GalleryCoreApi::getPluginParameter('module', 'core', 'core.repositories');
+			$form['formName'] = 'AdminRepository';
+
+			list($ret, $sources) = GalleryCoreApi::getPluginParameter(
+				'module',
+				'core',
+				'core.repositories'
+			);
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			@$form['repositories'] = unserialize($sources);
 		}
 
@@ -250,7 +265,11 @@ class AdminRepositoryView extends GalleryView {
 		$showIncompatible = GalleryUtilities::getRequestVariables('showIncompatible');
 
 		if ($showIncompatible == 'true') {
-			list($coreApiVersion, $themeApiVersion, $moduleApiVersion) = GalleryUtilities::getRequestVariables('coreApi', 'themeApi', 'moduleApi');
+			list(
+				$coreApiVersion,
+				$themeApiVersion,
+				$moduleApiVersion
+			) = GalleryUtilities::getRequestVariables('coreApi', 'themeApi', 'moduleApi');
 
 			if (empty($coreApiVersion) || empty($themeApiVersion) || empty($moduleApiVersion)) {
 				return array(
@@ -263,14 +282,14 @@ class AdminRepositoryView extends GalleryView {
 					null,
 				);
 			}
+
 			$coreApis['core']                    = explode('.', $coreApiVersion);
 			$coreApis['module']                  = explode('.', $moduleApiVersion);
 			$coreApis['theme']                   = explode('.', $themeApiVersion);
 			$AdminRepository['showIncompatible'] = 1;
 		}
 
-		$AdminRepository['OS'] = strncasecmp(PHP_OS, 'win', 3) ? 'unix' : 'winnt';
-
+		$AdminRepository['OS']                     = strncasecmp(PHP_OS, 'win', 3) ? 'unix' : 'winnt';
 		$AdminRepository['isCoreUpgradeAvailable'] = false;
 		$AdminRepository['upgradesAvailable']      = false;
 
@@ -320,7 +339,7 @@ class AdminRepositoryView extends GalleryView {
 			list(
 				$ret,
 				$message
-			) = GalleryRepository::doStatic()->translateRepositoryName($source);
+			) = GalleryRepository::getMe()->translateRepositoryName($source);
 
 			if ($ret) {
 				return array($ret, null);
@@ -345,7 +364,11 @@ class AdminRepositoryView extends GalleryView {
 
 			// Get core upgrade info.
 			if ($source == 'released') {
-				list($ret, $AdminRepository['isCoreUpgradeAvailable'], $apiVersions) = $repository->isCoreUpgradeAvailable();
+				list(
+					$ret,
+					$AdminRepository['isCoreUpgradeAvailable'],
+					$apiVersions
+				) = $repository->isCoreUpgradeAvailable();
 
 				if ($ret) {
 					return array($ret, null);
@@ -361,6 +384,7 @@ class AdminRepositoryView extends GalleryView {
 
 		if (!empty($AdminRepository['browseData'])) {
 			GalleryCoreApi::requireOnce('modules/core/AdminPlugins.inc');
+
 			uasort($AdminRepository['browseData'], array($this, 'pluginSort'));
 		}
 
@@ -369,6 +393,7 @@ class AdminRepositoryView extends GalleryView {
 			'modules' => $platform->is_writeable($AdminRepository['basePath'] . '/modules'),
 			'themes'  => $platform->is_writeable($AdminRepository['basePath'] . '/themes'),
 		);
+
 		$AdminRepository['authToken'] = $session->getAuthToken();
 
 		// Render the HTML body

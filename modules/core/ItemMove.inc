@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,21 +26,21 @@
  */
 class ItemMoveController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemMoveController();
+		if (!isset($instance)) {
+			$instance = new ItemMoveController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
 	 * @see GalleryController::handleRequest
-	 * @todo Scalability - Don't load all album-items into memory. Need a way to load the items
+	 * @todo Scalability - Do not load all album-items into memory. Need a way to load the items
 	 *       incrementally, e.g. with an AJAX-powered tree widget.
 	 */
 	public function handleRequest($form) {
@@ -52,8 +51,8 @@ class ItemMoveController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$itemId = $item->getId();
 
+		$itemId = $item->getId();
 		$status = $error = array();
 
 		if (isset($form['action']['move'])) {
@@ -62,7 +61,8 @@ class ItemMoveController extends GalleryController {
 
 			if (!empty($form['destination'])) {
 				// Check if we can add albums or items here
-				$newParentId             = $form['destination'];
+				$newParentId = $form['destination'];
+
 				list($ret, $permissions) = GalleryCoreApi::getPermissions($newParentId);
 
 				if ($ret) {
@@ -70,7 +70,7 @@ class ItemMoveController extends GalleryController {
 				}
 
 				if (!isset($permissions['core.view'])) {
-					// Avoid information disclosure, act as if the item didn't exist.
+					// Avoid information disclosure, act as if the item does not exist.
 					return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 				}
 
@@ -81,12 +81,13 @@ class ItemMoveController extends GalleryController {
 					$error[] = 'form[error][destination][permission]';
 				}
 
-				// Load destination parent ids: we don't want recursive moves
+				// Load destination parent ids: we do not want recursive moves
 				list($ret, $newParentAncestorIds) = GalleryCoreApi::fetchParentSequence($newParentId);
 
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$newParentAncestorIds[] = $newParentId;
 			} else {
 				$error[] = 'form[error][destination][empty]';
@@ -104,6 +105,7 @@ class ItemMoveController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$ret = GalleryCoreApi::studyPermissions($selectedIds);
 
 				if ($ret) {
@@ -113,7 +115,7 @@ class ItemMoveController extends GalleryController {
 				foreach ($selectedItems as $selectedItem) {
 					$selectedId = $selectedItem->getId();
 
-					// Can't move into a tree that is included in the source
+					// Cannot move into a tree that is included in the source
 					if (in_array($selectedId, $newParentAncestorIds)) {
 						$error[] = 'form[error][source][' . $selectedId . '][selfMove]';
 
@@ -146,19 +148,23 @@ class ItemMoveController extends GalleryController {
 				$storage =& $gallery->getStorage();
 
 				// Read lock old and new parent album, and all ancestor albums
-				$lockIds                = array();
+				$lockIds = array();
+
 				list($ret, $oldParents) = GalleryCoreApi::fetchParentSequence($itemId);
 
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				list($ret, $newParents) = GalleryCoreApi::fetchParentSequence($newParentId);
 
 				if ($ret) {
 					return array($ret, null);
 				}
-				$oldParents[]          = $itemId;
-				$newParents[]          = $newParentId;
+
+				$oldParents[] = $itemId;
+				$newParents[] = $newParentId;
+
 				list($ret, $lockIds[]) = GalleryCoreApi::acquireReadLock(
 					array_unique(array_merge($oldParents, $newParents))
 				);
@@ -178,7 +184,8 @@ class ItemMoveController extends GalleryController {
 					foreach ($currentItems as $item) {
 						$currentIds[] = $item->getId();
 					}
-					// Write lock all the items we're moving
+
+					// Write lock all the items we are moving
 					list($ret, $currentLockId) = GalleryCoreApi::acquireWriteLock($currentIds);
 
 					if ($ret) {
@@ -193,16 +200,19 @@ class ItemMoveController extends GalleryController {
 
 						if ($ret) {
 							$lockIds[] = $currentLockId;
+
 							GalleryCoreApi::releaseLocks($lockIds);
 
 							return array($ret, null);
 						}
+
 						$status['moved']['count']++;
 
 						$ret = $selectedItem->save();
 
 						if ($ret) {
 							$lockIds[] = $currentLockId;
+
 							GalleryCoreApi::releaseLocks($lockIds);
 
 							return array($ret, null);
@@ -217,6 +227,7 @@ class ItemMoveController extends GalleryController {
 
 							if ($ret) {
 								$lockIds[] = $currentLockId;
+
 								GalleryCoreApi::releaseLocks($lockIds);
 
 								return array($ret, null);
@@ -231,6 +242,7 @@ class ItemMoveController extends GalleryController {
 							return array($ret, null);
 						}
 					}
+
 					$ret = GalleryCoreApi::releaseLocks($currentLockId);
 
 					if ($ret) {
@@ -238,6 +250,7 @@ class ItemMoveController extends GalleryController {
 
 						return array($ret, null);
 					}
+
 					$ret = $storage->checkPoint();
 
 					if ($ret) {
@@ -265,7 +278,8 @@ class ItemMoveController extends GalleryController {
 				$redirect['itemId']  = $itemId;
 			}
 		} elseif (isset($form['action']['next'])) {
-			$page                = GalleryUtilities::getRequestVariables('page');
+			$page = GalleryUtilities::getRequestVariables('page');
+
 			list($ret, $peerIds) = GalleryCoreApi::fetchChildItemIdsWithPermission(
 				$itemId,
 				'core.delete'
@@ -275,8 +289,7 @@ class ItemMoveController extends GalleryController {
 				return array($ret, null);
 			}
 
-			$numPages = ceil(sizeof($peerIds) / $form['numPerPage']);
-
+			$numPages                      = ceil(sizeof($peerIds) / $form['numPerPage']);
 			$results['delegate']['itemId'] = $itemId;
 			$results['delegate']['page']   = min($page + 1, $numPages);
 		} elseif (isset($form['action']['previous'])) {
@@ -293,6 +306,7 @@ class ItemMoveController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'core.ItemMove';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -305,16 +319,16 @@ class ItemMoveController extends GalleryController {
  */
 class ItemMoveView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemMoveView();
+		if (!isset($instance)) {
+			$instance = new ItemMoveView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -329,6 +343,7 @@ class ItemMoveView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		list($selectedId, $page) = GalleryUtilities::getRequestVariables('selectedId', 'page');
@@ -338,6 +353,7 @@ class ItemMoveView extends GalleryView {
 			if ($selectedId) {
 				$form['selectedIds'][$selectedId] = true;
 			}
+
 			$form['destination'] = '';
 			$form['formName']    = 'ItemMove';
 			$form['numPerPage']  = 15;
@@ -358,18 +374,18 @@ class ItemMoveView extends GalleryView {
 		$selectedIds          = array();
 		$peers                = array();
 		$peerDescendentCounts = array();
-
-		$peerTypes = array(
+		$peerTypes            = array(
 			'album' => array(),
 			'data'  => array(),
 		);
-		$numPages  = 1;
+
+		$numPages = 1;
 
 		if (!empty($peerIds)) {
 			$numPages = ceil(sizeof($peerIds) / $form['numPerPage']);
 
 			if (empty($page)) {
-				// determine which page we're on
+				// determine which page we are on
 				$page = 1;
 
 				for ($i = 0; $i < sizeof($peerIds); $i++) {
@@ -427,9 +443,10 @@ class ItemMoveView extends GalleryView {
 				} else {
 					$peerTypes['data'][$peerItem->getId()] = 1;
 				}
+
 				$peers[$peerItem->getId()]['selected'] = isset($form['selectedIds'][$peerItem->getId()]);
 
-				// While we're at it, attach thumbnails and resizes
+				// While we are at it, attach thumbnails and resizes
 				if (isset($derivatives[$peerItem->getId()])) {
 					foreach ($derivatives[$peerItem->getId()] as $derivative) {
 						$type = $derivative->getDerivativeType();
@@ -497,8 +514,7 @@ class ItemMoveView extends GalleryView {
 			$albumTree = GalleryUtilities::createAlbumTree($albums);
 		}
 
-		$urlGenerator =& $gallery->getUrlGenerator();
-
+		$urlGenerator                     =& $gallery->getUrlGenerator();
 		$ItemMove                         = array();
 		$ItemMove['canCancel']            = (bool)GalleryUtilities::getRequestVariables('return');
 		$ItemMove['albumIds']             = $albumIds;

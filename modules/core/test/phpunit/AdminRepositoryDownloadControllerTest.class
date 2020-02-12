@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/AdminRepositoryDownload.inc');
 
 /**
@@ -40,20 +38,19 @@ class AdminRepositoryDownloadControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		global $gallery;
-		$session =& $gallery->getSession();
 
+		$session                       =& $gallery->getSession();
 		$this->_galleryTemplateAdapter =& $gallery->getTemplateAdapter();
-
-		$gallery->_phpVm = new AdminRepositoryDownloadControllerTestPhpVm();
+		$gallery->_phpVm               = new AdminRepositoryDownloadControllerTestPhpVm();
 
 		// Use our own wrapped controller so that we can override _fetchPluginStatus
 		$this->_controller           = new AdminRepositoryDownloadControllerTestWrapper();
 		$this->_controller->_version = '0.1';
 		$this->_controller->_active  = true;
-
-		$cacheKey           = 'GalleryTranslator::SupportedLanguages';
-		$supportedLanguages = array(
+		$cacheKey                    = 'GalleryTranslator::SupportedLanguages';
+		$supportedLanguages          = array(
 			'en' => array(
 				'US' => array('US English'),
 			),
@@ -84,6 +81,7 @@ class AdminRepositoryDownloadControllerTest extends GalleryControllerTestCase {
 
 	public function tearDown() {
 		global $gallery;
+
 		$gallery->_templateAdapter =& $this->_galleryTemplateAdapter;
 
 		$ret = parent::tearDown();
@@ -98,9 +96,10 @@ class AdminRepositoryDownloadControllerTest extends GalleryControllerTestCase {
 
 		GalleryUtilities::putRequestVariable('form[pluginType]', 'module');
 		GalleryUtilities::putRequestVariable('form[pluginId]', 'testModule');
-
 		GalleryUtilities::putRequestVariable('form[action][cancel]', '1');
+
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -169,6 +168,7 @@ class AdminRepositoryDownloadControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -182,6 +182,7 @@ class AdminRepositoryDownloadControllerTest extends GalleryControllerTestCase {
 		);
 
 		$this->assertEquals(1, $mockAdapter->getCallbackCount());
+
 		$callback = $mockAdapter->getCallback(0);
 
 		$this->assertEquals(

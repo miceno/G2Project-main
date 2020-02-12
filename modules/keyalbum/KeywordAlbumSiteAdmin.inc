@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -64,12 +63,19 @@ class KeywordAlbumSiteAdminController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
-			$status = empty($status) ? array() : array('statusMessage' => $status);
+
+			$status = empty($status) ? array() : array(
+				'statusMessage' => $status,
+			);
 		}
 
 		if (isset($form['action']['save']) && empty($error)) {
 			$split = '';
-			$map   = array('semicolon' => ';', 'comma' => ',', 'space' => '\\s');
+			$map   = array(
+				'semicolon' => ';',
+				'comma'     => ',',
+				'space'     => '\\s',
+			);
 
 			foreach ($form['split'] as $key => $unused) {
 				if (isset($map[$key])) {
@@ -83,14 +89,15 @@ class KeywordAlbumSiteAdminController extends GalleryController {
 				'orderDirection' => !isset($form['orderDirection']) ? '' : $form['orderDirection'],
 				'summaryLinks'   => $form['summaryLinks'],
 				'description'    => $form['description'],
-				'split'          => $split, )
-			as $key => $value) {
+				'split'          => $split,
+			) as $key => $value) {
 				$ret = GalleryCoreApi::setPluginParameter('module', 'keyalbum', $key, $value);
 
 				if ($ret) {
 					return array($ret, null);
 				}
 			}
+
 			$status['saved'] = 1;
 		}
 
@@ -101,7 +108,8 @@ class KeywordAlbumSiteAdminController extends GalleryController {
 				'subView' => 'keyalbum.KeywordAlbumSiteAdmin',
 			),
 			'status' => $status,
-			'error'  => $error, );
+			'error'  => $error,
+		);
 
 		return array(null, $results);
 	}
@@ -140,6 +148,7 @@ class KeywordAlbumSiteAdminView extends GalleryView {
 					return array($ret, null);
 				}
 			}
+
 			$tmp = explode('|', $form['orderBy'], 2);
 
 			if (count($tmp) < 2) {
@@ -148,7 +157,13 @@ class KeywordAlbumSiteAdminView extends GalleryView {
 				$form['orderBy'] = $tmp[1];
 				$form['presort'] = $tmp[0];
 			}
-			$map           = array(';' => 'semicolon', ',' => 'comma', 's' => 'space');
+
+			$map = array(
+				';' => 'semicolon',
+				',' => 'comma',
+				's' => 'space',
+			);
+
 			$split         = $form['split'];
 			$form['split'] = array();
 
@@ -169,26 +184,31 @@ class KeywordAlbumSiteAdminView extends GalleryView {
 		}
 
 		$summaryList = array(
-		'all'   => $module->translate('All album views'),
-		'album' => $module->translate('Standard albums'),
-		'key'   => $module->translate('Keyword albums'),
-		'none'  => $module->translate('None'), );
+			'all'   => $module->translate('All album views'),
+			'album' => $module->translate('Standard albums'),
+			'key'   => $module->translate('Keyword albums'),
+			'none'  => $module->translate('None'),
+		);
 
 		// Set up sort order selection list
 		GalleryCoreApi::requireOnce('modules/core/classes/GallerySortInterface_1_2.class');
+
 		list(
 			$ret,
 			$orderByList,
 			$presortList,
 			$orderDirectionList
-		) = GallerySortInterface_1_2::doStatic()->getAllSortOrders();
+		) = GallerySortInterface_1_2::getMe()->getAllSortOrders();
 
 		if ($ret) {
 			return array($ret, null);
 		}
 
 		// Set up theme selection list
-		$themeList               = array('' => $module->translate('&laquo; default theme &raquo;'));
+		$themeList = array(
+			'' => $module->translate('&laquo; default theme &raquo;'),
+		);
+
 		list($ret, $themeStatus) = GalleryCoreApi::fetchPluginStatus('theme');
 
 		if ($ret) {
@@ -202,29 +222,36 @@ class KeywordAlbumSiteAdminView extends GalleryView {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$themeList[$id] = $theme->translate($theme->getName());
 			}
 		}
 
 		$KeywordAlbumSiteAdmin = array(
-		'summaryList'        => $summaryList,
-		'orderByList'        => $orderByList,
-		'presortList'        => $presortList,
-		'orderDirectionList' => $orderDirectionList,
-		'themeList'          => $themeList, );
+			'summaryList'        => $summaryList,
+			'orderByList'        => $orderByList,
+			'presortList'        => $presortList,
+			'orderDirectionList' => $orderDirectionList,
+			'themeList'          => $themeList,
+		);
 
 		// Set up theme settings
-		list($ret, $themeSettingsId) = GalleryCoreApi::getPluginParameter('module', 'keyalbum', 'themeSettingsId');
+		list($ret, $themeSettingsId) = GalleryCoreApi::getPluginParameter(
+			'module',
+			'keyalbum',
+			'themeSettingsId'
+		);
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$ret = GalleryCoreApi::loadThemeSettingsForm(
 			$form['themeId'],
 			$themeSettingsId,
 			$template,
 			$form
-	);
+		);
 
 		if ($ret) {
 			return array($ret, null);
@@ -237,6 +264,11 @@ class KeywordAlbumSiteAdminView extends GalleryView {
 		$template->setVariable('KeywordAlbumSiteAdmin', $KeywordAlbumSiteAdmin);
 		$template->setVariable('controller', 'keyalbum.KeywordAlbumSiteAdmin');
 
-		return array(null, array('body' => 'modules/keyalbum/templates/KeywordAlbumSiteAdmin.tpl'));
+		return array(
+			null,
+			array(
+				'body' => 'modules/keyalbum/templates/KeywordAlbumSiteAdmin.tpl',
+			),
+		);
 	}
 }

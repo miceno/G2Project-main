@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class AdminCoreController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminCoreController();
+		if (!isset($instance)) {
+			$instance = new AdminCoreController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -89,6 +88,7 @@ class AdminCoreController extends GalleryController {
 						if ($value[0] != '/') {
 							$value = '/' . $value;
 						}
+
 						$paths[$key] = $value;
 					}
 
@@ -112,6 +112,7 @@ class AdminCoreController extends GalleryController {
 					if ($cookieDomain[0] != '.') {
 						$cookieDomain = '.' . $cookieDomain;
 					}
+
 					$urlComponents = parse_url($urlGenerator->getCurrentUrlDir());
 					$currentHost   = '.' . $urlComponents['host'];
 
@@ -186,6 +187,7 @@ class AdminCoreController extends GalleryController {
 				&& !preg_match('/^\*+/', $form['smtp']['password'])
 			) {
 				GalleryUtilities::unsanitizeInputValues($form['smtp']['password'], false);
+
 				$ret = GalleryCoreApi::setPluginParameter(
 					'module',
 					'core',
@@ -205,15 +207,19 @@ class AdminCoreController extends GalleryController {
 
 		if (isset($form['action']['emailTest']) && empty($error)) {
 			$platform = $gallery->getPlatform();
+
 			$gallery->startRecordingDebugSnippet();
+
 			ob_start();
-			$ret    = $platform->sendEmail(
+
+			$ret = $platform->sendEmail(
 				'modules/core/templates/EmailTest.tpl',
 				array(),
 				null,
 				$form['emailTest']['to'],
 				$module->translate('Gallery Email Test')
 			);
+
 			$output = ob_get_contents();
 			ob_end_clean();
 			$debugSnippet = $gallery->stopRecordingDebugSnippet();
@@ -230,13 +236,13 @@ class AdminCoreController extends GalleryController {
 			$redirect['subView'] = 'core.AdminCore';
 		}
 
-
 		if (!empty($redirect)) {
 			$results['redirect'] = $redirect;
 		} else {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'core.AdminCore';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -249,16 +255,16 @@ class AdminCoreController extends GalleryController {
  */
 class AdminCoreView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminCoreView();
+		if (!isset($instance)) {
+			$instance = new AdminCoreView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -301,7 +307,8 @@ class AdminCoreView extends GalleryView {
 					return array($ret, null);
 				}
 
-				list($outer, $inner)  = explode('.', $key);
+				list($outer, $inner) = explode('.', $key);
+
 				$form[$outer][$inner] = $value;
 			}
 
@@ -366,6 +373,7 @@ class AdminCoreView extends GalleryView {
 				)
 			);
 		}
+
 		$sessionTimeList[25 * 365 * 86400] = $module->translate('forever');
 
 		if (GalleryUtilities::isA($platform, 'UnixPlatform')) {
@@ -391,8 +399,7 @@ class AdminCoreView extends GalleryView {
 			);
 
 			$can['tweakSystemProcesses'] = true;
-
-			$AdminCore['beNiceList'] = array(
+			$AdminCore['beNiceList']     = array(
 				'0' => $module->translate('High Priority (Me first!)'),
 				'1' => $module->translate('Low Priority (I want to share!)'),
 			);
@@ -400,9 +407,10 @@ class AdminCoreView extends GalleryView {
 
 		// Miscellaneous lists
 		$embeddedMarkupList = array(
-			'none'   => $module->translate('No Markup'),
-			'bbcode' => $module->translate('BBCode'),
-			'html'   => $module->translate('Raw HTML'),
+			'none'     => $module->translate('No Markup'),
+			'bbcode'   => $module->translate('BBCode'),
+			'markdown' => $module->translate('Markdown'),
+			'html'     => $module->translate('Raw HTML'),
 		);
 
 		$lockSystemList = array(

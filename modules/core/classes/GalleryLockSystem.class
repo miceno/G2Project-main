@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -53,16 +52,16 @@ class GalleryLockSystem {
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryLockSystem();
+		if (!isset($instance)) {
+			$instance = new GalleryLockSystem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -86,6 +85,7 @@ class GalleryLockSystem {
 			if ($lock['type'] != LOCK_WRITE) {
 				continue;
 			}
+
 			$foundIds = array_intersect(array_keys($lock['ids']), $ids);
 
 			if (count($foundIds) == count($lock['ids'])) {
@@ -99,6 +99,7 @@ class GalleryLockSystem {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				unset($this->_releaseQueue[$lockId]);
 			} elseif (!empty($foundIds)) {
 				// Remove ids from this lock
@@ -160,6 +161,7 @@ class GalleryLockSystem {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				unset($this->_releaseQueue[$lockId]);
 			} elseif (!empty($foundIds)) {
 				// Remove ids from this read lock
@@ -183,6 +185,7 @@ class GalleryLockSystem {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$this->_locks[$lockId] = array(
 				'lockId' => $lockId,
 				'type'   => LOCK_WRITE,
@@ -257,6 +260,7 @@ class GalleryLockSystem {
 	 */
 	public function releaseLocks($lockIds) {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		if (!is_array($lockIds)) {
@@ -269,6 +273,7 @@ class GalleryLockSystem {
 				unset($lockIds[$key]);
 			}
 		}
+
 		// Queue locks for release
 		foreach ($lockIds as $lockId) {
 			$this->_releaseQueue[$lockId] = $this->_locks[$lockId];
@@ -298,6 +303,7 @@ class GalleryLockSystem {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->_releaseQueue = array();
 		}
 
@@ -366,7 +372,7 @@ class GalleryLockSystem {
 	}
 
 	/**
-	 * Release any locks that we're holding
+	 * Release any locks that we are holding
 	 *
 	 * @return GalleryStatus a status code
 	 */
@@ -381,7 +387,7 @@ class GalleryLockSystem {
 	}
 
 	/**
-	 * Refresh all the locks that we hold so that they aren't accidentally considered expired
+	 * Refresh all the locks that we hold so that they are not accidentally considered expired
 	 *
 	 * @param int $freshUntil the new "fresh until" timestamp
 	 * @return GalleryStatus a status code

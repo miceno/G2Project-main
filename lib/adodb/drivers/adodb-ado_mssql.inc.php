@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,12 +8,9 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Microsoft SQL Server ADO data driver. Requires ADO and MSSQL client.
   Works only on MS Windows.
-
   Warning: Some versions of PHP (esp PHP4) leak memory when ADO/COM is used.
   Please check http://bugs.php.net/ for more info.
 */
@@ -30,7 +28,6 @@ if (!defined('_ADODB_ADO_LAYER')) {
 	}
 }
 
-
 class ADODB_ado_mssql extends ADODB_ado {
 	public $databaseType = 'ado_mssql';
 	public $hasTop       = 'top';
@@ -39,13 +36,15 @@ class ADODB_ado_mssql extends ADODB_ado {
 	public $sysTimeStamp = 'GetDate()';
 	public $leftOuter    = '*=';
 	public $rightOuter   = '=*';
-	public $ansiOuter    = true; // for mssql7 or later
-	public $substr       = 'substring';
-	public $length       = 'len';
-	public $_dropSeqSQL  = 'drop table %s';
 
-	//var $_inTransaction = 1; // always open recordsets, so no transaction problems.
+	// for mssql7 or later
+	public $ansiOuter   = true;
+	public $substr      = 'substring';
+	public $length      = 'len';
+	public $_dropSeqSQL = 'drop table %s';
 
+	// always open recordsets, so no transaction problems.
+	//var $_inTransaction = 1;
 	public function _insertid() {
 		return $this->GetOne('select SCOPE_IDENTITY()');
 	}
@@ -66,6 +65,7 @@ class ADODB_ado_mssql extends ADODB_ado {
 		if (!stristr($transaction_mode, 'isolation')) {
 			$transaction_mode = 'ISOLATION LEVEL ' . $transaction_mode;
 		}
+
 		$this->Execute('SET TRANSACTION ' . $transaction_mode);
 	}
 
@@ -76,31 +76,35 @@ class ADODB_ado_mssql extends ADODB_ado {
 	}
 
 	public function MetaColumns($table, $normalize = true) {
-		$table = strtoupper($table);
-		$arr   = array();
-		$dbc   = $this->_connectionID;
-
+		$table        = strtoupper($table);
+		$arr          = array();
+		$dbc          = $this->_connectionID;
 		$osoptions    = array();
 		$osoptions[0] = null;
 		$osoptions[1] = null;
 		$osoptions[2] = $table;
 		$osoptions[3] = null;
 
-		$adors = @$dbc->OpenSchema(4, $osoptions);//tables
+		//tables
+		$adors = @$dbc->OpenSchema(4, $osoptions);
 
 		if ($adors) {
 			while (!$adors->EOF) {
-				$fld                         = new ADOFieldObject();
-				$c                           = $adors->Fields(3);
-				$fld->name                   = $c->Value;
-				$fld->type                   = 'CHAR'; // cannot discover type in ADO!
+				$fld       = new ADOFieldObject();
+				$c         = $adors->Fields(3);
+				$fld->name = $c->Value;
+
+				// cannot discover type in ADO!
+				$fld->type                   = 'CHAR';
 				$fld->max_length             = -1;
 				$arr[strtoupper($fld->name)] = $fld;
 
 				$adors->MoveNext();
 			}
+
 			$adors->Close();
 		}
+
 		$false = false;
 
 		return empty($arr) ? $false : $arr;
@@ -108,8 +112,11 @@ class ADODB_ado_mssql extends ADODB_ado {
 
 	public function CreateSequence($seq = 'adodbseq', $start = 1) {
 		$this->Execute('BEGIN TRANSACTION adodbseq');
+
 		$start -= 1;
+
 		$this->Execute("create table $seq (id float(53))");
+
 		$ok = $this->Execute("insert into $seq with (tablock,holdlock) values($start)");
 
 		if (!$ok) {
@@ -117,6 +124,7 @@ class ADODB_ado_mssql extends ADODB_ado {
 
 			return false;
 		}
+
 		$this->Execute('COMMIT TRANSACTION adodbseq');
 
 		return true;
@@ -125,10 +133,12 @@ class ADODB_ado_mssql extends ADODB_ado {
 	public function GenID($seq = 'adodbseq', $start = 1) {
 		//$this->debug=1;
 		$this->Execute('BEGIN TRANSACTION adodbseq');
+
 		$ok = $this->Execute("update $seq with (tablock,holdlock) set id = id + 1");
 
 		if (!$ok) {
 			$this->Execute("create table $seq (id float(53))");
+
 			$ok = $this->Execute("insert into $seq with (tablock,holdlock) values($start)");
 
 			if (!$ok) {
@@ -136,11 +146,14 @@ class ADODB_ado_mssql extends ADODB_ado {
 
 				return false;
 			}
+
 			$this->Execute('COMMIT TRANSACTION adodbseq');
 
 			return $start;
 		}
+
 		$num = $this->GetOne("select id from $seq");
+
 		$this->Execute('COMMIT TRANSACTION adodbseq');
 
 		return $num;
@@ -149,7 +162,6 @@ class ADODB_ado_mssql extends ADODB_ado {
 		//return $this->GetOne("SELECT CONVERT(varchar(255), NEWID()) AS 'Char'");
 	}
 } // end class
-
 class ADORecordSet_ado_mssql extends ADORecordSet_ado {
 	public $databaseType = 'ado_mssql';
 

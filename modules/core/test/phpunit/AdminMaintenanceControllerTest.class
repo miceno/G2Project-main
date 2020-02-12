@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/AdminMaintenance.inc');
 
 /**
@@ -40,7 +38,8 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		}
 
 		$path = 'modules/core/test/phpunit/AdminMaintenanceControllerTest.class';
-		$ret  = GalleryCoreApi::registerFactoryImplementation(
+
+		$ret = GalleryCoreApi::registerFactoryImplementation(
 			'MaintenanceTask',
 			'AdminMaintenanceControllerTestTaskSuccess',
 			'AdminMaintenanceControllerTestTaskSuccess',
@@ -78,6 +77,7 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markFactoryModuleForCleanup('coreTest');
 	}
 
@@ -95,7 +95,7 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 			);
 
 			if ($ret) {
-				// Don't return early here, give the loop a chance to try to clear all tasks
+				// Do not return early here, give the loop a chance to try to clear all tasks
 				$this->failWithStatus($ret);
 			}
 		}
@@ -112,6 +112,7 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('taskId', 'AdminMaintenanceControllerTestTaskSuccess');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -136,13 +137,16 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		}
 
 		$this->assertTrue($info['runId'] > 0);
-		$this->assertTrue($info['timestamp'] > time() - 2);  // assert that it's recent
+
+		// assert that it is recent
+		$this->assertTrue($info['timestamp'] > time() - 2);
 		$this->assertTrue($info['success']);
 		$this->assertEquals(array('success details'), $info['details']);
 	}
 
 	public function testRunTaskProgressBar() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('form[action][runTask]', 1);
 		GalleryUtilities::putRequestVariable(
 			'taskId',
@@ -153,8 +157,8 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		$gallery->_templateAdapter =& $mockAdapter;
 		$mockUrlGenerator          = new AdminMaintenanceControllerTestUrlGenerator();
 		$gallery->_urlGenerator    =& $mockUrlGenerator;
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -200,13 +204,16 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		}
 
 		$this->assertTrue($info['runId'] > 0);
-		$this->assertTrue($info['timestamp'] > time() - 2);  // assert that it's recent
+
+		// assert that it is recent
+		$this->assertTrue($info['timestamp'] > time() - 2);
 		$this->assertTrue($info['success']);
 		$this->assertEquals(array('success details'), $info['details']);
 	}
 
 	public function testRunTaskProgressBarFail() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('form[action][runTask]', 1);
 		GalleryUtilities::putRequestVariable(
 			'taskId',
@@ -218,8 +225,8 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		$gallery->_templateAdapter =& $mockAdapter;
 		$mockUrlGenerator          = new AdminMaintenanceControllerTestUrlGenerator();
 		$gallery->_urlGenerator    =& $mockUrlGenerator;
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -267,13 +274,16 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		}
 
 		$this->assertTrue($info['runId'] > 0);
-		$this->assertTrue($info['timestamp'] > time() - 2);  // assert that it's recent
+
+		// assert that it is recent
+		$this->assertTrue($info['timestamp'] > time() - 2);
 		$this->assertFalse($info['success']);
 		$this->assertEquals(array('fail details'), $info['details']);
 	}
 
 	public function testRunTaskProgressBarError() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('form[action][runTask]', 1);
 		GalleryUtilities::putRequestVariable(
 			'taskId',
@@ -285,8 +295,8 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		$gallery->_templateAdapter =& $mockAdapter;
 		$mockUrlGenerator          = new AdminMaintenanceControllerTestUrlGenerator();
 		$gallery->_urlGenerator    =& $mockUrlGenerator;
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -332,7 +342,9 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		}
 
 		$this->assertTrue($info['runId'] > 0);
-		$this->assertTrue($info['timestamp'] > time() - 2);  // assert that it's recent
+
+		// assert that it is recent
+		$this->assertTrue($info['timestamp'] > time() - 2);
 		$this->assertFalse($info['success']);
 		$this->assertTrue(strstr($info['details'], 'ERROR_UNKNOWN'));
 	}
@@ -342,6 +354,7 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('taskId', 'AdminMaintenanceControllerTestTaskFail');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -366,7 +379,9 @@ class AdminMaintenanceControllerTest extends GalleryControllerTestCase {
 		}
 
 		$this->assertTrue($info['runId'] > 0);
-		$this->assertTrue($info['timestamp'] > time() - 2);  // assert that it's recent
+
+		// assert that it is recent
+		$this->assertTrue($info['timestamp'] > time() - 2);
 		$this->assertFalse($info['success']);
 		$this->assertEquals(array('fail details'), $info['details']);
 	}
@@ -397,9 +412,9 @@ class AdminMaintenanceControllerTestTaskProgressBar extends MaintenanceTask {
 
 	public function run() {
 		global $gallery;
-		$templateAdapter =& $gallery->getTemplateAdapter();
 
-		$success = !GalleryUtilities::getRequestVariables('forceTaskToFail');
+		$templateAdapter =& $gallery->getTemplateAdapter();
+		$success         = !GalleryUtilities::getRequestVariables('forceTaskToFail');
 
 		$templateAdapter->updateProgressBar('ignored', 'ignored', 0);
 		$templateAdapter->updateProgressBar('ignored', 'ignored', 50);

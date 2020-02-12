@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/gd/classes/GdToolkitHelper.class');
 GalleryCoreApi::requireOnce('modules/gd/classes/GdToolkit.class');
 GalleryCoreApi::requireOnce('modules/gd/test/phpunit/TestGdFunctionality.class');
@@ -33,13 +31,13 @@ class GdToolkitTest extends GalleryTestCase {
 	// The possible environments to simulate
 	public $_gdEnvironments;
 	public $_toolkit;
-
 	public $_oldBase;
 
 	public function __construct($methodName) {
 		parent::__construct($methodName);
 
 		include __DIR__ . '/GdFunctionMatrix.inc';
+
 		$this->_gdEnvironments = $gdEnvironments;
 	}
 
@@ -71,6 +69,7 @@ class GdToolkitTest extends GalleryTestCase {
 
 		// Watermarks are relative to data.gallery.base
 		$this->_oldBase = $gallery->getConfig('data.gallery.base');
+
 		$gallery->setConfig('data.gallery.base', '/valid/');
 
 		// Get a toolkit to work with
@@ -95,6 +94,7 @@ class GdToolkitTest extends GalleryTestCase {
 			// Test each PHP environment we know
 			$this->_gdFunctionality->setEnvironment($environment);
 			$this->_toolkit->setGdFunctionality($this->_gdFunctionality);
+
 			$gd =& $this->_gdFunctionality;
 
 			list($ret, $isSupported) = GdToolkitHelper::isGdVersionSupported(null, $gd);
@@ -130,6 +130,7 @@ class GdToolkitTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						array(
 							'x'        => 100,
@@ -157,6 +158,7 @@ class GdToolkitTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						array(
 							'x'        => 450,
@@ -184,6 +186,7 @@ class GdToolkitTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						array(
 							'x'        => 900,
@@ -211,6 +214,7 @@ class GdToolkitTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						array(
 							'x'        => 154.0,
@@ -229,10 +233,11 @@ class GdToolkitTest extends GalleryTestCase {
 				}
 
 				if (GdToolkitHelper::isOperationSupported('rotate', $gd)) {
-					$context                              = array(
+					$context = array(
 						'width'  => 300,
 						'height' => 200,
 					);
+
 					list($ret, $resultMimeType, $context) = $this->_toolkit->performOperation(
 						$mimeType,
 						'rotate',
@@ -245,6 +250,7 @@ class GdToolkitTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						array(
 							'x'        => 200,
@@ -254,6 +260,7 @@ class GdToolkitTest extends GalleryTestCase {
 						$this->_gdFunctionality->getOutputFileData('/valid/rotated.ext'),
 						'rotate'
 					);
+
 					$this->assertEquals(
 						array(
 							'width'  => 200,
@@ -262,6 +269,7 @@ class GdToolkitTest extends GalleryTestCase {
 						$context,
 						'rotate-context'
 					);
+
 					$this->assertEquals(
 						0,
 						$gd->_undestroyedResourceCounter,
@@ -289,9 +297,10 @@ class GdToolkitTest extends GalleryTestCase {
 					);
 
 					if (in_array($mimeType, array('image/png', 'image/gif'))) {
-						// There's an additional copy to remove the transparencies
+						// there is an additional copy to remove the transparencies
 						$expected['copy'] = array('', 0, 0, 0, 0, 400, 400);
 					}
+
 					$this->assertEquals(
 						$expected,
 						$this->_gdFunctionality->getOutputFileData('/valid/converted.jpeg'),
@@ -320,7 +329,9 @@ class GdToolkitTest extends GalleryTestCase {
 							0,
 							0,
 						)
-					); // image alignment x, y
+						// image alignment x, y
+					);
+
 					if ($ret) {
 						return $ret;
 					}
@@ -368,10 +379,13 @@ class GdToolkitTest extends GalleryTestCase {
 							99,
 							99,
 						)
-					); // image alignment x, y
+						// image alignment x, y
+					);
+
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						0,
 						$gd->_undestroyedResourceCounter,
@@ -381,7 +395,8 @@ class GdToolkitTest extends GalleryTestCase {
 
 				if (GdToolkitHelper::isOperationSupported('compress', $gd)) {
 					$this->_gdFunctionality->_counter = 2;
-					list($ret, $resultMimeType)       = $this->_toolkit->performOperation(
+
+					list($ret, $resultMimeType) = $this->_toolkit->performOperation(
 						$mimeType,
 						'compress',
 						'compressMe.jpg',
@@ -392,6 +407,7 @@ class GdToolkitTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$this->assertEquals(
 						array(
 							'x'        => 0,
@@ -410,7 +426,7 @@ class GdToolkitTest extends GalleryTestCase {
 			}
 		}
 
-		// Test a functionality that doesn't exist
+		// Test a functionality that does not exist
 		list($ret, $resultMimeType) = $this->_toolkit->performOperation(
 			'image/png',
 			'BOGUS',
@@ -448,6 +464,7 @@ class GdToolkitTest extends GalleryTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals(array(300, 300), $results);
 			$this->assertEquals(
 				0,
@@ -455,8 +472,9 @@ class GdToolkitTest extends GalleryTestCase {
 				'memory leak for image/gif / dimensions'
 			);
 
-			// Test a property that doesn't exist
+			// Test a property that does not exist
 			list($ret, $results) = $this->_toolkit->getProperty('image/gif', 'BOGUS', 'BOGUS');
+
 			$this->assertTrue($ret->getErrorCode() & ERROR_UNIMPLEMENTED);
 			$this->assertEquals(
 				0,
@@ -467,62 +485,134 @@ class GdToolkitTest extends GalleryTestCase {
 	}
 
 	public function testMergeOperations() {
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('crop', array(1, 2, 3, 4), 'crop', array(3, 4, 5, 6));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'crop',
+			array(1, 2, 3, 4),
+			'crop',
+			array(3, 4, 5, 6)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('crop', $operation);
 		$this->assertEquals(array(3, 4, 5, 6), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('resize', array(1, 2), 'resize', array(3, 4));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'resize',
+			array(1, 2),
+			'resize',
+			array(3, 4)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('resize', $operation);
 		$this->assertEquals(array(3, 4), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('thumbnail', array(1, 2), 'resize', array(3, 4));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'thumbnail',
+			array(1, 2),
+			'resize',
+			array(3, 4)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('resize', $operation);
 		$this->assertEquals(array(3, 4), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('thumbnail', array(1, 2), 'thumbnail', array(3, 4));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'thumbnail',
+			array(1, 2),
+			'thumbnail',
+			array(3, 4)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('thumbnail', $operation);
 		$this->assertEquals(array(3, 4), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('scale', array(1, 2), 'thumbnail', array(3, 4));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'scale',
+			array(1, 2),
+			'thumbnail',
+			array(3, 4)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('thumbnail', $operation);
 		$this->assertEquals(array(3, 4), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('rotate', array(90), 'rotate', array(90));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'rotate',
+			array(90),
+			'rotate',
+			array(90)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('rotate', $operation);
 		$this->assertEquals(array(180), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('rotate', array(90), 'rotate', array(-90));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'rotate',
+			array(90),
+			'rotate',
+			array(-90)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals(null, $operation);
 		$this->assertEquals(null, $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('rotate', array(270), 'rotate', array(180));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'rotate',
+			array(270),
+			'rotate',
+			array(180)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('rotate', $operation);
 		$this->assertEquals(array(90), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('rotate', array(90), 'rotate', array(-180));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'rotate',
+			array(90),
+			'rotate',
+			array(-180)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('rotate', $operation);
 		$this->assertEquals(array(-90), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('rotate', array(90), 'rotate', array(180));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'rotate',
+			array(90),
+			'rotate',
+			array(180)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals('rotate', $operation);
 		$this->assertEquals(array(-90), $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('rotate', array(270), 'rotate', array(90));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'rotate',
+			array(270),
+			'rotate',
+			array(90)
+		);
+
 		$this->assertTrue($success);
 		$this->assertEquals(null, $operation);
 		$this->assertEquals(null, $args);
 
-		list($success, $operation, $args) = $this->_toolkit->mergeOperations('crop', array(1, 2), 'thumbnail', array(3, 4));
+		list($success, $operation, $args) = $this->_toolkit->mergeOperations(
+			'crop',
+			array(1, 2),
+			'thumbnail',
+			array(3, 4)
+		);
+
 		$this->assertFalse($success);
 	}
 
@@ -536,6 +626,7 @@ class GdToolkitTest extends GalleryTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals(
 				$environment['mimeTypes'],
 				$results,
@@ -717,6 +808,7 @@ class GdToolkitTest extends GalleryTestCase {
 					'mimeTypes'   => $environment['mimeTypes'],
 				);
 			}
+
 			$qualityMimeTypes = array_intersect(array('image/jpeg'), $environment['mimeTypes']);
 
 			if (!empty($qualityMimeTypes)) {
@@ -739,6 +831,7 @@ class GdToolkitTest extends GalleryTestCase {
 			);
 
 			$environment['mimeTypes'][] = 'application/x-shockwave-flash';
+
 			$this->assertEquals(
 				array(
 					'dimensions' => array(
@@ -757,6 +850,7 @@ class GdToolkitTest extends GalleryTestCase {
 		// We use the other case (has transparent color index) in other tests for simplicity
 		$this->_gdFunctionality->setEnvironment(array_pop($this->_gdEnvironments));
 		$this->_toolkit->setGdFunctionality($this->_gdFunctionality);
+
 		$gd =& $this->_gdFunctionality;
 
 		list($ret, $res) = $this->_toolkit->_getTrueColorImageRes(200, 300, true);
@@ -766,11 +860,14 @@ class GdToolkitTest extends GalleryTestCase {
 		}
 
 		$hasTransparency = $this->_toolkit->_canHaveTransparency('image/gif', $res);
+
 		$this->assertTrue($hasTransparency, 'has transparency');
 
 		// After some operation, the resource has no transparent color index anymore...
 		$gd->imagecolortransparent($res, -1);
+
 		$hasTransparency = $this->_toolkit->_canHaveTransparency('image/gif', $res);
+
 		$this->assertFalse($hasTransparency, 'has transparency 2');
 
 		// Call the method under test through the save wrapper
@@ -784,10 +881,11 @@ class GdToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$this->_toolkit->_free($res);
 
+		$this->_toolkit->_free($res);
 		$this->assertEquals(0, $gd->_undestroyedResourceCounter, 'memory leak');
 		$this->assertEquals(2, $gd->_resourceCounter, 'total resources used');
+
 		$this->assertEquals(
 			array(
 				'x'        => 200,

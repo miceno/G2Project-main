@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -40,8 +39,11 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 		}
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$gallery->_phpVm = new UnitTestPhpVm();
+
 		$gallery->setConfig('data.gallery.plugins_data', '/');
 		$gallery->setConfig('apacheSetenvBroken', 0);
 	}
@@ -59,6 +61,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 		GalleryUtilities::putRequestVariable('file', 'bogus!');
 
 		list($ret, $results) = $this->_renderImmediate(array(), array());
+
 		$this->assertErrorEquals(ERROR_BAD_PARAMETER, $ret);
 		$this->assertEquals('', $results);
 	}
@@ -71,7 +74,8 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 		 * test. (Verify all header() calls, including those from loadView())
 		 */
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryView.class');
-		list($ret, $this->_view) = GalleryView::doStatic()->loadView('slideshow.DownloadPicLens');
+
+		list($ret, $this->_view) = GalleryView::getMe()->loadView('slideshow.DownloadPicLens');
 
 		if ($ret) {
 			return $ret;
@@ -89,6 +93,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-Disposition: inline; filename="piclens.js"', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Sun, 23 Sep 2001 08:00:00 GMT', null),
@@ -109,12 +114,12 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-length: 1000', null),
 			null
 		);
-
 		$gallery->_platform->setReply(
 			'file_exists',
 			array('/modules/slideshow/piclens.js'),
 			true
 		);
+
 		$gallery->_platform->setReply(
 			'stat',
 			array('/modules/slideshow/piclens.js'),
@@ -123,6 +128,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 				9 => strtotime('Sun, 23 Sep 2001 08:00:00 GMT'),
 			)
 		);
+
 		$gallery->_platform->setReply(
 			'fopen',
 			array('/modules/slideshow/piclens.js', 'rb', 0),
@@ -157,6 +163,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		GalleryUtilities::putRequestVariable('file', 'js');
+
 		$_SERVER['REQUEST_METHOD'] = 'head';
 
 		$gallery->_phpVm->setReply(
@@ -169,6 +176,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-Disposition: inline; filename="piclens.js"', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Sun, 23 Sep 2001 08:00:00 GMT', null),
@@ -189,12 +197,12 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-length: 0', null),
 			null
 		);
-
 		$gallery->_platform->setReply(
 			'file_exists',
 			array('/modules/slideshow/piclens.js'),
 			true
 		);
+
 		$gallery->_platform->setReply(
 			'stat',
 			array('/modules/slideshow/piclens.js'),
@@ -228,6 +236,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-Disposition: inline; filename="PicLensLite.swf"', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Sun, 23 Sep 2001 08:00:00 GMT', null),
@@ -248,12 +257,12 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-length: 1000', null),
 			null
 		);
-
 		$gallery->_platform->setReply(
 			'file_exists',
 			array('/modules/slideshow/PicLensLite.swf'),
 			true
 		);
+
 		$gallery->_platform->setReply(
 			'stat',
 			array('/modules/slideshow/PicLensLite.swf'),
@@ -262,6 +271,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 				9 => strtotime('Sun, 23 Sep 2001 08:00:00 GMT'),
 			)
 		);
+
 		$gallery->_platform->setReply(
 			'fopen',
 			array('/modules/slideshow/PicLensLite.swf', 'rb', 0),
@@ -296,6 +306,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		GalleryUtilities::putRequestVariable('file', 'swf');
+
 		$_SERVER['REQUEST_METHOD'] = 'head';
 
 		$gallery->_phpVm->setReply(
@@ -308,6 +319,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-Disposition: inline; filename="PicLensLite.swf"', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Sun, 23 Sep 2001 08:00:00 GMT', null),
@@ -328,12 +340,12 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 			array('Content-length: 0', null),
 			null
 		);
-
 		$gallery->_platform->setReply(
 			'file_exists',
 			array('/modules/slideshow/PicLensLite.swf'),
 			true
 		);
+
 		$gallery->_platform->setReply(
 			'stat',
 			array('/modules/slideshow/PicLensLite.swf'),
@@ -364,6 +376,7 @@ class DownloadPicLensViewTest extends GalleryImmediateViewTestCase {
 		);
 
 		list($ret, $results) = $this->_renderImmediate(array(), array());
+
 		$this->assertErrorEquals(ERROR_MISSING_OBJECT, $ret);
 		$this->assertEquals('', $results);
 	}

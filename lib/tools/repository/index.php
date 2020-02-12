@@ -1,33 +1,31 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
- /**
-  * @package RepositoryTools
-  */
+/**
+ * @package RepositoryTools
+ */
 define('G2_SUPPORT_URL_FRAGMENT', '../../support/');
 
 require '../../support/security.inc';
-
 require '../../../bootstrap.inc';
-
 require_once '../../../init.inc';
+
 define('GALLERY_MAIN_PHP', 'index.php');
 
 // Simulate HTTP for command line clients
@@ -36,6 +34,7 @@ if (php_sapi_name() == 'cli') {
 
 	for ($i = 1; $i < count($argv); $i++) {
 		$arg = explode('=', $argv[$i]);
+
 		GalleryUtilities::putRequestVariable($arg[0], $arg[1], false);
 	}
 }
@@ -74,8 +73,10 @@ function RepositoryToolsMain() {
 
 	if (empty($repositoryPath)) {
 		$repositoryPath = $gallery->getConfig('data.gallery.base') . '/repository/';
+
 		$gallery->setConfig('repository.path', $repositoryPath);
 	}
+
 	$gallery->setConfig('repository.templates', 'lib/tools/repository/templates/');
 
 	if ($isSiteAdmin) {
@@ -109,17 +110,20 @@ function RepositoryToolsMain() {
 				"Bad controller '$controllerName'"
 			);
 		}
+
 		$methodName     = GalleryUtilities::getRequestVariables('action');
 		$controllerPath = sprintf('%s/%s.inc', __DIR__, $controllerName);
 	}
 
 	// Configure our url Generator for repository mode.
 	$urlGenerator = new GalleryUrlGenerator();
-	$ret          = $urlGenerator->init();
+
+	$ret = $urlGenerator->init();
 
 	if ($ret) {
 		return $ret;
 	}
+
 	$gallery->setUrlGenerator($urlGenerator);
 
 	$platform =& $gallery->getPlatform();
@@ -134,7 +138,9 @@ function RepositoryToolsMain() {
 	$controllerClassName = $controllerName . 'ControllerAndView';
 
 	include_once $controllerPath;
+
 	$controller = new $controllerClassName();
+
 	$controller->init();
 
 	// Call a controller method.
@@ -160,6 +166,7 @@ $ret = RepositoryToolsMain();
 
 if ($ret) {
 	echo $ret->getAsHtml();
+
 	echo $gallery->getDebugBuffer();
 
 	return;

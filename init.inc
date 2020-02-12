@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * Perform all necessary initialization of the Gallery framework
  * @package Gallery
@@ -30,11 +30,8 @@ function GalleryInitFirstPass($params = array()) {
 
 	ini_set('magic_quotes_runtime', 0);
 	ini_set('magic_quotes_sybase', 0);
-
-	if (function_exists('date_default_timezone_set')) {
-		// PHP 5.3 requires a default be set before using any date/time functions
-		@date_default_timezone_set(date_default_timezone_get());
-	}
+	$script_tz = date_default_timezone_get();
+	@date_default_timezone_set($script_tz);
 
 	// Specify that when an assertion fails, we terminate right away
 	assert_options(ASSERT_WARNING, 1);
@@ -46,11 +43,12 @@ function GalleryInitFirstPass($params = array()) {
 	/*
 	 * Conditional class loading confuses APC resulting in
 	 *   "Cannot redeclare class gallerycoreapi"
-	 * log spam.  Only load GalleryCoreApi if it isn't loaded.
+	 * log spam.  Only load GalleryCoreApi if it is not loaded.
 	 */
 	if (!class_exists('GalleryCoreApi')) {
 		include_once $galleryBase . 'modules/core/classes/GalleryCoreApi.class';
 	}
+
 	GalleryCoreApi::requireOnce('modules/core/classes/GalleryConstants.class');
 	GalleryCoreApi::requireOnce('modules/core/classes/GalleryCapabilities.class');
 	GalleryCoreApi::requireOnce('modules/core/classes/GalleryView.class');
@@ -64,13 +62,16 @@ function GalleryInitFirstPass($params = array()) {
 
 	if (!strncasecmp(PHP_OS, 'win', 3)) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryPlatform/WinNtPlatform.class');
+
 		$platform = new WinNtPlatform();
 	} else {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryPlatform/UnixPlatform.class');
+
 		$platform = new UnixPlatform();
 	}
 
 	$gallery->setPlatform($platform);
+
 	$slash = $platform->getDirectorySeparator();
 
 	if (isset($params['debug'])) {
@@ -82,6 +83,7 @@ function GalleryInitFirstPass($params = array()) {
 
 	if ($dataBase[strlen($dataBase) - 1] != $slash) {
 		$dataBase .= $slash;
+
 		$gallery->setConfig('data.gallery.base', $dataBase);
 	}
 
@@ -91,6 +93,7 @@ function GalleryInitFirstPass($params = array()) {
 	if (empty($repositoryUrl)) {
 		$gallery->setConfig('repository.url', 'http://gallery.menalto.com/repository/');
 	}
+
 	$gallery->setConfig('repository.cache', $dataBase . 'cache' . $slash . 'repository' . $slash);
 
 	// Set our various data paths
@@ -99,10 +102,7 @@ function GalleryInitFirstPass($params = array()) {
 	$gallery->setConfig('data.gallery.locks', $dataBase . 'locks' . $slash);
 	$gallery->setConfig('data.gallery.tmp', $dataBase . 'tmp' . $slash);
 	$gallery->setConfig('data.smarty.base', $dataBase . 'smarty' . $slash);
-	$gallery->setConfig(
-		'data.smarty.templates_c',
-		$dataBase . 'smarty' . $slash . 'templates_c' . $slash
-	);
+	$gallery->setConfig('data.smarty.templates_c', $dataBase . 'smarty' . $slash . 'templates_c' . $slash);
 	$gallery->setConfig('data.gallery.plugins', $galleryBase . 'plugins' . $slash);
 	$gallery->setConfig('data.gallery.plugins_data', $dataBase . 'plugins_data' . $slash);
 	$gallery->setConfig('data.gallery.version', $dataBase . 'versions.dat');
@@ -116,6 +116,7 @@ function GalleryInitFirstPass($params = array()) {
 		 * core 1.0.6
 		 */
 		list($ret, $urlGenerator) = @GalleryCoreApi::newFactoryInstance('GalleryUrlGenerator');
+
 		// Swallow ERROR_STORAGE_FAILURE, or automatic upgrading fails
 		if ($ret && !($ret->getErrorCode() & ERROR_STORAGE_FAILURE)) {
 			return $ret;
@@ -124,19 +125,41 @@ function GalleryInitFirstPass($params = array()) {
 
 	if (!isset($urlGenerator)) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryUrlGenerator.class');
+
 		$urlGenerator = new GalleryUrlGenerator();
 	}
+
 	// Allow for overrides from GalleryEmbed ($param) or from config.php
 	$configBaseUri = @$gallery->getConfig('baseUri');
-	$ret           = $urlGenerator->init(
-		isset($params['baseUri']) ? $params['baseUri'] : (!empty($configBaseUri) ? $configBaseUri : null),
-		isset($params['g2Uri']) ? $params['g2Uri'] : null,
-		isset($params['embedSessionString']) ? $params['embedSessionString'] : null
-	);
+
+	if (empty($configBaseUri)) {
+		$configBaseUri = null;
+	}
+
+	if (isset($params['baseUri'])) {
+		$ourBaseUri = $params['baseUri'];
+	} else {
+		$ourBaseUri = $configBaseUri;
+	}
+
+	if (isset($params['g2Uri'])) {
+		$ourG2Uri = $params['g2Uri'];
+	} else {
+		$ourG2Uri = null;
+	}
+
+	if (isset($params['embedSessionString'])) {
+		$ourEmbedSessionString = $params['embedSessionString'];
+	} else {
+		$ourEmbedSessionString = null;
+	}
+
+	$ret = $urlGenerator->init($ourBaseUri, $ourG2Uri, $ourEmbedSessionString);
 
 	if ($ret) {
 		return $ret;
 	}
+
 	$gallery->setUrlGenerator($urlGenerator);
 
 	// Initialize our session
@@ -145,6 +168,7 @@ function GalleryInitFirstPass($params = array()) {
 			GalleryCoreApi::requireOnce('modules/core/classes/GallerySession.class');
 			GalleryUtilities::putRequestVariable(SESSION_ID_PARAMETER, $params['gallerySessionId']);
 		}
+
 		$ret = $gallery->initSession();
 
 		if ($ret) {
@@ -156,12 +180,8 @@ function GalleryInitFirstPass($params = array()) {
 
 	if (version_compare(phpversion(), '5.0') < 0 && !isset($params['noDatabase'])) {
 		/*
-		 * PHP5 requires static methods to be marked static, or it generates an error.  PHP4 cannot
-		 * parse that syntax, so we cannot modify the code.  So since setting an error handler for
-		 * PHP5 results in a measurable performance hit, we only set it for PHP4.
-		 *
-		 * The error handler relies on a database connection and a session, so don't set it before
-		 * they're initialized.
+		 * The error handler relies on a database connection and a session
+		 * So do not set it before they are initialized.
 		 */
 		set_error_handler('GalleryPhpErrorHandler');
 		$GLOBALS['gallerySetErrorHandler'] = true;
@@ -172,11 +192,14 @@ function GalleryInitFirstPass($params = array()) {
 
 	if (isset($params['activeLanguage']) || !empty($language)) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryTranslator.class');
-		list($language) = GalleryTranslator::doStatic()->getSupportedLanguageCode(
+
+		list($language) = GalleryTranslator::getMe()->getSupportedLanguageCode(
 			empty($language) ? $params['activeLanguage'] : $language
 		);
+
 		$gallery->setActiveLanguageCode($language);
 	}
+
 	$ret = $gallery->initTranslator(isset($params['noDatabase']));
 
 	if ($ret) {
@@ -188,6 +211,7 @@ function GalleryInitFirstPass($params = array()) {
 
 function GalleryInitSecondPass() {
 	global $gallery;
+
 	$session      =& $gallery->getSession();
 	$urlGenerator =& $gallery->getUrlGenerator();
 
@@ -199,7 +223,7 @@ function GalleryInitSecondPass() {
 
 	/*
 	 * Set our active user.  Try getting our active user from registered authentication plugins.  If
-	 * not, make us the anonymous user.  If we don't have a session, this will initiate one for us.
+	 * not, make us the anonymous user.  If we do not have a session, this will initiate one for us.
 	 */
 	list($ret, $pluginIds) = GalleryCoreApi::getAllFactoryImplementationIds('GalleryAuthPlugin');
 
@@ -259,7 +283,7 @@ function GalleryInitSecondPass() {
  */
 function GalleryPhpErrorHandler($errorNumber, $errorString, $file, $line, $context) {
 	if (error_reporting() == 0) {
-		// The @ error suppression operator was used, so don't log this error.
+		// The @ error suppression operator was used, so do not log this error.
 		return false;
 	}
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim. All rights reserved.
@@ -7,13 +8,9 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Sybase driver contributed by Toni (toni.tunkkari@finebyte.com)
-
   - MSSQL date patch applied.
-
   Date patch by Toni 15 Feb 2002
 */
 
@@ -23,16 +20,20 @@ if (!defined('ADODB_DIR')) {
 }
 
 class ADODB_sybase extends ADOConnection {
-	public $databaseType    = 'sybase';
-	public $dataProvider    = 'sybase';
-	public $replaceQuote    = "''"; // string to use to replace quotes
+	public $databaseType = 'sybase';
+	public $dataProvider = 'sybase';
+
+	// string to use to replace quotes
+	public $replaceQuote    = "''";
 	public $fmtDate         = "'Y-m-d'";
 	public $fmtTimeStamp    = "'Y-m-d H:i:s'";
 	public $hasInsertID     = true;
 	public $hasAffectedRows = true;
 	public $metaTablesSQL   = "select name from sysobjects where type='U' or type='V'";
+
 	// see http://sybooks.sybase.com/onlinebooks/group-aw/awg0800e/dbrfen8/@ebt-link;pt=5981;uf=0?target=0;window=new;showtoc=true;book=dbrfen8
 	public $metaColumnsSQL = "SELECT c.column_name, c.column_type, c.width FROM syscolumn c, systable t WHERE t.table_name='%s' AND c.table_id=t.table_id AND t.table_type='BASE'";
+
 	/*
 	"select c.name,t.name,c.length from
 	syscolumns c join systypes t on t.xusertype=c.xusertype join sysobjects o on o.id=c.id
@@ -43,11 +44,9 @@ class ADODB_sybase extends ADOConnection {
 	public $sysDate         = 'GetDate()';
 	public $leftOuter       = '*=';
 	public $rightOuter      = '=*';
-
 	public $port;
 
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	// might require begintrans -- committrans
 	public function _insertid() {
@@ -63,6 +62,7 @@ class ADODB_sybase extends ADOConnection {
 		if ($this->transOff) {
 			return true;
 		}
+
 		$this->transCnt += 1;
 
 		$this->Execute('BEGIN TRAN');
@@ -80,6 +80,7 @@ class ADODB_sybase extends ADOConnection {
 		}
 
 		$this->transCnt -= 1;
+
 		$this->Execute('COMMIT TRAN');
 
 		return true;
@@ -89,7 +90,9 @@ class ADODB_sybase extends ADOConnection {
 		if ($this->transOff) {
 			return true;
 		}
+
 		$this->transCnt -= 1;
+
 		$this->Execute('ROLLBACK TRAN');
 
 		return true;
@@ -100,14 +103,18 @@ class ADODB_sybase extends ADOConnection {
 		if (!$this->_hastrans) {
 			$this->BeginTrans();
 		}
+
 		$tables = str_replace(',', ' HOLDLOCK,', $tables);
 
 		return $this->GetOne("select $col from $tables HOLDLOCK where $where");
 	}
 
 	public function SelectDB($dbName) {
-		$this->database     = $dbName;
-		$this->databaseName = $dbName; // obsolete, retained for compat with older adodb versions
+		$this->database = $dbName;
+
+		// obsolete, retained for compat with older adodb versions
+		$this->databaseName = $dbName;
+
 		if ($this->_connectionID) {
 			return @sybase_select_db($dbName);
 		}
@@ -117,7 +124,6 @@ class ADODB_sybase extends ADOConnection {
 
 	/*	Returns: the last error message from previous database operation
 		Note: This function is NOT available for Microsoft SQL Server.	*/
-
 	public function ErrorMsg() {
 		if ($this->_logsql) {
 			return $this->_errorMsg;
@@ -201,7 +207,8 @@ class ADODB_sybase extends ADOConnection {
 
 	// See http://www.isug.com/Sybase_FAQ/ASE/section6.2.html#6.2.12
 	public function SelectLimit($sql, $nrows = -1, $offset = -1, $inputarr = false, $secs2cache = 0) {
-		if ($secs2cache > 0) {// we do not cache rowcount, so we have to load entire recordset
+		if ($secs2cache > 0) {
+			// we do not cache rowcount, so we have to load entire recordset
 			$rs = ADOConnection::SelectLimit($sql, $nrows, $offset, $inputarr, $secs2cache);
 
 			return $rs;
@@ -209,15 +216,16 @@ class ADODB_sybase extends ADOConnection {
 
 		$nrows  = (int)$nrows;
 		$offset = (int)$offset;
-
-		$cnt = ($nrows >= 0) ? $nrows : 999999999;
+		$cnt    = ($nrows >= 0) ? $nrows : 999999999;
 
 		if ($offset > 0 && $cnt) {
 			$cnt += $offset;
 		}
 
 		$this->Execute("set rowcount $cnt");
+
 		$rs = ADOConnection::SelectLimit($sql, $nrows, $offset, $inputarr, 0);
+
 		$this->Execute('set rowcount 0');
 
 		return $rs;
@@ -244,14 +252,15 @@ class ADODB_sybase extends ADOConnection {
 		if (!$col) {
 			$col = $this->sysTimeStamp;
 		}
-		$s = '';
 
+		$s   = '';
 		$len = strlen($fmt);
 
 		for ($i = 0; $i < $len; $i++) {
 			if ($s) {
 				$s .= '+';
 			}
+
 			$ch = $fmt[$i];
 
 			switch ($ch) {
@@ -314,6 +323,7 @@ class ADODB_sybase extends ADOConnection {
 						$i++;
 						$ch = substr($fmt, $i, 1);
 					}
+
 					$s .= $this->qstr($ch);
 
 					break;
@@ -333,8 +343,7 @@ class ADODB_sybase extends ADOConnection {
 			   "AND t.table_type='BASE' " .
 			   "AND c.pkey = 'Y' " .
 			   'ORDER BY c.column_id';
-
-		$a = $this->GetCol($sql);
+		$a   = $this->GetCol($sql);
 
 		if ($a && sizeof($a) > 0) {
 			return $a;
@@ -348,6 +357,7 @@ class ADODB_sybase extends ADOConnection {
 	 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
 global $ADODB_sybase_mths;
+
 $ADODB_sybase_mths = array(
 	'JAN' => 1,
 	'FEB' => 2,
@@ -366,6 +376,7 @@ $ADODB_sybase_mths = array(
 class ADORecordset_sybase extends ADORecordSet {
 	public $databaseType = 'sybase';
 	public $canSeek      = true;
+
 	// _mths works only in non-localised system
 	public $_mths = array(
 		'JAN' => 1,
@@ -385,6 +396,7 @@ class ADORecordset_sybase extends ADORecordSet {
 	public function __construct($id, $mode = false) {
 		if ($mode === false) {
 			global $ADODB_FETCH_MODE;
+
 			$mode = $ADODB_FETCH_MODE;
 		}
 
@@ -393,19 +405,22 @@ class ADORecordset_sybase extends ADORecordSet {
 		} else {
 			$this->fetchMode = $mode;
 		}
+
 		parent::__construct($id, $mode);
 	}
 
 	/*	Returns: an object containing field information.
 		Get column information in the Recordset object. fetchField() can be used in order to obtain information about
-		fields in a certain query result. If the field offset isn't specified, the next field that wasn't yet retrieved by
+		fields in a certain query result. If the field offset is not specified, the next field that was not yet retrieved by
 		fetchField() is retrieved.	*/
 	public function FetchField($fieldOffset = -1) {
 		if ($fieldOffset != -1) {
 			$o = @sybase_fetch_field($this->_queryID, $fieldOffset);
-		} elseif ($fieldOffset == -1) {  // The $fieldOffset argument is not provided thus its -1
+		} elseif ($fieldOffset == -1) {
+			// The $fieldOffset argument is not provided thus its -1
 			$o = @sybase_fetch_field($this->_queryID);
 		}
+
 		// older versions of PHP did not support type, only numeric
 		if ($o && !isset($o->type)) {
 			$o->type = ($o->numeric) ? 'float' : 'varchar';
@@ -416,6 +431,7 @@ class ADORecordset_sybase extends ADORecordSet {
 
 	public function _initrs() {
 		global $ADODB_COUNTRECS;
+
 		$this->_numOfRows   = ($ADODB_COUNTRECS) ? @sybase_num_rows($this->_queryID) : -1;
 		$this->_numOfFields = @sybase_num_fields($this->_queryID);
 	}
@@ -489,12 +505,14 @@ class ADORecordSet_array_sybase extends ADORecordSet_array {
 		if ($themth <= 0) {
 			return false;
 		}
+
 		// h-m-s-MM-DD-YY
 		return adodb_mktime(0, 0, 0, $themth, $rr[2], $rr[3]);
 	}
 
 	public static function UnixTimeStamp($v) {
 		global $ADODB_sybase_mths;
+
 		//11.02.2001 Toni Tunkkari toni.tunkkari@finebyte.com
 		//Changed [0-9] to [0-9 ] in day conversion
 		if (!preg_match('/([A-Za-z]{3})[-/\. ]([0-9 ]{1,2})[-/\. ]([0-9]{4}) +([0-9]{1,2}):([0-9]{1,2}) *([apAP]{0,1})/', $v, $rr)
@@ -531,6 +549,7 @@ class ADORecordSet_array_sybase extends ADORecordSet_array {
 			default:
 				break;
 		}
+
 		// h-m-s-MM-DD-YY
 		return adodb_mktime($rr[4], $rr[5], 0, $themth, $rr[2], $rr[3]);
 	}

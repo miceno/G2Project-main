@@ -1,4 +1,5 @@
 <?php
+
 // NOTE: The ADOdb and PEAR directories MUST be in your PHP include_path!
 require_once 'Auth/Auth.php';
 
@@ -21,10 +22,14 @@ $params = array(
 	'usernamecol' => 'username',
 	'passwordcol' => 'password',
 );
-$a      = new Auth('ADOdb', $params, 'loginFunction');
+
+$a = new Auth('ADOdb', $params, 'loginFunction');
+
 $a->start();
 
 if ($a->getAuth()) {
 	echo 'Success';
+
 	// * The output of your site goes here.
 }
+

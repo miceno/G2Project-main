@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -46,6 +45,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_user[0]);
 
 		list($ret, $this->_user[1]) = $this->_createUser();
@@ -53,6 +53,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_user[1]);
 	}
 
@@ -61,6 +62,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][cancel]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -79,6 +81,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][undo]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -106,6 +109,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -123,6 +127,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 
 	public function testEditUserNewUsername() {
 		$newUserName = 'newname-' . mt_rand();
+
 		GalleryUtilities::putRequestVariable('userId', $this->_user[0]->getId());
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 		GalleryUtilities::putRequestVariable('form[userName]', $newUserName);
@@ -134,6 +139,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -151,6 +157,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 
 	public function testEditUserDuplicateUsername() {
 		$newUserName = $this->_user[1]->getUserName();
+
 		GalleryUtilities::putRequestVariable('userId', $this->_user[0]->getId());
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 		GalleryUtilities::putRequestVariable('form[userName]', $newUserName);
@@ -162,6 +169,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -187,6 +195,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -214,6 +223,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[password2]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -229,6 +239,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 
 	public function testChangePassword() {
 		$password = '<test"pass &word;>' . mt_rand(1, 999) . "'";
+
 		GalleryUtilities::putRequestVariable('userId', $this->_user[0]->getId());
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 		GalleryUtilities::putRequestVariable('form[userName]', $this->_user[0]->getUserName());
@@ -240,6 +251,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -259,6 +271,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue($user->isCorrectPassword($password), 'check password');
 	}
 
@@ -266,8 +279,10 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		// Trailing space on full/username with no other changes used to give db error on mysql
 		GalleryUtilities::putRequestVariable('userId', $this->_user[0]->getId());
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
+
 		$userName = $this->_user[0]->getUserName();
 		$fullName = $this->_user[0]->getFullName();
+
 		GalleryUtilities::putRequestVariable('form[userName]', "$userName  ");
 		GalleryUtilities::putRequestVariable('form[fullName]', "$fullName   ");
 		GalleryUtilities::putRequestVariable('form[email]', $this->_user[0]->getEmail());
@@ -277,6 +292,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -307,6 +323,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$userName = $this->_user[0]->getUserName();
 		$fullName = $this->_user[0]->getFullName();
 
@@ -321,6 +338,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', 'on');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -354,6 +372,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[locked]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -403,6 +422,7 @@ class AdminEditUserControllerTest extends GalleryControllerTestCase {
 		}
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(

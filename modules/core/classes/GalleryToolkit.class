@@ -1,26 +1,25 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
  * A toolkit for manipulating files.
- * This class defines the API for file manipulation toolkits.  It's designed such that we can
+ * This class defines the API for file manipulation toolkits.  It is designed such that we can
  * create many different toolkits, each providing its own unique functions for manipulating files.
  * Some of these toolkits may be centered around a particular technology (eg, NetPBPM, ImageMagick,
  * Jhead, etc) while others may be focussed on a specific type of file (eg JPEG).
@@ -34,16 +33,16 @@
  */
 class GalleryToolkit {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryToolkit();
+		if (!isset($instance)) {
+			$instance = new GalleryToolkit();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -135,10 +134,11 @@ class GalleryToolkit {
 
 						switch ($rotationAmount) {
 							case '90':
-								$newX      = GalleryUtilities::roundToString(
+								$newX = GalleryUtilities::roundToString(
 									100.0 - GalleryUtilities::castToFloat($y) - GalleryUtilities::castToFloat($height),
 									3
 								);
+
 								$newY      = $x;
 								$newWidth  = $height;
 								$newHeight = $width;
@@ -147,25 +147,28 @@ class GalleryToolkit {
 
 							case '-90':
 							case '270':
-								$newX      = $y;
-								$newY      = GalleryUtilities::roundToString(
+								$newX = $y;
+								$newY = GalleryUtilities::roundToString(
 									100.0 - GalleryUtilities::castToFloat($x) - GalleryUtilities::castToFloat($width),
 									3
 								);
+
 								$newWidth  = $height;
 								$newHeight = $width;
 
 								break;
 
 							case '180':
-								$newX      = GalleryUtilities::roundToString(
+								$newX = GalleryUtilities::roundToString(
 									100.0 - GalleryUtilities::castToFloat($x) - GalleryUtilities::castToFloat($width),
 									3
 								);
-								$newY      = GalleryUtilities::roundToString(
+
+								$newY = GalleryUtilities::roundToString(
 									100.0 - GalleryUtilities::castToFloat($y) - GalleryUtilities::castToFloat($height),
 									3
 								);
+
 								$newWidth  = $width;
 								$newHeight = $height;
 
@@ -190,6 +193,7 @@ class GalleryToolkit {
 						$newOperations[] = $operation;
 					}
 				}
+
 				$transformedOperations = join(';', $newOperations);
 			}
 		}
@@ -278,7 +282,7 @@ class GalleryToolkit {
 						if (GalleryUtilities::isA($source, 'GalleryDerivativeImage')) {
 							/*
 							 * If the source is also a derivative then assume the real source
-							 * is larger and allow upscaling in this estimate.  It's possible
+							 * is larger and allow upscaling in this estimate.  It is possible
 							 * the real source is actually smaller than our $target size, but
 							 * it will be corrected once the derivative is actually built.
 							 */
@@ -294,6 +298,7 @@ class GalleryToolkit {
 								$target
 							);
 						}
+
 						$derivative->setWidth($newWidth);
 						$derivative->setHeight($newHeight);
 					}

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class DownloadItemView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new DownloadItemView();
+		if (!isset($instance)) {
+			$instance = new DownloadItemView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -71,7 +70,7 @@ class DownloadItemView extends GalleryView {
 	 * @see GalleryView::renderImmediate
 	 */
 	public function renderImmediate($status = null, $error = null) {
-		// Figure out which item we're talking about
+		// Figure out which item we are talking about
 		$itemId = (int)GalleryUtilities::getRequestVariables('itemId');
 
 		if (empty($itemId)) {
@@ -86,7 +85,7 @@ class DownloadItemView extends GalleryView {
 		}
 
 		if (!method_exists($item, 'fetchPath') || !method_exists($item, 'getMimeType')) {
-			// Avoid information disclosure for bogus entities by acting as if it didn't exist
+			// Avoid information disclosure for bogus entities by acting as if it does not exist
 			return GalleryCoreApi::error(ERROR_MISSING_OBJECT);
 		}
 
@@ -109,7 +108,7 @@ class DownloadItemView extends GalleryView {
 			return $ret;
 		}
 
-		// Don't allow malicious URLs
+		// Do not allow malicious URLs
 		$fileName = GalleryUtilities::getRequestVariables('fileName');
 
 		if (!empty($fileName) && $fileName != $pseudoFileName) {
@@ -145,18 +144,19 @@ class DownloadItemView extends GalleryView {
 		}
 
 		$ret = GalleryCoreApi::createFastDownloadFile($item);
-		// Ignore failures since the file has already been sent
 
+		// Ignore failures since the file has already been sent
 		return null;
 	}
 
 	public function _sendFile($data) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$phpVm    = $gallery->getPhpVm();
 
 		/**
-		 * Try to prevent Apache's mod_deflate from gzipping the output since it's likely already
+		 * Try to prevent Apache's mod_deflate from gzipping the output since it is likely already
 		 * a binary file and broken versions of mod_deflate sometimes get the byte count wrong.
 		 */
 		if (function_exists('apache_setenv') && !@$gallery->getConfig('apacheSetenvBroken')) {
@@ -168,6 +168,7 @@ class DownloadItemView extends GalleryView {
 		$phpVm->header('Content-type: ' . $data['mimeType']);
 		$phpVm->header('Content-Disposition: inline; filename="' . $data['pseudoFileName'] . '"');
 		$stats = $platform->stat($data['derivativePath']);
+
 		$phpVm->header('Last-Modified: ' . GalleryUtilities::getHttpDate($stats[9]));
 		$phpVm->header('Expires: ' . GalleryUtilities::getHttpDate(2147483647));
 
@@ -182,15 +183,16 @@ class DownloadItemView extends GalleryView {
 		 */
 		$phpVm->header('Cache-Control: private');
 
-		// If the request method is HEAD, don't send back the body
+		// If the request method is HEAD, do not send back the body
 		if ($requestMethod == 'head') {
 			$phpVm->header('Content-length: 0');
 		} else {
 			if ($stats[7] > 0) {
 				$phpVm->header('Content-length: ' . $stats[7]);
 			}
+
 			/*
-			 * Don't use readfile() because it buffers the entire file in memory.  Profiling shows
+			 * Do not use readfile() because it buffers the entire file in memory.  Profiling shows
 			 * that this approach is as efficient as fpassthru() but we get to call
 			 * guaranteeTimeLimit which prevents it from failing on very large files
 			 */
@@ -201,9 +203,12 @@ class DownloadItemView extends GalleryView {
 					if (strlen($bits) == 0) {
 						break;
 					}
+
 					echo $bits;
+
 					$gallery->guaranteeTimeLimit(30);
 				}
+
 				$platform->fclose($fd);
 			}
 		}
@@ -219,8 +224,8 @@ class DownloadItemView extends GalleryView {
 	 */
 	public function _assertPermissions($item, $derivativeType) {
 		global $gallery;
-		$session =& $gallery->getSession();
 
+		$session             =& $gallery->getSession();
 		$itemIdForPermission = $item->getId();
 
 		if (!empty($derivativeType)) {
@@ -248,6 +253,7 @@ class DownloadItemView extends GalleryView {
 				// DERIVATIVE_TYPE_IMAGE_PREFERRED uses core.viewSource
 			}
 		}
+
 		$ret = GalleryCoreApi::assertHasItemPermission($itemIdForPermission, $permission);
 
 		if ($ret) {

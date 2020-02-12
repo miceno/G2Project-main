@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,12 +26,12 @@ class KeyAlbumCallbacks {
 	public function callback($params, &$smarty, $callback, $userId) {
 		switch ($callback) {
 			case 'LoadKeywords':
-				$onlyPublic = (bool)$params['onlyPublic'];
-				$sizeLimit  = (int)$params['sizeLimit'];
-				$param      = 'allKeywords' . ($onlyPublic ? '.public' : '')
+				$onlyPublic       = (bool)$params['onlyPublic'];
+				$sizeLimit        = (int)$params['sizeLimit'];
+				$param            = 'allKeywords' . ($onlyPublic ? '.public' : '')
 				. ($sizeLimit ? '.' . $sizeLimit : '');
+				$includeFrequency = (bool)$params['includeFrequency'];
 
-				$includeFrequency        = (bool)$params['includeFrequency'];
 				list($ret, $lastUpdated) = GalleryCoreApi::getPluginParameter(
 					'module',
 					'keyalbum',
@@ -57,6 +56,7 @@ class KeyAlbumCallbacks {
 						return $ret;
 					}
 				}
+
 				list($ret, $keywords) = GalleryCoreApi::getPluginParameter(
 					'module',
 					'keyalbum',
@@ -83,14 +83,14 @@ class KeyAlbumCallbacks {
 				if ($ret) {
 					return $ret;
 				}
+
 				list($ret, $split) = $module->getParameter('split');
 
 				if ($ret) {
 					return $ret;
 				}
 
-				$block =& $smarty->_tpl_vars['block'];
-
+				$block                         =& $smarty->_tpl_vars['block'];
 				$block['keyalbum']['keywords'] = $module->splitKeywords(
 					$params['keywords'],
 					$split
@@ -113,15 +113,22 @@ class KeyAlbumCallbacks {
 	 * @return GalleryStatus a status code
 	 * @static
 	 */
-	public function _findAllKeywords($param, $onlyPublic, $sizeLimit, $maxWeight, $includeFrequency) {
+	public function _findAllKeywords(
+		$param,
+		$onlyPublic,
+		$sizeLimit,
+		$maxWeight,
+		$includeFrequency
+	) {
 		global $gallery;
 
-		$query    = '
-		SELECT ' . ($includeFrequency ? '' : 'DISTINCT') . '
-		[GalleryItem::keywords]
-		FROM
-		[GalleryItem]
+		$query = '
+			SELECT ' . ($includeFrequency ? '' : 'DISTINCT') . '
+				[GalleryItem::keywords]
+			FROM
+				[GalleryItem]
 		';
+
 		$keywords = $aclIds = array();
 
 		if ($onlyPublic) {
@@ -130,6 +137,7 @@ class KeyAlbumCallbacks {
 			if ($ret) {
 				return $ret;
 			}
+
 			list($ret, $aclIds) = GalleryCoreApi::fetchAccessListIds('core.view', $guestId);
 
 			if ($ret) {
@@ -148,21 +156,25 @@ class KeyAlbumCallbacks {
 				';
 			}
 		}
+
 		list($ret, $searchResults) = $gallery->search($query, $aclIds);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'keyalbum');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $split) = GalleryCoreApi::getPluginParameter('module', 'keyalbum', 'split');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$maxCount = 1;
 
 		while ($result = $searchResults->nextResult()) {
@@ -178,6 +190,7 @@ class KeyAlbumCallbacks {
 				}
 			}
 		}
+
 		$minCount = $maxCount;
 
 		foreach ($keywords as $keyword) {
@@ -206,8 +219,10 @@ class KeyAlbumCallbacks {
 				$entry                  = array(key($keywords), current($keywords));
 				$newKeywords[$entry[0]] = $entry[1];
 			}
+
 			$keywords = $newKeywords;
 		}
+
 		ksort($keywords);
 		$keywords = array_values($keywords);
 
@@ -225,6 +240,7 @@ class KeyAlbumCallbacks {
 				$maxWeight ** ((float)$keyword['count'] / $maxCount) - $adjustment,
 				2
 			);
+
 			unset($keywords[$i]['count']);
 		}
 
@@ -238,6 +254,7 @@ class KeyAlbumCallbacks {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::setPluginParameter('module', 'keyalbum', $param . '.time', time());
 
 		if ($ret) {

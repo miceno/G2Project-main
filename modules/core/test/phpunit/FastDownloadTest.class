@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -45,6 +44,7 @@ class FastDownloadTest extends GalleryTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->_markForCleanup($this->_item[$i]);
 
 			foreach (array(
@@ -74,7 +74,9 @@ class FastDownloadTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
+
 		// Set the thumbnail of the album
 		list($ret, $this->_derivatives[3][]) = $this->_createDerivative(
 			$this->_album,
@@ -87,7 +89,8 @@ class FastDownloadTest extends GalleryTestCase {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->checkPoint();
+
+		$ret = $storage->checkPoint();
 
 		if ($ret) {
 			return $ret;
@@ -96,10 +99,15 @@ class FastDownloadTest extends GalleryTestCase {
 
 	public function testCreateFastDownloadFileForDerivative() {
 		global $gallery;
+
 		$bytesWritten = '';
 		$platform     = new FastDownloadTestCreateFastDownloadPlatform($bytesWritten);
-		$platform->setStat(7, 50);    // content length
-		$platform->setStat(9, 1);     // last mod date
+
+		// content length
+		$platform->setStat(7, 50);
+
+		// last mod date
+		$platform->setStat(9, 1);
 		$gallery->setPlatform($platform);
 
 		list($ret, $anonymousUserId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.anonymousUser');
@@ -131,6 +139,7 @@ class FastDownloadTest extends GalleryTestCase {
 				'itemId' => $this->_derivatives[0][0]->getId(),
 			)
 		);
+
 		// Use here another method to assemble the relative path to get a better test coverage
 		$relativePath = 'cache' . $platform->getDirectorySeparator() . $cachePath;
 
@@ -153,10 +162,15 @@ class FastDownloadTest extends GalleryTestCase {
 
 	public function testCreateFastDownloadFileForDataItem() {
 		global $gallery;
+
 		$bytesWritten = '';
 		$platform     = new FastDownloadTestCreateFastDownloadPlatform($bytesWritten);
-		$platform->setStat(7, 50);    // content length
-		$platform->setStat(9, 1);     // last mod date
+
+		// content length
+		$platform->setStat(7, 50);
+
+		// last mod date
+		$platform->setStat(9, 1);
 		$gallery->setPlatform($platform);
 
 		list($ret, $anonymousUserId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.anonymousUser');
@@ -187,6 +201,7 @@ class FastDownloadTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$relativePath = str_replace($gallery->getConfig('data.gallery.base'), '', $path);
 
 		$this->assertEquals(
@@ -210,6 +225,7 @@ class FastDownloadTest extends GalleryTestCase {
 		global $gallery;
 
 		GalleryUtilities::putRequestVariable('fileName', 'bogus.jpg');
+
 		$ret = $gallery->fastDownload(
 			'/phpunit/cache',
 			'phpunit.jpg',
@@ -221,7 +237,7 @@ class FastDownloadTest extends GalleryTestCase {
 		$this->assertFalse($ret, 'status');
 	}
 
-	// Fake event that removes permissions that don't affect the guest user
+	// Fake event that removes permissions that do not affect the guest user
 	public function testRemoveIrrelevantPermission() {
 		global $gallery;
 
@@ -240,6 +256,7 @@ class FastDownloadTest extends GalleryTestCase {
 		}
 
 		$event = GalleryCoreApi::newEvent('Gallery::RemovePermission');
+
 		$event->setData(
 			array(
 				'userId'         => $gallery->getActiveUserId(),
@@ -252,6 +269,7 @@ class FastDownloadTest extends GalleryTestCase {
 
 		$buf      = array();
 		$platform = new FastDownloadTestRemovePermissionPlatform($buf);
+
 		$gallery->setPlatform($platform);
 
 		list($ret, $response) = GalleryItemHelper_medium::handleEvent($event);
@@ -332,6 +350,7 @@ class FastDownloadTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $bits2) = GalleryCoreApi::convertPermissionIdsToBits($permissions2);
 
 		if ($ret) {
@@ -339,6 +358,7 @@ class FastDownloadTest extends GalleryTestCase {
 		}
 
 		$event = GalleryCoreApi::newEvent('Gallery::RemovePermission');
+
 		$event->setData(
 			array(
 				'userId'         => $userId,
@@ -353,6 +373,7 @@ class FastDownloadTest extends GalleryTestCase {
 
 		$buf      = array();
 		$platform = new FastDownloadTestRemovePermissionPlatform($buf);
+
 		$gallery->setPlatform($platform);
 
 		list($ret, $response) = GalleryItemHelper_medium::handleEvent($event);
@@ -370,6 +391,7 @@ class FastDownloadTest extends GalleryTestCase {
 				$ids[] = $this->_derivatives[$j][$i]->getId();
 			}
 		}
+
 		$ids[] = $this->_derivatives[0][2]->getId();
 		$ids[] = $this->_item[0]->getId();
 
@@ -417,8 +439,7 @@ class FastDownloadTestCreateFastDownloadPlatform {
 		return "$file-$mode";
 	}
 
-	public function fclose() {
-	}
+	public function fclose() {}
 
 	public function flock($handle, $operation, &$wouldblock) {
 		$wouldblock = false;
@@ -436,7 +457,7 @@ class FastDownloadTestCreateFastDownloadPlatform {
 }
 
 /**
- * Test platform to verify that we're deleting cache files
+ * Test platform to verify that we are deleting cache files
  */
 class FastDownloadTestRemovePermissionPlatform {
 	public $_stat;

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -49,6 +48,7 @@ class ExifDescriptionOption extends ItemAddOption {
 	public function handleRequestAfterAdd($form, $items) {
 		GalleryCoreApi::requireOnce('modules/exif/classes/ExifExtractor.class');
 		GalleryCoreApi::requireOnce('modules/exif/classes/ExifHelper.class');
+
 		$errors = $warnings = $needed = array();
 
 		list($ret, $addOption) = GalleryCoreApi::getPluginParameter('module', 'exif', 'addOption');
@@ -79,15 +79,15 @@ class ExifDescriptionOption extends ItemAddOption {
 		if (!empty($needed)) {
 			// Copy the array because we will change it with do / while / array_splice
 			$itemsInBatches = $items;
+
 			/*
-			 * Batch size should be <= ulimit max open files, as long as we don't query this value,
+			 * Batch size should be <= ulimit max open files, as long as we do not query this value,
 			 * assume a value of 100 which is fairly low
 			 */
 			$batchSize = 100;
 
 			do {
-				$currentItems = array_splice($itemsInBatches, 0, $batchSize);
-
+				$currentItems   = array_splice($itemsInBatches, 0, $batchSize);
 				$currentItemIds = array();
 
 				foreach ($currentItems as $item) {
@@ -109,7 +109,8 @@ class ExifDescriptionOption extends ItemAddOption {
 				}
 
 				for ($i = 0; $i < count($currentItems); $i++) {
-					$itemId                       = $currentItems[$i]->getId();
+					$itemId = $currentItems[$i]->getId();
+
 					list($ret, $currentItems[$i]) = $currentItems[$i]->refresh();
 
 					if ($ret) {
@@ -194,13 +195,13 @@ class ExifDescriptionOption extends ItemAddOption {
 						 */
 
 						/*
+
 						 //elseif ($orientation == 'Normal (O deg)') { leave $args empty }
 						 else if ($orientation == 'Mirrored') {}
 						 else if ($orientation == 'Upsidedown Mirrored') {}
 						 else if ($orientation == '90 deg CW Mirrored') {}
 						 else if ($orientation == '90 deg CCW Mirrored') {}
 						*/
-
 						if ($orientation == 'Upsidedown') {
 							$args = array(180);
 						} elseif ($orientation == '90 deg CW') {
@@ -209,8 +210,7 @@ class ExifDescriptionOption extends ItemAddOption {
 							$args = array(90);
 						}
 
-						$operation = 'rotate';
-
+						$operation        = 'rotate';
 						$preserveOriginal = ($addOption & EXIF_ITEM_ROTATE_PRESERVE) ? 1 : 0;
 
 						if (!empty($args)) {
@@ -219,6 +219,7 @@ class ExifDescriptionOption extends ItemAddOption {
 							if ($ret) {
 								return array($ret, null, null);
 							}
+
 							$ret = GalleryCoreApi::applyToolkitOperation(
 								$operation,
 								$args,

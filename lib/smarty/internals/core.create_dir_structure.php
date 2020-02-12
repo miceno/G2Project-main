@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -11,7 +12,6 @@
  */
 
 // $dir
-
 function smarty_core_create_dir_structure($params, &$smarty) {
 	if (!file_exists($params['dir'])) {
 		$_open_basedir_ini = ini_get('open_basedir');
@@ -33,6 +33,7 @@ function smarty_core_create_dir_structure($params, &$smarty) {
 			if (preg_match('!^((//)|([a-zA-Z]:/))!', $_dir, $_root_dir)) {
 				// leading "//" for network volume, or "[letter]:/" for full path
 				$_new_dir = $_root_dir[1];
+
 				// remove drive-letter from _dir_parts
 				if (isset($_root_dir[3])) {
 					array_shift($_dir_parts);
@@ -70,6 +71,7 @@ function smarty_core_create_dir_structure($params, &$smarty) {
 
 				return false;
 			}
+
 			$_new_dir .= '/';
 		}
 	}

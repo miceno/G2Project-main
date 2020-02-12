@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('lib/tools/phpunit/ItemAddOptionTestCase.class');
 
 /**
@@ -36,11 +34,13 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		GalleryCoreApi::requireOnce('modules/exif/classes/ExifHelper.class');
 
 		list($ret, $this->_album) = $this->_createRandomAlbum($this->_getRootId());
@@ -48,6 +48,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		$ret = $this->_markPluginParametersForCleanup('module', 'exif');
@@ -56,7 +57,8 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			return $ret;
 		}
 
-		$this->_items                = array();
+		$this->_items = array();
+
 		list($ret, $this->_items[0]) = $this->_createRandomDataItem(
 			$this->_album->getId(),
 			'image/jpeg',
@@ -70,6 +72,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $this->_items[1]) = $this->_createRandomDataItem(
 			$this->_album->getId(),
 			'image/jpeg',
@@ -103,6 +106,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		list($ret, $item) = $this->_items[0]->refresh();
@@ -146,6 +150,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		for ($j = 0; $j < $totalTestItems; $j++) {
@@ -154,6 +159,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals('exif description', $item->getDescription(), "description $j");
 			$this->assertEquals("original summary $j", $item->getSummary(), "summary $j");
 		}
@@ -167,6 +173,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		list($ret, $item) = $this->_items[1]->refresh();
@@ -211,6 +218,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		for ($j = 0; $j < $totalTestItems; $j++) {
@@ -219,6 +227,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals(
 				"original description $j",
 				$item->getDescription(),
@@ -241,6 +250,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		list($ret, $item) = $this->_items[1]->refresh();
@@ -260,7 +270,8 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 	public function _registerRotateToolkit() {
 		// Register a dummy toolkit
 		$path = 'modules/exif/test/phpunit/ExifDescriptionOptionTest.class';
-		$ret  = GalleryCoreApi::registerFactoryImplementation(
+
+		$ret = GalleryCoreApi::registerFactoryImplementation(
 			'GalleryToolkit',
 			'ExifDescriptionOptionTestToolkit',
 			'ExifDescriptionOptionTestToolkit',
@@ -273,6 +284,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markToolkitForCleanup('ExifDescriptionOptionTestToolkit');
 
 		// Register operations that we can perform on our mock data items
@@ -321,7 +333,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			return $ret;
 		}
 
-		// Shouldn't be used; register just in case
+		// Should not be used; register just in case
 		$ret = $this->_registerRotateToolkit();
 
 		if ($ret) {
@@ -340,6 +352,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		// Verify that we do *not* have a preferred
@@ -348,6 +361,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, sizeof($preferredIds), 'there should not be any preferred');
 	}
 
@@ -363,7 +377,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			return $ret;
 		}
 
-		// Shouldn't be used; register just in case
+		// Should not be used; register just in case
 		$ret = $this->_registerRotateToolkit();
 
 		if ($ret) {
@@ -377,6 +391,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 	}
 
@@ -397,6 +412,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$_REQUEST['exifDescriptionTestToolkit'] = true;
 
 		// Save current size
@@ -408,6 +424,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 
 		// Initialize a Flag for checking rotation
 		global $gallery;
+
 		$gallery->setConfig('rotated', 0);
 
 		// Perform the request and verify that we succeeded
@@ -418,14 +435,16 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
-		// Verify that we don't have a preferred
+		// Verify that we do not have a preferred
 		list($ret, $preferredIds) = GalleryCoreApi::fetchPreferredsByItemIds(array($this->_items[0]->getId()));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, sizeof($preferredIds), 'there should be no preferreds');
 
 		// Verify that the item serial is NOT the same
@@ -463,7 +482,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			return $ret;
 		}
 
-		// Shouldn't be used; register just in case
+		// Should not be used; register just in case
 		$ret = $this->_registerRotateToolkit();
 
 		if ($ret) {
@@ -486,6 +505,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
 		// Verify that we have a preferred
@@ -494,6 +514,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(1, sizeof($preferredIds), 'there should be a preferred');
 
 		// Verify that the item serial is the same
@@ -502,10 +523,12 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($originalSerial, $this->_items[0]->getSerialNumber());
 
 		// Verify that the item was rotated
 		$this->_preferred = array_shift($preferredIds);
+
 		$this->assertEquals('rotate|90', $this->_preferred->getDerivativeOperations());
 	}
 
@@ -521,7 +544,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 			return $ret;
 		}
 
-		// Register toolkit, but don't set flag so it generates an error
+		// Register toolkit, but do not set flag so it generates an error
 		$ret = $this->_registerRotateToolkit();
 
 		if ($ret) {
@@ -539,14 +562,16 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		}
 
 		$result = $this->_handleRequestAfterAdd(array(), $this->_items);
+
 		$this->assertEquals(array($this->_noErrors, $this->_noWarnings), $result);
 
-		// Verify that we don't have a preferred
+		// Verify that we do not have a preferred
 		list($ret, $preferredIds) = GalleryCoreApi::fetchPreferredsByItemIds(array($this->_items[0]->getId()));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, count($preferredIds), 'there should not be a preferred');
 
 		// Verify that the item serial is the same - rotate error was ignored (just logged)
@@ -555,6 +580,7 @@ class ExifDescriptionOptionTest extends ItemAddOptionTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($originalSerial, $this->_items[0]->getSerialNumber());
 	}
 }
@@ -591,8 +617,10 @@ class ExifDescriptionOptionTestToolkit extends GalleryToolkit {
 		}
 
 		$fd = $platform->fopen($destFilename, 'a');
+
 		$platform->fwrite($fd, $operationName);
 		$platform->fclose($fd);
+
 		// Clear cache to ensure new filesize will be seen
 		$platform->clearstatcache();
 

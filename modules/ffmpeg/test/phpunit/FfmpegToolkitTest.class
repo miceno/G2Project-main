@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/ffmpeg/classes/FfmpegToolkitHelper.class');
 GalleryCoreApi::requireOnce('modules/ffmpeg/classes/FfmpegToolkit.class');
 
@@ -43,7 +41,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		}
 
 		$gallery->_platform = new FfmpegToolkitTestPlatform();
-		$ret                = $gallery->_platform->init($this);
+
+		$ret = $gallery->_platform->init($this);
 
 		if ($ret) {
 			return $ret;
@@ -63,6 +62,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(200, 240), $results, 'dimensions mismatch');
 
 		list($ret, $results) = $this->_toolkit->getProperty(
@@ -74,9 +74,11 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(200, 240, 3.1), $results, 'dimensions-and-duration mismatch');
 
 		list($ret, $results) = $this->_toolkit->getProperty('video/x-msvideo', 'BOGUS', 'BOGUS');
+
 		$this->assertTrue($ret->getErrorCode() & ERROR_UNIMPLEMENTED);
 	}
 
@@ -86,6 +88,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$expectedMimeTypes = array(
 			'video/mpeg',
 			'video/x-ms-asf',
@@ -94,6 +97,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 			'video/x-flv',
 			'video/x-ms-wmv',
 		);
+
 		$this->assertEquals(
 			array(
 				'convert-to-image/jpeg' => array(
@@ -205,8 +209,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
 			),
 			$results
 		);
-		$this->assertTrue($supportsOffset, 'offset');
 
+		$this->assertTrue($supportsOffset, 'offset');
 		$this->assertEquals($expectedMimeTypes, $mimeTypes);
 	}
 
@@ -229,8 +233,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
 			'video/x-flv',
 			'video/x-ms-wmv',
 		);
-		sort($expectedMimeTypes);
 
+		sort($expectedMimeTypes);
 		$output[] = 'File formats:';
 		$output[] = '  E 3gp';
 		$output[] = ' D  4xm';
@@ -423,6 +427,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		);
 
 		sort($mimeTypes);
+
 		$this->assertEquals($expectedMimeTypes, $mimeTypes);
 	}
 
@@ -442,6 +447,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 			'video/quicktime',
 			'video/x-ms-wmv',
 		);
+
 		sort($expectedMimeTypes);
 
 		// Versions prior to 0.4.9-pre1 supported singlejpeg (which is the same as mjpeg)
@@ -477,9 +483,11 @@ class FfmpegToolkitTest extends GalleryTestCase {
 			),
 			$results
 		);
+
 		$this->assertFalse($supportsOffset, 'offset');
 
 		sort($mimeTypes);
+
 		$this->assertEquals($expectedMimeTypes, $mimeTypes);
 	}
 
@@ -493,6 +501,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		}
 
 		$output[] = 'Bogus stdout';
+
 		$this->assertEquals(
 			array(
 				array(
@@ -507,7 +516,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
 
 	public function testPerformOperation() {
 		$this->_chmodWasCalled = false;
-		list($ret, $results)   = $this->_toolkit->performOperation(
+
+		list($ret, $results) = $this->_toolkit->performOperation(
 			'video/avi',
 			'convert-to-image/jpeg',
 			'testPerformOperation1.avi',
@@ -518,12 +528,14 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($results, 'image/jpeg');
 		$this->assertTrue($this->_chmodWasCalled, 'chmod not called');
 	}
 
 	public function testPerformOperationWithOffset() {
-		$this->_chmodWasCalled         = false;
+		$this->_chmodWasCalled = false;
+
 		list($ret, $results, $context) = $this->_toolkit->performOperation(
 			'video/avi',
 			'select-offset',
@@ -535,7 +547,9 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($results, 'video/avi', 'mime after offset');
+
 		$this->assertEquals(
 			array(
 				'ffmpeg.offset' => '1.2',
@@ -556,13 +570,15 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($results, 'image/jpeg', 'mime after convert');
 		$this->assertEquals(array(), $context, 'no offset');
 		$this->assertTrue($this->_chmodWasCalled, 'chmod not called');
 	}
 
 	public function testPerformSetAudioChannels() {
-		$this->_chmodWasCalled         = false;
+		$this->_chmodWasCalled = false;
+
 		list($ret, $results, $context) = $this->_toolkit->performOperation(
 			'video/avi',
 			'set-audio-channels',
@@ -574,7 +590,9 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($results, 'video/avi', 'mime after audiochannels');
+
 		$this->assertEquals(
 			array(
 				'audioChannels' => '2',
@@ -585,7 +603,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
 	}
 
 	public function testPerformSetAudioRate() {
-		$this->_chmodWasCalled         = false;
+		$this->_chmodWasCalled = false;
+
 		list($ret, $results, $context) = $this->_toolkit->performOperation(
 			'video/avi',
 			'set-audio-samplerate',
@@ -597,7 +616,9 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($results, 'video/avi', 'mime after audiorate');
+
 		$this->assertEquals(
 			array(
 				'sampleRate' => '11025',
@@ -609,7 +630,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
 
 	public function testPerformConvertFlv() {
 		$this->_chmodWasCalled = false;
-		list($ret, $results)   = $this->_toolkit->performOperation(
+
+		list($ret, $results) = $this->_toolkit->performOperation(
 			'video/avi',
 			'convert-to-video/x-flv',
 			'testPerformOperation1.avi',
@@ -620,6 +642,7 @@ class FfmpegToolkitTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($results, 'video/x-flv');
 		$this->assertTrue($this->_chmodWasCalled, 'chmod not called');
 	}
@@ -633,7 +656,8 @@ class FfmpegToolkitTest extends GalleryTestCase {
  */
 class FfmpegToolkitTestPlatform {
 	public function init(&$test) {
-		$this->_test                   =& $test;
+		$this->_test =& $test;
+
 		list($ret, $this->_ffmpegPath) = GalleryCoreApi::getPluginParameter(
 			'module',
 			'ffmpeg',
@@ -1080,7 +1104,7 @@ class FfmpegToolkitTestPlatform {
 	}
 
 	public function unlink($path) {
-		// we don't create any files, so no need to unlink any
+		// we do not create any files, so no need to unlink any
 	}
 
 	public function tempnam($dir, $prefix) {

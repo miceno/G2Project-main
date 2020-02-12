@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,16 +28,16 @@
  */
 class PluginCallbackView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new PluginCallbackView();
+		if (!isset($instance)) {
+			$instance = new PluginCallbackView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -60,21 +59,24 @@ class PluginCallbackView extends GalleryView {
 	 */
 	public function renderImmediate($status = null, $error = null) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 		$storage =& $gallery->getStorage();
-
 		$command = GalleryUtilities::getRequestVariables('command');
 
 		if (!headers_sent()) {
 			header('Content-type: text/plain; charset=UTF-8');
 		}
 
-		$result                   = array();
+		$result = array();
+
 		list($ret, $beforeStates) = $this->getPluginStates();
 
 		if ($ret) {
 			$result['status'] = 'error';
-			$storage->rollbackTransaction();  // ignore errors here
+
+			// ignore errors here
+			$storage->rollbackTransaction();
 			$ret->putInSession();
 		}
 
@@ -83,7 +85,9 @@ class PluginCallbackView extends GalleryView {
 
 			if ($ret) {
 				$result['status'] = 'error';
-				$storage->rollbackTransaction();  // ignore errors here
+
+				// ignore errors here
+				$storage->rollbackTransaction();
 				$ret->putInSession();
 			} else {
 				// Make sure this change is isolated from any potential failures we get below.
@@ -91,6 +95,7 @@ class PluginCallbackView extends GalleryView {
 
 				if ($ret) {
 					$result['status'] = 'error';
+
 					$ret->putInSession();
 				}
 			}
@@ -112,7 +117,9 @@ class PluginCallbackView extends GalleryView {
 
 			if ($ret) {
 				$result['status'] = 'error';
-				$storage->rollbackTransaction();  // ignore errors here
+
+				// ignore errors here
+				$storage->rollbackTransaction();
 				$ret->putInSession();
 			} else {
 				$result = array_merge(
@@ -123,7 +130,9 @@ class PluginCallbackView extends GalleryView {
 		}
 
 		GalleryCoreApi::requireOnce('lib/JSON/JSON.php');
+
 		$json = new Services_JSON();
+
 		echo $json->encode($result);
 
 		return null;
@@ -167,6 +176,7 @@ class PluginCallbackView extends GalleryView {
 	 */
 	public function handleCallback($command, &$result) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		$ret = GalleryCoreApi::assertUserIsSiteAdministrator();
@@ -175,7 +185,8 @@ class PluginCallbackView extends GalleryView {
 			return $ret;
 		}
 
-		$result                      = array();
+		$result = array();
+
 		list($pluginType, $pluginId) = GalleryUtilities::getRequestVariables(
 			'pluginType',
 			'pluginId'
@@ -202,12 +213,12 @@ class PluginCallbackView extends GalleryView {
 						return $ret;
 					}
 				} else {
-					// Themes don't need configuration
+					// Themes do not need configuration
 					$needsConfiguration = false;
 				}
 
 				if ($isActive || $needsConfiguration) {
-					// UI shouldn't let us come here anyway
+					// UI should not let us come here anyway
 					$result['status'] = 'invalid';
 
 					return null;
@@ -230,7 +241,7 @@ class PluginCallbackView extends GalleryView {
 
 			case 'deactivate':
 				if (!$isActive) {
-					// UI shouldn't let us come here anyway
+					// UI should not let us come here anyway
 					$result['status'] = 'invalid';
 
 					return null;
@@ -248,7 +259,7 @@ class PluginCallbackView extends GalleryView {
 					}
 
 					if ($plugin->getId() == $defaultThemeId) {
-						// UI shouldn't let us come here anyway
+						// UI should not let us come here anyway
 						$result['status'] = 'invalid';
 					}
 				}
@@ -285,10 +296,9 @@ class PluginCallbackView extends GalleryView {
 						return $ret;
 					}
 				} else {
-					// Themes don't need this step
+					// Themes do not need this step
 					$autoConfigured = true;
 				}
-
 
 				if ($autoConfigured) {
 					list($ret, $redirect) = $plugin->activate();
@@ -296,7 +306,7 @@ class PluginCallbackView extends GalleryView {
 					if ($ret) {
 						if ($ret->getErrorCode() & ERROR_CONFIGURATION_REQUIRED) {
 							/*
-							 * Some modules don't override autoConfigure which defaults to success.
+							 * Some modules do not override autoConfigure which defaults to success.
 							 * Show the "Modules needs configuration" message.
 							 */
 						} else {
@@ -336,6 +346,7 @@ class PluginCallbackView extends GalleryView {
 					if ($ret) {
 						return $ret;
 					}
+
 					$result['status'] = 'success';
 				}
 
@@ -362,12 +373,13 @@ class PluginCallbackView extends GalleryView {
 						return $ret;
 					}
 
-					$path    = sprintf(
+					$path = sprintf(
 						'%s%ss/%s',
 						GalleryCoreApi::getCodeBasePath(),
 						$pluginType,
 						$pluginId
 					);
+
 					$success = @$platform->recursiveRmdir($path);
 
 					if (!$success) {
@@ -468,7 +480,7 @@ class PluginCallbackView extends GalleryView {
 			case 'module':
 				$pluginApiCompatible = GalleryUtilities::isCompatibleWithApi(
 					$plugin->getRequiredModuleApi(),
-					GalleryModule::doStatic()->getApiVersion()
+					GalleryModule::getMe()->getApiVersion()
 				);
 
 				break;
@@ -476,7 +488,7 @@ class PluginCallbackView extends GalleryView {
 			case 'theme':
 				$pluginApiCompatible = GalleryUtilities::isCompatibleWithApi(
 					$plugin->getRequiredThemeApi(),
-					GalleryTheme::doStatic()->getApiVersion()
+					GalleryTheme::getMe()->getApiVersion()
 				);
 
 				break;
@@ -488,7 +500,7 @@ class PluginCallbackView extends GalleryView {
 				$state   = 'inactive';
 
 				/*
-				 * If the database versions doesn't match the module
+				 * If the database versions does not match the module
 				 * version, we need to get the user to install the module.
 				 */
 				if ($version != $plugin->getVersion()) {

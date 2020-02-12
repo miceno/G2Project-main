@@ -1,7 +1,6 @@
 <?php
 
 // Romanian - by "bogdan stefan" <sbogdan#rsb.ro>
-
 $ADODB_LANG_ARRAY = array(
 	'LANG'                       => 'ro',
 	DB_ERROR                     => 'eroare necunoscuta',
@@ -32,3 +31,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'nu exista baza de date',
 	DB_ERROR_ACCESS_VIOLATION    => 'permisiuni insuficiente',
 );
+

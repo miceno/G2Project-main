@@ -1,4 +1,5 @@
 <?php
+
 /*
  @version   v5.20.12  30-Mar-2018
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,7 +8,6 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 4.
-
   Postgres7 support.
   28 Feb 2001: Currently indicate that we support LIMIT
   01 Dec 2001: dannym added support for default values
@@ -22,9 +22,13 @@ require_once ADODB_DIR . '/drivers/adodb-postgres64.inc.php';
 
 class ADODB_postgres7 extends ADODB_postgres64 {
 	public $databaseType = 'postgres7';
-	public $hasLimit     = true;   // set to true for pgsql 6.5+ only. support pgsql/mysql SELECT * FROM TABLE LIMIT 10
-	public $ansiOuter    = true;
-	public $charSet      = true; //set to true for Postgres 7 and above - PG client supports encodings
+
+	// set to true for pgsql 6.5+ only. support pgsql/mysql SELECT * FROM TABLE LIMIT 10
+	public $hasLimit  = true;
+	public $ansiOuter = true;
+
+	//set to true for Postgres 7 and above - PG client supports encodings
+	public $charSet = true;
 
 	// Richard 3/18/2012 - Modified SQL to return SERIAL type correctly AS old driver no longer return SERIAL as data type.
 	public $metaColumnsSQL = "
@@ -102,6 +106,7 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 		if (ADODB_ASSOC_CASE !== ADODB_ASSOC_CASE_NATIVE) {
 			$this->rsPrefix .= 'assoc_';
 		}
+
 		$this->_bindInputArray = PHP_VERSION >= 5.1;
 	}
 
@@ -124,13 +129,17 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 
 	/*
 	function Prepare($sql)
+
 	{
 		$info = $this->ServerInfo();
+
 		if ($info['version']>=7.3) {
 			return array($sql,false);
 		}
+
 		return $sql;
 	}
+
 	*/
 
 	/**
@@ -193,6 +202,7 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 			} else {
 				$a[$rs->Fields('lookup_table')][] = str_replace('"', '', $rs->Fields('dep_field') . '=' . $rs->Fields('lookup_field'));
 			}
+
 			$rs->MoveNext();
 		}
 
@@ -212,8 +222,7 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 		c.relname = \'' . strtolower($table) . '\'
 		ORDER BY
 			t.tgrelid';
-
-		$rs = $this->Execute($sql);
+		$rs  = $this->Execute($sql);
 
 		if (!$rs || $rs->EOF) {
 			return false;
@@ -224,7 +233,10 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 
 		foreach ($arr as $v) {
 			$data = explode(chr(0), $v['args']);
-			$size = count($data) - 1; //-1 because the last node is empty
+
+			//-1 because the last node is empty
+			$size = count($data) - 1;
+
 			for ($i = 4; $i < $size; $i++) {
 				if ($upper) {
 					$a[strtoupper($data[2])][] = strtoupper($data[$i] . '=' . $data[++$i]);
@@ -239,12 +251,13 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 
 	public function _query($sql, $inputarr = false) {
 		if (!$this->_bindInputArray) {
-			// We don't have native support for parameterized queries, so let's emulate it at the parent
+			// We do not have native support for parameterized queries, so let's emulate it at the parent
 			return ADODB_postgres64::_query($sql, $inputarr);
 		}
 
 		$this->_pnum     = 0;
 		$this->_errorMsg = false;
+
 		// -- added Cristiano da Cunha Duarte
 		if ($inputarr) {
 			$sqlarr = explode('?', trim($sql));
@@ -258,6 +271,7 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 				} else {
 					$sql .= $v . ' $' . $i;
 				}
+
 				$i++;
 			}
 
@@ -265,11 +279,13 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 		} else {
 			$rez = pg_query($this->_connectionID, $sql);
 		}
+
 		// check if no data returned, then no need to create real recordset
 		if ($rez && pg_num_fields($rez) <= 0) {
 			if (is_resource($this->_resultid) && get_resource_type($this->_resultid) === 'pgsql result') {
 				pg_free_result($this->_resultid);
 			}
+
 			$this->_resultid = $rez;
 
 			return true;
@@ -279,7 +295,7 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 	}
 
 	// this is a set of functions for managing client encoding - very important if the encodings
-	// of your database and your output target (i.e. HTML) don't match
+	// of your database and your output target (i.e. HTML) do not match
 	//for instance, you may have UNICODE database and server it on-site as WIN1251 etc.
 	// GetCharSet - get the name of the character set the client is using now
 	// the functions should work with Postgres 7.0 and above, the set of charsets supported
@@ -317,7 +333,6 @@ class ADODB_postgres7 extends ADODB_postgres64 {
 /*--------------------------------------------------------------------------------------
 	Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordSet_postgres7 extends ADORecordSet_postgres64 {
 	public $databaseType = 'postgres7';
 
@@ -341,6 +356,7 @@ class ADORecordSet_postgres7 extends ADORecordSet_postgres64 {
 					return true;
 				}
 			}
+
 			$this->fields = false;
 			$this->EOF    = true;
 		}
@@ -367,6 +383,7 @@ class ADORecordSet_assoc_postgres7 extends ADORecordSet_postgres64 {
 			if (isset($this->_blobArr)) {
 				$this->_fixblobs();
 			}
+
 			$this->_updatefields();
 		}
 
@@ -392,7 +409,6 @@ class ADORecordSet_assoc_postgres7 extends ADORecordSet_postgres64 {
 					return true;
 				}
 			}
-
 
 			$this->fields = false;
 			$this->EOF    = true;

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -25,20 +24,21 @@
  */
 class CoreCallbacks {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new CoreCallbacks();
+		if (!isset($instance)) {
+			$instance = new CoreCallbacks();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	public function callback($params, &$smarty, $callback, $userId = null) {
 		global $gallery;
+
 		$block =& $smarty->_tpl_vars['block'];
 		$theme =& $smarty->_tpl_vars['theme'];
 
@@ -68,6 +68,7 @@ class CoreCallbacks {
 
 			case 'ShouldShowEmergencyEditItemLink':
 				$check = isset($params['checkBlocks']) ? $params['checkBlocks'] : '';
+
 				/**
 				 * @todo Remove support for check[Sidebar|Album|Photo]Blocks on next major api bump
 				 */
@@ -103,7 +104,8 @@ class CoreCallbacks {
 				$item = $params['item'];
 
 				if (isset($item['parent']->getChildrenFunction)) {
-					$parent              = $item['parent'];
+					$parent = $item['parent'];
+
 					list($ret, $peerIds) = call_user_func($parent->getChildrenFunction, $userId);
 
 					if ($ret) {
@@ -122,6 +124,7 @@ class CoreCallbacks {
 						if ($ret) {
 							return $ret;
 						}
+
 						list($ret, $peerIds) = GalleryCoreApi::fetchChildItemIds($parent, null, null, $userId);
 
 						if ($ret) {
@@ -141,12 +144,12 @@ class CoreCallbacks {
 				}
 
 				if (isset($peerItemIndex)) {
-					$windowSize = isset($params['windowSize']) ? ($params['windowSize'] - 1) : 6;
-					$addEnds    = isset($params['addEnds']) ? $params['addEnds'] : true;
-					$peerLast   = count($peerIds) - 1;
-
+					$windowSize        = isset($params['windowSize']) ? ($params['windowSize'] - 1) : 6;
+					$addEnds           = isset($params['addEnds']) ? $params['addEnds'] : true;
+					$peerLast          = count($peerIds) - 1;
 					$peerNeighborStart = max($peerItemIndex - (int)($windowSize / 2), 0);
 					$peerNeighborEnd   = min($peerItemIndex + (int)(($windowSize + 1) / 2), $peerLast);
+
 					// If the window is pinned to one end, expand it to the entire windowSize
 					if ($peerNeighborStart == 0) {
 						$peerNeighborEnd = min($peerLast, $windowSize);
@@ -179,6 +182,7 @@ class CoreCallbacks {
 							return $ret;
 						}
 					}
+
 					$j = 0;
 
 					foreach ($peerMap as $i => $id) {
@@ -188,8 +192,10 @@ class CoreCallbacks {
 						if (isset($thumbTable[$id])) {
 							$peer['thumbnail'] = (array)$thumbTable[$id];
 						}
+
 						$peers[] = $peer;
 					}
+
 					$block['core']['LoadPeers'] = array(
 						'peers'         => $peers,
 						'peerCount'     => count($peerIds),
@@ -209,7 +215,11 @@ class CoreCallbacks {
 				if (!empty($params['level'])) {
 					$options['level'] = $params['level'];
 				} else {
-					list($ret, $options['level']) = GalleryCoreApi::getPluginParameter('module', 'core', 'validation.level');
+					list($ret, $options['level']) = GalleryCoreApi::getPluginParameter(
+						'module',
+						'core',
+						'validation.level'
+					);
 
 					if ($ret) {
 						return $ret;
@@ -223,7 +233,9 @@ class CoreCallbacks {
 				if ($options['level'] == 'OFF') {
 					$allPluginIds = array();
 				} else {
-					list($ret, $allPluginIds) = GalleryCoreApi::getAllFactoryImplementationIds('GalleryValidationPlugin');
+					list($ret, $allPluginIds) = GalleryCoreApi::getAllFactoryImplementationIds(
+						'GalleryValidationPlugin'
+					);
 
 					if ($ret) {
 						return $ret;
@@ -234,13 +246,19 @@ class CoreCallbacks {
 				$block['core']['ValidationPlugins'] = array();
 
 				foreach (array_keys($allPluginIds) as $pluginId) {
-					list($ret, $plugin) = GalleryCoreApi::newFactoryInstanceById('GalleryValidationPlugin', $pluginId);
+					list($ret, $plugin) = GalleryCoreApi::newFactoryInstanceById(
+						'GalleryValidationPlugin',
+						$pluginId
+					);
 
 					if ($ret) {
 						return $ret;
 					}
 
-					list($ret, $data['file'], $data['l10Domain']) = $plugin->loadTemplate($smarty->_tpl_vars['form'], $options);
+					list($ret, $data['file'], $data['l10Domain']) = $plugin->loadTemplate(
+						$smarty->_tpl_vars['form'],
+						$options
+					);
 
 					if ($ret) {
 						return $ret;

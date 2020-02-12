@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce(
 	'modules/rewrite/classes/parsers/isapirewrite/IsapiRewriteUrlGenerator.class'
 );
@@ -38,6 +36,7 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -75,11 +74,13 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 	 * a relative URL is alright.  But it isn't, we should use server-relative URLs in this case.
 	 */
 	public function testGenerateUrlMustBeServerRelative() {
-		$env    = array(
+		$env = array(
 			'REQUEST_URI' => '/gallery2/' . GALLERY_MAIN_PHP .
 							 '?g2_view=core.ShowItem&g2_itemId=17',
 		);
+
 		$params = $this->_getTestUrlParams();
+
 		// Only test a single URL
 		$params      = $params[6];
 		$expectedUrl = '/gallery2/v' . $this->_testAlbumPath;
@@ -103,6 +104,7 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 		}
 
 		GalleryDataCache::put('G2_EMBED', false, true);
+
 		$ret = $this->_urlGeneratorInit('IsapiRewriteUrlGenerator');
 
 		if ($ret) {
@@ -112,6 +114,7 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 		$this->assertFalse($this->_urlGenerator->_error, 'init error in non-embedded');
 
 		GalleryDataCache::put('G2_EMBED', true, true);
+
 		$ret = $this->_urlGeneratorInit('IsapiRewriteUrlGenerator');
 
 		if ($ret) {
@@ -133,6 +136,7 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 		}
 
 		GalleryDataCache::put('G2_EMBED', false, true);
+
 		$ret = $this->_urlGeneratorInit('IsapiRewriteUrlGenerator');
 
 		if ($ret) {
@@ -142,6 +146,7 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 		$this->assertTrue($this->_urlGenerator->_error, 'no init error in standalone mode');
 
 		GalleryDataCache::put('G2_EMBED', true, true);
+
 		$ret = $this->_urlGeneratorInit('IsapiRewriteUrlGenerator');
 
 		if ($ret) {
@@ -151,3 +156,4 @@ class IsapiRewriteUrlGeneratorTest extends RewriteUrlGeneratorTestCase {
 		$this->assertFalse($this->_urlGenerator->_error, 'init error when embedded');
 	}
 }
+

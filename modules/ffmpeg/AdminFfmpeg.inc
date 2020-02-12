@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/ffmpeg/classes/FfmpegToolkitHelper.class');
 
 /**
@@ -68,6 +66,7 @@ class AdminFfmpegController extends GalleryController {
 						} else {
 							// Got a match
 							$form['path'] = $path;
+
 							GalleryUtilities::putRequestVariable('form.path', $path);
 						}
 					}
@@ -116,12 +115,15 @@ class AdminFfmpegController extends GalleryController {
 		    FROM [GalleryDerivative], [GalleryChildEntity], [GalleryEntity]
 		    WHERE [GalleryDerivative::id] = [GalleryChildEntity::id]
 		      AND [GalleryChildEntity::parentId] = [GalleryEntity::id]
+
 		      AND [GalleryEntity::entityType] = \'GalleryMovieItem\'';
-					$ret   = $this->_processThumbnails($query, '_addWatermark');
+
+					$ret = $this->_processThumbnails($query, '_addWatermark');
 
 					if ($ret) {
 						return array($ret, null);
 					}
+
 					$status['added'] = 1;
 				} elseif (isset($form['removeWatermark']) && $form['removeWatermark']) {
 					$query = '
@@ -129,11 +131,13 @@ class AdminFfmpegController extends GalleryController {
 		    FROM [GalleryDerivative]
 		    WHERE [GalleryDerivative::derivativeOperations]
 			  LIKE \'%composite|%filmreel.png%\'';
-					$ret   = $this->_processThumbnails($query, '_removeWatermark');
+
+					$ret = $this->_processThumbnails($query, '_removeWatermark');
 
 					if ($ret) {
 						return array($ret, null);
 					}
+
 					$status['removed'] = 1;
 				}
 
@@ -147,6 +151,7 @@ class AdminFfmpegController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$ret = GalleryCoreApi::setPluginParameter(
 					'module',
 					'ffmpeg',
@@ -164,6 +169,7 @@ class AdminFfmpegController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				list($ret, $isActive) = $module->isActive();
 
 				if ($ret) {
@@ -194,6 +200,7 @@ class AdminFfmpegController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'ffmpeg.AdminFfmpeg';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -202,11 +209,13 @@ class AdminFfmpegController extends GalleryController {
 
 	public function _processThumbnails($query, $operation) {
 		global $gallery;
+
 		list($ret, $searchResults) = $gallery->search($query);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ids = array();
 
 		while ($result = $searchResults->nextResult()) {
@@ -214,12 +223,14 @@ class AdminFfmpegController extends GalleryController {
 		}
 
 		while (!empty($ids)) {
-			$idSet              = array_splice($ids, 0, 100);
+			$idSet = array_splice($ids, 0, 100);
+
 			list($ret, $lockId) = GalleryCoreApi::acquireWriteLock($idSet);
 
 			if ($ret) {
 				return $ret;
 			}
+
 			list($ret, $thumbnails) = GalleryCoreApi::loadEntitiesById($idSet, 'GalleryDerivative');
 
 			if ($ret) {
@@ -230,6 +241,7 @@ class AdminFfmpegController extends GalleryController {
 
 			foreach ($thumbnails as $thumbnail) {
 				$this->$operation($thumbnail);
+
 				$ret = $thumbnail->save();
 
 				if ($ret) {
@@ -238,6 +250,7 @@ class AdminFfmpegController extends GalleryController {
 					return $ret;
 				}
 			}
+
 			$ret = GalleryCoreApi::releaseLocks($lockId);
 
 			if ($ret) {
@@ -249,17 +262,20 @@ class AdminFfmpegController extends GalleryController {
 	}
 
 	public function _addWatermark(&$thumbnail) {
-		static $op  = 'composite|plugins_data/modules/ffmpeg/filmreel.png,image/png,12,399';
+		static $op = 'composite|plugins_data/modules/ffmpeg/filmreel.png,image/png,12,399';
+
 		$operations = $thumbnail->getDerivativeOperations();
 
 		if (strpos($operations, 'filmreel.png') === false) {
 			$operations .= (empty($operations) ? '' : ';') . "$op,top-left,0,0;$op,top-right,0,0";
+
 			$thumbnail->setDerivativeOperations($operations);
 		}
 	}
 
 	public function _removeWatermark(&$thumbnail) {
 		$operations = $thumbnail->getDerivativeOperations();
+
 		$thumbnail->setDerivativeOperations(
 			rtrim(
 				preg_replace(
@@ -289,7 +305,7 @@ class AdminFfmpegView extends GalleryView {
 			return array($ret, null);
 		}
 
-		// Load our default values if we didn't just come from this form.
+		// Load our default values if we did not just come from this form.
 		if ($form['formName'] != 'AdminFfmpeg') {
 			foreach (array('path', 'useWatermark') as $key) {
 				list($ret, $form[$key]) = GalleryCoreApi::getPluginParameter(
@@ -302,6 +318,7 @@ class AdminFfmpegView extends GalleryView {
 					return array($ret, null);
 				}
 			}
+
 			$form['formName'] = 'AdminFfmpeg';
 		} else {
 			if (!isset($form['useWatermark'])) {
@@ -323,6 +340,7 @@ class AdminFfmpegView extends GalleryView {
 				$form['error']['path']['missing'] = 1;
 			} else {
 				$gallery->startRecordingDebugSnippet();
+
 				list($ret, $tests, $mimeTypes, $supportsOffset,
 				$mimeTypesEncoder, $encoderCodecs, $version) = FfmpegToolkitHelper::testBinary($form['path']);
 
@@ -331,6 +349,7 @@ class AdminFfmpegView extends GalleryView {
 				) {
 					$encodeWarnings['video/x-flv']['mute'] = true;
 				}
+
 				$debugSnippet = $gallery->stopRecordingDebugSnippet();
 
 				if ($ret) {
@@ -365,6 +384,7 @@ class AdminFfmpegView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $isActive) = $module->isActive();
 
 		if ($ret) {
@@ -387,7 +407,8 @@ class AdminFfmpegView extends GalleryView {
 				ini_get('disable_functions')
 			)
 		);
-		$AdminFfmpeg['canWatermark']     = isset($toolkit);
+
+		$AdminFfmpeg['canWatermark'] = isset($toolkit);
 
 		if ($failCount > 0) {
 			$template->javascript('lib/javascript/BlockToggle.js');

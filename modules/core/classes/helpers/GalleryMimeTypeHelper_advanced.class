@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/helpers/GalleryMimeTypeHelper_simple.class'
 );
@@ -36,7 +34,7 @@ class GalleryMimeTypeHelper_advanced {
 	 * @return GalleryStatus a status code
 	 */
 	public static function initializeMimeTypes() {
-		$mimeTypes         = array(
+		$mimeTypes = array(
 			// This data was lifted from Apache's mime.types listing.
 			'z'       => 'application/x-compress',
 			'ai'      => 'application/postscript',
@@ -175,14 +173,12 @@ class GalleryMimeTypeHelper_advanced {
 			'xwd'     => 'image/x-xwindowdump',
 			'xyz'     => 'chemical/x-xyz',
 			'zip'     => 'application/zip',
-
 			// And some of my own additions
 			// From support.microsoft.com/support/kb/articles/Q284/0/94.ASP
 			'asf'     => 'video/x-ms-asf',
 			'asx'     => 'video/x-ms-asx',
 			'wmv'     => 'video/x-ms-wmv',
 			'wma'     => 'audio/x-ms-wma',
-
 			// JPEG 2000: From RFC 3745: http://www.faqs.org/rfcs/rfc3745.html
 			'jp2'     => 'image/jp2',
 			'jpg2'    => 'image/jp2',
@@ -192,7 +188,6 @@ class GalleryMimeTypeHelper_advanced {
 			'mjp2'    => 'video/mj2',
 			'jpm'     => 'image/jpm',
 			'jpgm'    => 'image/jpgm',
-
 			// Other
 			'psd'     => 'application/photoshop',
 			'pcd'     => 'image/x-photo-cd',
@@ -209,6 +204,7 @@ class GalleryMimeTypeHelper_advanced {
 			'3gpp2' => 'video/3gpp2',
 			'3gp2'  => 'video/3gpp2',
 		);
+
 		$viewableMimeTypes = array(
 			'image/jpeg'  => 1,
 			'image/pjpeg' => 1,
@@ -229,7 +225,8 @@ class GalleryMimeTypeHelper_advanced {
 				'mimeType'  => $mime,
 				'viewable'  => (int)isset($viewableMimeTypes[$mime]),
 			);
-			$ret         = GalleryCoreApi::addMapEntry('GalleryMimeTypeMap', $mimeTypeMap);
+
+			$ret = GalleryCoreApi::addMapEntry('GalleryMimeTypeMap', $mimeTypeMap);
 
 			if ($ret) {
 				return $ret;
@@ -250,6 +247,7 @@ class GalleryMimeTypeHelper_advanced {
 		if ($ret) {
 			return $ret;
 		}
+
 		GalleryMimeTypeHelper_simple::_deleteCache();
 
 		return null;
@@ -262,7 +260,7 @@ class GalleryMimeTypeHelper_advanced {
 		global $gallery;
 
 		// Check to see if the extension already exists.
-		$query               = '
+		$query = '
 	SELECT
 	    [GalleryMimeTypeMap::extension]
 	FROM
@@ -270,6 +268,7 @@ class GalleryMimeTypeHelper_advanced {
 	WHERE
 	    [GalleryMimeTypeMap::extension] = ?
 	';
+
 		list($ret, $results) = $gallery->search(
 			$query,
 			array($extension),

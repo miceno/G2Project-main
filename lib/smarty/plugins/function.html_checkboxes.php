@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -47,8 +48,7 @@ function smarty_function_html_checkboxes($params, &$smarty) {
 	$separator = '';
 	$labels    = true;
 	$output    = null;
-
-	$extra = '';
+	$extra     = '';
 
 	foreach ($params as $_key => $_val) {
 		switch ($_key) {
@@ -82,6 +82,7 @@ function smarty_function_html_checkboxes($params, &$smarty) {
 
 			case 'checkboxes':
 				$smarty->trigger_error('html_checkboxes: the use of the "checkboxes" attribute is deprecated, use "options" instead', E_USER_WARNING);
+
 				$options = (array)$_val;
 
 				break;
@@ -101,8 +102,10 @@ function smarty_function_html_checkboxes($params, &$smarty) {
 	}
 
 	if (!isset($options) && !isset($values)) {
-		return ''; // raise error here?
+		// raise error here?
+		return '';
 	}
+
 	settype($selected, 'array');
 	$_html_result = array();
 
@@ -130,6 +133,7 @@ function smarty_function_html_checkboxes_output($name, $value, $output, $selecte
 	if ($labels) {
 		$_output .= '<label>';
 	}
+
 	$_output .= '<input type="checkbox" name="'
 		. smarty_function_escape_special_chars($name) . '[]" value="'
 		. smarty_function_escape_special_chars($value) . '"';
@@ -137,11 +141,13 @@ function smarty_function_html_checkboxes_output($name, $value, $output, $selecte
 	if (in_array((string)$value, $selected)) {
 		$_output .= ' checked="checked"';
 	}
+
 	$_output .= $extra . ' />' . $output;
 
 	if ($labels) {
 		$_output .= '</label>';
 	}
+
 	$_output .= $separator;
 
 	return $_output;

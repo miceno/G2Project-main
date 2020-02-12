@@ -1,4 +1,5 @@
 <?php
+
 // This is a sample valid index used for testing.
 $sampleIndex = array(
 	'modules' => array(
@@ -7,7 +8,7 @@ $sampleIndex = array(
 				'id'                => 'testModule',
 				'version'           => '1.0.0',
 				'requiredCoreApi'   => GalleryCoreApi::getApiVersion(),
-				'requiredPluginApi' => GalleryModule::doStatic()->getApiVersion(),
+				'requiredPluginApi' => GalleryModule::getMe()->getApiVersion(),
 				'stringsRevision'   => '22222',
 				'buildTimestamp'    => '44444',
 			),
@@ -43,14 +44,13 @@ $sampleIndex = array(
 			),
 		),
 	),
-
 	'themes' => array(
 		'testTheme' => array(
 			'header' => array(
 				'id'                => 'testTheme',
 				'version'           => '1.0.0',
 				'requiredCoreApi'   => GalleryCoreApi::getApiVersion(),
-				'requiredPluginApi' => GalleryTheme::doStatic()->getApiVersion(),
+				'requiredPluginApi' => GalleryTheme::getMe()->getApiVersion(),
 				'stringsRevision'   => '22222',
 				'buildTimestamp'    => '11111',
 			),
@@ -87,3 +87,4 @@ $sampleIndex = array(
 		),
 	),
 );
+

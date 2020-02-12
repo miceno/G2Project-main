@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class SiteAdminView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new SiteAdminView();
+		if (!isset($instance)) {
+			$instance = new SiteAdminView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -122,6 +121,7 @@ class SiteAdminView extends GalleryView {
 				}
 
 				$group = $module->getGroup();
+
 				/**
 				 * Pre 2.2, we only accepted a 'view', which we made the subView to
 				 * core.SiteAdmin.  In 2.2, we now let them specify extra parameters
@@ -130,7 +130,7 @@ class SiteAdminView extends GalleryView {
 				 * be core.SiteAdmin).
 				 *
 				 * TODO: change the API to allow the module to return this form directly
-				 * so that we don't have to massage it like this.
+				 * so that we do not have to massage it like this.
 				 */
 				$currentSubView = GalleryUtilities::getRequestVariables('subView');
 
@@ -170,8 +170,10 @@ class SiteAdminView extends GalleryView {
 								break;
 							}
 						}
+
 						$outer['selected'] = $selected;
 					}
+
 					$moduleViews[$i] = $outer;
 				}
 
@@ -215,6 +217,7 @@ class SiteAdminView extends GalleryView {
 				$data[0]['groupLabel'] = ucwords($data[0]['group']);
 			}
 		}
+
 		usort($subViewGroups, array($this, 'groupSort'));
 
 		// If we have a specific sub view, render it now
@@ -235,7 +238,7 @@ class SiteAdminView extends GalleryView {
 			$subViewName = 'core.AdminPlugins';
 		}
 
-		list($ret, $subView) = GalleryView::doStatic()->loadView($subViewName);
+		list($ret, $subView) = GalleryView::getMe()->loadView($subViewName);
 
 		if ($ret) {
 			return array($ret, null);
@@ -287,7 +290,8 @@ class SiteAdminView extends GalleryView {
 		if (empty($subViewName)) {
 			$subViewName = 'core.AdminCore';
 		}
-		list($ret, $subView) = GalleryView::doStatic()->loadView($subViewName);
+
+		list($ret, $subView) = GalleryView::getMe()->loadView($subViewName);
 
 		if ($ret) {
 			return array($ret, null);
@@ -298,13 +302,14 @@ class SiteAdminView extends GalleryView {
 		if (!empty($description)) {
 			return array(null, $description);
 		}
+
 		list($ret, $core) = GalleryCoreApi::loadPlugin('module', 'core');
 
 		if ($ret) {
 			return array($ret, null);
 		}
 
-		// Fallback if subView doesn't have a name
+		// Fallback if subView does not have a name
 		return array(null, $core->translate('site admin'));
 	}
 
@@ -327,6 +332,7 @@ class SiteAdminView extends GalleryView {
 				'other'    => 4,
 			);
 		}
+
 		$ag = $a[0]['group'];
 		$bg = $b[0]['group'];
 		$ao = isset($groupOrder[$ag]) ? $groupOrder[$ag] : $groupOrder[''];
@@ -335,6 +341,7 @@ class SiteAdminView extends GalleryView {
 		if ($ao != $bo) {
 			return ($ao > $bo) ? 1 : -1;
 		}
+
 		$ag = isset($a[0]['groupLabel']) ? $a[0]['groupLabel'] : $ag;
 		$bg = isset($b[0]['groupLabel']) ? $b[0]['groupLabel'] : $bg;
 

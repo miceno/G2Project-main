@@ -1,4 +1,5 @@
 <?php
+
 //	 Session Encryption by Ari Kuorikoski <ari.kuorikoski@finebyte.com>
 class MD5Crypt {
 	public function keyED($txt, $encrypt_key) {
@@ -10,6 +11,7 @@ class MD5Crypt {
 			if ($ctr == strlen($encrypt_key)) {
 				$ctr = 0;
 			}
+
 			$tmp .= substr($txt, $i, 1) ^ substr($encrypt_key, $ctr, 1);
 			$ctr++;
 		}
@@ -27,6 +29,7 @@ class MD5Crypt {
 			if ($ctr == strlen($encrypt_key)) {
 				$ctr = 0;
 			}
+
 			$tmp .= substr($encrypt_key, $ctr, 1) .
 			(substr($txt, $i, 1) ^ substr($encrypt_key, $ctr, 1));
 			$ctr++;

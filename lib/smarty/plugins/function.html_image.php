@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
  * @subpackage plugins
  */
-
 
 /**
  * Smarty {html_image} function plugin
@@ -112,6 +112,7 @@ function smarty_function_html_image($params, &$smarty) {
 
 				return;
 			}
+
 			$smarty->trigger_error("html_image: '$_image_path' is not a valid image file", E_USER_NOTICE);
 
 			return;
@@ -120,6 +121,7 @@ function smarty_function_html_image($params, &$smarty) {
 		if ($smarty->security &&
 			($_params = array('resource_type' => 'file', 'resource_name' => $_image_path)) &&
 			(require_once(SMARTY_CORE_DIR . 'core.is_secure.php')) &&
+
 			(!smarty_core_is_secure($_params, $smarty))) {
 			$smarty->trigger_error("html_image: (secure) '$_image_path' not in secure directory", E_USER_NOTICE);
 		}
@@ -139,6 +141,7 @@ function smarty_function_html_image($params, &$smarty) {
 		} else {
 			$dpi_default = 96;
 		}
+
 		$_resize = $dpi_default/$params['dpi'];
 		$width   = round($width * $_resize);
 		$height  = round($height * $_resize);

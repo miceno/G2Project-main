@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -30,6 +29,7 @@ GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteHelper.class');
 GalleryCoreApi::requireOnce(
 	'modules/rewrite/classes/parsers/modrewrite/ModRewriteHelper.class'
 );
+
 class ModRewriteHelperTest extends GalleryTestCase {
 	public function __construct($methodName) {
 		parent::__construct($methodName);
@@ -37,6 +37,7 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -44,11 +45,13 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		}
 
 		$urlGenerator = new GalleryUrlGenerator();
-		$ret          = $urlGenerator->init('http://www.test.server/gallery2/main.php');
+
+		$ret = $urlGenerator->init('http://www.test.server/gallery2/main.php');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$gallery->setUrlGenerator($urlGenerator);
 
 		$ret = $this->_markPluginParametersForCleanup('module', 'rewrite');
@@ -77,7 +80,9 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 		// Set up our mock platform
 		$this->_platform = new ModRewriteHelperMockPlatform();
+
 		$this->_platform->init($this);
+
 		unset($this->_fileContent, $this->_embeddedFileContent);
 
 		$gallery->setPlatform($this->_platform);
@@ -107,30 +112,37 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_OK, $code, 'success');
 
 		$this->_platform->_isWriteable = false;
-		list($ret, $code)              = ModRewriteHelper::checkFile();
+
+		list($ret, $code) = ModRewriteHelper::checkFile();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_HTACCESS_CANT_WRITE, $code, 'writeable');
 
 		$this->_platform->_isReadable = false;
-		list($ret, $code)             = ModRewriteHelper::checkFile();
+
+		list($ret, $code) = ModRewriteHelper::checkFile();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_HTACCESS_CANT_READ, $code, 'readable');
 
 		$this->_platform->_fileExists = false;
-		list($ret, $code)             = ModRewriteHelper::checkFile();
+
+		list($ret, $code) = ModRewriteHelper::checkFile();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_HTACCESS_MISSING, $code, 'exists');
 	}
 
@@ -140,30 +152,37 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_OK, $code, 'success');
 
 		$this->_platform->_isWriteableEmbed = false;
-		list($ret, $code)                   = ModRewriteHelper::checkFile(true);
+
+		list($ret, $code) = ModRewriteHelper::checkFile(true);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_EMBED_HTACCESS_CANT_WRITE, $code, 'writeable');
 
 		$this->_platform->_isReadableEmbed = false;
-		list($ret, $code)                  = ModRewriteHelper::checkFile(true);
+
+		list($ret, $code) = ModRewriteHelper::checkFile(true);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_EMBED_HTACCESS_CANT_READ, $code, 'readable');
 
 		$this->_platform->_fileExistsEmbed = false;
-		list($ret, $code)                  = ModRewriteHelper::checkFile(true);
+
+		list($ret, $code) = ModRewriteHelper::checkFile(true);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_EMBED_HTACCESS_MISSING, $code, 'exists');
 	}
 
@@ -176,10 +195,11 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 		$this->assertEquals(REWRITE_STATUS_OK, $code, 'success');
 		$this->assertFalse(empty($this->_fileContent), 'success fileContent');
-		unset($this->_fileContent);
 
+		unset($this->_fileContent);
 		$this->_platform->_isReadable = false;
-		list($ret, $code)             = ModRewriteHelper::writeFile(array());
+
+		list($ret, $code) = ModRewriteHelper::writeFile(array());
 
 		if ($ret) {
 			return $ret;
@@ -190,7 +210,8 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 		$this->_platform->_isReadable  = true;
 		$this->_platform->_isWriteable = false;
-		list($ret, $code)              = ModRewriteHelper::writeFile(array());
+
+		list($ret, $code) = ModRewriteHelper::writeFile(array());
 
 		if ($ret) {
 			return $ret;
@@ -209,10 +230,11 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 		$this->assertEquals(REWRITE_STATUS_OK, $code, 'success');
 		$this->assertFalse(empty($this->_embeddedFileContent), 'success fileContent');
-		unset($this->_embeddedFileContent);
 
+		unset($this->_embeddedFileContent);
 		$this->_platform->_isReadableEmbed = false;
-		list($ret, $code)                  = ModRewriteHelper::writeFile(array(), true);
+
+		list($ret, $code) = ModRewriteHelper::writeFile(array(), true);
 
 		if ($ret) {
 			return $ret;
@@ -223,7 +245,8 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 		$this->_platform->_isReadableEmbed  = true;
 		$this->_platform->_isWriteableEmbed = false;
-		list($ret, $code)                   = ModRewriteHelper::writeFile(array(), true);
+
+		list($ret, $code) = ModRewriteHelper::writeFile(array(), true);
 
 		if ($ret) {
 			return $ret;
@@ -239,7 +262,8 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		 * the RewriteRule.
 		 */
 		GalleryDataCache::put('G2_EMBED', 1, true);
-		$testRules[0]         = array(
+
+		$testRules[0] = array(
 			'pattern'     => 'd/Test-Download-Rule',
 			'keywords'    => array(),
 			'queryString' => array(
@@ -254,6 +278,7 @@ class ModRewriteHelperTest extends GalleryTestCase {
 				'useAuthToken'           => false,
 			),
 		);
+
 		list($ret, $htaccess) = ModRewriteHelper::getHtaccessContent($testRules, true);
 
 		if ($ret) {
@@ -271,6 +296,7 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 	public function testCheckModRewrite() {
 		GalleryUtilities::putRequestVariable('modRewriteTest', 'pass');
+
 		list($ret, $status, $trueStatus) = ModRewriteHelper::checkModRewrite();
 
 		if ($ret) {
@@ -281,6 +307,7 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		$this->assertEquals(REWRITE_STATUS_OK, $trueStatus);
 
 		GalleryUtilities::putRequestVariable('modRewriteTest', 'fail');
+
 		list($ret, $status, $trueStatus) = ModRewriteHelper::checkModRewrite();
 
 		if ($ret) {
@@ -291,6 +318,7 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		$this->assertEquals(REWRITE_STATUS_APACHE_NO_MOD_REWRITE, $trueStatus, 'fail');
 
 		GalleryUtilities::putRequestVariable('modRewriteTest', '404');
+
 		list($ret, $status, $trueStatus) = ModRewriteHelper::checkModRewrite();
 
 		if ($ret) {
@@ -303,17 +331,21 @@ class ModRewriteHelperTest extends GalleryTestCase {
 
 	public function testCheckModRewriteUnableToTest() {
 		global $gallery;
+
 		// Prepare the URL Generator
 		$urlGenerator = new GalleryUrlGenerator();
-		$ret          = $urlGenerator->init('http://www.test.server/bogus/main.php');
+
+		$ret = $urlGenerator->init('http://www.test.server/bogus/main.php');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$gallery->setUrlGenerator($urlGenerator);
 
 		// Execute the test
 		GalleryUtilities::putRequestVariable('modRewriteTest', 'fail');
+
 		list($ret, $status, $trueStatus) = ModRewriteHelper::checkModRewrite();
 
 		if ($ret) {
@@ -342,6 +374,7 @@ class ModRewriteHelperTest extends GalleryTestCase {
 		}
 
 		GalleryUtilities::putRequestVariable('modRewriteTest', 'fail');
+
 		list($ret, $status, $trueStatus) = ModRewriteHelper::checkModRewrite();
 
 		if ($ret) {

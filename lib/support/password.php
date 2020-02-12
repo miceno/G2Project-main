@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('G2_SUPPORT')) {
 	define('G2_SUPPORT_FILE', true);
 
@@ -8,6 +9,7 @@ if (!defined('G2_SUPPORT')) {
 // Connect to Gallery2
 function connect() {
 	include_once '../../embed.php';
+
 	$ret = GalleryEmbed::init(
 		array(
 			'fullInit' => true,
@@ -27,20 +29,25 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 
 	if (isset($process_password_string)) {
 		$storage =& $gallery->getStorage();
+
 		// Empty FailedLoginsMap table
 		$sql = 'TRUNCATE [FailedLoginsMap]';
+
 		$ret = $storage->execute($sql);
 
 		// Empty Lock table
 		$sql = 'TRUNCATE [Lock]';
+
 		$ret = $storage->execute($sql);
 
 		// Empty RecoverPasswordMap table
 		$sql = 'TRUNCATE [RecoverPasswordMap]';
+
 		$ret = $storage->execute($sql);
 
 		// Empty SessionMap table
 		$sql = 'TRUNCATE [SessionMap]';
+
 		$ret = $storage->execute($sql);
 
 		// Disable captcha module if active
@@ -48,15 +55,17 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 
 		if (!$ret) {
 			if (isset($moduleStatus['captcha']) && !empty($moduleStatus['captcha']['active'])) {
-				$sql     = '
-				UPDATE
-				[PluginMap]
-				SET
-				[::active] = ?,
-				WHERE
-				[::pluginId] = ?
+				$sql = '
+					UPDATE
+						[PluginMap]
+					SET
+						[::active] = ?,
+					WHERE
+						[::pluginId] = ?
 				';
-				$ret     = $storage->execute($sql, array(0, 'captcha'));
+
+				$ret = $storage->execute($sql, array(0, 'captcha'));
+
 				$captcha = 'off';
 			}
 		}
@@ -64,6 +73,7 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 		if (isset($process_admin_change)) {
 			// Set target username to change admin username to
 			$process_user_name = 'Admin';
+
 			// Get the G2 setup password
 			$process_password_string = $gallery->getConfig('setup.password');
 
@@ -73,13 +83,14 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 			} else {
 				// Build and execute the query
 				$sql = '
-				UPDATE
-				[GalleryUser]
-				SET
-				[GalleryUser::userName] = ?,
-				WHERE
-				[GalleryUser::id] = ?
+					UPDATE
+						[GalleryUser]
+					SET
+						[GalleryUser::userName] = ?,
+					WHERE
+						[GalleryUser::id] = ?
 				';
+
 				$ret = $storage->execute($sql, array($process_user_name, 6));
 			}
 		}
@@ -97,15 +108,21 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 			} else {
 				// Build and execute the query
 				list($ret, $lockId) = GalleryCoreApi::acquireWriteLock($user->getId());
-				list($ret, $user)   = $user->refresh();
+
+				list($ret, $user) = $user->refresh();
+
 				GalleryUtilities::unsanitizeInputValues($process_password_string, false);
+
 				$user->changePassword($process_password_string);
+
 				$ret = $user->save();
+
 				$ret = GalleryCoreApi::releaseLocks($lockId);
 
 				if (!isset($ret)) {
 					// Prime success flag
 					$success = true;
+
 					// Prevent the G2 setup password from being displayed in the form
 					$process_password_string = null;
 				}
@@ -132,6 +149,7 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 					$status     = array_merge($status, call_user_func_array($func, array($args[0], $args[1])));
 					$remember[] = $key;
 				}
+
 				$_COOKIE['g2pwdcache'] = join(',', $remember);
 			}
 		}
@@ -144,6 +162,7 @@ function process(&$process_password_string, &$process_user_name, $process_admin_
 	if (!isset($html) && isset($process_advance) && !isset($process_auth)) {
 		$html = "<div class=\"warning center\">Unable To Update Password For <i>'" . $process_user_name . "'</i></div>";
 	}
+
 	// return html output
 	return $html;
 }
@@ -177,6 +196,7 @@ function recDelDir($dirname, &$status) {
 		if (!strcmp($filename, '.') || !strcmp($filename, '..')) {
 			continue;
 		}
+
 		$path = "$dirname/$filename";
 
 		if (is_dir($path)) {
@@ -185,6 +205,7 @@ function recDelDir($dirname, &$status) {
 			$status[] = array('error', "Unable to remove cache file: $path");
 		}
 	}
+
 	closedir($fd);
 
 	if (!@rmdir($dirname)) {
@@ -194,6 +215,7 @@ function recDelDir($dirname, &$status) {
 
 function refreshCache($dir, $mark) {
 	global $gallery;
+
 	$path = $gallery->getConfig('data.gallery.base') . $dir;
 	recDelDir($path, $status);
 
@@ -208,11 +230,13 @@ function refreshCache($dir, $mark) {
 
 function validate() {
 	global $gallery, $advance, $authError, $authString;
+
 	$platform =& $gallery->getPlatform();
 
 	if (!isset($advance)) {
 		// Generate the auth string on the first visit to this view
 		$key = GallerySetupUtilities::generateAuthenticationKey();
+
 		GallerySetupUtilities::setAuthenticationKey($key);
 	}
 
@@ -265,27 +289,30 @@ if (isset($_POST['auth'])) {
 
 // Activate G2 API Framework
 $output = connect();
+
 // if connect function returned data, this is an error.
 if (!isset($output)) {
 	// Validate user
 	list($authError, $authString) = validate();
+
 	// Check if authenticated and this is not a reset call
 	if (!isset($authError) && !isset($reset)) {
 		$caches = getCacheDirs();
 		$output = process($new_password_string, $user_name, $admin_change, $advance, $auth);
 	}
 }
+
 // Deactivate G2 API Framework
 GalleryEmbed::done();
-?>
 
+?>
 <html lang="en">
 <head>
 	<title>Gallery Support | Password Reset</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>support.css">
 </head>
 <body>
-	<div id="content">
+	<div class="container">
 		<div id="title">
 			<a href="../../">Gallery</a> &raquo;
 			<a href="<?php generateUrl('index.php'); ?>">Support</a> &raquo; Reset Passwords
@@ -297,6 +324,7 @@ GalleryEmbed::done();
 		</h2>
 		<div class="center">
 			<?php
+
 			if (isset($authError)) {
 				?>
 				<p class="description">
@@ -305,17 +333,18 @@ GalleryEmbed::done();
 				<blockquote>
 					<fieldset>
 						Please create a file called "authFile.txt" in <br> <?php echo GALLERY_CONFIG_DIR; ?> <br> with the following content:<br>
-						<h1><?php echo $authString; ?></h1>
+						<h3><?php echo $authString; ?></h3>
 						Click the "Authenticate" button to proceed once you are done.
 						<form action="<?php echo basename($_SERVER['PHP_SELF']); ?>" method="POST">
 							<input type="hidden" name="auth" value=true>
 							<input type="hidden" name="advance" value=true>
-							<input type="submit" value="Authenticate">
+							<input type="submit" value="Authenticate" class="btn btn-primary">
 						</form>
 					</fieldset>
 				</blockquote>
 			</div>
 				<?php
+
 				if (isset($advance)) {
 					?>
 				<hr class="faint">
@@ -335,6 +364,7 @@ GalleryEmbed::done();
 			</blockquote>
 		</div>
 				<?php
+
 				if (isset($advance)) {
 					?>
 			<hr class="faint">
@@ -354,9 +384,11 @@ GalleryEmbed::done();
 				<form action="<?php echo basename($_SERVER['PHP_SELF']); ?>" method="POST">
 				<?php $caches = getCacheDirs(); ?>
 				<?php
+
 				foreach ($caches as $key => $info) {
 					?>
 						<?php
+
 						if (isset($info[0])) {
 							?>
 							<input type="hidden" name="target[<?php echo $key; ?>]" value=true
@@ -367,6 +399,7 @@ GalleryEmbed::done();
 				} ?>
 					<input type="hidden" name="advance" value=true><br>
 								<?php
+
 								if (isset($user_name)) {
 									?>
 						<label for="user_name">User Name</label><br><input required type="text" name="user_name" id="user_name" value=<?php echo $user_name; ?>><br>
@@ -377,6 +410,7 @@ GalleryEmbed::done();
 									<?php
 								} ?>
 					<?php
+
 					if (isset($new_password_string)) {
 						?>
 						<label for="new_password">New Password</label><br><input required type="password" name="new_password" id="new_password" value=<?php echo $new_password_string; ?>><br>
@@ -393,9 +427,11 @@ GalleryEmbed::done();
 				<form action="<?php echo basename($_SERVER['PHP_SELF']); ?>" onSubmit="return confirm('Reset admin username and password?');" method="POST">
 								<?php $caches = getCacheDirs(); ?>
 								<?php
+
 								foreach ($caches as $key => $info) {
 									?>
 									<?php
+
 									if (isset($info[0])) {
 										?>
 							<input type="hidden" name="target[<?php echo $key; ?>]" value=true
@@ -422,18 +458,22 @@ GalleryEmbed::done();
 	</div>
 				<?php
 			}
+
 			?>
 <?php
+
 if (isset($output)) {
-				?>
+	?>
 	<hr class="faint">
 	<?php echo $output; ?>
 	<?php
+
 	if (!empty($status)) {
 		?>
 		<hr class="faint">
 		<div class="warning">
 			<?php
+
 			foreach ($status as $line) {
 				?>
 				<pre class="<?php echo $line[0]; ?>"><?php echo $line[1]; ?></pre>
@@ -441,6 +481,7 @@ if (isset($output)) {
 			} ?>
 		</div>
 		<?php
+
 		if (isset($captcha)) {
 			?>
 			<hr class="faint">
@@ -453,7 +494,8 @@ if (isset($output)) {
 		<?php
 	} ?>
 	<?php
-			}
+}
+
 ?>
 </div>
 </body>

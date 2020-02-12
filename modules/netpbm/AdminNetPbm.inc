@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/netpbm/classes/NetPbmToolkitHelper.class');
 
 /**
@@ -46,7 +44,7 @@ class AdminNetPbmController extends GalleryController {
 			if (empty($form['path'])) {
 				$error[] = 'form[error][path][missing]';
 			} else {
-				// Set the path.  Guarantee that it's got a trailing slash.
+				// Set the path.  Guarantee that it has got a trailing slash.
 				$platform     =& $gallery->getPlatform();
 				$slash        = $platform->getDirectorySeparator();
 				$form['path'] = trim($form['path']);
@@ -119,7 +117,8 @@ class AdminNetPbmController extends GalleryController {
 
 				// Set the jhead binary name
 				$jheadPath = isset($form['jheadPath']) ? $form['jheadPath'] : '';
-				$ret       = GalleryCoreApi::setPluginParameter(
+
+				$ret = GalleryCoreApi::setPluginParameter(
 					'module',
 					'netpbm',
 					'jheadPath',
@@ -142,6 +141,7 @@ class AdminNetPbmController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				list($ret, $isActive) = $module->isActive();
 
 				if ($ret) {
@@ -172,6 +172,7 @@ class AdminNetPbmController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'netpbm.AdminNetPbm';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -188,6 +189,7 @@ class AdminNetPbmView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		$ret = GalleryCoreApi::assertUserIsSiteAdministrator();
@@ -196,7 +198,7 @@ class AdminNetPbmView extends GalleryView {
 			return array($ret, null);
 		}
 
-		// Load our default values if we didn't just come from this form.
+		// Load our default values if we did not just come from this form.
 		if ($form['formName'] != 'AdminNetPbm') {
 			foreach (array('path', 'jpegQuality', 'jheadPath') as $key) {
 				list($ret, $form[$key]) = GalleryCoreApi::getPluginParameter('module', 'netpbm', $key);
@@ -205,6 +207,7 @@ class AdminNetPbmView extends GalleryView {
 					return array($ret, null);
 				}
 			}
+
 			$form['formName'] = 'AdminNetPbm';
 		}
 
@@ -235,8 +238,10 @@ class AdminNetPbmView extends GalleryView {
 				$form['error']['path']['missing'] = 1;
 			} else {
 				$gallery->startRecordingDebugSnippet();
+
 				list($ret, $tests, $mimeTypes) = NetPbmToolkitHelper::testBinaries($form['path']);
-				$debugSnippet                  = $gallery->stopRecordingDebugSnippet();
+
+				$debugSnippet = $gallery->stopRecordingDebugSnippet();
 
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_BAD_PATH) {
@@ -255,8 +260,10 @@ class AdminNetPbmView extends GalleryView {
 				$form['error']['jheadPath']['missing'] = 1;
 			} else {
 				$gallery->startRecordingDebugSnippet();
+
 				list($ret, $jheadTests, $jheadMimeTypes) = NetPbmToolkitHelper::testJhead($form['jheadPath']);
-				$debugSnippet                           .= $gallery->stopRecordingDebugSnippet();
+
+				$debugSnippet .= $gallery->stopRecordingDebugSnippet();
 
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_BAD_PATH) {
@@ -278,6 +285,7 @@ class AdminNetPbmView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $isActive) = $module->isActive();
 
 		if ($ret) {

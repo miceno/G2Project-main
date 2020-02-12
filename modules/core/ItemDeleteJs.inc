@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemDeleteJsView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemDeleteJsView();
+		if (!isset($instance)) {
+			$instance = new ItemDeleteJsView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -65,7 +64,9 @@ class ItemDeleteJsView extends GalleryView {
 	 */
 	public function renderImmediate($status, $error) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
-		$template = new GalleryTemplate(dirname(dirname(dirname(__FILE__))));
+
+		$template = new GalleryTemplate(dirname(dirname(__DIR__)));
+
 		$template->setVariable('l10Domain', 'modules_core');
 
 		if (function_exists('getallheaders')) {
@@ -84,12 +85,15 @@ class ItemDeleteJsView extends GalleryView {
 				 *       and refactor the hardcoded .mo file locations.
 				 */
 				global $gallery;
-				$platform         =& $gallery->getPlatform();
+
+				$platform =& $gallery->getPlatform();
+
 				list($ret, $lang) = $gallery->getActiveLanguageCode();
 
 				if ($ret) {
 					return $ret;
 				}
+
 				$inc = $gallery->getConfig('data.gallery.base')
 					   . "locale/$lang/LC_MESSAGES/modules_core.mo";
 

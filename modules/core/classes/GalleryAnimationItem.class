@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryDataItem.class');
 
 /**
@@ -39,16 +37,16 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryDataItem.class');
  */
 class GalleryAnimationItem extends GalleryDataItem {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryAnimationItem();
+		if (!isset($instance)) {
+			$instance = new GalleryAnimationItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -134,7 +132,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 		$this->setWidth(0);
 		$this->setHeight(0);
 
-		// We're linkable
+		// We are linkable
 		$this->setIsLinkable(true);
 
 		// Detect our dimensions, if possible
@@ -172,7 +170,8 @@ class GalleryAnimationItem extends GalleryDataItem {
 			return $ret;
 		}
 
-		$mimeType            = $this->getMimeType();
+		$mimeType = $this->getMimeType();
+
 		list($ret, $toolkit) = GalleryCoreApi::getToolkitByProperty($mimeType, 'dimensions');
 
 		if ($ret) {
@@ -184,7 +183,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 
 			if ($ret) {
 				/*
-				 * If we can't get the dimensions, it's probably a bad image.
+				 * If we cannot get the dimensions, it is probably a bad image.
 				 * Or our graphics code is broken.  Hard to tell which at this point.
 				 */
 				$ret->addErrorCode(ERROR_BAD_DATA_TYPE);
@@ -244,6 +243,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 					case 'application/x-shockwave-flash':
 						return sprintf(
 							'<script type="text/javascript">
+
 		    // <![CDATA[
 		    if (window.ActiveXObject) {
 			document.write(\'<object id="animation"\');
@@ -283,6 +283,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 			document.write(\'  %s\');
 			document.write(\'</object>\');
 		    }
+
 		    //]]>
 		    </script>',
 							// IE Object
@@ -304,6 +305,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 					case 'application/x-director':
 						return sprintf(
 							'<script type="text/javascript">
+
 		    // <![CDATA[
 		    if (window.ActiveXObject) {
 			document.write(\'<object id="animation"\');
@@ -317,7 +319,6 @@ class GalleryAnimationItem extends GalleryDataItem {
 							'/pub/shockwave/cabs/director/sw.cab#version=8,0,0,0"\');
 			document.write(\'        ' .
 							'classid="clsid:166B1BCA-3F9C-11CF-8075-444553540000">\');
-
 			document.write(\'  <param name="src" value="%s" />\');
 			document.write(\'  <param name="swRemote" value="swTarget=false ' .
 							'swVolume=false swRestart=false swPausePlay=false ' .
@@ -343,6 +344,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 			document.write(\'  %s\');
 			document.write(\'</object>\');
 		    }
+
 		    //]]>
 		    </script>',
 							// IE Object
@@ -363,6 +365,7 @@ class GalleryAnimationItem extends GalleryDataItem {
 					default:
 						return $fallback;
 				}
+
 				// Fall Through
 			default:
 				return null;

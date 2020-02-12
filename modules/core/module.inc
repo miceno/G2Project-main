@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -30,32 +29,37 @@ class CoreModule extends GalleryModule {
 
 		$this->setId('core');
 		$this->setName($gallery->i18n('Core'));
-		$this->setGalleryVersion('2.3.3');
+		$this->setDescription(
+			$gallery->i18n(
+				'Gallery 2 Core Module'
+			)
+		);
 
-		// Do not forget to update CoreModuleExtras::upgrade and _prepareConfigUpgrade too!
-		$this->setVersion('1.3.0.2');
+		// Update CoreModuleExtras::upgrade and CoreModuleExtras::_prepareConfigUpgrade too!
+		$this->setVersion('1.4.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
 
-		$this->setDescription($gallery->i18n('Gallery 2 Core Module'));
+		$this->setGalleryVersion('2.4.0');
 		$this->setGroup('gallery', $gallery->i18n('Gallery'));
 		$this->setCallbacks(
 			'getItemLinks|getSystemLinks|getItemAdminViews|getSiteAdminViews|getUserAdminViews'
 		);
-		$this->setRequiredCoreApi(array(7, 55));
-		$this->setRequiredModuleApi(array(3, 8));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new CoreModule();
+		if (!isset($instance)) {
+			$instance = new CoreModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -63,6 +67,7 @@ class CoreModule extends GalleryModule {
 	 */
 	public function getItemLinks($items, $wantsDetailedLinks, $permissions, $userId = null) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		list($ret, $rootId) = GalleryCoreApi::getPluginParameter(
@@ -83,9 +88,9 @@ class CoreModule extends GalleryModule {
 		}
 
 		/*
-		 * We're not doing this as the acting user id, but that's OK because we're not displaying
-		 * the result; we're only using it as a gating factor for whether or not we show a link, and
-		 * that'll also be gated by the permissions we receive which *will* be for the acting user.
+		 * We are not doing this as the acting user id, but that is OK because we are not displaying
+		 * the result; we are only using it as a gating factor for whether or not we show a link, and
+		 * that will also be gated by the permissions we receive which *will* be for the acting user.
 		 */
 		list($ret, $childCounts) = GalleryCoreApi::fetchChildCounts($itemIds);
 
@@ -140,6 +145,7 @@ class CoreModule extends GalleryModule {
 					_('Edit Photo');
 					_('Edit Movie');
 				}
+
 				$links[$itemId][] = array(
 					'text' => $this->_translate(
 						array(
@@ -200,6 +206,7 @@ class CoreModule extends GalleryModule {
 				if (!function_exists('smarty_modifier_escape')) {
 					GalleryCoreApi::requireOnce('lib/smarty/plugins/modifier.escape.php');
 				}
+
 				$title = smarty_modifier_escape(
 					GalleryUtilities::markup(
 						$item->getTitle(),
@@ -210,6 +217,7 @@ class CoreModule extends GalleryModule {
 				);
 
 				list($thisItemId, $page) = GalleryUtilities::getRequestVariables('itemId', 'page');
+
 				// If no page item defined, we will navigate to the parent of the deleted item
 				if (empty($thisItemId)) {
 					$thisItemId = $itemId;
@@ -267,6 +275,7 @@ class CoreModule extends GalleryModule {
 					_('Move Photo');
 					_('Move Movie');
 				}
+
 				$links[$itemId][] = array(
 					'text' => $this->_translate(
 						array(
@@ -309,6 +318,7 @@ class CoreModule extends GalleryModule {
 				if (!empty($thisItemId) && !empty($thisPage) && $thisItemId == $item->getId()) {
 					$link['params']['albumPage'] = $thisPage;
 				}
+
 				$links[$itemId][] = $link;
 			}
 
@@ -351,6 +361,7 @@ class CoreModule extends GalleryModule {
 					'itemId'  => $itemId,
 					'return'  => 1,
 				);
+
 				// First item on the page will be in the list for deletion
 				if ($next) {
 					$params['anchorId'] = $next->getId();
@@ -378,7 +389,8 @@ class CoreModule extends GalleryModule {
 			return array($ret, null);
 		}
 
-		$links               = array();
+		$links = array();
+
 		list($ret, $isAdmin) = GalleryCoreApi::isUserInSiteAdminGroup();
 
 		if ($ret) {
@@ -421,7 +433,8 @@ class CoreModule extends GalleryModule {
 						'return'  => 1,
 					),
 				);
-				$links['Logout']      = array(
+
+				$links['Logout'] = array(
 					'text'   => $this->translate('Logout'),
 					'params' => array(
 						'controller' => 'core.Logout',
@@ -500,6 +513,7 @@ class CoreModule extends GalleryModule {
 	 */
 	public function getUserAdminViews($user) {
 		global $gallery;
+
 		$views = array();
 
 		if ($gallery->getConfig('login')) {
@@ -515,6 +529,7 @@ class CoreModule extends GalleryModule {
 						'name' => $this->translate('Account Settings'),
 						'view' => 'core.UserPreferences',
 					);
+
 					$views[] = array(
 						'name' => $this->translate('Change Password'),
 						'view' => 'core.UserChangePassword',
@@ -537,7 +552,8 @@ class CoreModule extends GalleryModule {
 	public function getItemAdminViews($item) {
 		global $gallery;
 
-		$views                   = array();
+		$views = array();
+
 		list($ret, $permissions) = GalleryCoreApi::getPermissions($item->getId());
 
 		if ($ret) {
@@ -567,9 +583,10 @@ class CoreModule extends GalleryModule {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$hasThumb = !empty($thumbTable[$item->getId()]);
 
-		$parentId                      = $item->getParentId();
+		$hasThumb = !empty($thumbTable[$item->getId()]);
+		$parentId = $item->getParentId();
+
 		list($ret, $parentPermissions) = GalleryCoreApi::getPermissions($parentId);
 
 		if ($ret) {
@@ -637,6 +654,7 @@ class CoreModule extends GalleryModule {
 				if (!function_exists('smarty_modifier_escape')) {
 					GalleryCoreApi::requireOnce('lib/smarty/plugins/modifier.escape.php');
 				}
+
 				$title = smarty_modifier_escape(
 					GalleryUtilities::markup(
 						$item->getTitle(),
@@ -645,6 +663,7 @@ class CoreModule extends GalleryModule {
 					'javascript',
 					'UTF-8'
 				);
+
 				// This is ItemAdmin view, hence page item is the one we are deleting
 				$thisItemId   = $itemId;
 				$urlGenerator =& $gallery->getUrlGenerator();
@@ -719,14 +738,15 @@ class CoreModule extends GalleryModule {
 	}
 
 	/**
-	 * We pushed all this code into its own file since we need it very rarely so it doesn't make
+	 * We pushed all this code into its own file since we need it very rarely so it does not make
 	 * sense to load it every single time.
 	 *
 	 * @see GalleryModule::install
 	 */
 	public function upgrade($currentVersion, $statusMonitor = null) {
 		GalleryCoreApi::requireOnce('modules/core/CoreModuleExtras.inc');
-		$ret = CoreModuleExtras::doStatic()->upgrade($this, $currentVersion, $statusMonitor);
+
+		$ret = CoreModuleExtras::getMe()->upgrade($this, $currentVersion, $statusMonitor);
 
 		if ($ret) {
 			return $ret;
@@ -751,7 +771,7 @@ class CoreModule extends GalleryModule {
 
 	/**
 	 * Get the version of the core module and of Gallery itself.  We store this on disk to avoid
-	 * having to load up the database (which can be problematic if we're doing an upgrade and don't
+	 * having to load up the database (which can be problematic if we are doing an upgrade and do not
 	 * want to count a specific database schema). If the versions.dat file indicates that Gallery
 	 * is in maintenance mode, then set the configuration value to indicate this.
 	 *
@@ -773,6 +793,7 @@ class CoreModule extends GalleryModule {
 				if (count($versionArray) >= 2) {
 					$versions['core']    = rtrim($versionArray[0]);
 					$versions['gallery'] = rtrim($versionArray[1]);
+
 					GalleryDataCache::put('CoreModule::installedVersions', $versions, true);
 
 					if (isset($versionArray[2])) {
@@ -809,7 +830,8 @@ class CoreModule extends GalleryModule {
 	 */
 	public function performFactoryRegistrations() {
 		GalleryCoreApi::requireOnce('modules/core/CoreModuleExtras.inc');
-		$ret = CoreModuleExtras::doStatic()->performFactoryRegistrations($this);
+
+		$ret = CoreModuleExtras::getMe()->performFactoryRegistrations($this);
 
 		if ($ret) {
 			return $ret;

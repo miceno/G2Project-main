@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -31,7 +30,8 @@ class GalleryMimeTypeHelper_simple {
 	 * @see GalleryCoreApi::getMimeType
 	 */
 	public static function getMimeType($filename, $requestMimeType = null) {
-		$extension            = GalleryUtilities::getFileExtension($filename);
+		$extension = GalleryUtilities::getFileExtension($filename);
+
 		list($ret, $mimetype) = GalleryMimeTypeHelper_simple::convertExtensionToMime($extension);
 
 		if ($ret) {
@@ -127,18 +127,20 @@ class GalleryMimeTypeHelper_simple {
 				'id'     => '_all',
 				'itemId' => 'GalleryMimeTypeHelper_mimeData',
 			);
-			$cached      = GalleryDataCache::getFromDisk($cacheParams);
+
+			$cached = GalleryDataCache::getFromDisk($cacheParams);
 
 			if (isset($cached)) {
 				$mimeData = $cached;
 			} else {
 				global $gallery;
+
 				/*
 				 * TODO: add a column to define "primary" extension for mime type -> extension
 				 * conversions.. for now I set desc order by extension so image/jpeg will
 				 * map to jpg instead of jpe (quick fix for most common case).
 				 */
-				$query                     = '
+				$query = '
 		SELECT
 		    [GalleryMimeTypeMap::extension],
 		    [GalleryMimeTypeMap::mimeType],
@@ -148,6 +150,7 @@ class GalleryMimeTypeHelper_simple {
 		ORDER BY
 		    [GalleryMimeTypeMap::extension] DESC
 		';
+
 				list($ret, $searchResults) = $gallery->search($query);
 
 				if ($ret) {
@@ -174,9 +177,11 @@ class GalleryMimeTypeHelper_simple {
 						$mimeData['by-mimetype'][$result[1]]['viewable'] |= (bool)$result[2];
 					}
 				}
+
 				GalleryDataCache::putToDisk($cacheParams, $mimeData);
 			}
 		}
+
 		$ret = array(null, &$mimeData);
 
 		return $ret;
@@ -205,6 +210,7 @@ class GalleryMimeTypeHelper_simple {
 				'itemId' => 'GalleryMimeTypeHelper_mimeData',
 			)
 		);
+
 		$mimeData =& GalleryMimeTypeHelper_simple::_getSingleton();
 		$mimeData = array();
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,17 +8,12 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Library for basic performance monitoring and tuning.
-
   My apologies if you see code mixed with presentation. The presentation suits
   my needs. If you want to separate code from presentation, be my guest. Patches
   are welcome.
-
 */
-
 if (!defined('ADODB_DIR')) {
 	include_once __DIR__ . '/adodb.inc.php';
 }
@@ -28,8 +24,9 @@ define('ADODB_OPT_HIGH', 2);
 define('ADODB_OPT_LOW', 1);
 
 global $ADODB_PERF_MIN;
-$ADODB_PERF_MIN = 0.05; // log only if >= minimum number of secs to run
 
+// log only if >= minimum number of secs to run
+$ADODB_PERF_MIN = 0.05;
 
 // returns in K the memory of current process, or 0 if not known
 function adodb_getmem() {
@@ -41,7 +38,6 @@ function adodb_getmem() {
 
 	if (strncmp(strtoupper(PHP_OS), 'WIN', 3) == 0) {
 		$output = array();
-
 		exec('tasklist /FI "PID eq ' . $pid . '" /FO LIST', $output);
 
 		return substr($output[5], strpos($output[5], ':') + 1);
@@ -97,10 +93,10 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 			$prefix = '';
 		}
 
-		$conn->_logsql = false; // disable logsql error simulation
+		// disable logsql error simulation
+		$conn->_logsql = false;
 		$dbT           = $conn->databaseType;
-
-		$time = $a1 - $a0;
+		$time          = $a1 - $a0;
 
 		if (!$rs) {
 			$errM            = $connx->ErrorMsg();
@@ -117,6 +113,7 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 			if (!is_object($rs) || $rs->dataProvider == 'empty') {
 				$conn->_affected = $conn->affected_rows(true);
 			}
+
 			$conn->lastInsID = @$conn->Insert_ID();
 			$conn->debug     = $dbg;
 		}
@@ -130,8 +127,8 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 		} elseif (isset($_SERVER['PHP_SELF'])) {
 			$tracer .= '<br>' . htmlspecialchars($_SERVER['PHP_SELF']);
 		}
-		//$tracer .= (string) adodb_backtrace(false);
 
+		//$tracer .= (string) adodb_backtrace(false);
 		$tracer = (string)substr($tracer, 0, 500);
 
 		if (is_array($inputarr)) {
@@ -147,6 +144,7 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 						$xar_params[$xar_param_key] = '"' . $xar_param . '"';
 					}
 				}
+
 				$params = implode(', ', $xar_params);
 
 				if (strlen($params) >= 3000) {
@@ -164,6 +162,7 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 		if ($prefix) {
 			$sql = $prefix . $sql;
 		}
+
 		$arr = array(
 			'b' => strlen($sql) . '.' . crc32($sql),
 			'c' => substr($sql, 0, 3900),
@@ -171,11 +170,11 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 			'e' => $tracer,
 			'f' => adodb_round($time, 6),
 		);
+
 		//var_dump($arr);
 		$saved       = $conn->debug;
 		$conn->debug = 0;
-
-		$d = $conn->sysTimeStamp;
+		$d           = $conn->sysTimeStamp;
 
 		if (empty($d)) {
 			$d = date("'Y-m-d H:i:s'");
@@ -194,17 +193,18 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 			$sql2   = $conn->qstr($arr['c']);
 			$params = $conn->qstr($arr['d']);
 			$tracer = $conn->qstr($arr['e']);
-
-			$isql = "insert into $perf_table (created,sql0,sql1,params,tracer,timer) values($d,$sql1,$sql2,$params,$tracer,$timer)";
+			$isql   = "insert into $perf_table (created,sql0,sql1,params,tracer,timer) values($d,$sql1,$sql2,$params,$tracer,$timer)";
 
 			if ($dbT == 'informix') {
 				$isql = str_replace(chr(10), ' ', $isql);
 			}
+
 			$arr = false;
 		} else {
 			if ($dbT == 'db2') {
 				$arr['f'] = (float)$arr['f'];
 			}
+
 			$isql = "insert into $perf_table (created,sql0,sql1,params,tracer,timer) values( $d,?,?,?,?,?)";
 		}
 
@@ -221,8 +221,10 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 		if ($ok) {
 			$conn->_logsql = true;
 		} else {
-			$err2          = $conn->ErrorMsg();
-			$conn->_logsql = true; // enable logsql error simulation
+			$err2 = $conn->ErrorMsg();
+
+			// enable logsql error simulation
+			$conn->_logsql = true;
 			$perf          = NewPerfMonitor($conn);
 
 			if ($perf) {
@@ -244,12 +246,15 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 
 			if (!$ok) {
 				ADOConnection::outp("<p><b>LOGSQL Insert Failed</b>: $isql<br>$err2</p>");
+
 				$conn->_logsql = false;
 			}
 		}
+
 		$connx->_errorMsg  = $errM;
 		$connx->_errorCode = $errN;
 	}
+
 	$connx->fnExecute = 'adodb_log_sql';
 
 	return $rs;
@@ -257,9 +262,7 @@ function adodb_log_sql(&$connx, $sql, $inputarr) {
 
 /*
 The settings data structure is an associative array that database parameter per element.
-
 Each database parameter element in the array is itself an array consisting of:
-
 0: category code, used to group related db parameters
 1: either
 	a. sql string to retrieve value, eg. "select value from v\$parameter where name='db_block_size'",
@@ -268,16 +271,17 @@ Each database parameter element in the array is itself an array consisting of:
 		e.g. to invoke $this->GetIndexValue(), set this array element to '=GetIndexValue',
 2: description of the database parameter
 */
-
 class adodb_perf {
 	public $conn;
-	public $color          = '#F0F0F0';
-	public $table          = '<table border=1 bgcolor=white>';
-	public $titles         = '<tr><td><b>Parameter</b></td><td><b>Value</b></td><td><b>Description</b></td></tr>';
-	public $warnRatio      = 90;
-	public $tablesSQL      = false;
-	public $cliFormat      = "%32s => %s \r\n";
-	public $sql1           = 'sql1';  // used for casting sql1 to text for mssql
+	public $color     = '#F0F0F0';
+	public $table     = '<table border=1 bgcolor=white>';
+	public $titles    = '<tr><td><b>Parameter</b></td><td><b>Value</b></td><td><b>Description</b></td></tr>';
+	public $warnRatio = 90;
+	public $tablesSQL = false;
+	public $cliFormat = "%32s => %s \r\n";
+
+	// used for casting sql1 to text for mssql
+	public $sql1           = 'sql1';
 	public $explain        = true;
 	public $helpurl        = '<a href="http://adodb.sourceforge.net/docs-adodb.htm#logsql">LogSQL help</a>';
 	public $createTableSQL = false;
@@ -301,7 +305,6 @@ class adodb_perf {
 	// returns array with info to calculate CPU Load
 	public function _CPULoad() {
 		/*
-
 		cpu  524152 2662 2515228 336057010
 		cpu0 264339 1408 1257951 168025827
 		cpu1 259813 1254 1257277 168031181
@@ -312,8 +315,8 @@ class adodb_perf {
 		ctxt 66155838
 		btime 1062315585
 		processes 69293
-
 		*/
+
 		// Algorithm is taken from
 		// http://social.technet.microsoft.com/Forums/en-US/winservergen/thread/414b0e1b-499c-411e-8a02-6a12e339c0f1/
 		if (strncmp(PHP_OS, 'WIN', 3) == 0) {
@@ -334,7 +337,8 @@ class adodb_perf {
 			}
 
 			if (PHP_VERSION == '4.3.10') {
-				return false; // see http://bugs.php.net/bug.php?id=31737
+				// see http://bugs.php.net/bug.php?id=31737
+				return false;
 			}
 
 			static $FAIL = false;
@@ -365,6 +369,7 @@ class adodb_perf {
 				}
 			} catch (Exception $e) {
 				$FAIL = true;
+
 				echo $e->getMessage();
 
 				return false;
@@ -393,9 +398,12 @@ class adodb_perf {
 			$info = explode(' ', $line);
 
 			if ($info[0] == 'cpu') {
-				array_shift($info);  // pop off "cpu"
+				// pop off "cpu"
+				array_shift($info);
+
 				if (!$info[0]) {
-					array_shift($info); // pop off blank space (if any)
+					// pop off blank space (if any)
+					array_shift($info);
 				}
 
 				return $info;
@@ -408,7 +416,6 @@ class adodb_perf {
 	// NOT IMPLEMENTED
 	public function MemInfo() {
 		/*
-
 		total:    used:    free:  shared: buffers:  cached:
 		Mem:  1055289344 917299200 137990144        0 165437440 599773184
 		Swap: 2146775040 11055104 2135719936
@@ -454,14 +461,12 @@ class adodb_perf {
 
 		$last            = $this->_lastLoad;
 		$this->_lastLoad = $info;
-
-		$d_user   = $info[0] - $last[0];
-		$d_nice   = $info[1] - $last[1];
-		$d_system = $info[2] - $last[2];
-		$d_idle   = $info[3] - $last[3];
+		$d_user          = $info[0] - $last[0];
+		$d_nice          = $info[1] - $last[1];
+		$d_system        = $info[2] - $last[2];
+		$d_idle          = $info[3] - $last[3];
 
 		//printf("Delta - User: %f  Nice: %f  System: %f  Idle: %f<br>",$d_user,$d_nice,$d_system,$d_idle);
-
 		$total = $d_user + $d_nice + $d_system + $d_idle;
 
 		if ($total < 1) {
@@ -477,6 +482,7 @@ class adodb_perf {
 		$this->conn->fnExecute = false;
 
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -491,7 +497,8 @@ class adodb_perf {
 	group by tracer
 	order by 1 desc"
 		);
-		$s    = '';
+
+		$s = '';
 
 		if ($arr) {
 			$s .= '<h3>Scripts Affected</h3>';
@@ -504,6 +511,7 @@ class adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$ADODB_CACHE_MODE      = $save;
 		$this->conn->fnExecute = $saveE;
 
@@ -523,11 +531,14 @@ class adodb_perf {
 		if (isset($_GET['sql'])) {
 			return;
 		}
+
 		$s                     = '<h3>Invalid SQL</h3>';
 		$saveE                 = $this->conn->fnExecute;
 		$this->conn->fnExecute = false;
 		$perf_table            = self::table();
-		$rs                    = $this->conn->SelectLimit("select distinct count(*),sql1,tracer as error_msg from $perf_table where tracer like 'ERROR:%' group by sql1,tracer order by 1 desc", $numsql);//,$numsql);
+
+		//,$numsql);
+		$rs                    = $this->conn->SelectLimit("select distinct count(*),sql1,tracer as error_msg from $perf_table where tracer like 'ERROR:%' group by sql1,tracer order by 1 desc", $numsql);
 		$this->conn->fnExecute = $saveE;
 
 		if ($rs) {
@@ -555,18 +566,20 @@ class adodb_perf {
 		if (isset($_GET['sql'])) {
 			return;
 		}
-		$sql1 = $this->sql1;
 
+		$sql1             = $this->sql1;
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
 		if ($this->conn->fetchMode !== false) {
 			$savem = $this->conn->SetFetchMode(false);
 		}
+
 		//$this->conn->debug=1;
 		$rs = $this->conn->SelectLimit(
 			"select avg(timer) as avg_timer,$sql1,count(*),max(timer) as max_timer,min(timer) as min_timer
 				from $perf_table
+
 				where {$this->conn->upperCase}({$this->conn->substr}(sql0,1,5)) not in ('DROP ','INSER','COMMI','CREAT')
 				and (tracer is null or tracer not like 'ERROR:%')
 				group by sql1
@@ -577,12 +590,14 @@ class adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE      = $save;
 		$this->conn->fnExecute = $saveE;
 
 		if (!$rs) {
 			return "<p>$this->helpurl. " . $this->conn->ErrorMsg() . '</p>';
 		}
+
 		$s   = "<h3>Suspicious SQL</h3>
 <font size=1>The following SQL have high average execution times</font><br>
 <table border=1 bgcolor=white><tr><td><b>Avg Time</b><td><b>Count</b><td><b>SQL</b><td><b>Max</b><td><b>Min</b></tr>\n";
@@ -596,6 +611,7 @@ class adodb_perf {
 				$sql2 = substr($sql, 0, $max - 500);
 				$raw  = urlencode($sql2) . '&part=' . crc32($sql);
 			}
+
 			$prefix = '<a target=sql' . mt_rand() . ' href="?hidem=1&exps=1&sql=' . $raw . '&x#explain">';
 			$suffix = '</a>';
 
@@ -603,8 +619,10 @@ class adodb_perf {
 				$suffix = ' ... <i>String too long for GET parameter: ' . strlen($prefix) . '</i>';
 				$prefix = '';
 			}
+
 			$s .= '<tr><td>' . adodb_round($rs->fields[0], 6) . '<td align=right>' . $rs->fields[2] . '<td><font size=-1>' . $prefix . htmlspecialchars($sql) . $suffix . '</font>' .
 				'<td>' . $rs->fields[3] . '<td>' . $rs->fields[4] . '</tr>';
+
 			$rs->MoveNext();
 		}
 
@@ -655,6 +673,7 @@ class adodb_perf {
 		$rs = $this->conn->SelectLimit(
 			"select sum(timer) as total,$sql1,count(*),max(timer) as max_timer,min(timer) as min_timer
 				from $perf_table
+
 				where {$this->conn->upperCase}({$this->conn->substr}(sql0,1,5))  not in ('DROP ','INSER','COMMI','CREAT')
 				and (tracer is null or tracer not like 'ERROR:%')
 				group by sql1
@@ -666,12 +685,14 @@ class adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$this->conn->fnExecute = $saveE;
 		$ADODB_FETCH_MODE      = $save;
 
 		if (!$rs) {
 			return "<p>$this->helpurl. " . $this->conn->ErrorMsg() . '</p>';
 		}
+
 		$s   = "<h3>Expensive SQL</h3>
 <font size=1>Tuning the following SQL could reduce the server load substantially</font><br>
 <table border=1 bgcolor=white><tr><td><b>Load</b><td><b>Count</b><td><b>SQL</b><td><b>Max</b><td><b>Min</b></tr>\n";
@@ -685,6 +706,7 @@ class adodb_perf {
 				$sql2 = substr($sql, 0, $max - 500);
 				$raw  = urlencode($sql2) . '&part=' . crc32($sql);
 			}
+
 			$prefix = '<a target=sqle' . mt_rand() . ' href="?hidem=1&expe=1&sql=' . $raw . '&x#explain">';
 			$suffix = '</a>';
 
@@ -692,8 +714,10 @@ class adodb_perf {
 				$prefix = '';
 				$suffix = '';
 			}
+
 			$s .= '<tr><td>' . adodb_round($rs->fields[0], 6) . '<td align=right>' . $rs->fields[2] . '<td><font size=-1>' . $prefix . htmlspecialchars($sql) . $suffix . '</font>' .
 				'<td>' . $rs->fields[3] . '<td>' . $rs->fields[4] . '</tr>';
+
 			$rs->MoveNext();
 		}
 
@@ -705,6 +729,7 @@ class adodb_perf {
 		if (empty($this->settings[$param])) {
 			return false;
 		}
+
 		$sql = $this->settings[$param][1];
 
 		return $this->_DBParameter($sql);
@@ -741,7 +766,9 @@ class adodb_perf {
 			} else {
 				$coef = false;
 			}
-			$ret              = false;
+
+			$ret = false;
+
 			$save             = $ADODB_FETCH_MODE;
 			$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -754,6 +781,7 @@ class adodb_perf {
 			if (isset($savem)) {
 				$this->conn->SetFetchMode($savem);
 			}
+
 			$ADODB_FETCH_MODE = $save;
 
 			if ($rs) {
@@ -769,10 +797,13 @@ class adodb_perf {
 
 						break;
 					}
+
 					$rs->MoveNext();
 				}
+
 				$rs->Close();
 			}
+
 			$this->conn->LogSQL($savelog);
 
 			return $ret;
@@ -783,8 +814,11 @@ class adodb_perf {
 
 			return $this->$fn();
 		}
+
 		$sql = str_replace('$DATABASE', $this->conn->database, $sql);
+
 		$ret = $this->conn->GetOne($sql);
+
 		$this->conn->LogSQL($savelog);
 
 		return $ret;
@@ -801,38 +835,38 @@ class adodb_perf {
 
 	public function clearsql() {
 		$perf_table = self::table();
+
 		$this->conn->Execute("delete from $perf_table where created<" . $this->conn->sysTimeStamp);
 	}
 
-	//
 	//                                    HIGH LEVEL UI FUNCTIONS
-
 	public function UI($pollsecs = 5) {
 		global $ADODB_LOG_CONN;
 
 		$perf_table = self::table();
 		$conn       = $this->conn;
-
-		$app = $conn->host;
+		$app        = $conn->host;
 
 		if ($conn->host && $conn->database) {
 			$app .= ', db=';
 		}
+
 		$app .= $conn->database;
 
 		if ($app) {
 			$app .= ', ';
 		}
+
 		$savelog = $this->conn->LogSQL(false);
 		$info    = $conn->ServerInfo();
 
 		if (isset($_GET['clearsql'])) {
 			$this->clearsql();
 		}
+
 		$this->conn->LogSQL($savelog);
 
 		// magic quotes
-
 		if (isset($_GET['sql']) && get_magic_quotes_gpc()) {
 			$_GET['sql'] = $_GET['sql'] = str_replace(array("\\'", '\"'), array("'", '"'), $_GET['sql']);
 		}
@@ -844,7 +878,6 @@ class adodb_perf {
 		}
 
 		$app .= $info['description'];
-
 
 		if (isset($_GET['do'])) {
 			$do = $_GET['do'];
@@ -861,6 +894,7 @@ class adodb_perf {
 				$nsql = $_SESSION['ADODB_PERF_SQL'] = (int)$_GET['nsql'];
 			}
 		}
+
 		echo "<title>ADOdb Performance Monitor on $app</title><body bgcolor=white>";
 
 		if ($do == 'viewsql') {
@@ -870,7 +904,9 @@ class adodb_perf {
 		}
 
 		$allowsql = !defined('ADODB_PERF_NO_RUN_SQL');
+
 		global $ADODB_PERF_MIN;
+
 		$app .= " (Min sql timing \$ADODB_PERF_MIN=$ADODB_PERF_MIN secs)";
 
 		if (empty($_GET['hidem'])) {
@@ -883,14 +919,15 @@ class adodb_perf {
 			'</tr></table>';
 		}
 
-
 		switch ($do) {
 			default:
 			case 'stats':
 				if (empty($ADODB_LOG_CONN)) {
 					echo '<p>&nbsp; <a href="?do=viewsql&clearsql=1">Clear SQL Log</a><br>';
 				}
+
 				echo $this->HealthCheck();
+
 				//$this->conn->debug=1;
 				echo $this->CheckMemory();
 
@@ -905,6 +942,7 @@ class adodb_perf {
 
 			case 'poll2':
 				echo '<pre>';
+
 				$this->Poll($pollsecs);
 
 				break;
@@ -922,8 +960,11 @@ class adodb_perf {
 				if (empty($_GET['hidem'])) {
 					echo '&nbsp; <a href="?do=viewsql&clearsql=1">Clear SQL Log</a><br>';
 				}
+
 				echo $this->SuspiciousSQL($nsql);
+
 				echo $this->ExpensiveSQL($nsql);
+
 				echo $this->InvalidSQL($nsql);
 
 				break;
@@ -933,17 +974,21 @@ class adodb_perf {
 
 				break;
 		}
+
 		global $ADODB_vers;
+
 		echo "<p><div align=center><font size=1>$ADODB_vers Sponsored by <a href=http://phplens.com/>phpLens</a></font></div>";
 	}
 
 	// Runs in infinite loop, returning real-time statistics
 	public function Poll($secs = 5) {
 		$this->conn->fnExecute = false;
+
 		//$this->conn->debug=1;
 		if ($secs <= 1) {
 			$secs = 1;
 		}
+
 		echo "Accumulating statistics, every $secs seconds...\n";
 		flush();
 		$arro = $this->PollParameters();
@@ -952,14 +997,12 @@ class adodb_perf {
 		sleep($secs);
 
 		while (1) {
-			$arr = $this->PollParameters();
-
+			$arr    = $this->PollParameters();
 			$hits   = sprintf('%2.2f', $arr[0]);
 			$reads  = sprintf('%12.4f', ($arr[1] - $arro[1]) / $secs);
 			$writes = sprintf('%12.4f', ($arr[2] - $arro[2]) / $secs);
 			$sess   = sprintf('%5d', $arr[3]);
-
-			$load = $this->CPULoad();
+			$load   = $this->CPULoad();
 
 			if ($load !== false) {
 				$oslabel = 'WS-CPU%';
@@ -972,6 +1015,7 @@ class adodb_perf {
 			if ($cnt % 10 == 0) {
 				echo ' Time   ' . $oslabel . "   Hit%   Sess           Reads/s          Writes/s\n";
 			}
+
 			$cnt += 1;
 			echo date('H:i:s') . '  ' . $osval . "$hits  $sess $reads $writes\n";
 			flush();
@@ -1022,6 +1066,7 @@ class adodb_perf {
 			if (!is_array($arr)) {
 				break;
 			}
+
 			$category = $arr[0];
 			$how      = $arr[1];
 
@@ -1030,7 +1075,6 @@ class adodb_perf {
 			} else {
 				$desc = ' &nbsp; ';
 			}
-
 
 			if ($category == 'HIDE') {
 				continue;
@@ -1055,12 +1099,14 @@ class adodb_perf {
 						$val /= 1024;
 						$val .= 'K';
 					}
+
 					//$val = htmlspecialchars($val);
 				}
 			}
 
 			if ($category != $oldc) {
 				$oldc = $category;
+
 				//$bgc = ($bgc == ' bgcolor='.$this->color) ? ' bgcolor=white' : ' bgcolor='.$this->color;
 			}
 
@@ -1082,6 +1128,7 @@ class adodb_perf {
 		if (!$cli) {
 			$html .= "</table>\n";
 		}
+
 		$this->conn->fnExecute = $saveE;
 
 		return $html;
@@ -1094,7 +1141,9 @@ class adodb_perf {
 
 		$savelog = $this->conn->LogSQL(false);
 		$rs      = $this->conn->Execute($this->tablesSQL . ' order by ' . $orderby);
+
 		$this->conn->LogSQL($savelog);
+
 		$html = rs2html($rs, false, false, false, false);
 
 		return $html;
@@ -1109,6 +1158,7 @@ class adodb_perf {
 		$sql     = str_replace('adodb_logsql', $table, $this->createTableSQL);
 		$savelog = $this->conn->LogSQL(false);
 		$ok      = $this->conn->Execute($sql);
+
 		$this->conn->LogSQL($savelog);
 
 		return ($ok) ? true : false;
@@ -1130,6 +1180,7 @@ class adodb_perf {
 			if ($rows < 3) {
 				$rows = 3;
 			}
+
 			$_SESSION['phplens_sqlrows'] = $rows;
 		}
 
@@ -1137,7 +1188,6 @@ class adodb_perf {
 			$rows                       *= 2;
 			$_SESSION['phplens_sqlrows'] = $rows;
 		} ?>
-
 <form method="POST" action="<?php echo $PHP_SELF; ?>">
 <table><tr>
 <td> Form size: <input type="submit" value=" &lt; " name="SMALLER"><input type="submit" value=" &gt; &gt; " name="BIGGER">
@@ -1151,8 +1201,8 @@ class adodb_perf {
   </tr>
  </table>
 </form>
-
 		<?php
+
 		if (!isset($_REQUEST['sql'])) {
 			return;
 		}
@@ -1176,8 +1226,10 @@ class adodb_perf {
 				echo '<p>' . htmlspecialchars($sqls) . '</p>';
 				flush();
 			}
+
 			$savelog = $this->conn->LogSQL(false);
 			$rs      = $this->conn->Execute($sqls);
+
 			$this->conn->LogSQL($savelog);
 
 			if ($rs && is_object($rs) && !$rs->EOF) {
@@ -1193,8 +1245,10 @@ class adodb_perf {
 
 				if (($e1) || ($e2)) {
 					if (empty($e1)) {
-						$e1 = '-1'; // postgresql fix
+						// postgresql fix
+						$e1 = '-1';
 					}
+
 					echo ' &nbsp; ' . $e1 . ': ' . $e2;
 				} else {
 					echo '<p>No Recordset returned<br></p>';

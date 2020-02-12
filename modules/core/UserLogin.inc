@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -35,16 +34,16 @@ class UserLoginController extends GalleryController {
 	public $_pluginInstances;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserLoginController();
+		if (!isset($instance)) {
+			$instance = new UserLoginController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -101,13 +100,16 @@ class UserLoginController extends GalleryController {
 				if ($ret && !($ret->getErrorCode() & ERROR_MISSING_OBJECT)) {
 					return array($ret, null);
 				}
+
 				GalleryUtilities::unsanitizeInputValues($form['password'], false);
+
 				$isCorrect = (isset($user) && $user->isCorrectPassword($form['password']));
 
 				// Prepare for validation
-				$options                      = array(
+				$options = array(
 					'pass' => $isCorrect,
 				);
+
 				list($ret, $options['level']) = GalleryCoreApi::getPluginParameter('module', 'core', 'validation.level');
 
 				if ($ret) {
@@ -162,7 +164,9 @@ class UserLoginController extends GalleryController {
 					$gallery->setActiveUser($user);
 
 					$event = GalleryCoreApi::newEvent('Gallery::Login');
+
 					$event->setEntity($user);
+
 					list($ret, $redirect) = GalleryCoreApi::postEvent($event);
 
 					if ($ret) {
@@ -183,11 +187,13 @@ class UserLoginController extends GalleryController {
 			if (!empty($error)) {
 				if (!empty($form['username'])) {
 					$event = GalleryCoreApi::newEvent('Gallery::FailedLogin');
+
 					$event->setData(
 						array(
 							'userName' => $form['username'],
 						)
 					);
+
 					list($ret, $ignored) = GalleryCoreApi::postEvent($event);
 
 					if ($ret) {
@@ -203,6 +209,7 @@ class UserLoginController extends GalleryController {
 			$results['delegate']['view']    = 'core.UserAdmin';
 			$results['delegate']['subView'] = 'core.UserLogin';
 		}
+
 		$results['status'] = array();
 		$results['error']  = $error;
 
@@ -215,16 +222,16 @@ class UserLoginController extends GalleryController {
  */
 class UserLoginView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserLoginView();
+		if (!isset($instance)) {
+			$instance = new UserLoginView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -232,6 +239,7 @@ class UserLoginView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		// Check if the default login view URL has been overridden and redirect appropriately
@@ -258,7 +266,9 @@ class UserLoginView extends GalleryView {
 						'forceFullUrl'   => true,
 					)
 				);
+
 				$redirectUrl = rtrim(str_replace('&amp;', '&', $redirectUrl), '&? ');
+
 				$phpVm->header("Location: $redirectUrl");
 				$phpVm->exit_();
 			}
@@ -269,7 +279,8 @@ class UserLoginView extends GalleryView {
 			$form['username'] = '';
 		}
 
-		$reauthenticate      = false;
+		$reauthenticate = false;
+
 		list($ret, $isAdmin) = GalleryCoreApi::isUserInSiteAdminGroup();
 
 		if ($ret) {

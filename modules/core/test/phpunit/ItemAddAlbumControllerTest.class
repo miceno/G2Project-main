@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -42,12 +41,14 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_parentAlbum);
 	}
 
 	public function testAddAlbum() {
 		// Use valid inputs
 		$name = 'testalbum-' . mt_rand();
+
 		GalleryUtilities::putRequestVariable('itemId', $this->_parentAlbum->getId());
 		GalleryUtilities::putRequestVariable('form[action][create]', 1);
 		GalleryUtilities::putRequestVariable('form[pathComponent]', $name);
@@ -64,6 +65,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -91,6 +93,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 		// Use valid inputs
 		$name = 'testalbum-' . mt_rand();
+
 		GalleryUtilities::putRequestVariable('itemId', $this->_parentAlbum->getId());
 		GalleryUtilities::putRequestVariable('form[action][create]', 1);
 		GalleryUtilities::putRequestVariable('form[title]', 'title');
@@ -109,6 +112,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -131,7 +135,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 			return $ret;
 		}
 
-		// Verify that the new album's path component is unique (it's got _001 as a suffix)
+		// Verify that the new album's path component is unique (it has got _001 as a suffix)
 		$this->assertEquals($subAlbum->getPathComponent() . '_001', $newAlbum->getPathComponent());
 	}
 
@@ -147,6 +151,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -172,6 +177,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -187,9 +193,10 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 	public function testAddAlbumWithSpaces() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$name = ' testalbum-' . mt_rand() . ' ';
+		$platform =& $gallery->getPlatform();
+		$name     = ' testalbum-' . mt_rand() . ' ';
+
 		GalleryUtilities::putRequestVariable('itemId', $this->_parentAlbum->getId());
 		GalleryUtilities::putRequestVariable('form[action][create]', 1);
 		GalleryUtilities::putRequestVariable('form[pathComponent]', $name);
@@ -207,6 +214,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
 		$id      = $this->_getChildId();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -228,6 +236,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(trim($name), $newAlbum->getPathComponent(), 'path component');
 
 		list($ret, $path) = $newAlbum->fetchPath();
@@ -235,6 +244,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue($platform->is_dir($path), "directory '$path'");
 		$this->assertEquals(
 			trim($name),
@@ -245,9 +255,10 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 	public function testAddAlbumWithPeriodInName() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$name = ' testalbum-' . mt_rand() . '.foobarbaz';
+		$platform =& $gallery->getPlatform();
+		$name     = ' testalbum-' . mt_rand() . '.foobarbaz';
+
 		GalleryUtilities::putRequestVariable('itemId', $this->_parentAlbum->getId());
 		GalleryUtilities::putRequestVariable('form[action][create]', 1);
 		GalleryUtilities::putRequestVariable('form[pathComponent]', $name);
@@ -265,6 +276,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
 		$id      = $this->_getChildId();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -286,6 +298,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(trim($name), $newAlbum->getPathComponent(), 'path component');
 
 		list($ret, $path) = $newAlbum->fetchPath();
@@ -293,6 +306,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue($platform->is_dir($path), "directory '$path'");
 		$this->assertEquals(
 			trim($name),
@@ -303,6 +317,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 	public function _getChildId() {
 		list($ret, $ids) = GalleryCoreApi::fetchChildItemIds($this->_parentAlbum);
+
 		$this->assertEquals(1, count($ids));
 
 		return $ids[0];
@@ -310,9 +325,10 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 	public function _getSecondChildId() {
 		list($ret, $ids) = GalleryCoreApi::fetchChildItemIds($this->_parentAlbum);
+
 		$this->assertEquals(2, sizeof($ids));
 
-		// We want the larger id, since it's the newer one
+		// We want the larger id, since it is the newer one
 		return max($ids[0], $ids[1]);
 	}
 
@@ -324,6 +340,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		}
 
 		$name = 'testalbum-' . mt_rand();
+
 		GalleryUtilities::putRequestVariable('itemId', $this->_parentAlbum->getId());
 		GalleryUtilities::putRequestVariable('form[action][create]', 1);
 		GalleryUtilities::putRequestVariable('form[pathComponent]', $name);
@@ -340,6 +357,7 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -361,8 +379,10 @@ class ItemAddAlbumControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(' title', $newAlbum->getTitle(), 'title');
 		$this->assertEquals('summary &lt;div&gt;.&lt;/div&gt;', $newAlbum->getSummary(), 'summary');
+
 		$this->assertEquals('description .', $newAlbum->getDescription(), 'description');
 	}
 }

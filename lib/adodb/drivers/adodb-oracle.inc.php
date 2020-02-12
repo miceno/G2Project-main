@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -6,11 +7,8 @@
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Oracle data driver. Requires Oracle client. Works on Windows and Unix and Oracle 7.
-
   If you are using Oracle 8 or later, use the oci8 driver which is much better and more reliable.
 */
 
@@ -20,19 +18,22 @@ if (!defined('ADODB_DIR')) {
 }
 
 class ADODB_oracle extends ADOConnection {
-	public $databaseType    = 'oracle';
-	public $replaceQuote    = "''"; // string to use to replace quotes
+	public $databaseType = 'oracle';
+
+	// string to use to replace quotes
+	public $replaceQuote    = "''";
 	public $concat_operator = '||';
 	public $_curs;
-	public $_initdate      = true; // init date to YYYY-MM-DD
+
+	// init date to YYYY-MM-DD
+	public $_initdate      = true;
 	public $metaTablesSQL  = 'select table_name from cat';
 	public $metaColumnsSQL = "select cname,coltype,width from col where tname='%s' order by colno";
 	public $sysDate        = "TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'),'YYYY-MM-DD')";
 	public $sysTimeStamp   = 'SYSDATE';
 	public $connectSID     = true;
 
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	// format and return date string in database date format
 	public function DBDate($d, $isfld = false) {
@@ -95,7 +96,9 @@ class ADODB_oracle extends ADOConnection {
 		if (!$ok) {
 			return $this->RollbackTrans();
 		}
+
 		$ret = ora_commit($this->_connectionID);
+
 		ora_commiton($this->_connectionID);
 
 		return $ret;
@@ -103,6 +106,7 @@ class ADODB_oracle extends ADOConnection {
 
 	public function RollbackTrans() {
 		$ret = ora_rollback($this->_connectionID);
+
 		ora_commiton($this->_connectionID);
 
 		return $ret;
@@ -154,8 +158,8 @@ class ADODB_oracle extends ADOConnection {
 		// G. Giunta 2003/08/13 - This looks danegrously suspicious: why should we want to set
 		// the oracle home to the host name of remote DB?
 		//          if ($argHostname) putenv("ORACLE_HOME=$argHostname");
-
-		if ($argHostname) { // code copied from version submitted for oci8 by Jorma Tuomainen <jorma.tuomainen@ppoy.fi>
+		if ($argHostname) {
+			// code copied from version submitted for oci8 by Jorma Tuomainen <jorma.tuomainen@ppoy.fi>
 			if (empty($argDatabasename)) {
 				$argDatabasename = $argHostname;
 			} else {
@@ -166,7 +170,6 @@ class ADODB_oracle extends ADOConnection {
 				} else {
 					$argHostport = '1521';
 				}
-
 
 				if ($this->connectSID) {
 					$argDatabasename = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=' . $argHostname
@@ -218,12 +221,12 @@ class ADODB_oracle extends ADOConnection {
 		// <G. Giunta 2003/03/03/> Reset error messages before executing
 		$this->_errorMsg  = false;
 		$this->_errorCode = false;
-
-		$curs = ora_open($this->_connectionID);
+		$curs             = ora_open($this->_connectionID);
 
 		if ($curs === false) {
 			return false;
 		}
+
 		$this->_curs = $curs;
 
 		if (!ora_parse($curs, $sql)) {
@@ -233,10 +236,12 @@ class ADODB_oracle extends ADOConnection {
 		if (ora_exec($curs)) {
 			return $curs;
 		}
+
 		// <G. Giunta 2004/03/03> before we close the cursor, we have to store the error message
 		// that we can obtain ONLY from the cursor (and not from the connection)
 		$this->_errorCode = @ora_errorcode($curs);
 		$this->_errorMsg  = @ora_error($curs);
+
 		// </G. Giunta 2004/03/03>
 		@ora_close($curs);
 
@@ -249,11 +254,9 @@ class ADODB_oracle extends ADOConnection {
 	}
 }
 
-
 /*--------------------------------------------------------------------------------------
 		 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordset_oracle extends ADORecordSet {
 	public $databaseType = 'oracle';
 	public $bind         = false;
@@ -261,18 +264,19 @@ class ADORecordset_oracle extends ADORecordSet {
 	public function __construct($queryID, $mode = false) {
 		if ($mode === false) {
 			global $ADODB_FETCH_MODE;
+
 			$mode = $ADODB_FETCH_MODE;
 		}
+
 		$this->fetchMode = $mode;
-
-		$this->_queryID = $queryID;
-
-		$this->_inited = true;
-		$this->fields  = array();
+		$this->_queryID  = $queryID;
+		$this->_inited   = true;
+		$this->fields    = array();
 
 		if ($queryID) {
 			$this->_currentRow = 0;
 			$this->EOF         = !$this->_fetch();
+
 			@$this->_initrs();
 		} else {
 			$this->_numOfRows   = 0;
@@ -285,9 +289,8 @@ class ADORecordset_oracle extends ADORecordSet {
 
 	/*		Returns: an object containing field information.
 			   Get column information in the Recordset object. fetchField() can be used in order to obtain information about
-			   fields in a certain query result. If the field offset isn't specified, the next field that wasn't yet retrieved by
+			   fields in a certain query result. If the field offset is not specified, the next field that was not yet retrieved by
 			   fetchField() is retrieved.		*/
-
 	public function FetchField($fieldOffset = -1) {
 		$fld             = new ADOFieldObject();
 		$fld->name       = ora_columnname($this->_queryID, $fieldOffset);
@@ -331,7 +334,6 @@ class ADORecordset_oracle extends ADORecordSet {
 
 	/*		close() only needs to be called if you are worried about using too much memory while your script
 		   is running. All associated result memory for the specified result identifier will automatically be freed.		*/
-
 	public function _close() {
 		return @ora_close($this->_queryID);
 	}
@@ -352,6 +354,7 @@ class ADORecordset_oracle extends ADORecordSet {
 				if ($len <= $this->blobSize) {
 					return 'C';
 				}
+
 				// Fall Through
 			case 'LONG':
 			case 'LONG VARCHAR':
@@ -367,7 +370,6 @@ class ADORecordset_oracle extends ADORecordSet {
 				return 'D';
 
 			//case 'T': return 'T';
-
 			case 'BIT':
 				return 'L';
 

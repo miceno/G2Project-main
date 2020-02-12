@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/helpers/GalleryPluginHelper_medium.class');
 
 /**
@@ -40,7 +38,8 @@ class FactoryTest extends GalleryTestCase {
 		}
 
 		$path = 'modules/core/test/phpunit/FactoryTest.class';
-		$ret  = GalleryCoreApi::registerFactoryImplementation(
+
+		$ret = GalleryCoreApi::registerFactoryImplementation(
 			'FactoryTest',
 			'FactoryTestDummy',
 			'FactoryTestDummyId3',
@@ -65,6 +64,7 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markFactoryModuleForCleanup('factoryTest');
 
 		$ret = GalleryCoreApi::registerFactoryImplementation(
@@ -88,6 +88,7 @@ class FactoryTest extends GalleryTestCase {
 			'factoryTest',
 			$FactoryTestModule
 		);
+
 		list($ret, $ignored) = GalleryCoreApi::activatePlugin('module', 'factoryTest');
 
 		if ($ret) {
@@ -100,6 +101,7 @@ class FactoryTest extends GalleryTestCase {
 			'factoryTest2',
 			$FactoryTestModule2
 		);
+
 		list($ret, $ignored) = GalleryCoreApi::activatePlugin('module', 'factoryTest2');
 
 		if ($ret) {
@@ -294,6 +296,7 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'FactoryTestDummyId2' => 'FactoryTestDummy2',
@@ -307,6 +310,7 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'FactoryTestDummyId2' => 'FactoryTestDummy2',
@@ -327,6 +331,7 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(null, $instance, 'newFactoryInstanceByHint');
 
 		list($ret, $instance) = GalleryCoreApi::newFactoryInstance('FactoryTest', 'FactoryTestDummy');
@@ -334,6 +339,7 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(null, $instance, 'newFactoryInstance');
 
 		list($ret, $instance) = GalleryCoreApi::newFactoryInstanceById('FactoryTest', 'FactoryTestDummyId2');
@@ -341,6 +347,7 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(null, $instance, 'newFactoryInstanceById');
 	}
 
@@ -369,7 +376,6 @@ class FactoryTest extends GalleryTestCase {
 		}
 
 		list($ret, $hints) = GalleryCoreApi::getFactoryDefinitionHints(
-
 			'FactoryTest',
 			'FactoryTestDummyId3'
 		);
@@ -377,12 +383,14 @@ class FactoryTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array('new hint'), $hints, 'Unexpected hints on update');
 	}
 
 	public function testRegisterFactoryImplementationForRequest() {
 		$handlerPath = __DIR__;
-		$ret         = GalleryCoreApi::registerFactoryImplementationForRequest(
+
+		$ret = GalleryCoreApi::registerFactoryImplementationForRequest(
 			'GalleryEventListener',
 			'TestErrorHandler',
 			'TestErrorHandler',
@@ -446,7 +454,8 @@ class FactoryTest extends GalleryTestCase {
 
 	public function testRegisterFactoryImplementationForRequestDeleteCache() {
 		$handlerPath = __DIR__;
-		$ret         = GalleryCoreApi::registerFactoryImplementationForRequest(
+
+		$ret = GalleryCoreApi::registerFactoryImplementationForRequest(
 			'GalleryEventListener',
 			'TestErrorHandler',
 			'TestErrorHandler',
@@ -468,17 +477,21 @@ class FactoryTest extends GalleryTestCase {
 		}
 
 		$result = empty($registry['implementations']['GalleryEventListener']['TestErrorHandler']);
+
 		$this->assertTrue($result, 'TestErrorHandler implementation is set');
 
 		$result = empty($registry['ids']['GalleryEventListener']['TestErrorHandler']);
+
 		$this->assertTrue($result, 'TestErrorHandler id is set');
 
 		$result = empty($registry['pluginIds']['GalleryEventListener']['TestErrorHandler']);
+
 		$this->assertTrue($result, 'TestErrorHandler implementation is still set');
 
 		$result = empty(
 			$registry['hints']['GalleryEventListener']['gallery::error']['TestErrorHandler']
 		);
+
 		$this->assertTrue($result, 'TestErrorHandler error listener is still set');
 	}
 }
@@ -489,10 +502,8 @@ class FactoryTest extends GalleryTestCase {
  * @package GalleryCore
  * @subpackage PHPUnit
  */
-class FactoryTestDummy {
-}
-class FactoryTestDummy2 {
-}
+class FactoryTestDummy {}
+class FactoryTestDummy2 {}
 
 /**
  * Bogus classes that we can feed to the factory
@@ -504,13 +515,14 @@ class FactoryTestModule extends GalleryModule {
 	public function __construct() {
 		$this->setId('factoryTest');
 		$this->setRequiredCoreApi(GalleryCoreApi::getApiVersion());
-		$this->setRequiredModuleApi(GalleryModule::doStatic()->getApiVersion());
+		$this->setRequiredModuleApi(GalleryModule::getMe()->getApiVersion());
 	}
 }
+
 class FactoryTestModule2 extends GalleryModule {
 	public function __construct() {
 		$this->setId('factoryTest2');
 		$this->setRequiredCoreApi(GalleryCoreApi::getApiVersion());
-		$this->setRequiredModuleApi(GalleryModule::doStatic()->getApiVersion());
+		$this->setRequiredModuleApi(GalleryModule::getMe()->getApiVersion());
 	}
 }

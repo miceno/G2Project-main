@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class');
 
 /**
@@ -32,6 +30,7 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class');
 class PostgreSqlStorage extends GalleryStorage {
 	public function __construct($config) {
 		parent::__construct($config);
+
 		$this->_isTransactional = true;
 	}
 
@@ -55,7 +54,7 @@ class PostgreSqlStorage extends GalleryStorage {
 
 		/*
 		 * Use a temporary database connection such that possible errors when dropping the bit_or
-		 * function don't affect the main transaction.
+		 * function do not affect the main transaction.
 		 */
 		list($ret, $tmpDb) = $this->_getConnection(true);
 
@@ -65,7 +64,9 @@ class PostgreSqlStorage extends GalleryStorage {
 
 		// Ignore errors when trying to drop the bit_or function
 		$this->_traceStart();
+
 		$recordSet = $tmpDb->Execute('DROP AGGREGATE BIT_OR(bit)');
+
 		$tmpDb->Close();
 		$this->_traceStop();
 
@@ -93,12 +94,14 @@ class PostgreSqlStorage extends GalleryStorage {
 			}
 
 			$this->_traceStart();
+
 			$recordSet = $tmpDb->Execute($query);
+
 			$tmpDb->Close();
 			$this->_traceStop();
 
 			/*
-			 * Ignore errors here, since we'll get them every time we try to
+			 * Ignore errors here, since we will get them every time we try to
 			 * install the aggregate, which will happen every time we upgrade core
 			 * or install in a database with another Gallery already present.
 			 *
@@ -199,6 +202,7 @@ class PostgreSqlStorage extends GalleryStorage {
 				while (count($args) > 1) {
 					$sql[] = 'WHEN ' . array_shift($args) . ' THEN ' . array_shift($args);
 				}
+
 				$sql = 'CASE ' . implode(' ', $sql) . ' ELSE ' . $args[0] . ' END';
 
 				break;
@@ -219,9 +223,10 @@ class PostgreSqlStorage extends GalleryStorage {
 					str_repeat('SELECT ' . $markers . ' UNION ALL ', $args[2]),
 					'UNION ALL '
 				);
-				$sql     = 'INSERT INTO ' . $args[0] . ' (';
-				$sql    .= join(', ', $args[1]);
-				$sql    .= ') ' . $rowList;
+
+				$sql  = 'INSERT INTO ' . $args[0] . ' (';
+				$sql .= join(', ', $args[1]);
+				$sql .= ') ' . $rowList;
 
 				break;
 

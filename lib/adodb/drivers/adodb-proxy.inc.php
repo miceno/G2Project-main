@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,7 +8,6 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 4.
-
   Synonym for csv driver.
 */
 
@@ -25,6 +25,7 @@ if (!defined('_ADODB_PROXY_LAYER')) {
 		public $databaseType     = 'proxy';
 		public $databaseProvider = 'csv';
 	}
+
 	class ADORecordset_proxy extends ADORecordset_csv {
 		public $databaseType = 'proxy';
 

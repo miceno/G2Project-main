@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,11 +8,8 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Support Borland Interbase 6.5 and later
-
 */
 
 // security - hide paths
@@ -28,6 +26,7 @@ class ADODB_borland_ibase extends ADODB_ibase {
 		if ($this->transOff) {
 			return true;
 		}
+
 		$this->transCnt      += 1;
 		$this->autoCommit     = false;
 		$this->_transactionID = ibase_trans($this->ibasetrans, $this->_connectionID);
@@ -56,13 +55,14 @@ class ADODB_borland_ibase extends ADODB_ibase {
 
 				break;
 		}
+
 		$arr['version']     = '6.5';
 		$arr['description'] = $s;
 
 		return $arr;
 	}
 
-	// Note that Interbase 6.5 uses ROWS instead - don't you love forking wars!
+	// Note that Interbase 6.5 uses ROWS instead - do not you love forking wars!
 	// 		SELECT col1, col2 FROM table ROWS 5 -- get 5 rows
 	//		SELECT col1, col2 FROM TABLE ORDER BY col1 ROWS 3 TO 7 -- first 5 skip 2
 	// Firebird uses
@@ -81,15 +81,17 @@ class ADODB_borland_ibase extends ADODB_ibase {
 			}
 		} else {
 			// ok, skip
-			$a   = $offset + 1;
-			$str = " ROWS $a TO 999999999"; // 999 million
+			$a = $offset + 1;
+
+			// 999 million
+			$str = " ROWS $a TO 999999999";
 		}
+
 		$sql .= $str;
 
 		return ($secs2cache) ? $this->CacheExecute($secs2cache, $sql, $inputarr) : $this->Execute($sql, $inputarr);
 	}
 }
-
 
 class ADORecordSet_borland_ibase extends ADORecordSet_ibase {
 	public $databaseType = 'borland_ibase';

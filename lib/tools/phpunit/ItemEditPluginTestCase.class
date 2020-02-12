@@ -1,27 +1,23 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 require_once __DIR__ . '/../../../modules/core/classes/GalleryView.class';
-
 require_once __DIR__ . '/../../../modules/core/classes/GalleryController.class';
-
 require_once __DIR__ . '/../../../modules/core/ItemEdit.inc';
 
 /**
@@ -65,8 +61,7 @@ class ItemEditPluginTestCase extends GalleryTestCase {
 		);
 
 		if (isset($errorCode)) {
-			$GalleryStatus = GalleryStatus::doStatic();
-
+			$GalleryStatus     = GalleryStatus::getMe();
 			$expectedErrorCode = implode(
 				' | ',
 				$GalleryStatus->getErrorCodeConstants(
@@ -84,6 +79,7 @@ class ItemEditPluginTestCase extends GalleryTestCase {
 			} else {
 				$actualErrorCode = 'SUCCESS';
 			}
+
 			$this->assertEquals($expectedErrorCode, $actualErrorCode, 'Unexpected error code!');
 		} elseif ($ret) {
 			return $ret;
@@ -92,8 +88,8 @@ class ItemEditPluginTestCase extends GalleryTestCase {
 			$this->assertTrue(isset($error) && is_array($error), 'plugin error results missing');
 
 			/*
-			 * This doesn't appear to test much, but it will cause us to examine $status so if
-			 * it's not set then we'll trigger a PHP warning which will fail the test
+			 * This does not appear to test much, but it will cause us to examine $status so if
+			 * it is not set then we will trigger a PHP warning which will fail the test
 			 */
 			$this->assertTrue(isset($status) || $status == null, 'plugin status result missing');
 		}

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -46,7 +45,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		}
 
 		/*
-		 * Don't set session.inactivityTimeout or session.siteAdministrationTimeout as the tests
+		 * Do not set session.inactivityTimeout or session.siteAdministrationTimeout as the tests
 		 * will fail with permission errors.
 		 */
 		$this->_valueMap = array(
@@ -73,6 +72,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 
 		// The AdminCore controller uses the url generator to check the cookie path
 		$AdminCoreControllerTestUrlGenerator = new AdminCoreControllerTestUrlGenerator();
+
 		$gallery->setUrlGenerator($AdminCoreControllerTestUrlGenerator);
 	}
 
@@ -80,6 +80,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		// Change the defaults to something meaningless
 		foreach ($valueMap as $key => $value) {
 			list($outer, $inner) = explode('.', $key);
+
 			GalleryUtilities::putRequestVariable('form[' . $outer . '][' . $inner . ']', $value);
 		}
 	}
@@ -88,10 +89,12 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		$valueMap = $this->_valueMap;
 
 		$this->_setFormFromValues($valueMap);
+
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -130,12 +133,14 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		}
 
 		$valueMap['smtp.password'] = '***';
+
 		$this->_setFormFromValues($valueMap);
 
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -150,7 +155,6 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-
 		list($ret, $storedPass) = GalleryCoreApi::getPluginParameter('module', 'core', 'smtp.password');
 
 		if ($ret) {
@@ -160,7 +164,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		$this->assertEquals(
 			'abc',
 			$storedPass,
-			"matching number of stars shouldn't change the password"
+			"matching number of stars should not change the password"
 		);
 	}
 
@@ -176,12 +180,14 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 
 		// But oops, the user entered 4 stars
 		$valueMap['smtp.password'] = '****';
+
 		$this->_setFormFromValues($valueMap);
 
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -205,20 +211,21 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		$this->assertEquals(
 			'abc',
 			$storedPass,
-			"mismatched number of stars shouldn't change the password"
+			"mismatched number of stars should not change the password"
 		);
 	}
 
 	public function testSaveEmailPasswordWithHtmlEntity() {
-		$valueMap = $this->_valueMap;
-
+		$valueMap                  = $this->_valueMap;
 		$valueMap['smtp.password'] = 'pass&word';
+
 		$this->_setFormFromValues($valueMap);
 
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -233,7 +240,6 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-
 		list($ret, $storedPass) = GalleryCoreApi::getPluginParameter('module', 'core', 'smtp.password');
 
 		if ($ret) {
@@ -243,10 +249,10 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		$this->assertEquals('pass&word', base64_decode($storedPass));
 	}
 
-	// Test that we don't accept just any cookie path
+	// Test that we do not accept just any cookie path
 	public function testChangeCookiePath() {
 		/*
-		 * AdminCore expects all the form vars, even if we test here only the cookie path.  Don't
+		 * AdminCore expects all the form vars, even if we test here only the cookie path.  Do not
 		 * set session.inactivityTimeout or session.siteAdministrationTimeout as the tests will fail
 		 * with permission errors.
 		 */
@@ -274,25 +280,30 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			'saved' => 1,
 			'ep'    => '',
 		);
+
 		$tests[] = array(
 			'path'  => '/',
 			'saved' => 1,
 			'ep'    => '/',
 		);
+
 		$tests[] = array(
 			'path'  => '/sub/',
 			'saved' => 1,
 			'ep'    => '/sub/',
 		);
+
 		$tests[] = array(
 			'path'  => '/sub',
 			'saved' => 1,
 			'ep'    => '/sub/',
 		);
+
 		$tests[] = array(
 			'path'  => '/sub/gallery',
 			'saved' => 0,
 		);
+
 		$tests[] = array(
 			'path'  => '/sub/application',
 			'saved' => 0,
@@ -309,9 +320,11 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			// Try to change the parameter
 			GalleryUtilities::putRequestVariable('form[cookie][path]', $testCase['path']);
 			GalleryUtilities::putRequestVariable('form[action][save]', 1);
+
 			// Just add the other form vars to the request such that it accepts the save request
 			foreach ($valueMap as $key => $value) {
 				list($outer, $inner) = explode('.', $key);
+
 				GalleryUtilities::putRequestVariable(
 					'form[' . $outer . '][' . $inner . ']',
 					$value
@@ -324,7 +337,9 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			$status  = !$testCase['saved'] ? array() : array(
 				'saved' => 1,
 			);
-			$kind    = $testCase['saved'] ? 'redirect' : 'delegate';
+
+			$kind = $testCase['saved'] ? 'redirect' : 'delegate';
+
 			$this->assertEquals(
 				array(
 					$kind    => array(
@@ -350,7 +365,9 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$expPath = $testCase['saved'] ? $testCase['ep'] : '/bad/';
+
 			$this->assertEquals(
 				$expPath,
 				$realValue,
@@ -359,10 +376,10 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		}
 	}
 
-	// Test that we don't accept just any cookie domain
+	// Test that we do not accept just any cookie domain
 	public function testChangeCookieDomain() {
 		/*
-		 * AdminCore expects all the form vars, even if we test here only the cookie path.  Don't
+		 * AdminCore expects all the form vars, even if we test here only the cookie path.  Do not
 		 * set session.inactivityTimeout or session.siteAdministrationTimeout as the tests will fail
 		 * with permission errors.
 		 */
@@ -390,25 +407,30 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			'saved'  => 1,
 			'ep'     => '',
 		);
+
 		$tests[] = array(
 			'domain' => 'example.com',
 			'saved'  => 1,
 			'ep'     => '.example.com',
 		);
+
 		$tests[] = array(
 			'domain' => '.example.com',
 			'saved'  => 1,
 			'ep'     => '.example.com',
 		);
+
 		$tests[] = array(
 			'domain' => '.www.example.com',
 			'saved'  => 1,
 			'ep'     => '.www.example.com',
 		);
+
 		$tests[] = array(
 			'domain' => 'photos.example.com',
 			'saved'  => 0,
 		);
+
 		$tests[] = array(
 			'domain' => '.com',
 			'saved'  => 0,
@@ -429,6 +451,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			// Just add the other form vars to the request such that it accepts the save request
 			foreach ($valueMap as $key => $value) {
 				list($outer, $inner) = explode('.', $key);
+
 				GalleryUtilities::putRequestVariable(
 					'form[' . $outer . '][' . $inner . ']',
 					$value
@@ -441,7 +464,9 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			$status  = !$testCase['saved'] ? array() : array(
 				'saved' => 1,
 			);
-			$kind    = $testCase['saved'] ? 'redirect' : 'delegate';
+
+			$kind = $testCase['saved'] ? 'redirect' : 'delegate';
+
 			$this->assertEquals(
 				array(
 					$kind    => array(
@@ -468,7 +493,9 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$expPath = $testCase['saved'] ? $testCase['ep'] : 'bad';
+
 			$this->assertEquals(
 				$expPath,
 				$realValue,
@@ -483,6 +510,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -501,6 +529,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][emailTest]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -519,6 +548,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][emailTest]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -534,13 +564,16 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 
 	public function testEmailTestSuccess() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if (GalleryUtilities::isA($platform, 'WinNtPlatform')) {
 			$WinPlatform = new AdminCoreControllerTestWinNtPlatform(true);
+
 			$gallery->setPlatform($WinPlatform);
 		} else {
 			$UnixPlatform = new AdminCoreControllerTestUnixPlatform(true);
+
 			$gallery->setPlatform($UnixPlatform);
 		}
 
@@ -548,6 +581,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][emailTest]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -578,9 +612,11 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 
 		if (GalleryUtilities::isA($platform, 'WinNtPlatform')) {
 			$WinPlatform = new AdminCoreControllerTestWinNtPlatform(false);
+
 			$gallery->setPlatform($WinPlatform);
 		} else {
 			$UnixPlatform = new AdminCoreControllerTestUnixPlatform(false);
+
 			$gallery->setPlatform($UnixPlatform);
 		}
 
@@ -588,6 +624,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][emailTest]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'view'    => 'core.SiteAdmin',
@@ -596,12 +633,14 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			$results['redirect'],
 			'redirect'
 		);
+
 		$this->assertEquals(
 			array('saved', 'emailTestError', 'emailTestDebug'),
 			array_keys($results['status']),
 			'status keys'
 		);
 		$this->assertEquals(1, $results['status']['saved'], 'saved');
+
 		$this->assertTrue(
 			strpos(
 				$results['status']['emailTestError'],
@@ -609,15 +648,17 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 			) !== false,
 			'emailTestError: ' . $results['status']['emailTestError']
 		);
+
 		$this->assertTrue(
 			strpos($results['status']['emailTestDebug'], 'file_exists') !== false,
 			'emailTestDebug: ' . $results['status']['emailTestDebug']
 		);
+
 		$this->assertEquals(array(), $results['error'], 'error');
 	}
 
 	public function testReset() {
-		// Set the default language to a value such that we can ensure that it hasn't changed
+		// Set the default language to a value such that we can ensure that it has not changed
 		$ret = GalleryCoreApi::setPluginParameter('module', 'core', 'default.language', 'de');
 
 		if ($ret) {
@@ -630,6 +671,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][reset]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -646,6 +688,7 @@ class AdminCoreControllerTest extends GalleryControllerTestCase {
 
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryPlatform/UnixPlatform.class');
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryPlatform/WinNtPlatform.class');
+
 class AdminCoreControllerTestUnixPlatform extends UnixPlatform {
 	public function __construct($succeed) {
 		$this->_succeed = $succeed;
@@ -655,6 +698,7 @@ class AdminCoreControllerTestUnixPlatform extends UnixPlatform {
 		return $this->_succeed;
 	}
 }
+
 class AdminCoreControllerTestWinNtPlatform extends WinNtPlatform {
 	public function __construct($succeed) {
 		$this->_succeed = $succeed;

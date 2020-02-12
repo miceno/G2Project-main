@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -41,6 +42,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 	include_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
 
 	include_once $smarty->_get_plugin_filepath('function', 'html_options');
+
 	// Default values.
 	$prefix         = 'Date_';
 	$start_year     = strftime('%Y');
@@ -49,33 +51,42 @@ function smarty_function_html_select_date($params, &$smarty) {
 	$display_months = true;
 	$display_years  = true;
 	$month_format   = '%B';
+
 	// Write months as numbers by default  GL
 	$month_value_format = '%m';
 	$day_format         = '%02d';
+
 	// Write day values using this format MB
 	$day_value_format = '%d';
 	$year_as_text     = false;
+
 	// Display years in reverse order? Ie. 2000,1999,....
 	$reverse_years = false;
+
 	/* Should the select boxes be part of an array when returned from PHP?
 	   e.g. setting it to "birthday", would create "birthday[Day]",
 	   "birthday[Month]" & "birthday[Year]". Can be combined with prefix */
 	$field_array = null;
+
 	/* <select size>'s of the different <select> tags.
 	   If not set, uses default dropdown. */
 	$day_size   = null;
 	$month_size = null;
 	$year_size  = null;
+
 	/* Unparsed attributes common to *ALL* the <select>/<input> tags.
 	   An example might be in the template: all_extra ='class ="foo"'. */
 	$all_extra = null;
+
 	// Separate attributes for the tags.
 	$day_extra   = null;
 	$month_extra = null;
 	$year_extra  = null;
+
 	/* Order in which to display the fields.
 	   "D" -> day, "M" -> month, "Y" -> year. */
 	$field_order = 'MDY';
+
 	// String printed between the different fields.
 	$field_separator = "\n";
 	$time            = time();
@@ -142,6 +153,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 		// negative timestamp, use date()
 		$time = date('Y-m-d', $time);
 	}
+
 	// If $time is not in format yyyy-mm-dd
 	if (preg_match('/^(\d{0,4}-\d{0,2}-\d{0,2})/', $time, $found)) {
 		$time = $found[1];
@@ -150,6 +162,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 		// strftime to make yyyy-mm-dd
 		$time = strftime('%Y-%m-%d', smarty_make_timestamp($time));
 	}
+
 	// Now split this in pieces, which later can be used to set the select
 	$time = explode('-', $time);
 
@@ -182,10 +195,8 @@ function smarty_function_html_select_date($params, &$smarty) {
 		}
 	}
 
-	$field_order = strtoupper($field_order);
-
-	$html_result = $month_result = $day_result = $year_result = '';
-
+	$field_order           = strtoupper($field_order);
+	$html_result           = $month_result           = $day_result           = $year_result           = '';
 	$field_separator_count = -1;
 
 	if ($display_months) {
@@ -222,8 +233,8 @@ function smarty_function_html_select_date($params, &$smarty) {
 		if (null !== $all_extra) {
 			$month_result .= ' ' . $all_extra;
 		}
-		$month_result .= $extra_attrs . '>' . "\n";
 
+		$month_result .= $extra_attrs . '>' . "\n";
 		$month_result .= smarty_function_html_options(
 			array(
 				'output'       => $month_names,
@@ -233,6 +244,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 			),
 			$smarty
 		);
+
 		$month_result .= '</select>';
 	}
 
@@ -269,6 +281,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 		if (null !== $day_extra) {
 			$day_result .= ' ' . $day_extra;
 		}
+
 		$day_result .= $extra_attrs . '>' . "\n";
 		$day_result .= smarty_function_html_options(
 			array(
@@ -279,6 +292,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 			),
 			$smarty
 		);
+
 		$day_result .= '</select>';
 	}
 
@@ -301,6 +315,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 			if (null !== $year_extra) {
 				$year_result .= ' ' . $year_extra;
 			}
+
 			$year_result .= ' />';
 		} else {
 			$years = range((int)$start_year, (int)$end_year);
@@ -310,12 +325,14 @@ function smarty_function_html_select_date($params, &$smarty) {
 			} else {
 				sort($years, SORT_NUMERIC);
 			}
+
 			$yearvals = $years;
 
 			if (isset($year_empty)) {
 				array_unshift($years, $year_empty);
 				array_unshift($yearvals, '');
 			}
+
 			$year_result .= '<select name="' . $year_name . '"';
 
 			if (null !== $year_size) {
@@ -329,6 +346,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 			if (null !== $year_extra) {
 				$year_result .= ' ' . $year_extra;
 			}
+
 			$year_result .= $extra_attrs . '>' . "\n";
 			$year_result .= smarty_function_html_options(
 				array(
@@ -339,6 +357,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 				),
 				$smarty
 			);
+
 			$year_result .= '</select>';
 		}
 	}
@@ -363,6 +382,7 @@ function smarty_function_html_select_date($params, &$smarty) {
 
 				break;
 		}
+
 		// Add the field seperator
 		if ($i < $field_separator_count) {
 			$html_result .= $field_separator;

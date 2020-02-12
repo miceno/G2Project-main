@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -6,19 +7,14 @@
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
-
   Portable version of sqlite driver, to make it more similar to other database drivers.
   The main differences are
-
    1. When selecting (joining) multiple tables, in assoc mode the table
 		 names are included in the assoc keys in the "sqlite" driver.
-
 	  In "sqlitepo" driver, the table names are stripped from the returned column names.
 	  When this results in a conflict,  the first field get preference.
-
 	Contributed by Herman Kuiper  herman#ozuzo.net
 */
-
 if (!defined('ADODB_DIR')) {
 	die();
 }
@@ -32,7 +28,6 @@ class ADODB_sqlitepo extends ADODB_sqlite {
 /*--------------------------------------------------------------------------------------
 	   Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordset_sqlitepo extends ADORecordset_sqlite {
 	public $databaseType = 'sqlitepo';
 
@@ -50,6 +45,7 @@ class ADORecordset_sqlitepo extends ADORecordset_sqlite {
 				if (($p = strpos($n, '.')) !== false) {
 					$n = substr($n, $p + 1);
 				}
+
 				$this->fields[$n] = $v;
 			}
 		}

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -39,7 +38,7 @@ class Gallery {
 	/**
 	 * Storage for all configuration variables, set in config.php.
 	 * The values contained here cannot be modified.
-	 * Well, they can be modified but they cannot be saved so it's not a good idea.
+	 * Well, they can be modified but they cannot be saved so it is not a good idea.
 	 * @var array
 	 * @access private
 	 */
@@ -145,7 +144,7 @@ class Gallery {
 	public $_currentView = '';
 
 	/**
-	 * The time at which we should cease whatever operation we're doing
+	 * The time at which we should cease whatever operation we are doing
 	 * @var int
 	 * @access private
 	 */
@@ -160,7 +159,7 @@ class Gallery {
 
 	/**
 	 * A facade in front of the PHP virtual machine.  We use this as an abstraction layer to let us
-	 * interpose mock objects between our code and the VM for testing purposes.  When we're not in a
+	 * interpose mock objects between our code and the VM for testing purposes.  When we are not in a
 	 * test environment, this is always an instance of GalleryPhpVm.
 	 * @var GalleryPhpVm
 	 * @access private
@@ -173,17 +172,14 @@ class Gallery {
 		// Default config settings (can be overridden via config.php or embedded environment)
 		$this->_config = array(
 			'login'             => true,        // Offer UserAdmin links (Login/Logout/Your Account)
-
 			// UrlGenerator parameters for redirect URL to login page. Can be overridden.
 			'loginRedirect'     => array(
 				'view'    => 'core.UserAdmin',
 				'subView' => 'core.UserLogin',
 				'return'  => true,
 			),
-
 			'link'              => true,      // @deprecated - Allow item linking
 			// (now unused, there is a separate replica module
-
 			'showSidebarBlocks' => true, // Can we allow themes to show the sidebar?
 			'systemCharset'     => null,     // Specify system character set, skip autodetect
 			'defaultAlbumId'    => null,    // Initial album to display instead of root album
@@ -193,16 +189,16 @@ class Gallery {
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new Gallery();
+		if (!isset($instance)) {
+			$instance = new Gallery();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -219,7 +215,8 @@ class Gallery {
 	 * @see GalleryStorage::search
 	 */
 	public function search($query, $data = array(), $options = array()) {
-		$storage             =& $this->getStorage();
+		$storage =& $this->getStorage();
+
 		list($ret, $results) = $storage->search($query, $data, $options);
 
 		if ($ret) {
@@ -237,7 +234,7 @@ class Gallery {
 	public function setActiveUser($user) {
 		$this->_activeUser = $user;
 
-		// It's possible for the session not to exist during bootstrap time
+		// It is possible for the session not to exist during bootstrap time
 		$session =& $this->getSession();
 
 		if (isset($session)) {
@@ -245,6 +242,7 @@ class Gallery {
 
 			if ($activeUserId != $user->getId()) {
 				$session->setUserId($user->getId());
+
 				$language = $user->getLanguage();
 
 				if (!empty($language)) {
@@ -264,6 +262,7 @@ class Gallery {
 		if (isset($this->_activeUser)) {
 			return (int)$this->_activeUser->getId();
 		}
+
 		$session =& $this->getSession();
 
 		return (int)$session->getUserId();
@@ -310,7 +309,8 @@ class Gallery {
 
 		if (empty($this->_session)) {
 			$this->_session = new GallerySession();
-			$ret            = $this->_session->init();
+
+			$ret = $this->_session->init();
 
 			if ($ret) {
 				return $ret;
@@ -325,6 +325,7 @@ class Gallery {
 	 */
 	public function initEmptySession() {
 		GalleryCoreApi::requireOnce('modules/core/classes/GallerySession.class');
+
 		$this->_session = new GallerySession();
 	}
 
@@ -362,7 +363,7 @@ class Gallery {
 	/**
 	 * Return the active lock system.
 	 *
-	 * @param boolean $canInit (optional) if false and lockSystem isn't yet initialized, return null
+	 * @param boolean $canInit (optional) if false and lockSystem is not yet initialized, return null
 	 * @return array GalleryStatus a status code
 	 *               GalleryLockSystem the lock implementation (reference)
 	 */
@@ -383,12 +384,14 @@ class Gallery {
 			switch ($which) {
 				case 'flock':
 					GalleryCoreApi::requireOnce('modules/core/classes/FlockLockSystem.class');
+
 					$this->_lockSystem = new FlockLockSystem();
 
 					break;
 
 				case 'database':
 					GalleryCoreApi::requireOnce('modules/core/classes/DatabaseLockSystem.class');
+
 					$this->_lockSystem = new DatabaseLockSystem();
 
 					break;
@@ -452,6 +455,7 @@ class Gallery {
 				case 'mysqlt':
 				case 'mysqli':
 					GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class');
+
 					$this->_storage = new MySqlStorage($config);
 
 					break;
@@ -461,12 +465,14 @@ class Gallery {
 					GalleryCoreApi::requireOnce(
 						'modules/core/classes/GalleryStorage/PostgreSqlStorage.class'
 					);
+
 					$this->_storage = new PostgreSqlStorage($config);
 
 					break;
 
 				case 'db2':
 					GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage/Db2Storage.class');
+
 					$this->_storage = new Db2Storage($config);
 
 					break;
@@ -478,6 +484,7 @@ class Gallery {
 					GalleryCoreApi::requireOnce(
 						'modules/core/classes/GalleryStorage/OracleStorage.class'
 					);
+
 					$this->_storage = new OracleStorage($config);
 
 					break;
@@ -486,6 +493,7 @@ class Gallery {
 					GalleryCoreApi::requireOnce(
 						'modules/core/classes/GalleryStorage/MSSqlStorage.class'
 					);
+
 					$this->_storage = new MSSqlStorage($config);
 
 					break;
@@ -494,6 +502,7 @@ class Gallery {
 					GalleryCoreApi::requireOnce(
 						'modules/core/classes/GalleryStorage/SQLiteStorage.class'
 					);
+
 					$this->_storage = new SQLiteStorage($config);
 
 					break;
@@ -501,7 +510,9 @@ class Gallery {
 				default:
 					$this->debug('Unknown storage type');
 					$this->debug_r($config);
+
 					GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class', true);
+
 					$this->_storage = new GalleryStorage($config);
 			}
 		}
@@ -582,12 +593,14 @@ class Gallery {
 				return $ret;
 			}
 
-			$this->_translator        = GalleryTranslator::doStatic();
+			$this->_translator = GalleryTranslator::getMe();
+
 			list($ret, $languageCode) = $this->_translator->init($language, $dontUseDatabase);
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$ret = $this->setActiveLanguageCode($languageCode);
 
 			if ($ret) {
@@ -606,7 +619,8 @@ class Gallery {
 	 */
 	public function getActiveLanguageCode() {
 		$session =& $this->getSession();
-		// During installation, we don't have a session yet
+
+		// During installation, we do not have a session yet
 		if (!empty($session)) {
 			$language = $session->get('core.language');
 		} else {
@@ -624,7 +638,8 @@ class Gallery {
 	 */
 	public function setActiveLanguageCode($language) {
 		$session =& $this->getSession();
-		// During installation, we don't have a session yet
+
+		// During installation, we do not have a session yet
 		if (!empty($session)) {
 			$session->put('core.language', $language);
 		}
@@ -647,7 +662,7 @@ class Gallery {
 		$now = time();
 
 		if (empty($this->_timeLimit) || ($this->_timeLimit - $now < $limit)) {
-			$this->debug("[$now] can't guarantee $limit -- extending!");
+			$this->debug("[$now] cannot guarantee $limit -- extending!");
 
 			// Make sure that we extend at least a minimum of 30 seconds
 			$this->_timeLimit = $now + max($limit, 30);
@@ -655,8 +670,8 @@ class Gallery {
 
 			/*
 			 * Then make sure our locks stick around.  Even though this returns a status code, we
-			 * really don't want to make guaranteeTimeLimit() return a status code since we want to
-			 * keep it lightweight.  So swallow the return code and don't sweat it for now.
+			 * really do not want to make guaranteeTimeLimit() return a status code since we want to
+			 * keep it lightweight.  So swallow the return code and do not sweat it for now.
 			 */
 			if (isset($this->_lockSystem)) {
 				$this->_lockSystem->refreshLocks($this->_timeLimit);
@@ -698,7 +713,6 @@ class Gallery {
 	 * @param mixed $debug one of 'buffered', 'logged', 'immediate' or false
 	 */
 	public function setDebug($debug = false) {
-
 		// Try to do the right thing in the face of bogus input
 		if ($debug === true) {
 			$debug = 'buffered';
@@ -711,8 +725,7 @@ class Gallery {
 		}
 
 		if (!empty($this->_debug)) {
-			// PHP 6 includes E_STRICT in E_ALL. Hardcode since PHP 4 does not know that constant
-			error_reporting(E_ALL & ~ 2048);
+			error_reporting(E_ALL);
 			ini_set('display_errors', 1);
 			ini_set('log_errors', 1);
 			ini_set('short_open_tag', false);
@@ -804,7 +817,7 @@ class Gallery {
 			if (!strcmp($this->_debug, 'buffered')) {
 				$this->_debugBuffer .= wordwrap($msg) . "\n";
 			} elseif (!strcmp($this->_debug, 'logged')) {
-				// Don't use platform calls for these as they call debug internally!
+				// Do not use platform calls for these as they call debug internally!
 				if ($fd = fopen($this->_debugLogFile, 'a')) {
 					$date    = date('Y-m-d H:i:s');
 					$session =& $this->getSession();
@@ -814,6 +827,7 @@ class Gallery {
 					} else {
 						$id = '<no session id>';
 					}
+
 					fwrite($fd, "$date [" . $id . "] $msg\n");
 					fclose($fd);
 				}
@@ -840,6 +854,7 @@ class Gallery {
 			if ($escapeHtmlEntities) {
 				$buf = htmlentities($buf);
 			}
+
 			$this->debug($buf);
 		}
 	}
@@ -852,6 +867,7 @@ class Gallery {
 	public function &getTemplateAdapter() {
 		if (!isset($this->_templateAdapter)) {
 			GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplateAdapter.class');
+
 			$this->_templateAdapter = new GalleryTemplateAdapter();
 		}
 
@@ -865,7 +881,11 @@ class Gallery {
 	 *
 	 * Consider this case:
 	 *   $message_to_be_localized = 'TEST to be displayed in different languages';
+	 *
+	 *
 	 *   print $this->translate($message_to_be_localized);
+	 *
+	 *
 	 *
 	 * The translate() method is called in the right place for runtime handling, but there is no
 	 * message at gettext preprocessing time to be given to the translation teams, just a variable
@@ -875,14 +895,19 @@ class Gallery {
 	 *
 	 * This method resolves all such cases. Simply mark the candidates:
 	 *   $message_to_be_localized = $gallery->i18n('TEST to be displayed in different languages');
+	 *
+	 *
 	 *   print $this->translate($message_to_be_localized);
+	 *
+	 *
 	 *
 	 * @param mixed $value string or array (array must have 'text' key; hint/cFormat keys optional)
 	 * @return string the text value
 	 * @see GalleryPlugin::translate
 	 */
 	public function i18n($value) {
-		return is_array($value) ? $value['text'] : $value;  // Just pass the text through
+		// Just pass the text through
+		return is_array($value) ? $value['text'] : $value;
 	}
 
 	/**
@@ -899,7 +924,7 @@ class Gallery {
 		global $gallery;
 
 		/*
-		 * Note: don't use GalleryPlatform or GalleryUtilities here because this code is
+		 * Note: do not use GalleryPlatform or GalleryUtilities here because this code is
 		 * a shortcut that is used before we load those classes.
 		 */
 		$fileNameParam   = GALLERY_FORM_VARIABLE_PREFIX . 'fileName';
@@ -910,7 +935,7 @@ class Gallery {
 		}
 
 		/**
-		 * Try to prevent Apache's mod_deflate from gzipping this output since it's likely already
+		 * Try to prevent Apache's mod_deflate from gzipping this output since it is likely already
 		 * a binary file and broken versions of mod_deflate sometimes get the byte count wrong.
 		 */
 		if (function_exists('apache_setenv') && !@$gallery->getConfig('apacheSetenvBroken')) {
@@ -930,12 +955,14 @@ class Gallery {
 
 			if (get_magic_quotes_runtime()) {
 				@set_magic_quotes_runtime(0);
-			}// deprecated in PHP5.3
+			} // deprecated in PHP5.3
+
 			set_time_limit(0);
 
 			while (!feof($fd)) {
 				echo fread($fd, 4096);
 			}
+
 			fclose($fd);
 
 			return true;
@@ -956,8 +983,9 @@ class Gallery {
 		if ($time == '') {
 			$time = time();
 		}
-		// Use fixed list of weekdays and months, so we don't have to fiddle with locale stuff
-		$months   = array(
+
+		// Use fixed list of weekdays and months, so we do not have to fiddle with locale stuff
+		$months = array(
 			'01' => 'Jan',
 			'02' => 'Feb',
 			'03' => 'Mar',
@@ -971,6 +999,7 @@ class Gallery {
 			'11' => 'Nov',
 			'12' => 'Dec',
 		);
+
 		$weekdays = array(
 			'1' => 'Mon',
 			'2' => 'Tue',
@@ -980,9 +1009,10 @@ class Gallery {
 			'6' => 'Sat',
 			'0' => 'Sun',
 		);
-		$dow      = $weekdays[gmstrftime('%w', $time)];
-		$month    = $months[gmstrftime('%m', $time)];
-		$out      = gmstrftime('%%s, %d %%s %Y %H:%M:%S GMT', $time);
+
+		$dow   = $weekdays[gmstrftime('%w', $time)];
+		$month = $months[gmstrftime('%m', $time)];
+		$out   = gmstrftime('%%s, %d %%s %Y %H:%M:%S GMT', $time);
 
 		return sprintf($out, $dow, $month);
 	}
@@ -1006,7 +1036,9 @@ class Gallery {
 		if (!isset($this->_shutdownActions)) {
 			$this->_shutdownActions = array();
 		}
+
 		$action = array($callback, $parameters);
+
 		// Skip duplicate actions
 		foreach ($this->_shutdownActions as $item) {
 			if ($item == $action) {
@@ -1055,6 +1087,7 @@ class Gallery {
 	public function getPhpVm() {
 		if (!isset($this->_phpVm)) {
 			GalleryCoreApi::requireOnce('modules/core/classes/GalleryPhpVm.class');
+
 			$this->_phpVm = new GalleryPhpVm();
 		}
 

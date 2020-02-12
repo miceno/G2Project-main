@@ -1,25 +1,24 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
- * Gallery specific version of PHPUnit's TestCase class.
+ * Gallery specific version of PHPUnit is TestCase class.
  * @package Gallery
  * @subpackage PHPUnit
  * @author Bharat Mediratta <bharat@menalto.com>
@@ -30,6 +29,7 @@ class GalleryTestCase extends TestCase {
 
 	public function __construct($methodName) {
 		parent::__construct($methodName);
+
 		$this->_cleanup = array(
 			'entity'           => array(),
 			'factoryModuleId'  => array(),
@@ -41,12 +41,12 @@ class GalleryTestCase extends TestCase {
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic($methodName = 'TestCase') {
-		$singleton = new GalleryTestCase($methodName);
+	public static function getMe($methodName = 'TestCase') {
+		$instance = new GalleryTestCase($methodName);
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -90,6 +90,7 @@ class GalleryTestCase extends TestCase {
 		if (!is_array($events)) {
 			$events = array($events);
 		}
+
 		// We need to set the path to something as there is an if (empty) check.
 		$ret = $this->_registerFactoryImplementationForTest(
 			'GalleryEventListener',
@@ -149,13 +150,14 @@ class GalleryTestCase extends TestCase {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->beginTransaction();
+
+		$ret = $storage->beginTransaction();
 
 		if ($ret) {
 			return $ret;
 		}
 
-		// Save useful vars so that tests don't have to worry about overwriting them
+		// Save useful vars so that tests do not have to worry about overwriting them
 		$this->_saveVars[] = $_GET;
 		$this->_saveVars[] = $_POST;
 		$this->_saveVars[] = $_REQUEST;
@@ -171,27 +173,29 @@ class GalleryTestCase extends TestCase {
 		$this->_saveVars[] = $gallery->_config;
 		$this->_saveVars[] = $gallery->_phpVm;
 		$this->_saveVars[] = isset($gallery->_lockSystem) ? $gallery->_lockSystem : null;
-
-		$_GET     = array();
-		$_POST    = array();
-		$_REQUEST = array();
-		$_FILES   = array();
-
-		$session =& $gallery->getSession();
+		$_GET              = array();
+		$_POST             = array();
+		$_REQUEST          = array();
+		$_FILES            = array();
+		$session           =& $gallery->getSession();
 
 		if (!$session->isUsingCookies()) {
 			$_GET[GALLERY_FORM_VARIABLE_PREFIX . $session->getKey()] = $session->getId();
 		}
+
 		$this->_saveSID    = $session->getId();
 		$this->_saveVars[] = $session->get('core.language');
 
 		$this->_markFactoryForCleanup();
+
 		$ret = $this->_initEventListenersForTest();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$counter =& GalleryTestCase::getEntityCounter();
+
 		$counter->setCount(0);
 
 		/*
@@ -231,10 +235,14 @@ class GalleryTestCase extends TestCase {
 		$_ENV              = array_shift($this->_saveVars);
 		$gallery->_storage = array_shift($this->_saveVars);
 		$platform          = array_shift($this->_saveVars);
+
 		$gallery->setPlatform($platform);
 		$gallery->setActiveUser(array_shift($this->_saveVars));
+
 		$urlGenerator = array_shift($this->_saveVars);
+
 		$gallery->setUrlGenerator($urlGenerator);
+
 		$gallery->_translator = array_shift($this->_saveVars);
 		$gallery->_config     = array_shift($this->_saveVars);
 		$gallery->_phpVm      = array_shift($this->_saveVars);
@@ -244,11 +252,12 @@ class GalleryTestCase extends TestCase {
 			$gallery->_lockSystem->releaseQueue();
 		}
 
-		// Make sure we're not hanging onto any locks
+		// Make sure we are not hanging onto any locks
 		$lockIds = GalleryCoreApi::getLockIds();
 
 		if (!empty($lockIds)) {
 			GalleryCoreApi::releaseAllLocks();
+
 			$this->assertTrue(0, 'There are unreleased locks!');
 		}
 
@@ -301,6 +310,7 @@ class GalleryTestCase extends TestCase {
 			GalleryCoreApi::requireOnce(
 				'modules/core/classes/helpers/GalleryFactoryHelper_simple.class'
 			);
+
 			$registryData    =& GalleryFactoryHelper_simple::_getFactoryData();
 			$registryData[1] = $this->_cleanup['factoryRegistry'];
 		}
@@ -330,7 +340,8 @@ class GalleryTestCase extends TestCase {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->commitTransaction();
+
+		$ret = $storage->commitTransaction();
 
 		if ($ret) {
 			$this->fail($ret->getAsText());
@@ -355,6 +366,7 @@ class GalleryTestCase extends TestCase {
 		GalleryDataCache::setMemoryCachingEnabled(true);
 
 		$counter =& GalleryTestCase::getEntityCounter();
+
 		$this->assertTrue(
 			$counter->getCount() == 0,
 			sprintf(
@@ -432,6 +444,7 @@ class GalleryTestCase extends TestCase {
 				return $ret;
 			}
 		}
+
 		$ret = GalleryCoreApi::setPluginParameter('module', 'core', 'misc.markup', $markup);
 
 		if ($ret) {
@@ -443,18 +456,23 @@ class GalleryTestCase extends TestCase {
 
 	public function assertTrue($condition, $message = null) {
 		global $gallery;
+
 		$message = $gallery->getDebugBuffer() . $message;
+
 		parent::assertTrue($condition, $message);
 	}
 
 	public function assertFalse($condition, $message = null) {
 		global $gallery;
+
 		$message = $gallery->getDebugBuffer() . $message;
+
 		parent::assertFalse($condition, $message);
 	}
 
 	public function assertEquals($expected, $actual, $message = null, $delta = 0) {
 		global $gallery;
+
 		$message = $gallery->getDebugBuffer() . $message;
 
 		if (is_array($actual) && is_array($expected)) {
@@ -462,11 +480,11 @@ class GalleryTestCase extends TestCase {
 			$expected = $this->recursive_ksort($expected);
 		}
 
-
 		$err = $this->DeepCompare($expected, $actual);
 
 		if ($err) {
 			$message .= sprintf('&nbsp;<br/><b>Mismatch At</b>: %s', htmlspecialchars($err));
+
 			parent::assertEquals($expected, $actual, $message);
 		}
 	}
@@ -486,7 +504,9 @@ class GalleryTestCase extends TestCase {
 		if (empty($parentId)) {
 			return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
 		}
+
 		$retries = 5;
+
 		// Try to avoid duplicate album id's and ugly ERROR_COLLISON status during a test.
 		do {
 			list($ret, $album) = GalleryCoreApi::createAlbum(
@@ -523,6 +543,7 @@ class GalleryTestCase extends TestCase {
 			// Change some settings
 			foreach ($fields as $field => $value) {
 				$func = "set$field";
+
 				$album->$func($value);
 			}
 
@@ -581,7 +602,8 @@ class GalleryTestCase extends TestCase {
 			return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 		}
 
-		$lockIds               = array();
+		$lockIds = array();
+
 		list($ret, $lockIds[]) = GalleryCoreApi::acquireReadLock($parentId);
 
 		if ($ret) {
@@ -613,6 +635,7 @@ class GalleryTestCase extends TestCase {
 
 		foreach ($fields as $field => $value) {
 			$func = "set$field";
+
 			$item->$func($value);
 		}
 
@@ -659,7 +682,8 @@ class GalleryTestCase extends TestCase {
 
 		$className  = get_class($targetItem);
 		$linkedItem = new $className();
-		$ret        = $linkedItem->createLink($targetItem, $parentId);
+
+		$ret = $linkedItem->createLink($targetItem, $parentId);
 
 		if ($ret) {
 			return array($ret, null);
@@ -706,6 +730,7 @@ class GalleryTestCase extends TestCase {
 
 		if (!isset($userTag)) {
 			$retries = 5;
+
 			// Try to avoid duplicate user id's and ugly ERROR_COLLISON status during a test.
 			do {
 				$ret = $user->create('testuser-' . mt_rand());
@@ -757,6 +782,7 @@ class GalleryTestCase extends TestCase {
 
 		if (!isset($groupTag)) {
 			$retries = 5;
+
 			// Try to avoid duplicate group id's and ugly ERROR_COLLISON status during a test.
 			do {
 				$ret = $group->create('Test Group ' . mt_rand());
@@ -791,6 +817,7 @@ class GalleryTestCase extends TestCase {
 		$fields = array()
 	) {
 		global $gallery;
+
 		$parentId = $parent->getId();
 
 		list($ret, $derivative) = GalleryCoreApi::newFactoryInstanceByHint('GalleryDerivative', $parent->getEntityType());
@@ -818,6 +845,7 @@ class GalleryTestCase extends TestCase {
 
 		foreach ($fields as $field => $value) {
 			$func = "set$field";
+
 			$derivative->$func($value);
 		}
 
@@ -902,6 +930,7 @@ class GalleryTestCase extends TestCase {
 		}
 
 		$retries = 5;
+
 		// Try to avoid duplicate user id's and ugly ERROR_COLLISON status during a test.
 		do {
 			$ret = $user->create('testuser-' . mt_rand());
@@ -923,6 +952,7 @@ class GalleryTestCase extends TestCase {
 
 		foreach ($fields as $field => $value) {
 			$func = "set$field";
+
 			$user->$func($value);
 		}
 
@@ -943,7 +973,8 @@ class GalleryTestCase extends TestCase {
 		static $unusedId;
 
 		if (!isset($unusedId)) {
-			$storage              =& $gallery->getStorage();
+			$storage =& $gallery->getStorage();
+
 			list($ret, $unusedId) = $storage->getUniqueId();
 
 			if ($ret) {
@@ -1024,7 +1055,7 @@ class GalleryTestCase extends TestCase {
 		if ($obj1Type !== $obj2Type) {
 			$contextString = $context;
 
-			if (!is_null($contextString)) {
+			if (null !== $contextString) {
 				$contextString = 'Array[' . trim($context) . '] :: ';
 			}
 
@@ -1067,7 +1098,7 @@ class GalleryTestCase extends TestCase {
 					return "[$context] $key1 !== $key2";
 				}
 
-				if (!is_null($context)) {
+				if (null !== $context) {
 					$prefixString = $context . '][';
 				} else {
 					$prefixString = null;
@@ -1113,6 +1144,7 @@ class GalleryTestCase extends TestCase {
 						}
 					}
 				}
+
 				$result .= "] $obj1 !== $obj2";
 
 				return $result;
@@ -1147,6 +1179,7 @@ class GalleryTestCase extends TestCase {
 	 */
 	public function _signUrl($url, $htmlEntities = true) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		$this->assertTrue($session->isPersistent(), 'test for authToken assumes persistent session');
@@ -1154,7 +1187,8 @@ class GalleryTestCase extends TestCase {
 		$authToken = array(
 			'authToken' => $session->getAuthToken(),
 		);
-		$url       = GalleryUrlGenerator::doStatic()->appendParamsToUrl($url, $authToken);
+
+		$url = GalleryUrlGenerator::getMe()->appendParamsToUrl($url, $authToken);
 
 		if (!$htmlEntities) {
 			$url = str_replace('&amp;', '&', $url);
@@ -1186,8 +1220,10 @@ class GalleryTestCase extends TestCase {
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/helpers/GalleryFactoryHelper_simple.class'
 		);
-		// Don't use references here
-		list($ret, $registry)              = GalleryFactoryHelper_simple::_getFactoryData();
+
+		// Do not use references here
+		list($ret, $registry) = GalleryFactoryHelper_simple::_getFactoryData();
+
 		$this->_cleanup['factoryRegistry'] = $registry;
 	}
 
@@ -1201,17 +1237,20 @@ class GalleryTestCase extends TestCase {
 			GalleryCoreApi::requireOnce(
 				'modules/core/classes/helpers/GalleryEventHelper_simple.class'
 			);
+
 			// Trigger all modules to register their event listeners
-			$event               = GalleryCoreApi::newEvent('GalleryTest:PseudoEvent');
+			$event = GalleryCoreApi::newEvent('GalleryTest:PseudoEvent');
+
 			list($ret, $ignored) = GalleryCoreApi::postEvent($event);
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$listenersAreRegistered = true;
 		}
 
-		// Don't use references here
+		// Do not use references here
 		$eventListeners                   = GalleryEventHelper_simple::_getEventListeners();
 		$this->_cleanup['eventListeners'] = $eventListeners;
 
@@ -1252,6 +1291,7 @@ class GalleryTestCase extends TestCase {
 		);
 
 		$counter =& GalleryTestCase::getEntityCounter();
+
 		$this->_registerTestEventListener('GalleryEntity::save', $counter);
 		$this->_registerTestEventListener('GalleryEntity::delete', $counter);
 
@@ -1318,6 +1358,7 @@ class GalleryTestCase extends TestCase {
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/helpers/GalleryFactoryHelper_simple.class'
 		);
+
 		$registryData =& GalleryFactoryHelper_simple::_getFactoryData();
 		$registry     =& $registryData[1];
 
@@ -1338,6 +1379,7 @@ class GalleryTestCase extends TestCase {
 			if (empty($registry['implementations'][$classType])) {
 				unset($registry['ids'][$classType]);
 			}
+
 			unset($registry['pluginIds'][$classType][$className]);
 
 			if (empty($registry['pluginIds'][$classType])) {
@@ -1377,7 +1419,7 @@ class GalleryTestCase extends TestCase {
 	 * @param string $message (optional) Message to be shown on failure
 	 */
 	public function assertErrorEquals($errorCode, $ret, $exactMatch = false, $message = null) {
-		$GalleryStatus = GalleryStatus::doStatic();
+		$GalleryStatus = GalleryStatus::getMe();
 
 		if (!$ret) {
 			$this->fail(
@@ -1426,6 +1468,7 @@ class GalleryTestCase extends TestCase {
 				count($_SERVER['NullEventListener'][$eventName]),
 				"Event '$eventName' fired more than once"
 			);
+
 			$event = $_SERVER['NullEventListener'][$eventName][0];
 
 			if (!empty($eventEntity)) {

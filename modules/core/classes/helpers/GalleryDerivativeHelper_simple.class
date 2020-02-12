@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -44,6 +43,7 @@ class GalleryDerivativeHelper_simple {
 		if ($ret) {
 			return array($ret, null, null);
 		}
+
 		$isBroken = $derivative->getIsBroken();
 
 		if (!$current || ($fixBroken && !empty($isBroken))) {
@@ -121,7 +121,8 @@ class GalleryDerivativeHelper_simple {
 		if (!empty($itemIds)) {
 			$idMarkers = GalleryUtilities::makeMarkers(sizeof($itemIds));
 			$data      = $itemIds;
-			$query     = '
+
+			$query = '
 			SELECT
 			[GalleryDerivative::id], [GalleryChildEntity::parentId]
 			FROM
@@ -134,7 +135,8 @@ class GalleryDerivativeHelper_simple {
 		} else {
 			$idMarkers = GalleryUtilities::makeMarkers(sizeof($sourceIds));
 			$data      = $sourceIds;
-			$query     = '
+
+			$query = '
 			SELECT
 			[GalleryDerivative::id], [GalleryDerivative::derivativeSourceId]
 			FROM
@@ -150,8 +152,10 @@ class GalleryDerivativeHelper_simple {
 
 		if (!empty($types)) {
 			$typeMarkers = GalleryUtilities::makeMarkers(sizeof($types));
-			$query      .= 'AND [GalleryDerivative::derivativeType] IN (' . $typeMarkers . ')';
-			$data        = array_merge($data, $types);
+
+			$query .= 'AND [GalleryDerivative::derivativeType] IN (' . $typeMarkers . ')';
+
+			$data = array_merge($data, $types);
 		}
 
 		list($ret, $searchResults) = $gallery->search($query, $data);
@@ -172,10 +176,10 @@ class GalleryDerivativeHelper_simple {
 			/*
 			 * Sorting this in the database triggers a filesort in MySQL which
 			 * is slow.  We expect this to be a fairly small set of derivatives
-			 * so we'll do it in memory in PHP instead and lighten the load on the DB.
+			 * so we will do it in memory in PHP instead and lighten the load on the DB.
 			 *
-			 * TODO: Consider caching this result since it's the kind of thing
-			 * that will be called often on data that won't change frequently.
+			 * TODO: Consider caching this result since it is the kind of thing
+			 * that will be called often on data that would not change frequently.
 			 */
 			sort($derivativeIds, SORT_NUMERIC);
 

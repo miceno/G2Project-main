@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,6 +28,7 @@ class CleanCacheStep extends UpgradeStep {
 
 	public function loadTemplateData(&$templateData) {
 		global $gallery;
+
 		$platform     =& $gallery->getPlatform();
 		$cacheBaseDir = $gallery->getConfig('data.gallery.cache');
 
@@ -38,10 +38,10 @@ class CleanCacheStep extends UpgradeStep {
 
 		/*
 		 * Try multiple times to clean the cache because for busy gallery installs that are
-		 * getting upgraded when not in maintenance mode, it's possible for new entries to get
-		 * cached while we're cleaning out old ones.  The first round of cleaning takes a long
+		 * getting upgraded when not in maintenance mode, it is possible for new entries to get
+		 * cached while we are cleaning out old ones.  The first round of cleaning takes a long
 		 * time so the window is big.  Subsequent runs are very fast, though so after 3 attempts
-		 * we should be good unless there's a real problem.
+		 * we should be good unless there is a real problem.
 		 */
 		$attempts = 3;
 
@@ -57,6 +57,7 @@ class CleanCacheStep extends UpgradeStep {
 					}
 				}
 			}
+
 			$attempts--;
 		} while ($attempts > 0 && !empty($templateData['unclean']));
 
@@ -68,7 +69,8 @@ class CleanCacheStep extends UpgradeStep {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->checkPoint();
+
+		$ret = $storage->checkPoint();
 
 		if ($ret) {
 			$templateData['errors'][]    = _('Unable to commit database transaction');
@@ -76,8 +78,8 @@ class CleanCacheStep extends UpgradeStep {
 		}
 
 		/*
-		 * Delete the install.log file that's left over from 2.0 and 2.0.1 installs
-		 * since it's in a known location and contains potential information leaks.
+		 * Delete the install.log file that is left over from 2.0 and 2.0.1 installs
+		 * since it is in a known location and contains potential information leaks.
 		 */
 		$dataBase             = $gallery->getConfig('data.gallery.base');
 		$legacyInstallLogPath = sprintf('%s/install.log', $dataBase);
@@ -87,6 +89,7 @@ class CleanCacheStep extends UpgradeStep {
 		}
 
 		$templateData['bodyFile'] = 'CleanCache.html';
+
 		$this->setComplete(true);
 	}
 }

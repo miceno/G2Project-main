@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -42,8 +43,8 @@ class ADODB_oci805 extends ADODB_oci8 {
 			$sql = "select * from ($sql) where rownum <= $nrows";
 			$nrows = -1;
 		}
-		*/
 
+		*/
 		return ADOConnection::SelectLimit($sql, $nrows, $offset, $inputarr, $secs2cache);
 	}
 }

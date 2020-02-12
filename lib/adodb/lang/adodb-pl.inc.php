@@ -1,7 +1,6 @@
 <?php
 
 // Contributed by Grzegorz Pacan <gp#dione.cc>
-
 $ADODB_LANG_ARRAY = array(
 	'LANG'                       => 'pl',
 	DB_ERROR                     => 'niezidentyfikowany błąd',
@@ -32,3 +31,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'nie znaleziono bazy',
 	DB_ERROR_ACCESS_VIOLATION    => 'niedostateczne uprawnienia',
 );
+

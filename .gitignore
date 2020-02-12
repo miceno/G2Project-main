@@ -40,30 +40,25 @@ attic
 # Misc stuff #
 ##############
 composer.phar
+*.zip
+*.tgz
+*.tar.gz
 
 
 # G2 Modules #
 ##############
 modules/*
-!modules/albumselect
 !modules/archiveupload
 !modules/bulkexcelupload
 !modules/captcha
 !modules/cart
-!modules/colorpack
 !modules/comment
 !modules/core
-!modules/customfield
-!modules/dcraw
-!modules/dynamicalbum
 !modules/exif
 !modules/ffmpeg
 !modules/gd
-!modules/hidden
 !modules/icons
-!modules/integrity
 !modules/imagemagick
-!modules/itemadd
 !modules/jpegtran
 !modules/keyalbum
 !modules/linkitem
@@ -71,35 +66,22 @@ modules/*
 !modules/mapv3
 !modules/mime
 !modules/netpbm
-!modules/newitems
-!modules/multilang
-!modules/notification
-!modules/password
-!modules/permalinks
-!modules/quotas
-!modules/randomhighlight
 !modules/rating
 !modules/rearrange
-!modules/register
-!modules/replica
-!modules/reupload
-!modules/rewrite
 !modules/search
-!modules/share
-!modules/sitemap
-!modules/sizelimit
 !modules/slideshow
-!modules/squarethumb
-!modules/thumbnail
-!modules/thumbpage
-!modules/useralbum
-!modules/watermark
 
 modules/mapv3/images/routes/*
 
 # G2 Themes #
 #############
 themes/*
+!themes/ajaxian
 !themes/carbon
+!themes/classic
+!themes/floatrix
+!themes/hybrid
 !themes/matrix
 !themes/siriux
+!themes/slider
+!themes/tile

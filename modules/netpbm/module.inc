@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -31,26 +30,34 @@ class NetPbmModule extends GalleryModule {
 
 		$this->setId('netpbm');
 		$this->setName($gallery->i18n('NetPBM'));
-		$this->setDescription($gallery->i18n('NetPBM Graphics Toolkit'));
-		$this->setVersion('7.0.0');
+		$this->setDescription(
+			$gallery->i18n(
+				'NetPBM Graphics Toolkit'
+			)
+		);
+
+		// Update upgrade() as required
+		$this->setVersion('2.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
+
 		$this->setGroup('toolkits', $gallery->i18n('Graphics Toolkits'));
 		$this->setCallbacks('getSiteAdminViews');
-		$this->setRequiredCoreApi(array(7, 20));
-		$this->setRequiredModuleApi(array(3, 6));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new NetPbmModule();
+		if (!isset($instance)) {
+			$instance = new NetPbmModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -145,6 +152,7 @@ class NetPbmModule extends GalleryModule {
 				if ($path[strlen($path) - 1] != $slash) {
 					$path .= $slash;
 				}
+
 				$paths[] = $path;
 			}
 
@@ -169,6 +177,7 @@ class NetPbmModule extends GalleryModule {
 				if ($path[strlen($path) - 1] != $slash) {
 					$path .= $slash;
 				}
+
 				$paths[] = $path;
 			}
 
@@ -205,21 +214,25 @@ class NetPbmModule extends GalleryModule {
 				if ($ret) {
 					return array($ret, false);
 				}
+
 				$ret = NetPbmToolkitHelper::saveParameters($testResults);
 
 				if ($ret) {
 					return array($ret, false);
 				}
+
 				$success = true;
 
 				break;
 			}
 		}
+
 		// Now try each path in turn to see which ones work for jhead
 		foreach ($paths as $path) {
 			if (!$platform->isRestrictedByOpenBaseDir($path) && !$platform->file_exists($path)) {
 				continue;
 			}
+
 			list($ret, $testResults) = NetPbmToolkitHelper::testJhead($path);
 
 			if ($ret) {
@@ -268,12 +281,18 @@ class NetPbmModule extends GalleryModule {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$priority = min($priority + 1, 40);
 		}
 
 		foreach ($results['operations'] as $operation => $info) {
-			$outputMimeType = isset($info['outputMimeType']) ? $info['outputMimeType'] : '';
-			$ret            = GalleryCoreApi::registerToolkitOperation(
+			if (isset($info['outputMimeType'])) {
+				$outputMimeType = $info['outputMimeType'];
+			} else {
+				$outputMimeType = null;
+			}
+
+			$ret = GalleryCoreApi::registerToolkitOperation(
 				'NetPBM',
 				$info['mimeTypes'],
 				$operation,
@@ -319,6 +338,7 @@ class NetPbmModule extends GalleryModule {
 		if (in_array('exec', preg_split('/,\s*/', ini_get('disable_functions')))) {
 			return array(null, true);
 		}
+
 		// This module requires all fields to be filled out before it can be activated.
 		foreach (array('path', 'jpegQuality', 'pnmtojpeg', 'bmptopnm', 'pnmcomp') as $key) {
 			list($ret, $value) = $this->getParameter($key);

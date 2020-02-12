@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,9 +8,7 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 8.
-
 */
-
 class ADODB_pdo_mysql extends ADODB_pdo {
 	public $metaTablesSQL  = "SELECT
 			TABLE_NAME,
@@ -27,8 +26,10 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 
 	public function _init($parentDriver) {
 		$parentDriver->hasTransactions = false;
+
 		// $parentDriver->_bindInputArray = false;
 		$parentDriver->hasInsertID = true;
+
 		$parentDriver->_connectionID->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 	}
 
@@ -41,6 +42,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 		$fraction = $dayFraction * 24 * 3600;
 
 		return $date . ' + INTERVAL ' . $fraction . ' SECOND';
+
 		//      return "from_unixtime(unix_timestamp($date)+$fraction)";
 	}
 
@@ -78,6 +80,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 			$mask                 = $this->qstr($mask);
 			$this->metaTablesSQL .= " like $mask";
 		}
+
 		$ret = ADOConnection::MetaTables($ttype, $showSchema);
 
 		$this->metaTablesSQL = $save;
@@ -105,6 +108,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 		if (!stristr($transaction_mode, 'isolation')) {
 			$transaction_mode = 'ISOLATION LEVEL ' . $transaction_mode;
 		}
+
 		$this->Execute('SET SESSION TRANSACTION ' . $transaction_mode);
 	}
 
@@ -113,15 +117,19 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 
 		if ($schema) {
 			$dbName = $this->database;
+
 			$this->SelectDB($schema);
 		}
+
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
 		if ($this->fetchMode !== false) {
 			$savem = $this->SetFetchMode(false);
 		}
+
 		$rs = $this->Execute(sprintf($this->metaColumnsSQL, $table));
 
 		if ($schema) {
@@ -131,6 +139,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 		if (isset($savem)) {
 			$this->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!is_object($rs)) {
@@ -157,15 +166,18 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 				$fld->type       = $query_array[1];
 				$fld->max_length = is_numeric($query_array[2]) ? $query_array[2] : -1;
 			} elseif (preg_match('/^(enum)\((.*)\)$/i', $type, $query_array)) {
-				$fld->type       = $query_array[1];
-				$arr             = explode(',', $query_array[2]);
-				$fld->enums      = $arr;
-				$zlen            = max(array_map('strlen', $arr)) - 2; // PHP >= 4.0.6
+				$fld->type  = $query_array[1];
+				$arr        = explode(',', $query_array[2]);
+				$fld->enums = $arr;
+
+				// PHP >= 4.0.6
+				$zlen            = max(array_map('strlen', $arr)) - 2;
 				$fld->max_length = ($zlen > 0) ? $zlen : 1;
 			} else {
 				$fld->type       = $type;
 				$fld->max_length = -1;
 			}
+
 			$fld->not_null       = ($rs->fields[2] != 'YES');
 			$fld->primary_key    = ($rs->fields[3] == 'PRI');
 			$fld->auto_increment = (strpos($rs->fields[5], 'auto_increment') !== false);
@@ -188,6 +200,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 			} else {
 				$retarr[strtoupper($fld->name)] = $fld;
 			}
+
 			$rs->MoveNext();
 		}
 
@@ -198,8 +211,10 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 
 	// returns true or false
 	public function SelectDB($dbName) {
-		$this->database     = $dbName;
-		$this->databaseName = $dbName; // obsolete, retained for compat with older adodb versions
+		$this->database = $dbName;
+
+		// obsolete, retained for compat with older adodb versions
+		$this->databaseName = $dbName;
 		$try                = $this->Execute('use ' . $dbName);
 
 		return $try !== false;
@@ -210,6 +225,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 		$nrows     = (int)$nrows;
 		$offset    = (int)$offset;
 		$offsetStr = ($offset >= 0) ? "$offset," : '';
+
 		// jason judge, see http://phplens.com/lens/lensforum/msgs.php?id=9220
 		if ($nrows < 0) {
 			$nrows = '18446744073709551615';
@@ -228,6 +244,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 		if (!$col) {
 			$col = $this->sysTimeStamp;
 		}
+
 		$s      = 'DATE_FORMAT(' . $col . ",'";
 		$concat = false;
 		$len    = strlen($fmt);
@@ -241,6 +258,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 						$i++;
 						$ch = substr($fmt, $i, 1);
 					}
+
 					// Fall Through
 				case '-':
 				case '/':
@@ -279,6 +297,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 					} else {
 						$s .= ",('";
 					}
+
 					$concat = true;
 
 					break;
@@ -325,6 +344,7 @@ class ADODB_pdo_mysql extends ADODB_pdo {
 					break;
 			}
 		}
+
 		$s .= "')";
 
 		if ($concat) {

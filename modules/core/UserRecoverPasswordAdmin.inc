@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,16 +27,16 @@
  */
 class UserRecoverPasswordAdminController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserRecoverPasswordAdminController();
+		if (!isset($instance)) {
+			$instance = new UserRecoverPasswordAdminController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -45,10 +44,10 @@ class UserRecoverPasswordAdminController extends GalleryController {
 	 */
 	public function handleRequest($form) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$session  =& $gallery->getSession();
-
-		$status = $error = $results = array();
+		$status   = $error   = $results   = array();
 
 		if (isset($form['action']['recover'])) {
 			$authFile = GALLERY_CONFIG_DIR . '/authFile.txt';
@@ -164,16 +163,16 @@ class UserRecoverPasswordAdminController extends GalleryController {
  */
 class UserRecoverPasswordAdminView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserRecoverPasswordAdminView();
+		if (!isset($instance)) {
+			$instance = new UserRecoverPasswordAdminView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -181,9 +180,9 @@ class UserRecoverPasswordAdminView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$session  =& $gallery->getSession();
-
 		$status   = array();
 		$error    = array();
 		$authFile = GALLERY_CONFIG_DIR . '/authFile.txt';
@@ -191,7 +190,7 @@ class UserRecoverPasswordAdminView extends GalleryView {
 		if ($form['formName'] != 'UserRecoverPasswordAdmin') {
 			$form['formName'] = 'UserRecoverPasswordAdmin';
 
-			// Don't display the Authorization Incorrect error on first page load
+			// Do not display the Authorization Incorrect error on first page load
 			$status['firstLoad'] = 1;
 
 			// Generate the auth string on the first visit to this view
@@ -214,11 +213,11 @@ class UserRecoverPasswordAdminView extends GalleryView {
 			}
 		}
 
-		$status['userName'] = GalleryUtilities::getRequestVariables('userName');
-
+		$status['userName']                     = GalleryUtilities::getRequestVariables('userName');
 		$UserRecoverPasswordAdmin['authString'] = $authString;
 		$UserRecoverPasswordAdmin['error']      = $error;
 		$UserRecoverPasswordAdmin['status']     = $status;
+
 		$template->setVariable('UserRecoverPasswordAdmin', $UserRecoverPasswordAdmin);
 		$template->setVariable('controller', 'core.UserRecoverPasswordAdmin');
 
@@ -236,11 +235,14 @@ class UserRecoverPasswordAdminView extends GalleryView {
 	 */
 	public function _generateAuthString() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		GalleryCoreApi::requireOnce('lib/joomla/crypt.php');
+
 		$j    = new JCrypt();
 		$rand = $j->genRandomBytes(32);
+
 		$session->put('core.UserRecoverPasswordAdminAuthKey', md5($rand));
 	}
 }

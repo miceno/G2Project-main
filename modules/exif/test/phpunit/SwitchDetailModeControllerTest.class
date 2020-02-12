@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GallerySmarty.class');
 GalleryCoreApi::requireOnce('modules/exif/Callbacks.inc');
 
@@ -35,10 +33,12 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 
 	public function testSwitchToSummary() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('mode', 'summary');
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'return'   => 1,
@@ -51,21 +51,24 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-		// Verify that we're in the right mode now
+		// Verify that we are in the right mode now
 		$session =& $gallery->getSession();
 
 		if (!$session->exists('exif.module.LoadExifInfo.mode')) {
 			$this->fail('Missing session value');
 		}
+
 		$this->assertEquals('summary', $session->get('exif.module.LoadExifInfo.mode'));
 	}
 
 	public function testSwitchToDetailed() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('mode', 'detailed');
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'return'   => 1,
@@ -78,21 +81,24 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-		// Verify that we're in the right mode now
+		// Verify that we are in the right mode now
 		$session =& $gallery->getSession();
 
 		if (!$session->exists('exif.module.LoadExifInfo.mode')) {
 			$this->fail('Missing session value');
 		}
+
 		$this->assertEquals('detailed', $session->get('exif.module.LoadExifInfo.mode'));
 	}
 
 	public function testSwitchToBogus() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('mode', 'BoGuS');
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'return'   => 1,
@@ -105,18 +111,20 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-		// Verify that we're in the right mode now
+		// Verify that we are in the right mode now
 		$session =& $gallery->getSession();
 
 		if (!$session->exists('exif.module.LoadExifInfo.mode')) {
 			$this->fail('Missing session value');
 		}
+
 		$this->assertEquals('summary', $session->get('exif.module.LoadExifInfo.mode'));
 	}
 
 	// Test the Callback function
 	public function testLoadExifInfoCallback() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		// Create a test photo with exif data
@@ -125,8 +133,10 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$title            = '_test_exif_' . mt_rand();
-		$path             = __DIR__ . '/../data/CanonS30.small.jpg';
+
+		$title = '_test_exif_' . mt_rand();
+		$path  = __DIR__ . '/../data/CanonS30.small.jpg';
+
 		list($ret, $item) = GalleryCoreApi::addItemToAlbum(
 			$path,
 			$title,
@@ -141,7 +151,9 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($item);
+
 		$ret = GalleryCoreApi::releaseLocks($lockId);
 
 		if ($ret) {
@@ -166,7 +178,9 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 			} else {
 				$filter = EXIF_SUMMARY;
 			}
-			$expModeSet           = $expDataSet           = true;
+
+			$expModeSet = $expDataSet           = true;
+
 			list($ret, $exifData) = ExifHelper::getExifData($path, $filter);
 
 			if ($ret) {
@@ -183,6 +197,7 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 				if ($ret) {
 					return $ret;
 				}
+
 				$mode = null;
 			}
 
@@ -194,7 +209,8 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 
 			// Execute the method under test
 			$callback = new ExifCallbacks();
-			$ret      = $callback->callback(
+
+			$ret = $callback->callback(
 				array(
 					'itemId' => $item->getId(),
 				),
@@ -208,6 +224,7 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 
 			// Verify the results
 			$data = $smarty->_tpl_vars['block']['exif']['LoadExifInfo'];
+
 			$this->assertEquals($expModeSet, isset($data['mode']), "mode not set for mode $mode");
 
 			if (isset($data['mode'])) {
@@ -217,6 +234,7 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 					"mode $mode was not set correctly in the template"
 				);
 			}
+
 			$this->assertEquals(
 				$expDataSet,
 				isset($data['exifData']),
@@ -226,6 +244,7 @@ class SwitchDetailModeControllerTest extends GalleryControllerTestCase {
 			if (isset($data['exifData'])) {
 				$this->assertEquals($exifData, $data['exifData'], "data for mode $mode");
 			}
+
 			$this->assertEquals($i, $data['blockNum'], "blockNum for $mode");
 		}
 	}

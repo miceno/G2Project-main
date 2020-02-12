@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryPlugin.class');
 
 /**
@@ -69,16 +67,16 @@ class GalleryModule extends GalleryPlugin {
 	public $_templateVersion;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryModule();
+		if (!isset($instance)) {
+			$instance = new GalleryModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -89,7 +87,7 @@ class GalleryModule extends GalleryPlugin {
 	 *
 	 * @todo for next major version bump:
 	 * - Change GalleryDataItem::render to match GalleryRenderer::render and
-	 *   consider dropping the format, since it's always HTML.
+	 *   consider dropping the format, since it is always HTML.
 	 * - Drop the redirect url from GalleryPlugin::deactivate() (also requires a
 	 *   major bump in GalleryTheme)
 	 * - Remove TYPE=DB_TABLE_TYPE replacement in MySqlStorage::_getSqlReplacements
@@ -102,7 +100,7 @@ class GalleryModule extends GalleryPlugin {
 	 * @return array major number, minor number
 	 */
 	public function getApiVersion() {
-		return array(3, 9);
+		return array(4, 0);
 	}
 
 	/**
@@ -110,8 +108,7 @@ class GalleryModule extends GalleryPlugin {
 	 * register its event listeners before any events are posted.
 	 * @deprecated Will be removed on next major API fump
 	 */
-	public function registerEventListeners() {
-	}
+	public function registerEventListeners() {}
 
 	/**
 	 * Perform the module installation or upgrade, whatever is required.
@@ -146,10 +143,11 @@ class GalleryModule extends GalleryPlugin {
 
 		if ($bootstrap) {
 			$gallery->debug('In bootstrap mode (core module)');
+
 			/*
-			 * If we're in bootstrap mode, then we may not even have a version table.  If we try
-			 * to query it, we will cause our current transaction to abort on some databases.
-			 * So, just assume that there's no installed version.
+			 * If we are in bootstrap mode, then we may not even have a version table.
+			 * If we try to query this, we will cause our current transaction to abort on some databases.
+			 * So, just assume that there is no installed version.
 			 */
 			$installedVersion = null;
 		} else {
@@ -168,11 +166,14 @@ class GalleryModule extends GalleryPlugin {
 						. '   New version: ' . $this->getVersion()
 					);
 				}
+
 				$gallery->debug(sprintf('Configure store for %s module', $this->getId()));
 			}
+
 			// The store requires configuration.
 			$storage =& $gallery->getStorage();
-			$ret     = $storage->configureStore($this->getId());
+
+			$ret = $storage->configureStore($this->getId());
 
 			if ($ret) {
 				if ($gallery->getDebug()) {
@@ -258,6 +259,7 @@ class GalleryModule extends GalleryPlugin {
 			if ($gallery->getDebug()) {
 				$gallery->debug(sprintf('ConfigureStoreCleanup for %s module', $this->getId()));
 			}
+
 			$ret = $storage->configureStoreCleanup($this->getId());
 
 			if ($ret) {
@@ -276,13 +278,14 @@ class GalleryModule extends GalleryPlugin {
 
 			/*
 			 * Reactivate myself so that any activate based tasks like registering factory
-			 * implementations, toolkit operations, etc can happen.  Note that it's possible for
+			 * implementations, toolkit operations, etc can happen.  Note that it is possible for
 			 * this to successfully deactivate and then fail to activate again.  upgrade() should
 			 * get the module read properly but it may fail under some edge cases.
 			 */
 			if ($gallery->getDebug()) {
 				$gallery->debug(sprintf('Reactivate %s module', $this->getId()));
 			}
+
 			list($ret, $redirect) = $this->reactivate();
 
 			if ($ret) {
@@ -314,11 +317,13 @@ class GalleryModule extends GalleryPlugin {
 				}
 
 				$altered = GalleryDataCache::get($cacheKey);
+
 				$storage->optimize($altered);
 
 				if ($ret) {
 					return $ret;
 				}
+
 				GalleryDataCache::remove($cacheKey);
 			}
 		}
@@ -372,7 +377,8 @@ class GalleryModule extends GalleryPlugin {
 
 		// Remove all tables
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->unconfigureStore($this->getId());
+
+		$ret = $storage->unconfigureStore($this->getId());
 
 		if ($ret) {
 			return $ret;
@@ -389,6 +395,7 @@ class GalleryModule extends GalleryPlugin {
 	 */
 	public function _deleteModuleEntities() {
 		global $gallery;
+
 		$types = $this->getModuleEntityTypes();
 
 		if (empty($types)) {
@@ -407,11 +414,13 @@ class GalleryModule extends GalleryPlugin {
 		';
 
 		$gallery->guaranteeTimeLimit(120);
+
 		list($ret, $searchResults) = $gallery->search($query, $types);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$i       = 0;
 		$storage =& $gallery->getStorage();
 
@@ -424,6 +433,7 @@ class GalleryModule extends GalleryPlugin {
 
 			if (!(++$i % 20)) {
 				$gallery->guaranteeTimeLimit(120);
+
 				$ret = $storage->checkPoint();
 
 				if ($ret) {
@@ -472,6 +482,7 @@ class GalleryModule extends GalleryPlugin {
 	 */
 	public function activate($postActivationEvent = true) {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		if (!GalleryCoreApi::isPluginCompatibleWithApis($this)) {
@@ -486,7 +497,7 @@ class GalleryModule extends GalleryPlugin {
 			);
 		}
 
-		// Make sure that we don't need configuration before we allow activation.
+		// Make sure that we do not need configuration before we allow activation.
 		list($ret, $needs) = $this->needsConfiguration();
 
 		if ($ret) {
@@ -548,7 +559,7 @@ class GalleryModule extends GalleryPlugin {
 	 *               boolean was module able to autoconfigure
 	 */
 	public function autoConfigure() {
-		// By default we don't need any configuration
+		// By default we do not need any configuration
 		return array(null, true);
 	}
 
@@ -709,7 +720,6 @@ class GalleryModule extends GalleryPlugin {
 	}
 
 	// Getters and setters below
-
 	public function setGroup($group, $groupLabel) {
 		$this->_group = array(
 			'group'      => $group,
@@ -719,7 +729,8 @@ class GalleryModule extends GalleryPlugin {
 
 	public function getGroup() {
 		if (empty($this->_group)) {
-			$groupLabel       = 'Other';
+			$groupLabel = 'Other';
+
 			list($ret, $core) = GalleryCoreApi::loadPlugin('module', 'core');
 
 			if (!$ret) {
@@ -817,6 +828,7 @@ class GalleryModule extends GalleryPlugin {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $searchResults) = GalleryCoreApi::getMapEntry(
 			'GalleryPluginParameterMap',
 			array('pluginId', 'itemId', 'parameterName', 'parameterValue'),
@@ -830,7 +842,7 @@ class GalleryModule extends GalleryPlugin {
 			return $ret;
 		}
 
-		// Go through each available theme and find which blocks they're using.
+		// Go through each available theme and find which blocks they are using.
 		while ($result = $searchResults->nextResult()) {
 			$themeId     = $result[0];
 			$itemId      = $result[1];
@@ -849,6 +861,7 @@ class GalleryModule extends GalleryPlugin {
 				// Remove used block if it is not available any more.
 				if ($pluginName == $this->getId() && !isset($blocks[$pluginName][$blockName])) {
 					unset($themeBlocks[$key]);
+
 					$ret = GalleryCoreApi::setPluginParameter(
 						'theme',
 						$themeId,

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,6 +31,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -52,6 +52,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_movie);
 
 		list($ret, $this->_thumbnail) = $this->_createDerivative(
@@ -67,6 +68,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		$this->_savePlatform               =& $gallery->getPlatform();
 		$AdminFfmpegControllerTestPlatform = new AdminFfmpegControllerTestPlatform();
+
 		$gallery->setPlatform($AdminFfmpegControllerTestPlatform);
 	}
 
@@ -77,6 +79,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -97,6 +100,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('/validPath/ffmpeg', $params['path']);
 		$this->assertEquals('0', $params['useWatermark']);
 	}
@@ -108,6 +112,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -128,6 +133,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('/validPath/ffmpeg', $params['path']);
 		$this->assertEquals('1', $params['useWatermark']);
 	}
@@ -139,6 +145,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -159,6 +166,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('/incompletePath/ffmpeg', $path);
 	}
 
@@ -166,6 +174,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][reset]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -183,6 +192,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][cancel]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -203,6 +213,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we failed
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -223,6 +234,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we failed
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -243,6 +255,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we failed
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -263,6 +276,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we failed
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -278,6 +292,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 	public function testAddRemoveWatermark() {
 		global $gallery;
+
 		$gallery->setPlatform($this->_savePlatform);
 
 		$ret = $this->_saveThumbnailOps();
@@ -297,6 +312,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[addWatermark]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -330,6 +346,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[removeWatermark]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -366,6 +383,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 	public function _saveThumbnailOps() {
 		global $gallery;
+
 		$query = '
 		SELECT
 			[GalleryDerivative::id],
@@ -379,6 +397,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 			AND
 				[GalleryChildEntity::parentId] = [GalleryEntity::id]
 			AND
+
 				[GalleryEntity::entityType] = \'GalleryMovieItem\'';
 
 		list($ret, $searchResults) = $gallery->search($query);
@@ -386,6 +405,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_thumbnailOps = array();
 
 		while ($result = $searchResults->nextResult()) {
@@ -399,11 +419,13 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 		if (empty($this->_thumbnailOps)) {
 			return null;
 		}
+
 		list($ret, $lockId) = GalleryCoreApi::acquireWriteLock(array_keys($this->_thumbnailOps));
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $thumbnails) = GalleryCoreApi::loadEntitiesById(
 			array_keys($this->_thumbnailOps),
 			'GalleryDerivative'
@@ -417,6 +439,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 
 		foreach ($thumbnails as $thumbnail) {
 			$thumbnail->setDerivativeOperations($this->_thumbnailOps[$thumbnail->getId()]);
+
 			$ret = $thumbnail->save();
 
 			if ($ret) {
@@ -425,6 +448,7 @@ class AdminFfmpegControllerTest extends GalleryControllerTestCase {
 				return $ret;
 			}
 		}
+
 		$ret = GalleryCoreApi::releaseLocks($lockId);
 
 		if ($ret) {

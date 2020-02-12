@@ -36,7 +36,7 @@
   function appendColorElement(elementId, button) {
     var colorChooser = document.getElementById('Markup_colorChooser');
     if (!button.g2ToggleMode) {
-      /* if we already have a popup, don't do anything */
+      /* if we already have a popup, do not do anything */
       if (colorChooser.style.display == 'block') {
         return;
       }
@@ -79,7 +79,7 @@
     if (text != null) {ldelim}
       if (text.length) element.value = element.value + '[url=' + url + ']' + text + '[/url]';
       else element.value = element.value + '[url]' + url + '[/url]';
-    {rdelim}      
+    {rdelim}
     {literal}
     if (typeof(element.selectionStart) != "undefined") {
       element.selectionStart = element.selectionEnd = element.value.length;
@@ -166,4 +166,10 @@
   <div id="Markup_hint">{g->text text="You can also use the %scolor name%s for example: %sYour Text%s" arg1="<a href=\"http://www.w3.org/TR/2002/WD-css3-color-20020418/#html4\" target=\"_new\">" arg2="</a>" arg3="[color=red]" arg4="[/color]"}</div>
 </div>
 {/if}
+{/if}
+
+{if $theme.markupType == 'markdown'}
+  {*if empty($firstMarkupBar)*}
+	<p>{g->text text="Markdown is in effect: Separate your paragraphs by empty lines."}</p>
+  {*/if*}
 {/if}

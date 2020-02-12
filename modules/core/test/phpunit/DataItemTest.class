@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryDataItem.class');
 
 /**
@@ -72,7 +70,8 @@ class DataItemTest extends GalleryTestCase {
 		for ($i = 0; $i < 3; $i++) {
 			$entity[$i]    = new GalleryDataItem();
 			$entityAlbumID = $this->_album->getId();
-			$ret           = $entity[$i]->create(
+
+			$ret = $entity[$i]->create(
 				$entityAlbumID,
 				__FILE__,
 				'text/plain',
@@ -92,6 +91,7 @@ class DataItemTest extends GalleryTestCase {
 			if ($i > 0) {
 				$expectedPathComponent = sprintf('valid_path_%03d.txt', $i);
 				$actualPathComponent   = $entity[$i]->getPathComponent();
+
 				$this->assertEquals(
 					$expectedPathComponent,
 					$actualPathComponent,
@@ -109,7 +109,6 @@ class DataItemTest extends GalleryTestCase {
 					$entityPath,
 					'full path mismatch'
 				);
-
 				$this->assertTrue($platform->file_exists($entityPath), "$entityPath does not exist");
 				$this->assertTrue($platform->is_file($entityPath), "$entityPath is not a directory");
 			}
@@ -138,7 +137,8 @@ class DataItemTest extends GalleryTestCase {
 		}
 
 		$orig = new GalleryDataItem();
-		$ret  = $orig->create(
+
+		$ret = $orig->create(
 			$this->_album->getId(),
 			__FILE__,
 			'text/plain',
@@ -156,6 +156,7 @@ class DataItemTest extends GalleryTestCase {
 		}
 
 		$new = new GalleryDataItem();
+
 		$ret = $new->create(
 			$subAlbum->getId(),
 			__FILE__,
@@ -200,6 +201,7 @@ class DataItemTest extends GalleryTestCase {
 		$this->assertEquals($basePath . 'valid_path_001.txt', $newPath, 'full path mismatch');
 
 		$platform =& $gallery->getPlatform();
+
 		$this->assertTrue($platform->file_exists($newPath), "$newPath does not exist");
 		$this->assertTrue($platform->is_file($newPath), "$newPath is not a file");
 
@@ -230,9 +232,9 @@ class DataItemTest extends GalleryTestCase {
 
 		$platform   =& $gallery->getPlatform();
 		$canSymlink = $platform->isSymlinkSupported();
+		$entity     = new GalleryDataItem();
 
-		$entity = new GalleryDataItem();
-		$ret    = $entity->create(
+		$ret = $entity->create(
 			$this->_album->getId(),
 			__FILE__,
 			'text/plain',
@@ -247,6 +249,7 @@ class DataItemTest extends GalleryTestCase {
 			) {
 				return $ret;
 			}
+
 			$ret = GalleryCoreApi::releaseLocks($lockId);
 
 			if ($ret) {
@@ -279,6 +282,7 @@ class DataItemTest extends GalleryTestCase {
 
 	public function testRescan() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Create a data item with wrong "size" attribute, and a fast-download file
@@ -294,36 +298,44 @@ class DataItemTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $everybodyId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.everybodyGroup');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addGroupPermission($item->getId(), $everybodyId, 'core.viewAll');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::createFastDownloadFile($item, true);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		// Verify setup
 		$this->assertEquals(123, $item->getSize(), 'size');
+
 		$path = GalleryDataCache::getCachePath(
 			array(
 				'type'   => 'fast-download',
 				'itemId' => $item->getId(),
 			)
 		);
+
 		$this->assertTrue($platform->file_exists($path), 'fast-download file should exist');
+
 		// Rescan
 		$ret = $item->rescan();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		// Verify results
 		$this->assertEquals($platform->filesize(__FILE__), $item->getSize(), 'updated size');
 		$this->assertFalse($platform->file_exists($path), 'fast-download file should be removed');

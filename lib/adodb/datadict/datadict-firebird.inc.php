@@ -29,7 +29,9 @@ class ADODB2_firebird extends ADODB_DataDict {
 				return 'VARCHAR(4000)';
 
 			case 'C2':
-				return 'VARCHAR'; // up to 32K
+				// up to 32K
+				return 'VARCHAR';
+
 			case 'X2':
 				return 'VARCHAR(4000)';
 
@@ -101,8 +103,7 @@ class ADODB2_firebird extends ADODB_DataDict {
 	public function CreateDatabase($dbname, $options = false) {
 		$options = $this->_Options($options);
 		$sql     = array();
-
-		$sql[] = "DECLARE EXTERNAL FUNCTION LOWER CSTRING(80) RETURNS CSTRING(80) FREE_IT ENTRY_POINT 'IB_UDF_lower' MODULE_NAME 'ib_udf'";
+		$sql[]   = "DECLARE EXTERNAL FUNCTION LOWER CSTRING(80) RETURNS CSTRING(80) FREE_IT ENTRY_POINT 'IB_UDF_lower' MODULE_NAME 'ib_udf'";
 
 		return $sql;
 	}
@@ -163,6 +164,7 @@ class ADODB2_firebird extends ADODB_DataDict {
 			} else {
 				$tab = $tab1;
 			}
+
 			$seqField = $this->seqField;
 			$seqname  = $this->schema . '.' . $this->seqPrefix . $tab;
 			$trigname = $this->schema . '.trig_' . $this->seqPrefix . $tab;

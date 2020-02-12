@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/helpers/UserRecoverPasswordHelper_simple.class'
 );
@@ -32,16 +30,16 @@ GalleryCoreApi::requireOnce(
  */
 class UserRecoverPasswordConfirmController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserRecoverPasswordConfirmController();
+		if (!isset($instance)) {
+			$instance = new UserRecoverPasswordConfirmController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -74,6 +72,7 @@ class UserRecoverPasswordConfirmController extends GalleryController {
 				if ($ret && !($ret->getErrorCode() & ERROR_MISSING_OBJECT)) {
 					return array($ret, null);
 				}
+
 				/*
 				 * Check the database to see if a previous request.
 				 * If a request exists, check the timestamp to see if a new request can be
@@ -135,6 +134,7 @@ class UserRecoverPasswordConfirmController extends GalleryController {
 
 						$status['passwordRecovered'] = 1;
 					}
+
 					$ret = GalleryCoreApi::removeMapEntry(
 						'GalleryRecoverPasswordMap',
 						array(
@@ -175,16 +175,16 @@ class UserRecoverPasswordConfirmController extends GalleryController {
  */
 class UserRecoverPasswordConfirmView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserRecoverPasswordConfirmView();
+		if (!isset($instance)) {
+			$instance = new UserRecoverPasswordConfirmView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -223,7 +223,9 @@ class UserRecoverPasswordConfirmView extends GalleryView {
 				),
 			);
 		}
+
 		$UserRecoverPasswordConfirm = array();
+
 		$template->setVariable('UserRecoverPasswordConfirm', $UserRecoverPasswordConfirm);
 		$template->setVariable('controller', 'core.UserRecoverPasswordConfirm');
 

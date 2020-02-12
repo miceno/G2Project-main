@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * This is Gallery's templating class.  It hides the details of the implementation (eg, Smarty)
  * and provides a unified means of handling internationalization.
@@ -60,6 +60,7 @@ class GalleryTemplate {
 
 	public function __construct($templateDir, $initSmarty = true, $trimWhitespace = true) {
 		global $gallery;
+
 		$this->_templateDir = $templateDir;
 
 		// This will be the place to put the compiled templates
@@ -137,8 +138,10 @@ class GalleryTemplate {
 
 		if (!isset($l10Domain)) {
 			list($type, $id, $junk) = explode('/', $tpl, 3);
-			$l10Domain              = $type . '_' . $id;
+
+			$l10Domain = $type . '_' . $id;
 		}
+
 		$head['tpl'][$tpl] = $l10Domain;
 	}
 
@@ -179,10 +182,10 @@ class GalleryTemplate {
 	 */
 	public function link($attributes) {
 		global $gallery;
-		$urlGenerator =& $gallery->getUrlGenerator();
 
-		$head     =& $this->getVariableByReference('head');
-		$linkHtml = '<link';
+		$urlGenerator =& $gallery->getUrlGenerator();
+		$head         =& $this->getVariableByReference('head');
+		$linkHtml     = '<link';
 
 		foreach ($attributes as $key => $value) {
 			if ($key == 'href') {
@@ -192,8 +195,10 @@ class GalleryTemplate {
 					)
 				);
 			}
+
 			$linkHtml .= " $key=\"$value\"";
 		}
+
 		$linkHtml               .= '/>';
 		$head['link'][$linkHtml] = true;
 	}
@@ -276,6 +281,7 @@ class GalleryTemplate {
 	 */
 	public function _initCompiledTemplateDir() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Make a unique subdirectory for compiled templates for this templates dir
@@ -284,6 +290,7 @@ class GalleryTemplate {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$dir = $this->_compiledTemplateDir . DIRECTORY_SEPARATOR . $themeId;
 
 		if ($platform->file_exists($dir) && !$platform->is_dir($dir)) {
@@ -344,6 +351,7 @@ class GalleryTemplate {
 						null,
 					);
 				}
+
 				list($ret, $dir) = $this->_initCompiledTemplateDir();
 
 				if ($ret) {
@@ -357,7 +365,7 @@ class GalleryTemplate {
 
 	/**
 	 * Return a properly configured instance of Smarty.  This used to be a single shared static
-	 * instance of Smarty, but now we build it every time we need it.  Theoretically we shouldn't
+	 * instance of Smarty, but now we build it every time we need it.  Theoretically we should not
 	 * be creating more than one GalleryTemplate and hence, more than one Smarty instance per
 	 * request.  However, having it as a static object makes it less testable.
 	 *
@@ -369,12 +377,13 @@ class GalleryTemplate {
 		global $gallery;
 
 		GalleryCoreApi::requireOnce('modules/core/classes/GallerySmarty.class');
+
 		$smarty = new GallerySmarty();
 
 		// Compiled templates go here
 		$smarty->compile_dir = $gallery->getConfig('data.smarty.templates_c');
 
-		// Don't let Smarty change the error reporting level
+		// Do not let Smarty change the error reporting level
 		$smarty->error_reporting = error_reporting();
 
 		// We have our own plugins
@@ -383,11 +392,11 @@ class GalleryTemplate {
 		if ($gallery->getDebug()) {
 			$smarty->debugging = true;
 		}
-		$smarty->use_sub_dirs = false;
 
+		$smarty->use_sub_dirs  = false;
 		$smarty->compile_check = GalleryTemplate::shouldDoCompileCheck();
+		$templateAdapter       =& $gallery->getTemplateAdapter();
 
-		$templateAdapter =& $gallery->getTemplateAdapter();
 		$smarty->register_object(
 			'g',
 			$templateAdapter,
@@ -395,7 +404,6 @@ class GalleryTemplate {
 			true,
 			array('addToTrailer', 'autoComplete', 'container')
 		);
-
 		$smarty->register_resource(
 			'gallery',
 			array(
@@ -444,9 +452,12 @@ class GalleryTemplate {
 					'core',
 					'smarty.compile_check'
 				);
+
 				/** @todo Log this error */
 			}
+
 			$compileCheck = (bool)$compileCheck;
+
 			GalleryDataCache::put($cacheKey, $compileCheck);
 		} else {
 			$compileCheck = GalleryDataCache::get($cacheKey);
@@ -499,8 +510,7 @@ class GalleryTemplate {
 	 */
 	public static function resourceGetTemplate($templateName, &$templateSource, &$smarty) {
 		$templatePath = GalleryTemplate::_getActualTemplatePath($templateName, $smarty);
-
-		$success = false;
+		$success      = false;
 
 		if (isset($templatePath)) {
 			$templateSource = $smarty->_read_file($templatePath);
@@ -529,8 +539,8 @@ class GalleryTemplate {
 	 */
 	public static function resourceGetTimestamp($templateName, &$templateTimestamp, &$smarty) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
+		$platform     =& $gallery->getPlatform();
 		$success      = false;
 		$templatePath = GalleryTemplate::_getActualTemplatePath($templateName, $smarty);
 
@@ -559,6 +569,7 @@ class GalleryTemplate {
 	 */
 	public static function _getActualTemplatePath($templateName, &$smarty) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Check template override
@@ -615,8 +626,7 @@ class GalleryTemplate {
 			$tplFile               = basename($templateName);
 			$qualifiedTemplateName = $smarty->template_dir . '/' . $templateName;
 			$base                  = dirname($qualifiedTemplateName);
-
-			$file = "$base/local/$tplFile";
+			$file                  = "$base/local/$tplFile";
 
 			if ($platform->is_readable($file)) {
 				$qualifiedTemplatePath = $file;
@@ -637,7 +647,8 @@ class GalleryTemplate {
 	 * @access private
 	 */
 	public static function _getThemeId() {
-		$view               = new GalleryView();
+		$view = new GalleryView();
+
 		list($ret, $itemId) = $view->getItem();
 
 		if ($ret) {

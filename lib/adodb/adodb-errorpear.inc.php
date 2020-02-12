@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -20,7 +21,6 @@ if (!defined('ADODB_ERROR_HANDLER')) {
 
 // Enabled the following if you want to terminate scripts when an error occurs
 //PEAR::setErrorHandling (PEAR_ERROR_DIE);
-
 // Name of the PEAR_Error derived class to call.
 if (!defined('ADODB_PEAR_ERROR_CLASS')) {
 	define('ADODB_PEAR_ERROR_CLASS', 'PEAR_Error');
@@ -28,6 +28,7 @@ if (!defined('ADODB_PEAR_ERROR_CLASS')) {
 
 // Store the last PEAR_Error object here
 global $ADODB_Last_PEAR_Error;
+
 $ADODB_Last_PEAR_Error = false;
 
   /**
@@ -44,15 +45,15 @@ function ADODB_Error_PEAR($dbms, $fn, $errno, $errmsg, $p1 = false, $p2 = false)
 	global $ADODB_Last_PEAR_Error;
 
 	if (error_reporting() == 0) {
-		return; // obey @ protocol
+		// obey @ protocol
+		return;
 	}
 
 	switch ($fn) {
 		case 'EXECUTE':
 			$sql         = $p1;
 			$inputparams = $p2;
-
-			$s = "$dbms error: [$errno: $errmsg] in $fn(\"$sql\")";
+			$s           = "$dbms error: [$errno: $errmsg] in $fn(\"$sql\")";
 
 			break;
 
@@ -60,8 +61,7 @@ function ADODB_Error_PEAR($dbms, $fn, $errno, $errmsg, $p1 = false, $p2 = false)
 		case 'CONNECT':
 			$host     = $p1;
 			$database = $p2;
-
-			$s = "$dbms error: [$errno: $errmsg] in $fn('$host', ?, ?, '$database')";
+			$s        = "$dbms error: [$errno: $errmsg] in $fn('$host', ?, ?, '$database')";
 
 			break;
 
@@ -92,3 +92,4 @@ function ADODB_PEAR_Error() {
 
 	return $ADODB_Last_PEAR_Error;
 }
+

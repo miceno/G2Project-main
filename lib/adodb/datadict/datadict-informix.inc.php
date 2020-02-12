@@ -24,7 +24,9 @@ class ADODB2_informix extends ADODB_DataDict {
 	public function ActualType($meta) {
 		switch ($meta) {
 			case 'C':
-				return 'VARCHAR';// 255
+				// 255
+				return 'VARCHAR';
+
 			case 'XL':
 			case 'X':
 				return 'TEXT';
@@ -97,6 +99,7 @@ class ADODB2_informix extends ADODB_DataDict {
 
 			return '';
 		}
+
 		$suffix = '';
 
 		if (strlen($fdefault)) {

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013  John Lim (jlim#natsoft.com).  All rights
@@ -8,17 +9,13 @@ reserved.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   21.02.2002 - Wade Johnson wade@wadejohnson.de
 			   Extended ODBC class for Sybase SQLAnywhere.
    1) Added support to retrieve the last row insert ID on tables with
 	  primary key column using autoincrement function.
-
    2) Added blob support.  Usage:
 		 a) create blob variable on db server:
-
 		$dbconn->create_blobvar($blobVarName);
 
 	  b) load blob var from file.  $filename must be complete path
@@ -27,11 +24,9 @@ Set tabs to 4 for best viewing.
 
 	  c) Use the $blobVarName in SQL insert or update statement in the values
 	  clause:
-
 		$recordSet = $dbconn->Execute('INSERT INTO tabname (idcol, blobcol) '
 		.
 	   'VALUES (\'test\', ' . $blobVarName . ')');
-
 	 instead of loading blob from a file, you can also load from
 	  an unformatted (raw) blob variable:
 	  $dbcon->load_blobvar_from_var($blobVarName, $varName);
@@ -40,7 +35,6 @@ Set tabs to 4 for best viewing.
 	  $dbconn->drop_blobvar($blobVarName);
 
   Sybase_SQLAnywhere data driver. Requires ODBC.
-
 */
 
 // security - hide paths
@@ -72,10 +66,8 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 		}
 
 		public function load_blobvar_from_file($blobVarName, $filename) {
-			$chunk_size = 1000;
-
-			$fd = fopen($filename, 'rb');
-
+			$chunk_size     = 1000;
+			$fd             = fopen($filename, 'rb');
 			$integer_chunks = (int)filesize($filename) / $chunk_size;
 			$modulus        = filesize($filename) % $chunk_size;
 
@@ -84,9 +76,8 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 			}
 
 			for ($loop = 1; $loop <= $integer_chunks; $loop++) {
-				$contents = fread($fd, $chunk_size);
-				$contents = bin2hex($contents);
-
+				$contents  = fread($fd, $chunk_size);
+				$contents  = bin2hex($contents);
 				$hexstring = '';
 
 				for ($loop2 = 0; $loop2 < strlen($contents); $loop2 += 2) {
@@ -94,7 +85,6 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 				}
 
 				$hexstring = $this->qstr($hexstring);
-
 				$this->Execute("set $blobVarName = $blobVarName || " . $hexstring);
 			}
 
@@ -102,8 +92,7 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 		}
 
 		public function load_blobvar_from_var($blobVarName, &$varName) {
-			$chunk_size = 1000;
-
+			$chunk_size     = 1000;
 			$integer_chunks = (int)strlen($varName) / $chunk_size;
 			$modulus        = strlen($varName) % $chunk_size;
 
@@ -112,9 +101,8 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 			}
 
 			for ($loop = 1; $loop <= $integer_chunks; $loop++) {
-				$contents = substr($varName, (($loop - 1) * $chunk_size), $chunk_size);
-				$contents = bin2hex($contents);
-
+				$contents  = substr($varName, (($loop - 1) * $chunk_size), $chunk_size);
+				$contents  = bin2hex($contents);
 				$hexstring = '';
 
 				for ($loop2 = 0; $loop2 < strlen($contents); $loop2 += 2) {
@@ -122,7 +110,6 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 				}
 
 				$hexstring = $this->qstr($hexstring);
-
 				$this->Execute("set $blobVarName = $blobVarName || " . $hexstring);
 			}
 		}
@@ -130,17 +117,19 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')) {
 		/*
 		Insert a null into the blob field of the table first.
 		Then use UpdateBlob to store the blob.
-
 		Usage:
-
 		$conn->Execute('INSERT INTO blobtable (id, blobcol) VALUES (1, null)');
+
 		$conn->UpdateBlob('blobtable','blobcol',$blob,'id=1');
 		*/
 		public function UpdateBlob($table, $column, &$val, $where, $blobtype = 'BLOB') {
 			$blobVarName = 'hold_blob';
+
 			$this->create_blobvar($blobVarName);
 			$this->load_blobvar_from_var($blobVarName, $val);
+
 			$this->Execute("UPDATE $table SET $column=$blobVarName WHERE $where");
+
 			$this->drop_blobvar($blobVarName);
 
 			return true;

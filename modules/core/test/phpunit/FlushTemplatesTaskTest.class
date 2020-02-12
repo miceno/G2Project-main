@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/FlushTemplatesTask.class');
 
 /**
@@ -42,8 +40,11 @@ class FlushTemplatesTaskTest extends GalleryTestCase {
 		}
 
 		$gallery->setConfig('data.smarty.templates_c', '/templates_c');
+
 		$mockPlatform = new FlushTemplatesTaskTestPlatform(array());
+
 		$gallery->setPlatform($mockPlatform);
+
 		$task = new FlushTemplatesTask();
 
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
@@ -76,8 +77,11 @@ class FlushTemplatesTaskTest extends GalleryTestCase {
 		global $gallery;
 
 		$gallery->setConfig('data.smarty.templates_c', '/templates_c');
+
 		$mockPlatform = new FlushTemplatesTaskTestPlatform(array('recursiveRmdir(/templates_c)'));
+
 		$gallery->setPlatform($mockPlatform);
+
 		$task = new FlushTemplatesTask();
 
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
@@ -114,12 +118,14 @@ class FlushTemplatesTaskTest extends GalleryTestCase {
 class FlushTemplatesTaskTestPlatform {
 	public function __construct($failedCalls) {
 		GalleryUtilities::putRequestVariable('calls', array());
+
 		$this->_failedCalls = $failedCalls;
 	}
 
 	public function _addCall($call) {
 		$calls   = GalleryUtilities::getRequestVariables('calls');
 		$calls[] = $call;
+
 		GalleryUtilities::putRequestVariable('calls', $calls);
 
 		return !in_array($call, $this->_failedCalls);

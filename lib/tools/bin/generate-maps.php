@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 ini_set('error_reporting', 2047);
 
@@ -26,7 +25,6 @@ if (!empty($_SERVER['SERVER_NAME'])) {
 }
 
 require_once __DIR__ . '/XmlParser.inc';
-
 require_once __DIR__ . '/../../smarty/Smarty.class.php';
 
 $tmpdir = __DIR__ . '/tmp_maps_' . mt_rand(1, 30000);
@@ -49,17 +47,15 @@ $smarty->error_reporting = error_reporting();
 $smarty->debugging       = true;
 $smarty->use_sub_dirs    = false;
 $smarty->template_dir    = __DIR__;
-
-$xmlFile = 'Maps.xml';
+$xmlFile                 = 'Maps.xml';
 
 if (!file_exists($xmlFile)) {
-	echo "Missing Maps.xml, can't continue.\n";
+	echo "Missing Maps.xml, cannot continue.\n";
 	cleanExit(1);
 }
 
 $p    = new XmlParser();
 $root = $p->parse($xmlFile);
-
 $maps = array();
 
 foreach ($root[0]['child'] as $map) {
@@ -107,12 +103,12 @@ foreach ($root[0]['child'] as $map) {
 
 $smarty->assign('maps', $maps);
 $smarty->assign('mapName', $mapName);
+
 $new = $smarty->fetch('maps.tpl');
 
 // Windows leaves a CR at the end of the file
 $new = rtrim($new, "\r");
-
-$fd = fopen('Maps.inc', 'w');
+$fd  = fopen('Maps.inc', 'w');
 fwrite($fd, $new);
 fclose($fd);
 

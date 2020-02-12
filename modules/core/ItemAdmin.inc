@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemAdminView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemAdminView();
+		if (!isset($instance)) {
+			$instance = new ItemAdminView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -45,12 +44,13 @@ class ItemAdminView extends GalleryView {
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
 
-		// Figure out the item we're referring to
+		// Figure out the item we are referring to
 		list($ret, $item) = $this->getItem();
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Find its thumbnail
@@ -105,7 +105,6 @@ class ItemAdminView extends GalleryView {
 		}
 
 		usort($subViewChoiceData, array($this, 'sortByName'));
-
 		$subViewName = GalleryUtilities::getRequestVariables('subView');
 
 		if ($subViewName == 'core.ItemAdmin') {
@@ -143,7 +142,7 @@ class ItemAdminView extends GalleryView {
 			$subViewName = 'core.ItemEdit';
 		}
 
-		list($ret, $subView) = GalleryView::doStatic()->loadView($subViewName);
+		list($ret, $subView) = GalleryView::getMe()->loadView($subViewName);
 
 		if ($ret) {
 			return array($ret, null);
@@ -197,7 +196,8 @@ class ItemAdminView extends GalleryView {
 		$ItemAdmin['subViewChoices'] = $subViewChoices;
 		$ItemAdmin['viewL10Domain']  = $subView->getL10Domain();
 		$ItemAdmin['isSiteAdmin']    = $isSiteAdmin;
-		$ItemAdmin['unsetCallback']  = function ($a, $k) {
+
+		$ItemAdmin['unsetCallback'] = function ($a, $k) {
 			unset($a[$k]);
 
 			return $a;
@@ -233,7 +233,7 @@ class ItemAdminView extends GalleryView {
 			$subViewName = 'core.ItemEdit';
 		}
 
-		list($ret, $subView) = GalleryView::doStatic()->loadView($subViewName);
+		list($ret, $subView) = GalleryView::getMe()->loadView($subViewName);
 
 		if ($ret) {
 			return array($ret, null);

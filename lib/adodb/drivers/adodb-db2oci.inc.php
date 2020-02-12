@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,9 +8,7 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Microsoft Visual FoxPro data driver. Requires ODBC. Works only on MS Windows.
 */
 
@@ -20,29 +19,33 @@ if (!defined('ADODB_DIR')) {
 
 require ADODB_DIR . '/drivers/adodb-db2.inc.php';
 
-
 if (!defined('ADODB_DB2OCI')) {
 	define('ADODB_DB2OCI', 1);
 
 	/*
+
 	// regex code for smart remapping of :0, :1 bind vars to ? ?
 	function _colontrack($p)
+
 	{
 	global $_COLONARR,$_COLONSZ;
+
 	$v = (integer) substr($p,1);
+
 	if ($v > $_COLONSZ) return $p;
 	$_COLONARR[] = $v;
+
 	return '?';
 	}
 
 	// smart remapping of :0, :1 bind vars to ? ?
 	function _colonscope($sql,$arr)
+
 	{
 	global $_COLONARR,$_COLONSZ;
 
 	$_COLONARR = array();
 	$_COLONSZ = sizeof($arr);
-
 	$sql2 = preg_replace("/(:[0-9]+)/e","_colontrack('\\1')",$sql);
 
 	if (empty($_COLONARR)) return array($sql,$arr);
@@ -53,14 +56,13 @@ if (!defined('ADODB_DB2OCI')) {
 
 	return array($sql2,$arr2);
 	}
+
 	*/
 
 	/*
 	Smart remapping of :0, :1 bind vars to ? ?
-
 	Handles colons in comments -- and / * * / and in quoted strings.
 	*/
-
 	function _colonparser($sql, $arr) {
 		$lensql  = strlen($sql);
 		$arrsize = sizeof($arr);
@@ -72,16 +74,14 @@ if (!defined('ADODB_DB2OCI')) {
 		$arr2    = array();
 		$nprev   = 0;
 
-
 		while (strlen($ch)) {
 			switch ($ch) {
 				case '/':
 					if ($state == 'NORM' && $ch2 == '*') {
 						$state = 'COMMENT';
-
-						$at += 1;
-						$ch  = $ch2;
-						$ch2 = $at < $lensql ? $sql[$at] : '';
+						$at   += 1;
+						$ch    = $ch2;
+						$ch2   = $at < $lensql ? $sql[$at] : '';
 					}
 
 					break;
@@ -89,10 +89,9 @@ if (!defined('ADODB_DB2OCI')) {
 				case '*':
 					if ($state == 'COMMENT' && $ch2 == '/') {
 						$state = 'NORM';
-
-						$at += 1;
-						$ch  = $ch2;
-						$ch2 = $at < $lensql ? $sql[$at] : '';
+						$at   += 1;
+						$ch    = $ch2;
+						$ch2   = $at < $lensql ? $sql[$at] : '';
 					}
 
 					break;
@@ -130,6 +129,7 @@ if (!defined('ADODB_DB2OCI')) {
 							$n  .= $ch;
 							$ch2 = $at < $lensql ? $sql[$at] : '';
 						} while ('0' <= $ch && $ch <= '9');
+
 						// echo "$n $arrsize ] ";
 						$n = (int)$n;
 
@@ -147,6 +147,7 @@ if (!defined('ADODB_DB2OCI')) {
 						if ($ch2 == '-') {
 							$state = 'COMMENT2';
 						}
+
 						$at += 1;
 						$ch  = $ch2;
 						$ch2 = $at < $lensql ? $sql[$at] : '';
@@ -185,9 +186,7 @@ if (!defined('ADODB_DB2OCI')) {
 			$savem            = $ADODB_FETCH_MODE;
 			$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 			$qid              = db2_tables($this->_connectionID);
-
-			$rs = new ADORecordSet_db2($qid);
-
+			$rs               = new ADORecordSet_db2($qid);
 			$ADODB_FETCH_MODE = $savem;
 
 			if (!$rs) {
@@ -197,8 +196,11 @@ if (!defined('ADODB_DB2OCI')) {
 			}
 
 			$arr = $rs->GetArray();
+
 			$rs->Close();
+
 			$arr2 = array();
+
 			//	adodb_pr($arr);
 			if ($ttype) {
 				$isview = strncmp($ttype, 'V', 1) === 0;
@@ -208,6 +210,7 @@ if (!defined('ADODB_DB2OCI')) {
 				if (!$arr[$i][2]) {
 					continue;
 				}
+
 				$type      = $arr[$i][3];
 				$schemaval = ($schema) ? $arr[$i][1] . '.' : '';
 				$name      = $schemaval . $arr[$i][2];
@@ -241,7 +244,6 @@ if (!defined('ADODB_DB2OCI')) {
 			return parent::_Execute($sql, $inputarr);
 		}
 	}
-
 
 	class ADORecordSet_db2oci extends ADORecordSet_db2 {
 		public $databaseType = 'db2oci';

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim. All rights reserved.
@@ -6,17 +7,12 @@
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Portable version of oci8 driver, to make it more similar to other database drivers.
   The main differences are
-
    1. that the OCI_ASSOC names are in lowercase instead of uppercase.
    2. bind variables are mapped using ? instead of :<bindvar>
-
    Should some emulation of RecordCount() be implemented?
-
 */
 
 // security - hide paths
@@ -27,13 +23,16 @@ if (!defined('ADODB_DIR')) {
 require_once ADODB_DIR . '/drivers/adodb-oci8.inc.php';
 
 class ADODB_oci8po extends ADODB_oci8 {
-	public $databaseType   = 'oci8po';
-	public $dataProvider   = 'oci8';
-	public $metaColumnsSQL = "select lower(cname),coltype,width, SCALE, PRECISION, NULLS, DEFAULTVAL from col where tname='%s' order by colno"; //changed by smondino@users.sourceforge. net
+	public $databaseType = 'oci8po';
+	public $dataProvider = 'oci8';
+
+	//changed by smondino@users.sourceforge. net
+	public $metaColumnsSQL = "select lower(cname),coltype,width, SCALE, PRECISION, NULLS, DEFAULTVAL from col where tname='%s' order by colno";
 	public $metaTablesSQL  = "select lower(table_name),table_type from cat where table_type in ('TABLE','VIEW')";
 
 	public function __construct() {
 		$this->_hasOCIFetchStatement = ADODB_PHPVER >= 0x4200;
+
 		// oci8po does not support adodb extension: adodb_movenext()
 	}
 
@@ -60,7 +59,7 @@ class ADODB_oci8po extends ADODB_oci8 {
 	 * The optimizations performed by ADODB_oci8::SelectLimit() are not
 	 * compatible with the oci8po driver, so we rely on the slower method
 	 * from the base class.
-	 * We can't properly handle prepared statements either due to preprocessing
+	 * We cannot properly handle prepared statements either due to preprocessing
 	 * of query parameters, so we treat them as regular SQL statements.
 	 */
 	public function SelectLimit($sql, $nrows = -1, $offset = -1, $inputarr = false, $secs2cache = 0) {
@@ -112,7 +111,6 @@ class ADODB_oci8po extends ADODB_oci8 {
 /*--------------------------------------------------------------------------------------
 		 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordset_oci8po extends ADORecordset_oci8 {
 	public $databaseType = 'oci8po';
 
@@ -146,6 +144,7 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 		if (ADODB_ASSOC_CASE == ADODB_ASSOC_CASE_LOWER) {
 			$fld->name = strtolower($fld->name);
 		}
+
 		$fld->type       = OCIcolumntype($this->_queryID, $fieldOffset);
 		$fld->max_length = OCIcolumnsize($this->_queryID, $fieldOffset);
 
@@ -166,6 +165,7 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 
 		if ($ret !== false) {
 			global $ADODB_ANSI_PADDING_OFF;
+
 			$this->fields = $ret;
 			$this->_currentRow++;
 			$this->_updatefields();
@@ -204,6 +204,7 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 				return $arr;
 			}
 		}
+
 		$ret = @oci_fetch_array($this->_queryID, $this->fetchMode);
 
 		if ($ret === false) {
@@ -211,13 +212,17 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 
 			return $arr;
 		}
+
 		$this->fields = $ret;
+
 		$this->_updatefields();
+
 		$results = array();
 		$cnt     = 0;
 
 		while (!$this->EOF && $nrows != $cnt) {
 			$results[$cnt++] = $this->fields;
+
 			$this->MoveNext();
 		}
 
@@ -231,6 +236,7 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 
 		if ($ret) {
 			$this->fields = $ret;
+
 			$this->_updatefields();
 
 			if (!empty($ADODB_ANSI_PADDING_OFF)) {

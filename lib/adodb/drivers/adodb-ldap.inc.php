@@ -1,4 +1,5 @@
 <?php
+
 /*
   @version   v5.20.12  30-Mar-2018
   @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,12 +8,10 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 8.
-
   Revision 1: (02/25/2005) Updated codebase to include the _inject_bind_options function. This allows
   users to access the options in the ldap_set_option function appropriately. Most importantly
   LDAP Version 3 is now supported. See the examples for more information. Also fixed some minor
   bugs that surfaced when PHP error levels were set high.
-
   Joshua Eldridge (joshuae74#hotmail.com)
 */
 
@@ -47,11 +46,9 @@ class ADODB_ldap extends ADOConnection {
 	// error on binding, eg. "Binding: invalid credentials"
 	public $_bind_errmsg = 'Binding: %s';
 
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	// returns true or false
-
 	public function _connect($host, $username, $password, $ldapbase) {
 		global $LDAP_CONNECT_OPTIONS;
 
@@ -103,6 +100,7 @@ class ADODB_ldap extends ADOConnection {
 
 			return false;
 		}
+
 		$this->_errorMsg = '';
 		$this->database  = $ldapbase;
 
@@ -111,7 +109,6 @@ class ADODB_ldap extends ADOConnection {
 
 	/*
 	Valid Domain Values for LDAP Options:
-
 	LDAP_OPT_DEREF (integer)
 	LDAP_OPT_SIZELIMIT (integer)
 	LDAP_OPT_TIMELIMIT (integer)
@@ -124,11 +121,8 @@ class ADODB_ldap extends ADOConnection {
 	LDAP_OPT_MATCHED_DN (string)
 	LDAP_OPT_SERVER_CONTROLS (array)
 	LDAP_OPT_CLIENT_CONTROLS (array)
-
 	Make sure to set this BEFORE calling Connect()
-
 	Example:
-
 	$LDAP_CONNECT_OPTIONS = Array(
 		Array (
 			"OPTION_NAME"=>LDAP_OPT_DEREF,
@@ -159,8 +153,8 @@ class ADODB_ldap extends ADOConnection {
 			"OPTION_VALUE"=>FALSE
 		)
 	);
-	*/
 
+	*/
 	public function _inject_bind_options($options) {
 		foreach ($options as $option) {
 			ldap_set_option($this->_connectionID, $option['OPTION_NAME'], $option['OPTION_VALUE'])
@@ -197,13 +191,13 @@ class ADODB_ldap extends ADOConnection {
 	}
 
 	// SelectDB
-
 	public function ServerInfo() {
 		if (!empty($this->version)) {
 			return $this->version;
 		}
 
 		$version = array();
+
 		/*
 		Determines how aliases are handled during search.
 		LDAP_DEREF_NEVER (0x00)
@@ -220,12 +214,15 @@ class ADODB_ldap extends ADOConnection {
 		switch ($version['LDAP_OPT_DEREF']) {
 			case 0:
 				$version['LDAP_OPT_DEREF'] = 'LDAP_DEREF_NEVER';
+
 				// Fall Through
 			case 1:
 				$version['LDAP_OPT_DEREF'] = 'LDAP_DEREF_SEARCHING';
+
 				// Fall Through
 			case 2:
 				$version['LDAP_OPT_DEREF'] = 'LDAP_DEREF_FINDING';
+
 				// Fall Through
 			case 3:
 				$version['LDAP_OPT_DEREF'] = 'LDAP_DEREF_ALWAYS';
@@ -308,15 +305,17 @@ class ADODB_ldap extends ADOConnection {
 /*--------------------------------------------------------------------------------------
 	Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordSet_ldap extends ADORecordSet {
 	public $databaseType = 'ldap';
 	public $canSeek      = false;
-	public $_entryID; // keeps track of the entry resource identifier
+
+	// keeps track of the entry resource identifier
+	public $_entryID;
 
 	public function __construct($queryID, $mode = false) {
 		if ($mode === false) {
 			global $ADODB_FETCH_MODE;
+
 			$mode = $ADODB_FETCH_MODE;
 		}
 
@@ -345,7 +344,7 @@ class ADORecordSet_ldap extends ADORecordSet {
 	public function _initrs() {
 		/*
 		This could be teaked to respect the $COUNTRECS directive from ADODB
-		It's currently being used in the _fetch() function and the
+		It is currently being used in the _fetch() function and the
 		GetAssoc() function
 		*/
 		$this->_numOfRows = ldap_count_entries($this->connection->_connectionID, $this->_queryID);
@@ -402,6 +401,7 @@ class ADORecordSet_ldap extends ADORecordSet {
 					array_shift($v);
 					$results[$i] = $v;
 				}
+
 				$i++;
 			}
 		}

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -36,7 +35,6 @@ if (!defined('G2_SUPPORT')) {
 
 	include_once __DIR__ . '/lib/support/defaultloc.inc';
 }
-
 
 /*
  * Gets a lot of information about our GD installation and return it as a
@@ -71,6 +69,7 @@ function getGdLibraryInfo() {
 	if (isset($matches[2])) {
 		$gdVersion = sprintf('>%s', $gdVersion);
 	}
+
 	$isGdBundled = 0;
 
 	if (preg_match($matcherBundled, $matchString)) {
@@ -110,7 +109,8 @@ function getGdLibraryInfo() {
 			'functions' => array('imageCreateFromXbm', 'imageXbm'),
 		),
 	);
-	$mimeTypes  = array();
+
+	$mimeTypes = array();
 
 	foreach ($mimeChecks as $check) {
 		$ok = true;
@@ -121,7 +121,11 @@ function getGdLibraryInfo() {
 			}
 		}
 
-		if ($ok && !($check['value'] & imagetypes())) {
+		if ($ok && $check['value']) {
+			if (!($check['value'] & imagetypes())) {
+				$ok = false;
+			}
+		} else {
 			$ok = false;
 		}
 
@@ -140,16 +144,16 @@ function getGdLibraryInfo() {
 		PHP_OS
 	);
 
-	$out .= "\t" . sprintf('\'name\' => \'%s\',', $name) . "\n";
-	$out .= "\t" . sprintf('\'phpVersion\' => \'%s\',', phpversion()) . "\n";
-	$out .= "\t" . sprintf('\'gdVersion\' => \'%s\',', $gdVersion) . "\n";
-	$out .= "\t" . sprintf('\'gdBundled\' => %s,', $isGdBundled) . "\n";
-
+	$out       .= "\t" . sprintf('\'name\' => \'%s\',', $name) . "\n";
+	$out       .= "\t" . sprintf('\'phpVersion\' => \'%s\',', phpversion()) . "\n";
+	$out       .= "\t" . sprintf('\'gdVersion\' => \'%s\',', $gdVersion) . "\n";
+	$out       .= "\t" . sprintf('\'gdBundled\' => %s,', $isGdBundled) . "\n";
 	$imageTypes = 0;
 
 	if (function_exists('imageTypes')) {
 		$imageTypes = imagetypes();
 	}
+
 	$out .= "\t" . sprintf('\'imageTypes\' => %s,', $imageTypes) . "\n";
 
 	if (function_exists('gd_info')) {
@@ -159,6 +163,7 @@ function getGdLibraryInfo() {
 		foreach ($gdInfo as $field => $value) {
 			$out .= "\t\t" . sprintf('\'%s\' => \'%s\',', $field, $value) . "\n";
 		}
+
 		$out .= "\t" . '),' . "\n";
 	}
 
@@ -174,17 +179,18 @@ function getGdLibraryInfo() {
 		if (!is_int($value)) {
 			$value = sprintf('\'%s\'', $value);
 		}
+
 		$out .= "\t\t" . sprintf('\'%s\' => %s,', $constant, $value) . "\n";
 	}
-	$out .= "\t" . '),' . "\n";
 
+	$out .= "\t" . '),' . "\n";
 	$out .= "\t" . '\'mimeTypes\' => array(' . "\n";
 
 	foreach ($mimeTypes as $mimeType) {
 		$out .= "\t\t" . sprintf('\'%s\',', $mimeType) . "\n";
 	}
-	$out .= "\t" . '),' . "\n";
 
+	$out .= "\t" . '),' . "\n";
 	ob_start();
 	phpinfo(8);
 	$phpinfo = ob_get_contents();
@@ -213,8 +219,10 @@ function getGdLibraryInfo() {
 		if (!function_exists($fct)) {
 			continue;
 		}
+
 		$out .= "\t\t" . sprintf('\'%s\' => true,', $fct) . "\n";
 	}
+
 	$out .= "\t" . '),' . "\n";
 	$out .= ');' . "\n";
 
@@ -222,7 +230,6 @@ function getGdLibraryInfo() {
 }
 
 $gdInfo = getGdLibraryInfo();
-
 ?>
 <html lang="en">
 <head>
@@ -230,12 +237,13 @@ $gdInfo = getGdLibraryInfo();
 	<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>support.css">
 </head>
 <body>
-	<div id="content">
+	<div class="container">
 		<div id="title">
 			<a href="../../">Gallery</a> &raquo;
 			<a href="<?php generateUrl('index.php'); ?>">Support</a> &raquo; GD Library Info
 		</div>
 		<?php
+
 		if ($gdInfo == '') {
 			?>
 			<h2>No GD library found.</h2>
@@ -246,6 +254,7 @@ $gdInfo = getGdLibraryInfo();
 			<pre style="padding-left: 20px"><?php echo $gdInfo; ?></pre>
 			<?php
 		}
+
 		?>
 	</div>
 </body>

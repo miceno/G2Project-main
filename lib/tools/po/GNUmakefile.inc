@@ -7,7 +7,7 @@
 #
 # http://cvs.horde.org/co.php/horde/COPYING?r=2.1
 #
-# I'm not exactly sure what the license restrictions are in this case,
+# Not exactly sure what the license restrictions are in this case,
 # but I want to give full credit to the original authors:
 #
 # Copyright 2000-2002 Joris Braakman <jbraakman@yahoo.com>
@@ -20,30 +20,23 @@ MODULE_DIR = $(shell dirname "`pwd`")
 TYPE_DIR = $(shell dirname "$(MODULE_DIR)")
 APPLICATION ?= $(shell basename "$(TYPE_DIR)")_$(shell basename "$(MODULE_DIR)")
 PHP ?= php
-
 # Let PHP parse the config.php file to get the g2data directory.
 G2DATA = $(shell echo '<?php include "$(GALLERYDIR)/lib/support/GallerySetupUtilities.class"; $$gallery = new GallerySetupUtilitiesStub(); @include "$(GALLERYDIR)/config.php"; echo $$gallery->getConfig("data.gallery.base"); ?>' | $(PHP) -q 2>&1)
-
 ifdef QUIET
     MSGFMT_FLAGS =
 else
     MSGFMT_FLAGS = -v
 endif
-
 MSGFMT = msgfmt $(MSGFMT_FLAGS) -c -o
 MSGFMTSOL = msgfmt $(MSGFMT_FLAGS) -o
-
 PO ?= *
 LANGPO = $(shell echo $@ | perl -ne 'chomp; print if (s/^(..)_..\.po/$$1.po/ and -s)')
 COMPENDIUM = $(shell echo $@ | perl -ne 'chomp; print "-C $$_" if (s/^(..)_..\.po/$$1.po/ and -s)')
-
 all: install
-
 all-remove-obsolete: update remove-obsolete install
-
 messages.po: alwaysbuild
 	@$(PHP) -f "$(TOOLDIR)"/po/extract.php "$(MODULE_DIR)" > strings.raw.tmp
-	@# Don't extract right to strings.raw because extract.php tries to preserve
+	@# Do not extract right to strings.raw because extract.php tries to preserve
 	@# some old data from strings.raw and the > redirect blanks it out.
 	@mv strings.raw.tmp strings.raw
 	@xgettext --keyword=_ -C --no-location --add-comments=HINT: \
@@ -51,10 +44,9 @@ messages.po: alwaysbuild
 	@sed '1,4 d' < messages.po > messages.tmp
 	@cat "$(TOOLDIR)"/po/header.txt messages.tmp > messages.po
 	@$(RM) messages.tmp
-
 %.po: messages.po
 	@perl "$(TOOLDIR)"/po/premerge-messages.pl $@ messages.po > messages.tmp
-	@# ignore errors from msgmerge, we'll catch them on the msgfmt command:
+	@# ignore errors from msgmerge, we will catch them on the msgfmt command:
 	@-if [ -s messages.tmp ]; then \
 	    msgmerge --quiet --width=95 $(COMPENDIUM) $@ messages.tmp > $@.tmp; \
 	    if [ -s $@.tmp ]; then mv $@.tmp $@; else $(RM) $@.tmp; fi; \
@@ -66,14 +58,10 @@ messages.po: alwaysbuild
 	    perl -pi "$(TOOLDIR)"/po/header.pl $@; \
 	  fi
 	@$(RM) messages.tmp
-
 alwaysbuild:
-
 clean:
 	@$(RM) messages.po
-
 update: $(PO).po
-
 check-g2data:
 	@if ! test -d '$(G2DATA)'; then \
 	    echo "************************************************************"; \
@@ -89,11 +77,10 @@ check-g2data:
 	    echo "the 'Make the locale folder read/write' link"; \
 	    echo "************************************************************"; \
 	fi
-
 install: check-g2data update
 	@if ! test -z "$(DEBUG)"; then set -x; fi; \
 	if test "$(OSTYPE)" = "solaris"; then \
-	    echo "You'll probably get some warnings on Solaris. This is normal."; \
+	    echo "You will probably get some warnings on Solaris. This is normal."; \
 	    MSGFMT_CMD="$(MSGFMTSOL)"; \
 	else \
 	    MSGFMT_CMD="$(MSGFMT)"; \
@@ -107,14 +94,18 @@ install: check-g2data update
 	    if test -d ../locale; then \
 		if ! "$(TOOLDIR)"/po/shtool mkdir -p ../locale/$${LOCALE}/LC_MESSAGES; then \
 		    echo "Could not create directory: ../locale/$${LOCALE}/LC_MESSAGES"; \
+
 		    exit 1; \
+
 		fi; \
 		MO_FILE=../locale/$${LOCALE}/LC_MESSAGES/$(APPLICATION).mo; \
 	    elif test "$(APPLICATION)" = "gallery2_install" \
 		   || test "$(APPLICATION)" = "gallery2_upgrade";  then \
 		if ! $(TOOLDIR)/po/shtool mkdir -p ../../locale/$${LOCALE}/LC_MESSAGES; then \
 		    echo "Could not create directory: ../../locale/$${LOCALE}/LC_MESSAGES"; \
+
 		    exit 1; \
+
 		fi; \
 		MO_FILE=../../locale/$${LOCALE}/LC_MESSAGES/$(APPLICATION).mo; \
 	    else \
@@ -167,7 +158,6 @@ install: check-g2data update
 	fi; \
 	if test $${FAIL} -gt 0; then exit 1; fi;
 	@echo '';
-
 compendium: messages.po
 	@perl -pi -e 's|^("Content-Type: text/plain; charset)=CHARSET|$$1=UTF-8|' messages.po
 	@for POFILE in `ls $(PO).po | grep -v messages.po`; do \
@@ -183,7 +173,6 @@ compendium: messages.po
 		svn revert --quiet $${POFILE}; \
 	    fi; \
 	done;
-
 create-from-core:
 	@for POFILE in `ls $(TOOLDIR)/../../modules/core/po/$(PO).po | grep -v messages.po`; do \
 	    PO=`basename $${POFILE}`; \
@@ -191,7 +180,6 @@ create-from-core:
 		perl -p -e '$$x++ if /^msgid/; exit if $$x eq 2' $${POFILE} > $${PO}; \
 	    fi; \
 	done;
-
 remove-obsolete:
 	@for LOCALE in `ls $(PO).po | grep -v messages.po | sed 's/\.[^.]*$$//g'`; do \
 		msgattrib --no-obsolete --width=95 --output-file=$${LOCALE}.po $${LOCALE}; \

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditRotateAndScalePhoto extends ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditRotateAndScalePhoto();
+		if (!isset($instance)) {
+			$instance = new ItemEditRotateAndScalePhoto();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -49,11 +48,11 @@ class ItemEditRotateAndScalePhoto extends ItemEditPlugin {
 			return array($ret, null, null, null);
 		}
 
-		$status = null;
-		$error  = array();
-
+		$status    = null;
+		$error     = array();
 		$operation = null;
-		// Figure out which command we're taking
+
+		// Figure out which command we are taking
 		if (isset($form['action']['resize'])) {
 			if (empty($form['resize']['width']) || empty($form['resize']['height'])) {
 				$error[] = 'form[error][resize][size][missing]';
@@ -105,6 +104,7 @@ class ItemEditRotateAndScalePhoto extends ItemEditPlugin {
 				if ($ret) {
 					return array($ret, null, null, null);
 				}
+
 				list($ret, $preferred) = $preferred->refresh();
 
 				if ($ret) {
@@ -229,13 +229,16 @@ class ItemEditRotateAndScalePhoto extends ItemEditPlugin {
 		}
 
 		// Can we allow to delete the original?
-		$mimeType            = $item->getMimeType();
+		$mimeType = $item->getMimeType();
+
 		list($ret, $toolkit) = GalleryCoreApi::getToolkitByOperation($mimeType, 'rotate');
 
 		if ($ret) {
 			return array($ret, null, null);
 		}
+
 		$ItemEditRotateAndScalePhoto['editPhoto']['noToolkitSupport'] = !isset($toolkit);
+
 		// Get worst of rotate and resize
 		if (isset($toolkit)) {
 			list($ret, $toolkit) = GalleryCoreApi::getToolkitByOperation($mimeType, 'resize');
@@ -243,6 +246,7 @@ class ItemEditRotateAndScalePhoto extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$ItemEditRotateAndScalePhoto['editPhoto']['noToolkitSupport'] = !isset($toolkit);
 		}
 
@@ -258,6 +262,7 @@ class ItemEditRotateAndScalePhoto extends ItemEditPlugin {
 			} else {
 				$ItemEditRotateAndScalePhoto['editPhoto']['hasPreferredSource'] = false;
 			}
+
 			$sourceMimeTypes[] = $preferred->getMimeType();
 		}
 

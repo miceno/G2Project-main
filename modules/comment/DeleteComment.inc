@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -37,8 +36,8 @@ class DeleteCommentController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$itemId = $item->getId();
 
+		$itemId    = $item->getId();
 		$commentId = (int)GalleryUtilities::getRequestVariables('commentId');
 
 		// Make sure we have permission to delete a comment
@@ -87,6 +86,7 @@ class DeleteCommentController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'comment.DeleteComment';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -132,7 +132,8 @@ class DeleteCommentView extends GalleryView {
 		}
 
 		// Associate the commenter's info
-		$commenterId           = $comment->getCommenterId();
+		$commenterId = $comment->getCommenterId();
+
 		list($ret, $commenter) = GalleryCoreApi::loadEntitiesById($commenterId, 'GalleryUser');
 
 		if ($ret) {

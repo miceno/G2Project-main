@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -47,6 +46,7 @@ class GalleryFileSystemEntityHelper_medium {
 	  AND
 	    [GalleryChildEntity::id] = [GalleryFileSystemEntity::id]
 	';
+
 		// The check is case-insensitive since it should be DBMS / FS independent.
 		$data = array((int)$parentId, GalleryUtilities::strToUpper($pathComponent));
 
@@ -54,6 +54,7 @@ class GalleryFileSystemEntityHelper_medium {
 			$query .= '
 	      AND [GalleryChildEntity::id] <> ?
 	    ';
+
 			$data[] = (int)$selfId;
 		}
 
@@ -74,6 +75,7 @@ class GalleryFileSystemEntityHelper_medium {
 	 */
 	public static function getLegalPathComponent($pathComponent, $parentId, $selfId = null, $forDirectory = false) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Make sure our path component uses legal characters
@@ -95,7 +97,7 @@ class GalleryFileSystemEntityHelper_medium {
 
 		/*
 		 * If given string was extended characters that were all converted to "_" then
-		 * autogenerate a new filename.. we'll use today's date.
+		 * autogenerate a new filename.. we will use today's date.
 		 */
 		if (rtrim($fileBase, '_') == '') {
 			$fileBase = $platform->strftime('%Y%m%d');
@@ -106,7 +108,7 @@ class GalleryFileSystemEntityHelper_medium {
 		 *     <fileBase>_001.<extension>
 		 *     <fileBase>_002.<extension>
 		 *     etc.
-		 * Don't be intimidated by the first 100 collisions
+		 * Do not be intimidated by the first 100 collisions
 		 */
 		$retry = 0;
 
@@ -117,7 +119,7 @@ class GalleryFileSystemEntityHelper_medium {
 				$extension
 			);
 
-			// Make sure that we don't have a collision in the db.
+			// Make sure that we do not have a collision in the db.
 			list($ret, $isCollision) = GalleryFileSystemEntityHelper_medium::checkPathCollision(
 				$newPathComponent,
 				$parentId,

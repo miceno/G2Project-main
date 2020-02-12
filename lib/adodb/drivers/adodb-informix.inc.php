@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -28,7 +29,8 @@ class ADODB_informix extends ADODB_informix72 {
 	public $ansiOuter    = true;
 
 	public function IfNull($field, $ifNull) {
-		return " NVL($field, $ifNull) "; // if Informix 9.X or 10.X
+		// if Informix 9.X or 10.X
+		return " NVL($field, $ifNull) ";
 	}
 }
 

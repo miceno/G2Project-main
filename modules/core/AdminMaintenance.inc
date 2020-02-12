@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/helpers/MaintenanceHelper_simple.class');
 
 /**
@@ -29,16 +27,16 @@ GalleryCoreApi::requireOnce('modules/core/classes/helpers/MaintenanceHelper_simp
  */
 class AdminMaintenanceController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminMaintenanceController();
+		if (!isset($instance)) {
+			$instance = new AdminMaintenanceController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -62,8 +60,7 @@ class AdminMaintenanceController extends GalleryController {
 				return array($ret, null);
 			}
 
-			$mode = $gallery->getConfig('mode.maintenance');
-
+			$mode   = $gallery->getConfig('mode.maintenance');
 			$taskId = GalleryUtilities::getRequestVariables('taskId');
 
 			list($ret, $tasks) = MaintenanceHelper_simple::fetchTasks();
@@ -78,10 +75,12 @@ class AdminMaintenanceController extends GalleryController {
 				if (!$task->requiresMaintenanceMode() || $mode) {
 					if ($task->requiresProgressBar()) {
 						$templateAdapter =& $gallery->getTemplateAdapter();
+
 						$templateAdapter->registerTrailerCallback(
 							array($this, 'runTask'),
 							array($taskId, $task, true)
 						);
+
 						$results['delegate']['view'] = 'core.ProgressBar';
 					} else {
 						list($ret, $success) = $this->runTask($taskId, $task, false);
@@ -90,10 +89,11 @@ class AdminMaintenanceController extends GalleryController {
 							return array($ret, null);
 						}
 
-						$status['run']       = array(
+						$status['run'] = array(
 							'taskId'  => $taskId,
 							'success' => $success,
 						);
+
 						$redirect['view']    = 'core.SiteAdmin';
 						$redirect['subView'] = 'core.AdminMaintenance';
 					}
@@ -104,17 +104,16 @@ class AdminMaintenanceController extends GalleryController {
 				}
 			}
 		} elseif (isset($form['action']['setMode'])) {
-			$platform =& $gallery->getPlatform();
-
+			$platform       =& $gallery->getPlatform();
 			$newMode        = !empty($form['setMode']['mode']);
 			$maintenanceUrl = $form['setMode']['url'];
-
-			$statusMsg = $newMode ? 'setOn' : 'setOff';
+			$statusMsg      = $newMode ? 'setOn' : 'setOff';
 
 			if ($newMode && !empty($maintenanceUrl)) {
 				$urlGenerator =& $gallery->getUrlGenerator();
 				$newMode      = $urlGenerator->makeAbsoluteUrl($maintenanceUrl);
 			}
+
 			$ret = GalleryCoreApi::setMaintenanceMode($newMode);
 
 			if ($ret) {
@@ -152,6 +151,7 @@ class AdminMaintenanceController extends GalleryController {
 
 	public function runTask($taskId, $task, $useProgressBar) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		list($ret1, $success, $details) = $task->run();
@@ -159,6 +159,7 @@ class AdminMaintenanceController extends GalleryController {
 		if ($ret1) {
 			$details = $ret1->getAsHtml();
 		}
+
 		$ret2 = MaintenanceHelper_simple::addRun($taskId, time(), $success, $details);
 
 		if ($ret1 || $ret2) {
@@ -170,6 +171,7 @@ class AdminMaintenanceController extends GalleryController {
 		$status['run']['success'] = $success;
 		$status['run']['taskId']  = $taskId;
 		$session                  =& $gallery->getSession();
+
 		$session->putStatus($status);
 
 		$redirect['view']    = 'core.SiteAdmin';
@@ -177,6 +179,7 @@ class AdminMaintenanceController extends GalleryController {
 
 		if ($useProgressBar) {
 			$templateAdapter =& $gallery->getTemplateAdapter();
+
 			$templateAdapter->completeProgressBar($urlGenerator->generateUrl($redirect));
 		}
 
@@ -189,16 +192,16 @@ class AdminMaintenanceController extends GalleryController {
  */
 class AdminMaintenanceView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminMaintenanceView();
+		if (!isset($instance)) {
+			$instance = new AdminMaintenanceView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -248,7 +251,8 @@ class AdminMaintenanceView extends GalleryView {
 			}
 		}
 
-		$maintenanceMode                = $gallery->getConfig('mode.maintenance');
+		$maintenanceMode = $gallery->getConfig('mode.maintenance');
+
 		list($ret, $maintenanceModeUrl) = GalleryCoreApi::getPluginParameter(
 			'module',
 			'core',
@@ -271,7 +275,6 @@ class AdminMaintenanceView extends GalleryView {
 
 		$template->setVariable('AdminMaintenance', $AdminMaintenance);
 		$template->setVariable('controller', 'core.AdminMaintenance');
-
 		$template->javascript('lib/javascript/BlockToggle.js');
 
 		return array(
@@ -289,16 +292,16 @@ class AdminMaintenanceView extends GalleryView {
  */
 class MaintenanceTask {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new MaintenanceTask();
+		if (!isset($instance)) {
+			$instance = new MaintenanceTask();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**

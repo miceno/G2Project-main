@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Usage: php trim-po.php xx_YY.po
  * Prints a copy of xx_YY.po, omitting all translations that match xx.po.
@@ -10,7 +11,7 @@
 $path = $argv[1];
 
 if (preg_match('#^/cygdrive/(\w+)/(.*)$#', trim($path), $matches)) {
-	// Cygwin and Window PHP filesystem function don't play nice together.
+	// Cygwin and Window PHP filesystem function do not play nice together.
 	$path = $matches[1] . ':\\' . str_replace('/', '\\', $matches[2]);
 }
 
@@ -20,7 +21,9 @@ if ($langpath == $path || !file_exists($langpath)) {
 	if ($langpath != $path && !in_array(basename($langpath), array('en.po', 'zh.po'))) {
 		fwrite(stdErr(), "\nWarning: $path without $langpath\n");
 	}
+
 	list($po, $header) = readPo($path);
+
 	echo $header;
 
 	foreach ($po as $id => $data) {
@@ -36,7 +39,8 @@ if ($langpath == $path || !file_exists($langpath)) {
 }
 
 list($po, $header) = readPo($path);
-list($langpo)      = readPo($langpath);
+
+list($langpo) = readPo($langpath);
 
 echo $header;
 
@@ -55,6 +59,7 @@ function isValidUtf8($string) {
 	 * http://dev.jpmullan.com/snippets/check_utf8.php
 	 */
 	$valid = false;
+
 	/*
 	 * We are declaring non-strings to be invalid, even if their string
 	 * representation is valid.
@@ -114,11 +119,9 @@ function checkStringForHtml($string, $type, $path) {
 
 	if (empty($ltRegExpPattern)) {
 		$allowedHtmlTags = array('b', 'i', 'strong', 'tt');
-
 		$openTags        = implode('>|', $allowedHtmlTags) . '>';
 		$closeTags       = '/' . implode('>|/', $allowedHtmlTags) . '>';
 		$ltRegExpPattern = '#<(?!' . $openTags . '|' . $closeTags . ')#';
-
 		$openTags        = '<' . implode('|<', $allowedHtmlTags);
 		$closeTags       = '</' . implode('|</', $allowedHtmlTags);
 		$gtRegExpPattern = '#(?<!' . $openTags . '|' . $closeTags . ')>#';
@@ -141,7 +144,7 @@ function checkStringForHtml($string, $type, $path) {
 	}
 
 	if (strpos($string, '&') !== false) {
-		// Can't use look-ahead assertion of variable length. Therefore exploding on &.
+		// Cannot use look-ahead assertion of variable length. Therefore exploding on &.
 		$ampStrings = explode('&', $string);
 		array_shift($ampStrings);
 
@@ -177,6 +180,7 @@ function readPo($path) {
 	for ($line = 'a'; $lines && trim($line); $header[] = $line) {
 		$line = array_shift($lines);
 	}
+
 	$id  = $str  = false;
 	$key = $value = $before = '';
 
@@ -192,8 +196,9 @@ function readPo($path) {
 				'msgstr' => $value,
 				'before' => $before,
 			);
-			$id         = $str  = false;
-			$key        = $value = $before = '';
+
+			$id  = $str  = false;
+			$key = $value = $before = '';
 
 			continue;
 		}

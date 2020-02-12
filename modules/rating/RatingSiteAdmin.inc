@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -49,42 +48,63 @@ class RatingSiteAdminController extends GalleryController {
 				$form['currentThemeId'],
 				$themeSettingsId,
 				$form
-		);
+			);
 
 			if ($ret) {
 				return array($ret, null);
 			}
-			$status = empty($status) ? array() : array('statusMessage' => $status);
+
+			$status = empty($status) ? array() : array(
+				'statusMessage' => $status,
+			);
 
 			if (!isset($form['minLimit'])
-			|| !is_numeric($form['minLimit'] = str_replace(',', '.', $form['minLimit']))) {
+				|| !is_numeric($form['minLimit'] = str_replace(',', '.', $form['minLimit']))
+			) {
 				$error[] = 'form[error][minLimit]';
 			}
 		}
 
 		if (isset($form['action']['save']) && empty($error)) {
-			foreach (array('allowAlbumRating' => empty($form['allowAlbumRating']) ? 0 : 1,
-			   'themeId'                      => $form['themeId'],
-			   'orderBy'                      => (empty($form['presort']) ? '' : $form['presort'] . '|')
-					. $form['orderBy'],
-			   'orderDirection'               => $form['orderDirection'],
-			   'minLimit'                     => $form['minLimit'],
-			   'description'                  => $form['description'], )
-			as $key => $value) {
+			if (empty($form['allowAlbumRating'])) {
+				$allowAlbumRating = 0;
+			} else {
+				$allowAlbumRating = 1;
+			}
+
+			if (empty($form['presort'])) {
+				$presort = $form['orderBy'];
+			} else {
+				$presort = $form['presort'] . '|' . $form['orderBy'];
+			}
+
+			foreach (array(
+				'allowAlbumRating' => $allowAlbumRating,
+				'themeId'          => $form['themeId'],
+				'orderBy'          => $presort,
+				'orderDirection'   => $form['orderDirection'],
+				'minLimit'         => $form['minLimit'],
+				'description'      => $form['description'],
+			) as $key => $value) {
 				$ret = GalleryCoreApi::setPluginParameter('module', 'rating', $key, $value);
 
 				if ($ret) {
 					return array($ret, null);
 				}
 			}
+
 			$status['saved'] = 1;
 		}
 
 		$method  = empty($error) ? 'redirect' : 'delegate';
-		$results = array($method => array('view' => 'core.SiteAdmin',
-					  'subView'                  => 'rating.RatingSiteAdmin', ),
-			 'status'            => $status,
-			 'error'             => $error, );
+		$results = array(
+			$method  => array(
+				'view'    => 'core.SiteAdmin',
+				'subView' => 'rating.RatingSiteAdmin',
+			),
+			'status' => $status,
+			'error'  => $error,
+		);
 
 		return array(null, $results);
 	}
@@ -107,14 +127,21 @@ class RatingSiteAdminView extends GalleryView {
 		}
 
 		if ($form['formName'] != 'RatingSiteAdmin') {
-			foreach (array('allowAlbumRating', 'themeId', 'orderBy', 'orderDirection', 'minLimit',
-			   'description', ) as $key) {
+			foreach (array(
+				'allowAlbumRating',
+				'themeId',
+				'orderBy',
+				'orderDirection',
+				'minLimit',
+				'description',
+			) as $key) {
 				list($ret, $form[$key]) = GalleryCoreApi::getPluginParameter('module', 'rating', $key);
 
 				if ($ret) {
 					return array($ret, null);
 				}
 			}
+
 			// Localize by casting to string
 			$form['minLimit'] = (string)GalleryUtilities::castToFloat($form['minLimit']);
 			$tmp              = explode('|', $form['orderBy'], 2);
@@ -138,19 +165,23 @@ class RatingSiteAdminView extends GalleryView {
 
 		// Set up sort order selection list
 		GalleryCoreApi::requireOnce('modules/core/classes/GallerySortInterface_1_2.class');
+
 		list(
 			$ret,
 			$orderByList,
 			$presortList,
 			$orderDirectionList
-		) = GallerySortInterface_1_2::doStatic()->getAllSortOrders();
+		) = GallerySortInterface_1_2::getMe()->getAllSortOrders();
 
 		if ($ret) {
 			return array($ret, null);
 		}
 
 		// Set up theme selection list
-		$themeList               = array('' => $module->translate('&laquo; default theme &raquo;'));
+		$themeList = array(
+			'' => $module->translate('&laquo; default theme &raquo;'),
+		);
+
 		list($ret, $themeStatus) = GalleryCoreApi::fetchPluginStatus('theme');
 
 		if ($ret) {
@@ -164,15 +195,17 @@ class RatingSiteAdminView extends GalleryView {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$themeList[$id] = $theme->translate($theme->getName());
 			}
 		}
 
 		$RatingSiteAdmin = array(
-		'orderByList'        => $orderByList,
-		'presortList'        => $presortList,
-		'orderDirectionList' => $orderDirectionList,
-		'themeList'          => $themeList, );
+			'orderByList'        => $orderByList,
+			'presortList'        => $presortList,
+			'orderDirectionList' => $orderDirectionList,
+			'themeList'          => $themeList,
+		);
 
 		// Set up theme settings
 		list($ret, $themeSettingsId) = GalleryCoreApi::getPluginParameter('module', 'rating', 'themeSettingsId');
@@ -180,12 +213,13 @@ class RatingSiteAdminView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$ret = GalleryCoreApi::loadThemeSettingsForm(
 			$form['themeId'],
 			$themeSettingsId,
 			$template,
 			$form
-	);
+		);
 
 		if ($ret) {
 			return array($ret, null);
@@ -198,6 +232,11 @@ class RatingSiteAdminView extends GalleryView {
 		$template->setVariable('RatingSiteAdmin', $RatingSiteAdmin);
 		$template->setVariable('controller', 'rating.RatingSiteAdmin');
 
-		return array(null, array('body' => 'modules/rating/templates/RatingSiteAdmin.tpl'));
+		return array(
+			null,
+			array(
+				'body' => 'modules/rating/templates/RatingSiteAdmin.tpl',
+			),
+		);
 	}
 }

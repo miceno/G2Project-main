@@ -6,6 +6,7 @@ if (!defined('ADODB_DIR')) {
 }
 
 global $ADODB_INCLUDED_MEMCACHE;
+
 $ADODB_INCLUDED_MEMCACHE = 1;
 
 global $ADODB_INCLUDED_CSV;
@@ -15,7 +16,6 @@ if (empty($ADODB_INCLUDED_CSV)) {
 }
 
 /*
-
   @version   v5.20.12  30-Mar-2018
   @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
   @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
@@ -23,35 +23,38 @@ if (empty($ADODB_INCLUDED_CSV)) {
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
 Usage:
-
 $db = NewADOConnection($driver);
-$db->memCache = true; /// should we use memCache instead of caching in files
+
+/// should we use memCache instead of caching in files
+$db->memCache = true;
 $db->memCacheHost = array($ip1, $ip2, $ip3);
-$db->memCachePort = 11211; /// this is default memCache port
-$db->memCacheCompress = false; /// Use 'true' to store the item compressed (uses zlib)
+
+/// this is default memCache port
+$db->memCachePort = 11211;
+
+/// Use 'true' to store the item compressed (uses zlib)
+$db->memCacheCompress = false;
 
 $db->Connect(...);
 $db->CacheExecute($sql);
 
   Note the memcache class is shared by all connections, is created during the first call to Connect/PConnect.
-
   Class instance is stored in $ADODB_CACHE
 */
-
 class ADODB_Cache_MemCache {
-	public $createdir = false; // create caching directory structure?
+	// create caching directory structure?
+	public $createdir = false;
 
 	//-----------------------------
 	// memcache specific variables
+	// array of hosts
+	public $hosts;
+	public $port = 11211;
 
-	public $hosts; // array of hosts
-	public $port     = 11211;
-	public $compress = false; // memcache compression with zlib
-
+	// memcache compression with zlib
+	public $compress   = false;
 	public $_connected = false;
 	public $_memcache  = false;
 
@@ -84,10 +87,11 @@ class ADODB_Cache_MemCache {
 		}
 
 		if ($failcnt == sizeof($this->hosts)) {
-			$err = 'Can\'t connect to any memcache server';
+			$err = 'Cannot connect to any memcache server';
 
 			return false;
 		}
+
 		$this->_connected = true;
 		$this->_memcache  = $memcache;
 
@@ -134,7 +138,7 @@ class ADODB_Cache_MemCache {
 		$rs = $this->_memcache->get($filename);
 
 		if (!$rs) {
-			$err = 'Item with such key doesn\'t exists on the memcached server.';
+			$err = 'Item with such key does not exists on the memcached server.';
 
 			return $false;
 		}
@@ -152,10 +156,11 @@ class ADODB_Cache_MemCache {
 		}
 
 		if ($rs->timeCreated == 0) {
-			return $rs; // apparently have been reports that timeCreated was set to 0 somewhere
+			// apparently have been reports that timeCreated was set to 0 somewhere
+			return $rs;
 		}
 
-		$tdiff = intval($rs->timeCreated + $secs2cache - time());
+		$tdiff = (int)($rs->timeCreated + $secs2cache - time());
 
 		if ($tdiff <= 2) {
 			switch ($tdiff) {
@@ -230,7 +235,7 @@ class ADODB_Cache_MemCache {
 
 		if ($debug) {
 			if (!$del) {
-				ADOConnection::outp("flushcache: $key entry doesn't exist on memcached server!<br>\n");
+				ADOConnection::outp("flushcache: $key entry does not exist on memcached server!<br>\n");
 			} else {
 				ADOConnection::outp("flushcache: $key entry flushed from memcached server!<br>\n");
 			}

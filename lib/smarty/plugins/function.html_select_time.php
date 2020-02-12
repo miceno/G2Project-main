@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -24,6 +25,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 	include_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
 
 	include_once $smarty->_get_plugin_filepath('function', 'html_options');
+
 	// Default values.
 	$prefix           = 'Time_';
 	$time             = time();
@@ -34,6 +36,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 	$use_24_hours     = true;
 	$minute_interval  = 1;
 	$second_interval  = 1;
+
 	/* Should the select boxes be part of an array when returned from PHP?
 	   e.g. setting it to "birthday", would create "birthday[Hour]",
 	   "birthday[Minute]", "birthday[Seconds]" & "birthday[Meridian]".
@@ -79,8 +82,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 		}
 	}
 
-	$time = smarty_make_timestamp($time);
-
+	$time        = smarty_make_timestamp($time);
 	$html_result = '';
 
 	if ($display_hours) {
@@ -90,6 +92,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 		for ($i = 0, $for_max = count($hours); $i < $for_max; $i++) {
 			$hours[$i] = sprintf('%02d', $hours[$i]);
 		}
+
 		$html_result .= '<select name=';
 
 		if (null !== $field_array) {
@@ -105,6 +108,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 		if (null !== $all_extra) {
 			$html_result .= ' ' . $all_extra;
 		}
+
 		$html_result .= '>' . "\n";
 		$html_result .= smarty_function_html_options(
 			array(
@@ -115,6 +119,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 			),
 			$smarty
 		);
+
 		$html_result .= "</select>\n";
 	}
 
@@ -124,7 +129,8 @@ function smarty_function_html_select_time($params, &$smarty) {
 		for ($i = 0, $for_max = count($all_minutes); $i < $for_max; $i += $minute_interval) {
 			$minutes[] = sprintf('%02d', $all_minutes[$i]);
 		}
-		$selected     = intval(floor(strftime('%M', $time) / $minute_interval) * $minute_interval);
+
+		$selected     = (int)(floor(strftime('%M', $time) / $minute_interval) * $minute_interval);
 		$html_result .= '<select name=';
 
 		if (null !== $field_array) {
@@ -140,8 +146,8 @@ function smarty_function_html_select_time($params, &$smarty) {
 		if (null !== $all_extra) {
 			$html_result .= ' ' . $all_extra;
 		}
-		$html_result .= '>' . "\n";
 
+		$html_result .= '>' . "\n";
 		$html_result .= smarty_function_html_options(
 			array(
 				'output'       => $minutes,
@@ -151,6 +157,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 			),
 			$smarty
 		);
+
 		$html_result .= "</select>\n";
 	}
 
@@ -160,7 +167,8 @@ function smarty_function_html_select_time($params, &$smarty) {
 		for ($i = 0, $for_max = count($all_seconds); $i < $for_max; $i += $second_interval) {
 			$seconds[] = sprintf('%02d', $all_seconds[$i]);
 		}
-		$selected     = intval(floor(strftime('%S', $time) / $second_interval) * $second_interval);
+
+		$selected     = (int)(floor(strftime('%S', $time) / $second_interval) * $second_interval);
 		$html_result .= '<select name=';
 
 		if (null !== $field_array) {
@@ -176,8 +184,8 @@ function smarty_function_html_select_time($params, &$smarty) {
 		if (null !== $all_extra) {
 			$html_result .= ' ' . $all_extra;
 		}
-		$html_result .= '>' . "\n";
 
+		$html_result .= '>' . "\n";
 		$html_result .= smarty_function_html_options(
 			array(
 				'output'       => $seconds,
@@ -187,6 +195,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 			),
 			$smarty
 		);
+
 		$html_result .= "</select>\n";
 	}
 
@@ -206,8 +215,8 @@ function smarty_function_html_select_time($params, &$smarty) {
 		if (null !== $all_extra) {
 			$html_result .= ' ' . $all_extra;
 		}
-		$html_result .= '>' . "\n";
 
+		$html_result .= '>' . "\n";
 		$html_result .= smarty_function_html_options(
 			array(
 				'output'       => array('AM', 'PM'),
@@ -217,6 +226,7 @@ function smarty_function_html_select_time($params, &$smarty) {
 			),
 			$smarty
 		);
+
 		$html_result .= "</select>\n";
 	}
 

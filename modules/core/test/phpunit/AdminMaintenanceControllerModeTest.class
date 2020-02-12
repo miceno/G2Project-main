@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,6 +31,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -39,7 +39,9 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 		}
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$this->_platform =& $gallery->getPlatform();
 
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
@@ -52,8 +54,10 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 			$module->getVersion() . "\n",
 			$module->getGalleryVersion() . "\n",
 		);
+
 		$this->_versionFile         = $gallery->getConfig('data.gallery.version');
 		$this->_versionContentsBase = $module->getVersion() . "\n" . $module->getGalleryVersion();
+
 		GalleryDataCache::remove('CoreModule::installedVersions');
 	}
 
@@ -77,6 +81,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[setMode][url]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -92,15 +97,16 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 			),
 			$results
 		);
+
 		$this->assertTrue($this->_platform->isComplete(), $this->_platform->getRemaining());
 	}
 
 	public function testSetMaintenanceModeOnUrl() {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$url          = $urlGenerator->makeAbsoluteUrl('/maintenance.html');
-
-		$versionStr = "{$this->_versionContentsBase}\nmaintenance-mode:$url";
+		$versionStr   = "{$this->_versionContentsBase}\nmaintenance-mode:$url";
 
 		$this->_platform->setReply('file_exists', array($this->_versionFile), true);
 		$this->_platform->setReply(
@@ -115,6 +121,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[setMode][url]', $url);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -131,11 +138,13 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 			$results,
 			'The url was not properly'
 		);
+
 		$this->assertTrue($this->_platform->isComplete(), $this->_platform->getRemaining());
 	}
 
 	public function testSetMaintenanceModeOff() {
 		global $gallery;
+
 		$gallery->setConfig('mode.maintenance', true);
 
 		$this->_versionFileContents[] = 'nmaintenance-mode';
@@ -156,6 +165,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[setMode][url]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -171,6 +181,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 			),
 			$results
 		);
+
 		$this->assertTrue($this->_platform->isComplete(), $this->_platform->getRemaining());
 	}
 
@@ -183,6 +194,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[setMode][url]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -199,6 +211,7 @@ class AdminMaintenanceControllerModeTest extends GalleryControllerTestCase {
 			$results,
 			'The maintenance  mode was set'
 		);
+
 		$this->assertTrue($this->_platform->isComplete(), $this->_platform->getRemaining());
 	}
 }

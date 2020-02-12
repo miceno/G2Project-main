@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/exif/classes/ExifHelper.class');
 
 /**
@@ -137,6 +135,7 @@ class AdminExifController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$status['restored']['summary'] = 1;
 			$redirect['view']              = 'core.SiteAdmin';
 			$redirect['subView']           = 'exif.AdminExif';
@@ -177,6 +176,7 @@ class AdminExifController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$status['restored']['detailed'] = 1;
 			$redirect['view']               = 'core.SiteAdmin';
 			$redirect['subView']            = 'exif.AdminExif';
@@ -336,6 +336,7 @@ class AdminExifController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$status['saved']     = 1;
 			$redirect['view']    = 'core.SiteAdmin';
 			$redirect['subView'] = 'exif.AdminExif';
@@ -347,6 +348,7 @@ class AdminExifController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'exif.AdminExif';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -385,6 +387,7 @@ class AdminExifView extends GalleryView {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$form['item'] = array(
 				'summary'            => $addOption & EXIF_ITEM_SUMMARY,
 				'description'        => $addOption & EXIF_ITEM_DESCRIPTION,
@@ -399,7 +402,8 @@ class AdminExifView extends GalleryView {
 		$visibleKeys = array();
 
 		// Prepare the summary list
-		$summaryList     = array();
+		$summaryList = array();
+
 		list($ret, $tmp) = ExifHelper::getProperties(EXIF_SUMMARY);
 
 		if ($ret) {
@@ -411,7 +415,8 @@ class AdminExifView extends GalleryView {
 		}
 
 		// Prepare the detailed list
-		$detailedList    = array();
+		$detailedList = array();
+
 		list($ret, $tmp) = ExifHelper::getProperties(EXIF_DETAILED);
 
 		if ($ret) {
@@ -432,6 +437,7 @@ class AdminExifView extends GalleryView {
 
 			$availableList[$key] = $module->translate($data[0]);
 		}
+
 		asort($availableList);
 
 		// Check toolkit support for rotation

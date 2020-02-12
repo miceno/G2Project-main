@@ -1,4 +1,5 @@
 <?php
+
 /*
  @version   v5.20.12  30-Mar-2018
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -27,8 +28,7 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 		public $fmtTimeStamp    = "'Y-m-d H:i:s'";
 		public $hasLimit        = false;
 
-		public function __construct() {
-		}
+		public function __construct() {}
 
 		public function _insertid() {
 			return fbsql_insert_id($this->_connectionID);
@@ -57,8 +57,7 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 			$s     = '';
 			$arr   = func_get_args();
 			$first = true;
-
-			$s = implode(',', $arr);
+			$s     = implode(',', $arr);
 
 			if (sizeof($arr) > 0) {
 				return "CONCAT($s)";
@@ -119,14 +118,16 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 					} else {
 						$fld->max_length = -1;
 					}
-					$fld->not_null       = ($rs->fields[2] != 'YES');
-					$fld->primary_key    = ($rs->fields[3] == 'PRI');
-					$fld->auto_increment = (strpos($rs->fields[5], 'auto_increment') !== false);
-					$fld->binary         = (strpos($fld->type, 'blob') !== false);
 
+					$fld->not_null                  = ($rs->fields[2] != 'YES');
+					$fld->primary_key               = ($rs->fields[3] == 'PRI');
+					$fld->auto_increment            = (strpos($rs->fields[5], 'auto_increment') !== false);
+					$fld->binary                    = (strpos($fld->type, 'blob') !== false);
 					$retarr[strtoupper($fld->name)] = $fld;
+
 					$rs->MoveNext();
 				}
+
 				$rs->Close();
 
 				return $retarr;
@@ -172,7 +173,6 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 	/*--------------------------------------------------------------------------------------
 	 Class Name: Recordset
 	--------------------------------------------------------------------------------------*/
-
 	class ADORecordSet_fbsql extends ADORecordSet {
 		public $databaseType = 'fbsql';
 		public $canSeek      = true;
@@ -180,6 +180,7 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 		public function __construct($queryID, $mode = false) {
 			if (!$mode) {
 				global $ADODB_FETCH_MODE;
+
 				$mode = $ADODB_FETCH_MODE;
 			}
 
@@ -206,6 +207,7 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 
 		public function _initrs() {
 			global $ADODB_COUNTRECS;
+
 			$this->_numOfRows   = ($ADODB_COUNTRECS) ? @fbsql_num_rows($this->_queryID) : -1;
 			$this->_numOfFields = @fbsql_num_fields($this->_queryID);
 		}
@@ -213,11 +215,16 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 		public function FetchField($fieldOffset = -1) {
 			if ($fieldOffset != -1) {
 				$o = @fbsql_fetch_field($this->_queryID, $fieldOffset);
-				//$o->max_length = -1; // fbsql returns the max length less spaces -- so it is unrealiable
+
+				// fbsql returns the max length less spaces -- so it is unrealiable
+				//$o->max_length = -1;
 				$f         = @fbsql_field_flags($this->_queryID, $fieldOffset);
 				$o->binary = (strpos($f, 'binary') !== false);
-			} elseif ($fieldOffset == -1) {  // The $fieldOffset argument is not provided thus its -1
-				$o = @fbsql_fetch_field($this->_queryID);// fbsql returns the max length less spaces -- so it is unrealiable
+			} elseif ($fieldOffset == -1) {
+				// The $fieldOffset argument is not provided thus its -1
+				// fbsql returns the max length less spaces -- so it is unrealiable
+				$o = @fbsql_fetch_field($this->_queryID);
+
 				//$o->max_length = -1;
 			}
 
@@ -244,7 +251,10 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 				$t        = $fieldobj->type;
 				$len      = $fieldobj->max_length;
 			}
-			$len = -1; // fbsql max_length is not accurate
+
+			// fbsql max_length is not accurate
+			$len = -1;
+
 			switch (strtoupper($t)) {
 				case 'CHARACTER':
 				case 'CHARACTER VARYING':
@@ -284,7 +294,6 @@ if (!defined('_ADODB_FBSQL_LAYER')) {
 					}
 
 					return 'I';
-
 
 				default:
 					return 'N';

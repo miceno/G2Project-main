@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -34,6 +33,7 @@ class CoreModuleTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -67,8 +67,11 @@ class CoreModuleTest extends GalleryTestCase {
 
 	public function testGetItemAdminViews() {
 		global $gallery;
+
 		$albumId = $this->_parentAlbum->getId();
+
 		GalleryUtilities::putRequestVariable('itemId', $albumId);
+
 		list($ret, $content) = $this->_module->getItemAdminViews($this->_parentAlbum);
 
 		if ($ret) {
@@ -76,8 +79,10 @@ class CoreModuleTest extends GalleryTestCase {
 		}
 
 		$albumTitle = $this->_parentAlbum->getTitle();
+
 		GalleryCoreApi::requireOnce('lib/smarty/plugins/modifier.escape.php');
-		$albumTitle   = smarty_modifier_escape(
+
+		$albumTitle = smarty_modifier_escape(
 			GalleryUtilities::markup(
 				$albumTitle,
 				'strip'
@@ -85,6 +90,7 @@ class CoreModuleTest extends GalleryTestCase {
 			'javascript',
 			'UTF-8'
 		);
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$url          = $urlGenerator->generateUrl(
 			array(
@@ -93,6 +99,7 @@ class CoreModuleTest extends GalleryTestCase {
 				'pageId'     => $albumId,
 			)
 		);
+
 		$this->assertEquals(
 			array(
 				array(
@@ -218,6 +225,7 @@ class CoreModuleTest extends GalleryTestCase {
 
 	public function testGetConfigurationView() {
 		$content = $this->_module->getConfigurationView();
+
 		$this->assertEquals(null, $content);
 	}
 
@@ -259,7 +267,6 @@ class CoreModuleTest extends GalleryTestCase {
 			'Admin User'
 		);
 
-
 		list($ret, $this->_user1) = $this->_createUser(
 			array(
 				'hashedPassword' => GalleryUtilities::md5Salt('TestPassword'),
@@ -275,7 +282,6 @@ class CoreModuleTest extends GalleryTestCase {
 		}
 
 		$this->_markForCleanup($this->_user1);
-
 		$gallery->setActiveUser($this->_user1);
 
 		list($ret, $content) = $this->_module->getSystemLinks();
@@ -321,7 +327,6 @@ class CoreModuleTest extends GalleryTestCase {
 		}
 
 		$this->_markForCleanup($this->_user2);
-
 		$gallery->setActiveUser($this->_user2);
 
 		list($ret, $content) = $this->_module->getSystemLinks();
@@ -395,7 +400,9 @@ class CoreModuleTest extends GalleryTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
 		GalleryDataCache::remove('CoreModule::installedVersions');
@@ -405,6 +412,7 @@ class CoreModuleTest extends GalleryTestCase {
 		$platform->setReply('file_exists', array($versionFile), false);
 
 		$versions = $this->_module->getInstalledVersions();
+
 		$this->assertEquals(
 			array(
 				'core'    => 0,
@@ -413,22 +421,22 @@ class CoreModuleTest extends GalleryTestCase {
 			$versions,
 			'Returned non zero versions'
 		);
+
 		$this->assertTrue($platform->isComplete(), $platform->getRemaining());
 	}
 
 	public function testGetInstalledVersions() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		GalleryDataCache::remove('CoreModule::installedVersions');
 
-		$versionFile  = $gallery->getConfig('data.gallery.version');
-		$versionArray = $platform->file($versionFile);
-
+		$versionFile         = $gallery->getConfig('data.gallery.version');
+		$versionArray        = $platform->file($versionFile);
 		$expected['core']    = rtrim($versionArray[0]);
 		$expected['gallery'] = rtrim($versionArray[1]);
-
-		$versions = $this->_module->getInstalledVersions();
+		$versions            = $this->_module->getInstalledVersions();
 
 		$this->assertEquals($expected, $versions, 'Unexpected value from getInstalled Versions');
 	}
@@ -437,7 +445,9 @@ class CoreModuleTest extends GalleryTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
 		GalleryDataCache::remove('CoreModule::installedVersions');
@@ -469,7 +479,9 @@ class CoreModuleTest extends GalleryTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
 		GalleryDataCache::remove('CoreModule::installedVersions');
@@ -502,7 +514,9 @@ class CoreModuleTest extends GalleryTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
 		GalleryDataCache::remove('CoreModule::installedVersions');

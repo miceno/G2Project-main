@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -31,15 +30,15 @@ class GalleryCoreApi {
 	/**
 	 * Return the major and minor version of the Core API.
 	 *
-	 * When we add to the API, we'll bump the minor version.  When we change or remove something
-	 * from the API we'll change the major version.
+	 * When we add to the API, we will bump the minor version.  When we change or remove something
+	 * from the API we will change the major version.
 	 *
 	 * When writing a module, you should verify:
 	 * o The major version of the API exactly matches the version you expect
 	 * o The minor number is the same, or higher than the version you expect
 	 *
 	 * Notes:
-	 * o If the major number is lower, or it's the same and the minor number is
+	 * o If the major number is lower, or it is the same and the minor number is
 	 *   lower then it means that the API is older than you require.
 	 * o If the major number is higher, then it means that the API is newer, but
 	 *   has made a change that may be incompatible with your module
@@ -87,7 +86,7 @@ class GalleryCoreApi {
 	 *   of values.
 	 */
 	public static function getApiVersion() {
-		return array(7, 55);
+		return array(8, 0);
 	}
 
 	/**
@@ -618,7 +617,7 @@ class GalleryCoreApi {
 	}
 
 	/**
-	 * Compact the access list map, if we deem that it's a good time to do so.
+	 * Compact the access list map, if we deem that it is a good time to do so.
 	 *
 	 * @return GalleryStatus a status code
 	 */
@@ -1375,7 +1374,7 @@ class GalleryCoreApi {
 	 * @param string $operationSet1 the first set of operations
 	 * @param string $operationSet2 the second set of operations
 	 * @param boolean $highPriority true if the second set should be added at the beginning of
-	 *                     the first set, if it can't be merged.
+	 *                     the first set, if it cannot be merged.
 	 * @return array GalleryStatus a status code
 	 *               the merged operation set
 	 */
@@ -1514,7 +1513,7 @@ class GalleryCoreApi {
 
 	/**
 	 * Copy the derivative preferences from one id to another.
-	 * Note that this doesn't modify pre-existing preferences already assigned to the target.
+	 * Note that this does not modify pre-existing preferences already assigned to the target.
 	 *
 	 * @param int $sourceId the source id
 	 * @param int $targetId the target id
@@ -1859,7 +1858,7 @@ class GalleryCoreApi {
 
 	/**
 	 * Return the correct theme for this item.  If the appropriate theme cannot be loaded,
-	 * we fall back on the default.  And if that can't be loaded, then we return null.
+	 * we fall back on the default.  And if that cannot be loaded, then we return null.
 	 *
 	 * @param GalleryItem $item
 	 * @return array GalleryStatus a status code
@@ -2179,7 +2178,7 @@ class GalleryCoreApi {
 	/**
 	 * Make sure that the album has a thumbnail.
 	 * If it does not, grab the first handy child and  make it the album's thumbnail.
-	 * We're not picky.
+	 * We are not picky.
 	 *
 	 * @param int $itemId the album id
 	 * @return GalleryStatus a status code
@@ -2407,7 +2406,7 @@ class GalleryCoreApi {
 	 * @param int $parentId the id of the target parent
 	 * @param int $selfId (optional) ignore path collision with this id
 	 * @return array GalleryStatus a status code
-	 *               boolean true if there's a collision
+	 *               boolean true if there is a collision
 	 */
 	public static function checkPathCollision($pathComponent, $parentId, $selfId = null) {
 		GalleryCoreApi::requireOnce(
@@ -2423,7 +2422,7 @@ class GalleryCoreApi {
 
 	/**
 	 * Get a legal path component in the given parent id.  Legal by the platform standards, and
-	 * legal in that it doesn't cause a conflict with other path components.
+	 * legal in that it does not cause a conflict with other path components.
 	 *
 	 * @param string $pathComponent the starting path component (eg. "IMG_10293.JPG")
 	 * @param int $parentId the target parent id
@@ -2584,7 +2583,7 @@ class GalleryCoreApi {
 	}
 
 	/**
-	 * Unregister a toolkit's operations and properties.  If we have any remaining that are no
+	 * Unregister a toolkit is operations and properties.  If we have any remaining that are no
 	 * longer implemented by any toolkit then remove them from the system also.
 	 *
 	 * @param string $toolkitId
@@ -2857,7 +2856,7 @@ class GalleryCoreApi {
 	}
 
 	/**
-	 * Acquire read locks on all the ancestors of this id.  This is useful when we're going to do
+	 * Acquire read locks on all the ancestors of this id.  This is useful when we are going to do
 	 * a filesystem related operation and we want to make sure that the tree does not change out
 	 * from underneath us.
 	 *
@@ -2946,7 +2945,7 @@ class GalleryCoreApi {
 	}
 
 	/**
-	 * Refresh all the locks that we hold so that they aren't accidentally considered expired
+	 * Refresh all the locks that we hold so that they are not accidentally considered expired
 	 *
 	 * @param int $freshUntil the new "fresh until" timestamp
 	 * @return GalleryStatus a status code
@@ -2977,7 +2976,7 @@ class GalleryCoreApi {
 	 *
 	 * @param mixed $ids the ids (or id) of the GalleryEntities to load
 	 * @param mixed $requiredEntityType (optional) Throw an ERROR_MISSING_OBJECT if the loaded
-	 *              entity doesn't extend the given entity-type (or types), e.g. 'GalleryItem'.
+	 *              entity does not extend the given entity-type (or types), e.g. 'GalleryItem'.
 	 *              Specify 'GalleryEntity' if any entity type is allowed.
 	 * @return array GalleryStatus a status code,
 	 *               mixed one GalleryEntity or an array of GalleryEntities
@@ -2996,7 +2995,7 @@ class GalleryCoreApi {
 	 *
 	 * @param int $id the id of a GalleryEntity to delete
 	 * @param mixed $requiredEntityType (optional) Throw an ERROR_MISSING_OBJECT if the loaded
-	 *               entity doesn't extend the given entity-type (or types).
+	 *               entity does not extend the given entity-type (or types).
 	 *               Specify 'GalleryEntity' if any entity type is allowed.
 	 * @return GalleryStatus a status code
 	 * @deprecated $requiredEntityType will no longer be optional after the next major API change
@@ -3250,7 +3249,7 @@ class GalleryCoreApi {
 	 * @param string|array $requiredPermission a single required permission (can be null)
 	 *                                         or an array of required permission-ids
 	 * @param boolean $linkableOnly whether to restrict to linkable items only
-	 * @param int $userId the user we're doing this for
+	 * @param int $userId the user we are doing this for
 	 * @return array GalleryStatus a status code
 	 *               string query
 	 *               array data items for query (not including any ? marks in baseQuery)
@@ -3362,12 +3361,12 @@ class GalleryCoreApi {
 
 	/**
 	 * Add the given extension to the database and map it to the specified mime type and mark it
-	 * viewable as requested.  Return ERROR_COLLISION if there's already a mapping for the given
+	 * viewable as requested.  Return ERROR_COLLISION if there is already a mapping for the given
 	 * extension.
 	 *
 	 * @param string $extension
 	 * @param string $mimeType
-	 * @param bool $viewable whether or not it's browser viewable
+	 * @param bool $viewable whether or not it is browser viewable
 	 * @return GalleryStatus a status code
 	 */
 	public static function addMimeType($extension, $mimeType, $viewable) {
@@ -3554,11 +3553,11 @@ class GalleryCoreApi {
 	 *
 	 * OBSOLETE.  Remove on next major API bump.
 	 *
-	 * Sometimes it's useful to know just whether a plugin is in its default directory or not,
+	 * Sometimes it is useful to know just whether a plugin is in its default directory or not,
 	 * without actually getting any information about its path.  It is used for rewriting URL
 	 * in the UrlGenerator.
 	 *
-	 * We don't use GalleryPlatform in this function, because it is too low-level and there are
+	 * We do not use GalleryPlatform in this function, because it is too low-level and there are
 	 * significant problems with making it work here. One of the problems is that it breaks dozens
 	 * of tests that rely on UnitTestPlatform.
 	 *
@@ -3637,7 +3636,7 @@ class GalleryCoreApi {
 	 * Return an error status.
 	 *
 	 * Starting in GalleryCoreApi 7.4 we ignore the filename and line number.  You still need to
-	 * provide them if you want to provide an error message.  Next major API bump we'll remove the
+	 * provide them if you want to provide an error message.  Next major API bump we will remove the
 	 * fileName and lineNumber arguments.
 	 *
 	 * @param int $errorCode
@@ -3655,7 +3654,9 @@ class GalleryCoreApi {
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/GalleryStatus.class'
 		);
+
 		$status = new GalleryStatus(GALLERY_ERROR | $errorCode, $errorMessage);
+
 		$status->setStackTrace(debug_backtrace());
 
 		return $status;
@@ -3684,7 +3685,8 @@ class GalleryCoreApi {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->updateMapEntry($mapName, $match, $change, $useNonTransactionalConnection);
+
+		$ret = $storage->updateMapEntry($mapName, $match, $change, $useNonTransactionalConnection);
 
 		if ($ret) {
 			return $ret;
@@ -3712,7 +3714,8 @@ class GalleryCoreApi {
 			return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
 		}
 
-		$storage                   =& $gallery->getStorage();
+		$storage =& $gallery->getStorage();
+
 		list($ret, $searchResults) = $storage->getMapEntry($mapName, $select, $match, $optional);
 
 		if ($ret) {
@@ -3737,7 +3740,8 @@ class GalleryCoreApi {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->removeMapEntry($mapName, $data);
+
+		$ret = $storage->removeMapEntry($mapName, $data);
 
 		if ($ret) {
 			return $ret;
@@ -3759,7 +3763,8 @@ class GalleryCoreApi {
 		global $gallery;
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->addMapEntry($mapName, $data, $useNonTransactionalConnection);
+
+		$ret = $storage->addMapEntry($mapName, $data, $useNonTransactionalConnection);
 
 		if ($ret) {
 			return $ret;
@@ -3781,7 +3786,8 @@ class GalleryCoreApi {
 		global $gallery;
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->removeAllMapEntries($mapName, $useNonTransactionalConnection);
+
+		$ret = $storage->removeAllMapEntries($mapName, $useNonTransactionalConnection);
 
 		if ($ret) {
 			return $ret;
@@ -3801,7 +3807,8 @@ class GalleryCoreApi {
 	public static function describeMap($mapName, $tryAllModules = false) {
 		global $gallery;
 
-		$storage                =& $gallery->getStorage();
+		$storage =& $gallery->getStorage();
+
 		list($ret, $entityInfo) = $storage->describeMap($mapName, $tryAllModules);
 
 		if ($ret) {
@@ -3821,7 +3828,9 @@ class GalleryCoreApi {
 	 */
 	public static function describeEntity($entityName, $tryAllModules = false) {
 		global $gallery;
-		$storage                =& $gallery->getStorage();
+
+		$storage =& $gallery->getStorage();
+
 		list($ret, $entityInfo) = $storage->describeEntity($entityName, $tryAllModules);
 
 		if ($ret) {
@@ -3894,6 +3903,7 @@ class GalleryCoreApi {
 	 */
 	public static function getAnonymousUserId() {
 		global $gallery;
+
 		$id = $gallery->getConfig('anonymousUserId');
 
 		if (empty($id)) {
@@ -3921,8 +3931,10 @@ class GalleryCoreApi {
 	public static function isAnonymousUser($userId = null) {
 		if (empty($userId)) {
 			global $gallery;
+
 			$userId = $gallery->getActiveUserId();
 		}
+
 		list($ret, $anonymousId) = GalleryCoreApi::getAnonymousUserId();
 
 		if ($ret) {
@@ -4018,7 +4030,7 @@ class GalleryCoreApi {
 
 	/**
 	 * Return true if this username is not allowed to log in (generally due to automated abuse).
-	 * The username doesn't have to correspond to a real user in the system.
+	 * The username does not have to correspond to a real user in the system.
 	 *
 	 * @param string $userName a username
 	 * @return array GalleryStatus a status code
@@ -4038,8 +4050,8 @@ class GalleryCoreApi {
 	 * This does not include any permission checking.
 	 * @param string $entityName name of the entity
 	 * @return array GalleryStatus a status code
-	 *               array(string memberName =>      *                                array('read' => boolean true if it's ok to show,
-	 *                                      'write' => boolean true if it's ok to set))
+	 *               array(string memberName =>      *                                array('read' => boolean true if it is ok to show,
+	 *                                      'write' => boolean true if it is ok to set))
 	 */
 	public static function getExternalAccessMemberList($entityName) {
 		GalleryCoreApi::requireOnce(

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -63,15 +62,18 @@ class GalleryUserGroupHelper_medium {
 		if ($ret) {
 			return $ret;
 		}
+
 		GalleryDataCache::remove("GalleryUserGroupHelper::isUserInGroup($userId,$groupId)");
 
 		$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 		$event->setData(
 			array(
 				'userId' => $userId,
 				'itemId' => null,
 			)
 		);
+
 		list($ret) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -106,15 +108,18 @@ class GalleryUserGroupHelper_medium {
 		if ($ret) {
 			return $ret;
 		}
+
 		GalleryDataCache::remove("GalleryUserGroupHelper::isUserInGroup($userId,$groupId)");
 
 		$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 		$event->setData(
 			array(
 				'userId' => $userId,
 				'itemId' => null,
 			)
 		);
+
 		list($ret) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -149,12 +154,14 @@ class GalleryUserGroupHelper_medium {
 		}
 
 		$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 		$event->setData(
 			array(
 				'userId' => $userId,
 				'itemId' => null,
 			)
 		);
+
 		list($ret) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -202,13 +209,16 @@ class GalleryUserGroupHelper_medium {
 			if ($ret) {
 				return $ret;
 			}
+
 			$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 			$event->setData(
 				array(
 					'userId' => array_keys($userData),
 					'itemId' => null,
 				)
 			);
+
 			list($ret) = GalleryCoreApi::postEvent($event);
 
 			if ($ret) {
@@ -225,8 +235,9 @@ class GalleryUserGroupHelper_medium {
 	public static function fetchUsersForGroup($groupId, $count = null, $offset = null, $substring = null) {
 		global $gallery;
 
-		$data   = array();
-		$query  = '
+		$data = array();
+
+		$query = '
 	SELECT
 	  [GalleryUserGroupMap::userId],
 	  [GalleryUser::userName]
@@ -237,6 +248,7 @@ class GalleryUserGroupHelper_medium {
 	  AND
 	  [GalleryUserGroupMap::userId] = [GalleryUser::id]
 	';
+
 		$data[] = (int)$groupId;
 
 		if (!empty($substring)) {
@@ -244,8 +256,10 @@ class GalleryUserGroupHelper_medium {
 	      AND
 	      [GalleryUser::userName] LIKE ?
 	    ';
+
 			$data[] = "%$substring%";
 		}
+
 		$query .= '
 	ORDER BY
 	  [GalleryUser::userName]

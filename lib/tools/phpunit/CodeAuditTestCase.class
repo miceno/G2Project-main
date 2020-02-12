@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,6 +28,7 @@
 class CodeAuditTestCase extends GalleryTestCase {
 	public function __construct($methodName) {
 		parent::__construct($methodName);
+
 		$this->_shouldHalt = false;
 		$this->_baseDir    = realpath(__DIR__ . '/../../..');
 		$this->_checkTime  = time();
@@ -36,11 +36,11 @@ class CodeAuditTestCase extends GalleryTestCase {
 
 	public function testCodeAudit() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if (!$platform->file_exists($this->_baseDir . '/.svn/entries')) {
 			//$this->skip();
-
 			return;
 		}
 
@@ -63,6 +63,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 
 	public function _scanDir($dirPath) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if (($handle = $platform->fopen($dirPath . '/.svn/entries', 'r')) === false) {
@@ -84,12 +85,14 @@ class CodeAuditTestCase extends GalleryTestCase {
 			// Non-XML format
 			$functionName = '_scanNonXmlDir';
 		}
+
 		$platform->fclose($handle);
 
 		$dirPaths = array($dirPath);
 
 		while (($dirPath = array_shift($dirPaths)) !== null) {
 			$this->_timeCheck();
+
 			$dirPaths = array_merge($dirPaths, $this->$functionName($dirPath));
 
 			if ($this->_shouldHalt) {
@@ -100,12 +103,14 @@ class CodeAuditTestCase extends GalleryTestCase {
 
 	public function _scanXmlDir($dirPath) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		static $KIND;
 
 		if (!isset($KIND)) {
-			$KIND = strtoupper('kind'); // Won't be KIND in Turkish locale
+			// Wo not be KIND in Turkish locale
+			$KIND = strtoupper('kind');
 		}
 
 		$parser = xml_parser_create();
@@ -115,6 +120,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 			$xmlValues,
 			$xmlIndex
 		);
+
 		xml_parser_free($parser);
 
 		if (empty($xmlIndex['ENTRY'])) {
@@ -171,6 +177,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 
 	public function _scanNonXmlDir($dirPath) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		/*
@@ -183,7 +190,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 		 * By matching records which follow a form feed and a line feed (\f\n) we ignore the first
 		 * record, which is for this directory.
 		 *
-		 * ([^\f\n]*\n){20} matches the 20 don't care fields between the name field and the deleted
+		 * ([^\f\n]*\n){20} matches the 20 do not care fields between the name field and the deleted
 		 * field.  It is enclosed in ()? because empty fields that are only followed by empty fields
 		 * may be omitted from the record.
 		 *
@@ -193,11 +200,12 @@ class CodeAuditTestCase extends GalleryTestCase {
 		 * $matches[2][$i] is the kind field.
 		 * $matches[5][$i] is the deleted field, if present.
 		 */
-		$count    = preg_match_all(
+		$count = preg_match_all(
 			'/\f\n([^\f\n]*)\n([^\f\n]*)\n(([^\f\n]*\n){20}([^\f\n]*)\n)?/',
 			$platform->file_get_contents($dirPath . '/.svn/entries'),
 			$matches
 		);
+
 		$dirPaths = array();
 
 		for ($i = 0; $i < $count; $i++) {
@@ -243,6 +251,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 	 */
 	public function _timeCheck() {
 		global $gallery;
+
 		$gallery->guaranteeTimeLimit(30);
 
 		if (time() - $this->_checkTime >= 20) {
@@ -264,19 +273,17 @@ class CodeAuditTestCase extends GalleryTestCase {
 	 * Overload this method in subclasses to audit the file.
 	 * @access protected
 	 */
-	public function checkFile($fileName, $buffer) {
-	}
+	public function checkFile($fileName, $buffer) {}
 
 	/**
 	 * Overload this method in subclasses to run any tasks after the scan is complete.
 	 * @param bool $halted true if the scan was halted early
 	 * @access protected
 	 */
-	public function finishScan($halted) {
-	}
+	public function finishScan($halted) {}
 
 	/**
-	 * Overload this method in subclasses.  If this method returns true, we'll call checkFile on it.
+	 * Overload this method in subclasses.  If this method returns true, we will call checkFile on it.
 	 * @return true if we should check this file
 	 * @access protected
 	 */
@@ -298,7 +305,11 @@ class CodeAuditTestCase extends GalleryTestCase {
 
 	/**
 	 * Extract function calls from a php snippet.
+	 *
+	 *
 	 * @param string $phpCode e.g. '<?php print "meow"; $foo->bar("hello world"); ?>'
+	 *
+	 *
 	 * @param mixed $function Function to be searched for, e.g.
 	 *              - 'foo' for a global function called foo,
 	 *              - array('GalleryCoreApi', 'foo') for static function calls of function foo,
@@ -318,6 +329,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 			$functionName         = $function;
 			$className            = null;
 		}
+
 		$functionName = GalleryUtilities::strToLower($functionName);
 
 		if (!$fileName || !isset($this->_tokens[$fileName])) {
@@ -350,6 +362,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 		// Check the candidates and extract the complete calls
 		foreach ($candidateTokens as $baseIndex) {
 			$call = $tokens[$baseIndex][1];
+
 			// Seek backwards to check static / instance method vs. function call
 			$j = $this->_getNextTokenIndex($tokens, $baseIndex, true);
 
@@ -357,6 +370,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 				&& in_array($tokens[$j][0], array(T_DOUBLE_COLON, T_OBJECT_OPERATOR))
 			) {
 				$k = $this->_getNextTokenIndex($tokens, $j, true);
+
 				// Check whether it matches $foo->bar or Foo::bar
 				if (isset($tokens[$k][0]) && in_array(
 					$tokens[$k][0],
@@ -369,6 +383,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 					) {
 						continue;
 					}
+
 					$call = $tokens[$k][1] . $tokens[$j][1] . $call;
 				}
 			} elseif ($classMethodCallsOnly) {
@@ -381,6 +396,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 			if (!isset($tokens[$i]) || $tokens[$i] !== '(') {
 				continue;
 			}
+
 			$call      .= '(';
 			$parenCount = 1;
 
@@ -421,6 +437,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 	public function getFunctionParameters($functionCall) {
 		// Replace the function with an array
 		$parameterString = preg_replace('/^.*?\((.*)\)$/', 'array(\1)', $functionCall);
+
 		// Seek to the beginning of the parameter string
 		$tokens = token_get_all('<?php ' . $parameterString . '; ?>');
 		$i      = 0;
@@ -430,7 +447,7 @@ class CodeAuditTestCase extends GalleryTestCase {
 		} while (isset($i) && $tokens[$i] !== '(');
 		$parenCount = 1;
 
-		// Explode the parameters by ',' unless we're in a sub-expression (in parens)
+		// Explode the parameters by ',' unless we are in a sub-expression (in parens)
 		$params = array();
 		$param  = '';
 

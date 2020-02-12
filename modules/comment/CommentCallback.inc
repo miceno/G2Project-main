@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -45,9 +44,11 @@ class CommentCallbackView extends GalleryView {
 	public function renderImmediate($status = null, $error = null) {
 		global $gallery;
 
-		$result                    = array();
+		$result = array();
+
 		list($command, $commentId) = GalleryUtilities::getRequestVariables('command', 'commentId');
-		$commentId                 = (int)$commentId;
+
+		$commentId = (int)$commentId;
 
 		switch ($command) {
 			case 'delete':
@@ -72,13 +73,16 @@ class CommentCallbackView extends GalleryView {
 		if ($ret) {
 			$result['status'] = 'error';
 			$storage          =& $gallery->getStorage();
+
 			$ret->putInSession();
 		} else {
 			$result['status'] = 'success';
 		}
 
 		GalleryCoreApi::requireOnce('lib/JSON/JSON.php');
+
 		$json = new Services_JSON();
+
 		echo $json->encode($result);
 
 		return null;
@@ -106,7 +110,7 @@ class CommentCallbackView extends GalleryView {
 		}
 
 		if (empty($permissions['core.view'])) {
-			// Avoid information disclosure, act as if the item didn't exist.
+			// Avoid information disclosure, act as if the item does not exist.
 			return GalleryCoreApi::error(ERROR_MISSING_OBJECT);
 		}
 
@@ -155,7 +159,8 @@ class CommentCallbackView extends GalleryView {
 
 		if (empty($permissions['core.view'])) {
 			GalleryCoreApi::releaseLocks($lockId);
-			// Avoid information disclosure, act as if the item didn't exist.
+
+			// Avoid information disclosure, act as if the item does not exist.
 			return GalleryCoreApi::error(ERROR_MISSING_OBJECT);
 		}
 
@@ -166,6 +171,7 @@ class CommentCallbackView extends GalleryView {
 		}
 
 		$comment->setPublishStatus($newPublishStatus);
+
 		$ret = $comment->save();
 
 		if ($ret) {

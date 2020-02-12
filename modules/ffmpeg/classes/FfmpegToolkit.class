@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryToolkit.class');
 
 /**
@@ -91,8 +89,8 @@ class FfmpegToolkit extends GalleryToolkit {
 		$context = array()
 	) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
+		$platform    =& $gallery->getPlatform();
 		$tmpDir      = $gallery->getConfig('data.gallery.tmp');
 		$tmpFilename = $platform->tempnam($tmpDir, 'fmpg_');
 
@@ -112,6 +110,7 @@ class FfmpegToolkit extends GalleryToolkit {
 					array_unshift($args, '-ss', $context['ffmpeg.offset']);
 					unset($context['ffmpeg.offset']);
 				}
+
 				list($ret, $results) = $this->_ffmpeg($sourceFilename, $args);
 
 				if ($ret) {
@@ -134,7 +133,9 @@ class FfmpegToolkit extends GalleryToolkit {
 						null,
 					);
 				}
+
 				$platform->chmod($destFilename);
+
 				$outputMimeType = 'image/jpeg';
 
 				break;
@@ -142,58 +143,67 @@ class FfmpegToolkit extends GalleryToolkit {
 			case 'convert-to-video/x-flv':
 				// overwrite output files
 				$args = array('-y');
+
 				// TODO: no longer append .flv when a better work around is found
 				$tmpFilename = $tmpFilename . '.flv';
+
 				// Add video dimensions (size)
 				if (isset($context['width'], $context['height'])) {
 					$args[] = '-s';
 					$args[] = $context['width'] . 'x' . $context['height'];
 					unset($context['width'], $context['height']);
 				}
+
 				// Add video frame rate
 				if (isset($context['frameRate'])) {
 					$args[] = '-r';
 					$args[] = $context['frameRate'];
 					unset($context['frameRate']);
 				}
+
 				$muted = false;
+
 				// Add audio channels, and remember args index
 				$audioChannelIndex = -1;
 
 				if (isset($context['audioChannels'])) {
 					if ($context['audioChannels'] > 0) {
 						$audioChannelIndex = count($args);
-
-						$args[] = '-ac';
-						$args[] = $context['audioChannels'];
+						$args[]            = '-ac';
+						$args[]            = $context['audioChannels'];
 					} else {
 						$args[] = '-an';
 						$muted  = true;
 					}
+
 					unset($context['audioChannels']);
 				}
+
 				// Add audio sample rate, and remember args index
 				$audioRateIndex = -1;
 
 				if (isset($context['sampleRate'])) {
 					if (!$muted) {
 						$audioRateIndex = count($args);
-
-						$args[] = '-ar';
-						$args[] = $context['sampleRate'];
+						$args[]         = '-ar';
+						$args[]         = $context['sampleRate'];
 					}
+
 					unset($context['sampleRate']);
 				}
-				/** @todo: Add $args[] = '-acodec'; $args[] = 'adpcm_swf' */
-				// However, -acodec and -vcodec were added in 0.4.1
 
+				/** @todo: Add $args[] = '-acodec'; $args[] = 'adpcm_swf' */
+
+				// However, -acodec and -vcodec were added in 0.4.1
 				// Use same video quality as source (implies VBR)
 				if (isset($context['ffmpeg.videosameq'])) {
 					$args[] = '-sameq';
 					unset($context['ffmpeg.videosameq']);
 				}
+
 				// Final argument is filename
 				$args[] = $tmpFilename;
+
 				// Call ffmpeg
 				list($ret, $stdout, $stderr) = $this->_ffmpeg($sourceFilename, $args);
 
@@ -216,6 +226,7 @@ class FfmpegToolkit extends GalleryToolkit {
 					if ($muted || !$audioError || $audioRateIndex == -1) {
 						return array($ret, null, null);
 					}
+
 					$spliceWith = array('-an');
 
 					// Try muting audio
@@ -253,7 +264,9 @@ class FfmpegToolkit extends GalleryToolkit {
 						null,
 					);
 				}
+
 				$platform->chmod($destFilename);
+
 				$outputMimeType = 'video/x-flv';
 
 				break;
@@ -330,6 +343,7 @@ class FfmpegToolkit extends GalleryToolkit {
 					);
 				}
 			}
+
 			$outputMimeType = $mimeType;
 		}
 
@@ -345,8 +359,8 @@ class FfmpegToolkit extends GalleryToolkit {
 		list($ret, $results, $stderr) = $this->_ffmpeg($sourceFilename, array('-vstats'));
 
 		/*
-		 * Ffmpeg 0.4.6 demands an output file and we're not providing one, so we'll always
-		 * get a toolkit failure here.  :-/  Ignore it for now, but fail if we don't get
+		 * Ffmpeg 0.4.6 demands an output file and we are not providing one, so we will always
+		 * get a toolkit failure here.  :-/  Ignore it for now, but fail if we do not get
 		 * the output we want.
 		 */
 		if ($ret && !($ret->getErrorCode() & ERROR_TOOLKIT_FAILURE)) {
@@ -360,6 +374,7 @@ class FfmpegToolkit extends GalleryToolkit {
 		 *   Stream #0.0: Video: mjpeg, yuvj422p, 320x240, 15.00 fps(r)
 		 *   Stream #0.1: Audio: pcm_u8, 11024 Hz, mono, 88 kb/s
 		 */
+
 		/*
 		Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'dscn3232.mov':
 		  Duration: 00:00:04.0, start: 0.000000, bitrate: 2539 kb/s
@@ -367,7 +382,12 @@ class FfmpegToolkit extends GalleryToolkit {
 		*/
 		$unknownFormat = false;
 		$successfulRun = false;
-		$width         = $height         = $duration         = $vframerate         = $asamplerate         = $achannels         = 0;
+		$width         = 0;
+		$height        = 0;
+		$duration      = 0;
+		$achannels     = 0;
+		$vframerate    = 0;
+		$asamplerate   = 0;
 
 		foreach ($stderr as $resultLine) {
 			if (preg_match('/Unknown format/', $resultLine, $regs)) {
@@ -386,7 +406,8 @@ class FfmpegToolkit extends GalleryToolkit {
 				$regs
 			)
 			) {
-				$successfulRun                     = true;
+				$successfulRun = true;
+
 				list($width, $height, $vframerate) = array($regs[1], $regs[2], $regs[3]);
 			}
 
@@ -437,6 +458,7 @@ class FfmpegToolkit extends GalleryToolkit {
 	 */
 	public function _ffmpeg($sourceFilename, $args) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($ret, $ffmpegPath) = GalleryCoreApi::getPluginParameter('module', 'ffmpeg', 'path');
@@ -446,10 +468,17 @@ class FfmpegToolkit extends GalleryToolkit {
 		}
 
 		// Get error output back, because ffmpeg 0.4.6 returns some useful info only to stderr!
-		list($success, $results, $error) = $platform->exec(array(array_merge(array($ffmpegPath, '-i', $sourceFilename), $args)));
+		list($success, $results, $error) = $platform->exec(
+			array(
+				array_merge(
+					array($ffmpegPath, '-i', $sourceFilename),
+					$args
+				),
+			)
+		);
 
 		if (!$success) {
-			// Return the output even if there's a failure
+			// Return the output even if there is a failure
 			return array(GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE), $results, $error);
 		}
 

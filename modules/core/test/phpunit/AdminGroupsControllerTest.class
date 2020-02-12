@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -69,6 +68,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -81,6 +81,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 			),
 			$results
 		);
+
 		$this->_deleteGroup($group);
 
 		// Missing group name
@@ -88,6 +89,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::removeRequestVariable('form[text][groupName]');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -108,6 +110,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -133,6 +136,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -145,6 +149,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 			),
 			$results
 		);
+
 		$this->_deleteGroup($group);
 
 		// Missing group name
@@ -152,6 +157,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::removeRequestVariable('form[text][groupName]');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -172,6 +178,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -187,6 +194,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 
 	public function testDeleteSiteAdminGroupFromText() {
 		global $gallery;
+
 		list($ret, $id) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.adminGroup');
 
 		if ($ret) {
@@ -203,6 +211,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -218,6 +227,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 
 	public function testDeleteAllUsersGroupFromText() {
 		global $gallery;
+
 		list($ret, $id) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.allUserGroup');
 
 		if ($ret) {
@@ -234,6 +244,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -249,6 +260,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 
 	public function testEditAllUsersGroupUsersFromText() {
 		global $gallery;
+
 		list($ret, $id) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.allUserGroup');
 
 		if ($ret) {
@@ -265,6 +277,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -280,6 +293,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 
 	public function testDeleteEverybodyGroupFromText() {
 		global $gallery;
+
 		list($ret, $id) = GalleryCoreApi::getPluginParameter(
 			'module',
 			'core',
@@ -300,6 +314,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -325,6 +340,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[text][groupName]', $group->getGroupName());
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -337,6 +353,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 			),
 			$results
 		);
+
 		$this->_deleteGroup($group);
 
 		// Missing group name
@@ -344,6 +361,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::removeRequestVariable('form[text][groupName]');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -364,6 +382,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -398,6 +417,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$ret = $group->save();
 
 		if ($ret) {
@@ -409,6 +429,7 @@ class AdminGroupsControllerTest extends GalleryControllerTestCase {
 
 	public function _deleteGroup($group) {
 		global $gallery;
+
 		$ret = GalleryCoreApi::deleteEntityById($group->getId(), 'GalleryGroup');
 
 		if ($ret) {

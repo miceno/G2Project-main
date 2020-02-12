@@ -8,15 +8,12 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 8.
-
   MySQL code that supports transactions. For MySQL 3.23 or later.
   Code from James Poon <jpoon88@yahoo.com>
-
   This driver extends the deprecated mysql driver, and was originally designed to be a
   portable driver in the same manner as oci8po and mssqlpo. Its functionality
   is exactly duplicated in the mysqlt driver, which is itself deprecated.
   This driver will be removed in ADOdb version 6.0.0.
-
   Requires mysql client. Works on Windows and Unix.
 */
 
@@ -27,12 +24,15 @@ if (!defined('ADODB_DIR')) {
 
 require_once ADODB_DIR . '/drivers/adodb-mysql.inc.php';
 
-
 class ADODB_mysqlt extends ADODB_mysql {
-	public $databaseType    = 'mysqlt';
-	public $ansiOuter       = true; // for Version 3.23.17 or later
+	public $databaseType = 'mysqlt';
+
+	// for Version 3.23.17 or later
+	public $ansiOuter       = true;
 	public $hasTransactions = true;
-	public $autoRollback    = true; // apparently mysql does not autorollback properly
+
+	// apparently mysql does not autorollback properly
+	public $autoRollback = true;
 
 	public function __construct() {
 		global $ADODB_EXTENSION;
@@ -46,8 +46,10 @@ class ADODB_mysqlt extends ADODB_mysql {
 		if ($this->transOff) {
 			return true;
 		}
+
 		$this->transCnt += 1;
 		$this->Execute('SET AUTOCOMMIT=0');
+
 		$this->Execute('BEGIN');
 
 		return true;
@@ -65,7 +67,9 @@ class ADODB_mysqlt extends ADODB_mysql {
 		if ($this->transCnt) {
 			$this->transCnt -= 1;
 		}
+
 		$this->Execute('COMMIT');
+
 		$this->Execute('SET AUTOCOMMIT=1');
 
 		return true;
@@ -79,7 +83,9 @@ class ADODB_mysqlt extends ADODB_mysql {
 		if ($this->transCnt) {
 			$this->transCnt -= 1;
 		}
+
 		$this->Execute('ROLLBACK');
+
 		$this->Execute('SET AUTOCOMMIT=1');
 
 		return true;
@@ -93,6 +99,7 @@ class ADODB_mysqlt extends ADODB_mysql {
 		if ($where) {
 			$where = ' where ' . $where;
 		}
+
 		$rs = $this->Execute("select $col from $tables $where for update");
 
 		return !empty($rs);
@@ -105,6 +112,7 @@ class ADORecordSet_mysqlt extends ADORecordSet_mysql {
 	public function __construct($queryID, $mode = false) {
 		if ($mode === false) {
 			global $ADODB_FETCH_MODE;
+
 			$mode = $ADODB_FETCH_MODE;
 		}
 
@@ -128,6 +136,7 @@ class ADORecordSet_mysqlt extends ADORecordSet_mysql {
 		}
 
 		$this->adodbFetchMode = $mode;
+
 		parent::__construct($queryID);
 	}
 

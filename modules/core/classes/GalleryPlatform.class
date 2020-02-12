@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -72,16 +71,16 @@ class GalleryPlatform {
 	);
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryPlatform();
+		if (!isset($instance)) {
+			$instance = new GalleryPlatform();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -103,11 +102,13 @@ class GalleryPlatform {
 			if (!$results) {
 				return $results;
 			}
+
 			$results = $this->chmod($dest);
 		} else {
 			if (!isset($this->_umask)) {
 				$this->_loadPermissionPreferences();
 			}
+
 			$umask   = umask($this->_umask);
 			$results = copy($source, $dest);
 			umask($umask);
@@ -132,6 +133,7 @@ class GalleryPlatform {
 		if (!isset($this->_umask)) {
 			$this->_loadPermissionPreferences();
 		}
+
 		$umask   = umask($this->_umask);
 		$results = symlink($source, $dest);
 		umask($umask);
@@ -183,9 +185,8 @@ class GalleryPlatform {
 			$gallery->debug("tempnam($dir, $prefix)");
 		}
 
-		$slash = $this->getDirectorySeparator();
-		$dir   = $dir[strlen($dir) - 1] == $slash ? substr($dir, 0, strlen($dir) - 1) : $dir;
-
+		$slash    = $this->getDirectorySeparator();
+		$dir      = $dir[strlen($dir) - 1] == $slash ? substr($dir, 0, strlen($dir) - 1) : $dir;
 		$tempfile = tempnam($dir, $prefix);
 
 		if ($tempfile !== false) {
@@ -435,6 +436,7 @@ class GalleryPlatform {
 
 		if (!$success) {
 			global $gallery;
+
 			$gallery->debug("atomicWrite($filename): parent directory could not be created");
 
 			return false;
@@ -448,18 +450,21 @@ class GalleryPlatform {
 			if (!isset($this->_filePerms)) {
 				$this->_loadPermissionPreferences();
 			}
+
 			chmod($tempFile, $this->_filePerms);
 			$bytesWritten = fwrite($fd, $data);
 
 			if ($bytesWritten == strlen($data)) {
 				$success = true;
 			}
+
 			fclose($fd);
 		}
 
 		if ($success) {
 			return $this->rename($tempFile, $filename);
 		}
+
 		@unlink($tempFile);
 
 		return false;
@@ -550,7 +555,7 @@ class GalleryPlatform {
 	 *          1 is GIF, 2 is JPG, 3 is PNG, 4 is SWF, 5 is PSD,
 	 *          6 is BMP, 7 is TIFF(intel byte order), 8 is TIFF(motorola byte order),
 	 *          9 is JPC, 10 is JP2, 11 is JPX, 12 is  JB2, 13 is SWC, 14 is IFF.
-	 *     These values correspond to the IMAGETYPE constants that were added in PHP 4.3.
+	 *     These values correspond to the IMAGETYPE constants.
 	 *     Index 3 is a text string with the correct height="yyy" width="xxx" string
 	 *     that can be used  directly in an IMG tag.
 	 */
@@ -622,6 +627,7 @@ class GalleryPlatform {
 			if (!strcmp($filename, '.') || !strcmp($filename, '..')) {
 				continue;
 			}
+
 			$path = $dirname . $filename;
 
 			if ($this->is_dir($path)) {
@@ -634,6 +640,7 @@ class GalleryPlatform {
 				return false;
 			}
 		}
+
 		closedir($fd);
 
 		return $this->rmdir($dirname);
@@ -652,6 +659,7 @@ class GalleryPlatform {
 			if (!isset($this->_filePerms) || !isset($this->_dirPerms)) {
 				$this->_loadPermissionPreferences();
 			}
+
 			$octalPerms = $this->_dirPerms;
 		} else {
 			// Convert string permission representation to octal
@@ -732,23 +740,23 @@ class GalleryPlatform {
 			 * uploading files like 'foo.php.jpg' which will be treated like a JPEG by Gallery, but
 			 * could be treated like a .php file by Apache opening a security hole.
 			 */
-			$fileBase = str_replace('.', '_', $fileBase);
-
+			$fileBase     = str_replace('.', '_', $fileBase);
 			$blacklistKey = 'GalleryPlatform::blacklistedFileExtensions';
 
 			if (GalleryDataCache::containsKey($blacklistKey)) {
 				$blacklistedExtensions = GalleryDataCache::get($blacklistKey);
 			} else {
 				$blacklistedExtensions = array_flip($this->_blacklistedFileExtensions);
+
 				GalleryDataCache::put($blacklistKey, $blacklistedExtensions);
 			}
 
 			/*
-			 * If we don't know exactly what type this file is, we have to assume that it's
+			 * If we do not know exactly what type this file is, we have to assume that it is
 			 * something malicious.  In that case, it might be a server side script of some kind and
-			 * we don't want that to wind up in the albums directory in a pure state because it may
+			 * we do not want that to wind up in the albums directory in a pure state because it may
 			 * open up a security hole on systems that have placed the gallery data directory inside
-			 * the document root.  So mangle the extension to make sure that the webserver doesn't
+			 * the document root.  So mangle the extension to make sure that the webserver does not
 			 * execute it.
 			 */
 			list($ret, $tmp) = GalleryCoreApi::convertExtensionToMime($extension);
@@ -770,6 +778,7 @@ class GalleryPlatform {
 			if (!empty($extension)) {
 				$fileBase .= '.' . $extension;
 			}
+
 			$component = $fileBase;
 		}
 
@@ -815,6 +824,7 @@ class GalleryPlatform {
 	 */
 	public function _isRestrictedByOpenBaseDir($path, $separator, $caseSensitive) {
 		global $gallery;
+
 		$slash       = $this->getDirectorySeparator();
 		$phpVm       = $gallery->getPhpVm();
 		$openBasedir = $phpVm->ini_get('open_basedir');
@@ -827,9 +837,12 @@ class GalleryPlatform {
 			/*
 			 * PHP's open_basedir will actually take an invalid path, resolve relative paths, parse
 			 * out .. and . and then check against the dir list.  Here we do an ok job of doing the
-			 * same, though it isn't perfect.
+			 * same, though it is not perfect.
 			 */
-			$s = '\\\/';  // Do this by hand because preg_quote() isn't reliable
+
+			// Do this by hand because preg_quote() is not reliable
+			$s = '\\\/';
+
 			if (!preg_match("{^([a-zA-Z]+:)?[$s]}", $path)) {
 				$path = $this->getcwd() . $slash . $path;
 			}
@@ -856,6 +869,7 @@ class GalleryPlatform {
 				// Realpath will remove a trailing slash, add it back to avoid prefix match
 				$baseDirMatch .= $slash;
 			}
+
 			// Add slash on path so /dir is accepted if /dir/ is a valid basedir
 			if (!$function($baseDirMatch, $realpath . $slash, strlen($baseDirMatch))) {
 				return false;
@@ -920,6 +934,7 @@ class GalleryPlatform {
 		if (false === ($file = fopen($path, 'w')) || false === fwrite($file, $data)) {
 			return false;
 		}
+
 		fclose($file);
 
 		return true;
@@ -1018,14 +1033,6 @@ class GalleryPlatform {
 
 		$ret = ftruncate($handle, $size);
 
-		if ($ret === 1) {
-			/*
-			 * Prior to PHP 4.3.3, ftruncate() returns an integer value of 1 on success, instead of
-			 * boolean true. We correct this here.
-			 */
-			return true;
-		}
-
 		return $ret;
 	}
 
@@ -1108,7 +1115,7 @@ class GalleryPlatform {
 	public function mail($to = null, $subject = null, $body = null, $headers = null) {
 		global $gallery;
 
-		if (is_null($to) || is_null($subject) || is_null($body)) {
+		if (null === $to || null === $subject || null === $body) {
 			return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 		}
 
@@ -1116,7 +1123,8 @@ class GalleryPlatform {
 			$gallery->debug("mail($to, $subject, $body, $headers)");
 		}
 
-		$config             = array();
+		$config = array();
+
 		list($ret, $params) = GalleryCoreApi::fetchAllPluginParameters('module', 'core');
 
 		if (!$ret) {
@@ -1129,6 +1137,7 @@ class GalleryPlatform {
 
 		if (!empty($config['smtp.host'])) {
 			GalleryCoreApi::requireOnce('lib/smtp/smtp.php');
+
 			$ret = smtpmail($config, $to, $subject, $body, $headers);
 
 			if ($ret && $gallery->getDebug()) {
@@ -1137,12 +1146,15 @@ class GalleryPlatform {
 
 			return !$ret;
 		}
+
 		$phpVm = $gallery->getPhpVm();
+
 		// Convert \r\n to the appropriate line ending style
 		if ($this->getLineEnding() == "\n") {
 			if (isset($headers)) {
 				$headers = preg_replace("#\r\n#s", "\n", $headers);
 			}
+
 			$body = preg_replace("#\r\n#s", "\n", $body);
 		}
 
@@ -1253,7 +1265,8 @@ class GalleryPlatform {
 	 * @access private
 	 */
 	public function _loadPermissionPreferences() {
-		static $cacheKey  = 'GalleryPlatform::_loadPermissionPreferences';
+		static $cacheKey = 'GalleryPlatform::_loadPermissionPreferences';
+
 		$this->_filePerms = 0644;
 		$this->_dirPerms  = 0755;
 
@@ -1272,6 +1285,7 @@ class GalleryPlatform {
 			if (!$ret && !empty($filePerms)) {
 				$this->_filePerms = octdec($filePerms);
 			}
+
 			list($ret, $dirPerms) = GalleryCoreApi::getPluginParameter(
 				'module',
 				'core',
@@ -1281,8 +1295,10 @@ class GalleryPlatform {
 			if (!$ret && !empty($dirPerms)) {
 				$this->_dirPerms = octdec($dirPerms);
 			}
+
 			GalleryDataCache::put($cacheKey, array($this->_filePerms, $this->_dirPerms));
 		}
+
 		$this->_umask = 0777 - $this->_filePerms;
 	}
 
@@ -1303,6 +1319,7 @@ class GalleryPlatform {
 			if (!isset($this->_filePerms) || !isset($this->_dirPerms)) {
 				$this->_loadPermissionPreferences();
 			}
+
 			$mode = $this->is_dir($path) ? $this->_dirPerms : $this->_filePerms;
 		}
 
@@ -1352,6 +1369,7 @@ class GalleryPlatform {
 			if (!($dir = $this->opendir($path))) {
 				return false;
 			}
+
 			$slash = $this->getDirectorySeparator();
 			$list  = array();
 
@@ -1360,6 +1378,7 @@ class GalleryPlatform {
 					$list[] = $path . $slash . $file;
 				}
 			}
+
 			$this->closedir($dir);
 
 			foreach ($list as $path) {
@@ -1395,11 +1414,13 @@ class GalleryPlatform {
 		if (!$this->chmod($path)) {
 			return false;
 		}
+
 		$dir = $this->opendir($path);
 
 		if (!$dir) {
 			return false;
 		}
+
 		$slash = $this->getDirectorySeparator();
 
 		while ($file = $this->readdir($dir)) {
@@ -1409,6 +1430,7 @@ class GalleryPlatform {
 				return false;
 			}
 		}
+
 		$this->closedir($dir);
 
 		return true;
@@ -1431,6 +1453,7 @@ class GalleryPlatform {
 		$i          = 0;
 		$newFormat  = '';
 		$textPieces = array();
+
 		// Separate text and tokens so we can convert only token output to UTF-8
 		foreach (preg_split('{(%.)}', $format, -1, PREG_SPLIT_DELIM_CAPTURE) as $piece) {
 			if (++$i % 2) {
@@ -1440,6 +1463,7 @@ class GalleryPlatform {
 				$newFormat .= $piece;
 			}
 		}
+
 		// Call strftime and convert to UTF-8; escape % characters before sprintf
 		$newFormat = str_replace(
 			array('%', '&%%&'),
@@ -1479,7 +1503,6 @@ class GalleryPlatform {
 	 */
 	public function resetPlatform() {
 		unset($this->_umask, $this->_filePerms, $this->_dirPerms);
-
 
 		GalleryDataCache::remove('GalleryPlatform::_loadPermissionPreferences');
 	}

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,28 +27,37 @@
 class IconsModule extends GalleryModule {
 	public function __construct() {
 		global $gallery;
+
 		$this->setId('icons');
 		$this->setName($gallery->i18n('Icons'));
-		$this->setDescription($gallery->i18n('Display icons for links'));
-		$this->setVersion('7.0.0'); // Update upgrade() function below too
+		$this->setDescription(
+			$gallery->i18n(
+				'Display icons for links'
+			)
+		);
+
+		// Update upgrade() as required
+		$this->setVersion('2.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
+
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setCallbacks('getSiteAdminViews');
-		$this->setRequiredCoreApi(array(7, 20));
-		$this->setRequiredModuleApi(array(3, 6));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new IconsModule();
+		if (!isset($instance)) {
+			$instance = new IconsModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -91,8 +99,10 @@ class IconsModule extends GalleryModule {
 			case '0.9.0':
 			case '0.9.1':
 			case '0.9.2':
-				if (isset($params['iconpack']) && $params['iconpack'] == 'paularmstrongdesigns.com') {
-					// Removed ".com" from paularmstrongdesigns.com dir, IIS 5.1 didn't like it
+				if (isset($params['iconpack'])
+					&& $params['iconpack'] == 'paularmstrongdesigns.com'
+				) {
+					// Removed ".com" from paularmstrongdesigns.com dir, IIS 5.1 does not like it
 					$ret = $this->setParameter('iconpack', 'paularmstrongdesigns');
 
 					if ($ret) {
@@ -113,7 +123,15 @@ class IconsModule extends GalleryModule {
 				// .mo file migration
 			case '1.1.3':
 			case '1.1.4':
+			case '1.1.5':
+			case '2.0.0':
+				// Updated GalleryCoreApi requirement to 8.0
+				// Upgraded GalleryModule requirement to 4.0
 			case 'end of upgrade path':
+				/*
+				 * Leave this bogus case at the end of the legitimate case statements
+				 * so that we always properly terminate our upgrade path with a break.
+				 */
 				break;
 
 			default:
@@ -163,3 +181,4 @@ class IconsModule extends GalleryModule {
 		);
 	}
 }
+

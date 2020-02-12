@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * Main handler for all Gallery pages/requests.
  * @package Gallery
@@ -26,7 +26,7 @@ $gallerySetErrorHandler = false;
 require __DIR__ . '/bootstrap.inc';
 
 /*
- * If they don't have a setup password, we assume that the config.php is empty and this is an
+ * If they do not have a setup password, we assume that the config.php is empty and this is an
  * initial install
  */
 if (!@$gallery->getConfig('setup.password')) {
@@ -40,8 +40,17 @@ if ($gallery->isEmbedded()) {
 	include_once __DIR__ . '/init.inc';
 } else {
 	// If this is a request for a public data file, give it to the user immediately
-	$unsanitizedView = isset($_GET[GALLERY_FORM_VARIABLE_PREFIX . 'view']) ? $_GET[GALLERY_FORM_VARIABLE_PREFIX . 'view'] : null;
-	$itemId          = (int)(isset($_GET[GALLERY_FORM_VARIABLE_PREFIX . 'itemId']) ? $_GET[GALLERY_FORM_VARIABLE_PREFIX . 'itemId'] : null);
+	if (isset($_GET[GALLERY_FORM_VARIABLE_PREFIX . 'view'])) {
+		$unsanitizedView = $_GET[GALLERY_FORM_VARIABLE_PREFIX . 'view'];
+	} else {
+		$unsanitizedView = null;
+	}
+
+	if (isset($_GET[GALLERY_FORM_VARIABLE_PREFIX . 'itemId'])) {
+		$itemId = (int)$_GET[GALLERY_FORM_VARIABLE_PREFIX . 'itemId'];
+	} else {
+		$itemId = null;
+	}
 
 	if ($unsanitizedView == 'core.DownloadItem' && !empty($itemId)) {
 		/*
@@ -61,7 +70,7 @@ if ($gallery->isEmbedded()) {
 
 		/*
 		 * Fast download depends on having data.gallery.cache set, so set it now.  If for some
-		 * reason we fail, we'll reset it in init.inc (but that's OK).
+		 * reason we fail, we will reset it in init.inc (but that is OK).
 		 */
 		$gallery->setConfig(
 			'data.gallery.cache',
@@ -74,7 +83,8 @@ if ($gallery->isEmbedded()) {
 				'itemId' => $itemId,
 			)
 		);
-		// We don't have a platform yet so we have to use the raw file_exists
+
+		// We do not have a platform yet so we have to use the raw file_exists
 		// Disable fast-download in maintenance mode, admins still get via core.DownloadItem
 		if (file_exists($path) && !$gallery->getConfig('mode.maintenance')) {
 			include $path;
@@ -87,6 +97,7 @@ if ($gallery->isEmbedded()) {
 
 	// Otherwise, proceed with our regular process
 	include_once __DIR__ . '/init.inc';
+
 	$ret = GalleryInitFirstPass();
 
 	if ($ret) {
@@ -111,6 +122,18 @@ if (!empty($gallerySetErrorHandler)) {
 function GalleryMain($embedded = false) {
 	global $gallery;
 
+	/*
+	 * DA Note: Added Event - BeforeProcess
+	 * Event handlers should return array($ret, $ignored ... which is ignored!);
+	 */
+	$event = GalleryCoreApi::newEvent('Gallery::BeforeProcess');
+
+	list($ret, $ignored) = GalleryCoreApi::postEvent($event);
+
+	if ($ret) {
+		return array($ret, null);
+	}
+
 	// Process the request
 	list($ret, $g2Data) = _GalleryMain($embedded);
 
@@ -124,6 +147,7 @@ function GalleryMain($embedded = false) {
 		if ($gallery->isStorageInitialized()) {
 			// Nuke our transaction, too
 			$storage =& $gallery->getStorage();
+
 			$storage->rollbackTransaction();
 
 			if ($ret->getErrorCode() & ERROR_REQUEST_FORGED) {
@@ -148,25 +172,29 @@ function GalleryMain($embedded = false) {
 
 		// Write out our session data
 		$session =& $gallery->getSession();
-		$ret     = $session->save();
+
+		$ret = $session->save();
 	}
 
 	// Complete our transaction
 	if (!$ret && $gallery->isStorageInitialized()) {
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->commitTransaction();
+
+		$ret = $storage->commitTransaction();
 	}
 
 	if ($ret) {
 		$g2Data['isDone'] = true;
 	} elseif (isset($g2Data['redirectUrl'])) {
-		// If we're in debug mode, show a redirect page
+		// If we are in debug mode, show a redirect page
 		echo '<h1> Debug Redirect </h1> ' .
-		'Not automatically redirecting you to the next page because we\'re in debug mode<br/>';
+		'Not automatically redirecting you to the next page because we are in debug mode<br/>';
 		printf('<a href="%s">Continue to the next page</a>', $g2Data['redirectUrl']);
 		echo '<hr/>';
 		echo '<pre>';
+
 		echo $gallery->getDebugBuffer();
+
 		echo '</pre>';
 	}
 
@@ -175,17 +203,19 @@ function GalleryMain($embedded = false) {
 
 /**
  * Process our request.
- * @return array GalleryStatus a status code
- *               array
+ * @return array GalleryStatus a status code array
  */
 function _GalleryMain($embedded = false, $template = null) {
 	global $gallery;
+
 	$urlGenerator =& $gallery->getUrlGenerator();
 
 	// Figure out the target view/controller
 	list($controllerName, $viewName) = GalleryUtilities::getRequestVariables('controller', 'view');
-	$controllerName                  = is_string($controllerName) ? $controllerName : null;
-	$viewName                        = is_string($viewName) ? $viewName : null;
+
+	$controllerName = is_string($controllerName) ? $controllerName : null;
+	$viewName       = is_string($viewName) ? $viewName : null;
+
 	$gallery->debug("controller $controllerName, view $viewName");
 
 	// Check if core module needs upgrading
@@ -194,6 +224,7 @@ function _GalleryMain($embedded = false, $template = null) {
 	if ($ret) {
 		return array($ret, null);
 	}
+
 	$installedVersions = $core->getInstalledVersions();
 
 	if ($installedVersions['core'] != $core->getVersion()) {
@@ -201,14 +232,17 @@ function _GalleryMain($embedded = false, $template = null) {
 			// Maintenance mode - redirect if given URL, else simple message
 			if ($redirectUrl === true) {
 				header('Content-Type: text/html; charset=UTF-8');
+
 				echo $core->translate('Site is temporarily down for maintenance.');
 
 				exit;
 			}
 		} else {
 			$gallery->debug('Redirect to the upgrade wizard, core module version is out of date');
+
 			$redirectUrl = $urlGenerator->getCurrentUrlDir(true) . 'upgrade/index.php';
 		}
+
 		list($ignored, $results) = _GalleryMain_doRedirect($redirectUrl, null, null, true);
 
 		return array(null, $results);
@@ -225,7 +259,8 @@ function _GalleryMain($embedded = false, $template = null) {
 
 	if (!empty($controllerName)) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryController.class');
-		list($ret, $controller) = GalleryController::doStatic()->loadController($controllerName);
+
+		list($ret, $controller) = GalleryController::getMe()->loadController($controllerName);
 
 		if ($ret) {
 			return array($ret, null);
@@ -238,6 +273,7 @@ function _GalleryMain($embedded = false, $template = null) {
 			if (($redirectUrl = $gallery->getConfig('mode.embed.only')) === true) {
 				return array(GalleryCoreApi::error(ERROR_PERMISSION_DENIED), null);
 			}
+
 			list($ignored, $results) = _GalleryMain_doRedirect($redirectUrl, null, null, true);
 
 			return array(null, $results);
@@ -262,6 +298,7 @@ function _GalleryMain($embedded = false, $template = null) {
 						)
 					);
 				}
+
 				list($ignored, $results) = _GalleryMain_doRedirect($redirectUrl, null, null, true);
 
 				return array(null, $results);
@@ -273,7 +310,7 @@ function _GalleryMain($embedded = false, $template = null) {
 
 		// Verify the genuineness of the request
 		if (!$controller->omitAuthTokenCheck()) {
-			$ret = GalleryController::doStatic()->assertIsGenuineRequest();
+			$ret = GalleryController::getMe()->assertIsGenuineRequest();
 
 			if ($ret) {
 				return array($ret, null);
@@ -323,6 +360,7 @@ function _GalleryMain($embedded = false, $template = null) {
 			// If we have a status, store its data in the session
 			if (!empty($results['status'])) {
 				$session =& $gallery->getSession();
+
 				$session->putStatus($results['status']);
 			}
 
@@ -369,10 +407,11 @@ function _GalleryMain($embedded = false, $template = null) {
 	// Load and run the appropriate view
 	if (empty($viewName)) {
 		$viewName = GALLERY_DEFAULT_VIEW;
+
 		GalleryUtilities::putRequestVariable('view', $viewName);
 	}
 
-	list($ret, $view) = GalleryView::doStatic()->loadView($viewName);
+	list($ret, $view) = GalleryView::getMe()->loadView($viewName);
 
 	if ($ret) {
 		return array($ret, null);
@@ -393,8 +432,9 @@ function _GalleryMain($embedded = false, $template = null) {
 				return array(null, $results);
 			}
 
-			$viewName         = 'core.MaintenanceMode';
-			list($ret, $view) = GalleryView::doStatic()->loadView($viewName);
+			$viewName = 'core.MaintenanceMode';
+
+			list($ret, $view) = GalleryView::getMe()->loadView($viewName);
 
 			if ($ret) {
 				return array($ret, null);
@@ -421,7 +461,8 @@ function _GalleryMain($embedded = false, $template = null) {
 	$html = '';
 
 	if ($shouldCache) {
-		$session          =& $gallery->getSession();
+		$session =& $gallery->getSession();
+
 		list($ret, $html) = GalleryDataCache::getPageData(
 			'page',
 			$urlGenerator->getCacheableUrl()
@@ -453,16 +494,16 @@ function _GalleryMain($embedded = false, $template = null) {
 			if (!headers_sent()) {
 				header('Content-Type: text/html; charset=UTF-8');
 			}
+
 			echo $session->replaceTempSessionIdIfNecessary($html);
+
 			$data['isDone'] = true;
 		} else {
-			$html      = unserialize($html);
-			$themeData = unserialize($themeData);
-
+			$html              = unserialize($html);
+			$themeData         = unserialize($themeData);
 			$data              = $session->replaceSessionIdInData($html);
 			$data['themeData'] = $session->replaceSessionIdInData($themeData);
-
-			$data['isDone'] = false;
+			$data['isDone']    = false;
 		}
 	} else {
 		// Initialize our container for template data
@@ -470,7 +511,7 @@ function _GalleryMain($embedded = false, $template = null) {
 
 		if ($view->isControllerLike()) {
 			// Verify the genuineness of the request
-			$ret = GalleryController::doStatic()->assertIsGenuineRequest();
+			$ret = GalleryController::getMe()->assertIsGenuineRequest();
 
 			if ($ret) {
 				return array($ret, null);
@@ -485,19 +526,21 @@ function _GalleryMain($embedded = false, $template = null) {
 			 * session)
 			 */
 			$session =& $gallery->getSession();
-			$ret     = $session->start();
+
+			$ret = $session->start();
 
 			if ($ret) {
 				return array($ret, null);
 			}
-			// From now on, don't add sessionId to URLs if there's no persistent session
+
+			// From now on, do not add sessionId to URLs if there is no persistent session
 			$session->doNotUseTempId();
 		}
 
 		/*
 		 * If this is an immediate view, it will send its own output directly.  This is used in the
-		 * situation where we want to send back data that's not controlled by the layout.  That's
-		 * usually something that's not user-visible like a binary file.
+		 * situation where we want to send back data that is not controlled by the layout.  That's
+		 * usually something that is not user-visible like a binary file.
 		 */
 		$data = array();
 
@@ -505,7 +548,8 @@ function _GalleryMain($embedded = false, $template = null) {
 			if ($view->autoCacheControl()) {
 				// r17660 removed the default on the $template parameter
 				$null = null;
-				$ret  = $view->setCacheControl($null);
+
+				$ret = $view->setCacheControl($null);
 
 				if ($ret) {
 					return array($ret, null);
@@ -514,7 +558,8 @@ function _GalleryMain($embedded = false, $template = null) {
 
 			$status = isset($results['status']) ? $results['status'] : array();
 			$error  = isset($results['error']) ? $results['error'] : array();
-			$ret    = $view->renderImmediate($status, $error);
+
+			$ret = $view->renderImmediate($status, $error);
 
 			if ($ret) {
 				list($ret2, $inGroup) = GalleryCoreApi::isUserInSiteAdminGroup();
@@ -526,12 +571,15 @@ function _GalleryMain($embedded = false, $template = null) {
 
 				return array($ret, null);
 			}
+
 			$data['isDone'] = true;
 		} else {
 			if (!isset($template)) {
 				GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
+
 				$template = new GalleryTemplate(__DIR__);
 			}
+
 			list($ret, $results, $theme) = $view->doLoadTemplate($template);
 
 			if ($ret) {
@@ -570,6 +618,7 @@ function _GalleryMain($embedded = false, $template = null) {
 			}
 
 			$templatePath = 'gallery:' . $results['body'];
+
 			$template->setVariable('l10Domain', $theme->getL10Domain());
 			$template->setVariable('isEmbedded', $embedded);
 
@@ -592,16 +641,20 @@ function _GalleryMain($embedded = false, $template = null) {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$data['isDone'] = true;
 			} else {
 				$event = GalleryCoreApi::newEvent('Gallery::BeforeDisplay');
+
 				$event->setEntity($template);
+
 				$event->setData(
 					array(
 						'templatePath' => $templatePath,
 						'view'         => $view,
 					)
 				);
+
 				list($ret, $ignored) = GalleryCoreApi::postEvent($event);
 
 				if ($ret) {
@@ -619,7 +672,8 @@ function _GalleryMain($embedded = false, $template = null) {
 				 * (only if we do not have one yet)
 				 */
 				$session =& $gallery->getSession();
-				$ret     = $session->start();
+
+				$ret = $session->start();
 
 				if ($ret) {
 					return array($ret, null);
@@ -629,6 +683,36 @@ function _GalleryMain($embedded = false, $template = null) {
 
 				if ($ret) {
 					return array($ret, null);
+				}
+
+				/*
+				 * DA Note: Added Event - BeforeOutput
+				 * Event handlers should return array($ret, array($cacheStatus as boolean, $htmlData as string));
+				 */
+				$event = GalleryCoreApi::newEvent('Gallery::BeforeOutput');
+
+				$event->setEntity($template);
+
+				$event->setData(
+					array(
+						'templatePath' => $templatePath,
+						'view'         => $view,
+						'html'         => $html,
+					)
+				);
+
+				list($ret, $output) = GalleryCoreApi::postEvent($event);
+
+				if ($ret) {
+					return array($ret, null);
+				}
+
+				if ($output) {
+					if ($output[0] === 'false') {
+						$shouldCache = null;
+					}
+
+					$html = $output[1];
 				}
 
 				if ($embedded) {
@@ -644,8 +728,7 @@ function _GalleryMain($embedded = false, $template = null) {
 				}
 
 				if ($embedded) {
-					$data = $session->replaceSessionIdInData($html);
-
+					$data              = $session->replaceSessionIdInData($html);
 					$data['themeData'] =& $template->getVariableByReference('theme');
 					$data['themeData'] = $session->replaceSessionIdInData($data['themeData']);
 					$data['isDone']    = false;
@@ -654,6 +737,7 @@ function _GalleryMain($embedded = false, $template = null) {
 					if (!headers_sent()) {
 						header('Content-Type: text/html; charset=UTF-8');
 					}
+
 					echo $session->replaceTempSessionIdIfNecessary($html);
 
 					$data['isDone'] = true;
@@ -720,6 +804,7 @@ function _GalleryMain_doRedirect(
 	$ignoreErrors = false
 ) {
 	global $gallery;
+
 	$session      =& $gallery->getSession();
 	$urlGenerator =& $gallery->getUrlGenerator();
 
@@ -736,7 +821,9 @@ function _GalleryMain_doRedirect(
 			return array($ret, null);
 		}
 	}
+
 	$redirectUrl = $session->replaceTempSessionIdIfNecessary($redirectUrl);
+
 	$session->doNotUseTempId();
 
 	/*
@@ -746,7 +833,7 @@ function _GalleryMain_doRedirect(
 	if (!$session->isUsingCookies() && $session->isPersistent()
 		&& strpos($redirectUrl, $session->getKey()) === false
 	) {
-		$redirectUrl = GalleryUrlGenerator::doStatic()->appendParamsToUrl(
+		$redirectUrl = GalleryUrlGenerator::getMe()->appendParamsToUrl(
 			$redirectUrl,
 			array(
 				$session->getKey() => $session->getId(),
@@ -761,7 +848,6 @@ function _GalleryMain_doRedirect(
 		 */
 		$redirectUrl = str_replace('&amp;', '&', $redirectUrl);
 		$redirectUrl = rtrim($redirectUrl, '&? ');
-
 		$redirectUrl = $urlGenerator->makeAbsoluteUrl($redirectUrl);
 
 		/*
@@ -773,7 +859,7 @@ function _GalleryMain_doRedirect(
 		 * Our solution: detect IIS version and append GALLERYSID to the Location URL if necessary
 		 */
 		if (in_array($controller, array('core.Logout', 'core.UserLogin', 'publishxp.Login'))) {
-			// Check if it's IIS and if the version is < 6.0
+			// Check if it is IIS and if the version is < 6.0
 			$webserver = GalleryUtilities::getServerVar('SERVER_SOFTWARE');
 
 			if (!empty($webserver)
@@ -781,11 +867,12 @@ function _GalleryMain_doRedirect(
 				&& $matches[1] < 6
 			) {
 				/*
-				 * It is IIS and it's a version with this bug, check if GALLERYSID is already in the
+				 * It is IIS and it is a version with this bug, check if GALLERYSID is already in the
 				 * URL, else append it
 				 */
 				$session            =& $gallery->getSession();
-				$sessionParamString = GalleryUtilities::prefixFormVariable(urlencode($session->getKey())) . '='
+				$sessionParamString = GalleryUtilities::prefixFormVariable(urlencode($session->getKey()))
+				. '='
 				. urlencode($session->getId());
 
 				if ($session->isPersistent() && !strstr($redirectUrl, $sessionParamString)) {
@@ -825,7 +912,8 @@ function _GalleryMain_errorHandler($error, $g2Data = null) {
 	global $gallery;
 
 	GalleryCoreApi::requireOnce('modules/core/ErrorPage.inc');
-	$handledError = ErrorPageView::doStatic()->errorHandler($error, $g2Data);
+
+	$handledError = ErrorPageView::getMe()->errorHandler($error, $g2Data);
 
 	if (!$handledError) {
 		$summary = $error->getErrorMessage();
@@ -833,6 +921,7 @@ function _GalleryMain_errorHandler($error, $g2Data = null) {
 		if (empty($summary)) {
 			$summary = join(', ', $error->getErrorCodeConstants($error->getErrorCode()));
 		}
+
 		GalleryCoreApi::addEventLogEntry('Gallery Error', $summary, $error->getAsText());
 	}
 }

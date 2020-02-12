@@ -1,34 +1,22 @@
 #!/usr/bin/php -q
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- *ten You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-if (!function_exists('file_put_contents')) {
-	// Define file_put_contents if running PHP 4.x
-	function file_put_contents($path, $data) {
-		if (false === ($file = fopen($path, 'w')) || false === fwrite($file, $data)) {
-			return false;
-		}
-		fclose($file);
-
-		return true;
-	}
-}
 
 // Prepare the environment if the script was run directly from command line
 if (empty($SRCDIR)) {
@@ -79,6 +67,7 @@ if (empty($SRCDIR)) {
 
 function makeManifest($filterPath = '') {
 	global $SRCDIR;
+
 	$startTime = time();
 
 	if (empty($SRCDIR)) {
@@ -93,13 +82,12 @@ function makeManifest($filterPath = '') {
 		$baseDir = $SRCDIR . '/gallery2/';
 		chdir($baseDir);
 	}
+
 	// Just so we are consistent lets standardize on Unix path sepearators
 	$baseDir = str_replace('\\', '/', $baseDir);
 	$baseDir .= substr($baseDir, -1) == '/' ? '' : '/';
-
 	quiet_print('Finding all files...');
 	$entries = listSvn($filterPath);
-
 	quiet_print('Sorting...');
 	sort($entries);
 
@@ -137,11 +125,11 @@ function makeManifest($filterPath = '') {
 
 		$newContent = '# $Revi' . "sion: $oldRevision\$$nl";
 		$newContent .= "# File crc32 crc32(crlf) size size(crlf)  or  R File$nl";
-
 		$deleted = $seen = array();
 
 		foreach ($entries as $entry) {
 			list($file, $isBinary) = preg_split('/\@\@/', $entry);
+
 			$relativeFilePath      = $file;
 			$file                  = $baseDir . $file;
 
@@ -153,7 +141,6 @@ function makeManifest($filterPath = '') {
 				$fileSize                = filesize($file);
 				$data                    = fread($fileHandle, $fileSize);
 				fclose($fileHandle);
-
 				$data_crlf = $data;
 
 				if ($isBinary) {
@@ -164,6 +151,7 @@ function makeManifest($filterPath = '') {
 					} else {
 						$data_crlf = str_replace("\n", "\r\n", $data_crlf);
 					}
+
 					$size      = strlen($data);
 					$size_crlf = strlen($data_crlf);
 				}
@@ -211,6 +199,7 @@ function makeManifest($filterPath = '') {
 			file_put_contents($baseDir . $manifest, $newContent);
 			$changed++;
 		}
+
 		$total++;
 	}
 
@@ -224,8 +213,7 @@ function makeManifest($filterPath = '') {
  * @return array List of SVN entries
  */
 function listSvn($filterpath) {
-	$entries = array();
-
+	$entries    = array();
 	$binaryList = array();
 	exec("svn propget --non-interactive -R svn:mime-type $filterpath", $output);
 
@@ -263,8 +251,7 @@ function listSvn($filterpath) {
 			die("Check {$matches[1]} status for {$matches[2]}");
 		}
 
-		$status = $matches[1] === 'D' ? 'deleted:' : '';
-
+		$status    = $matches[1] === 'D' ? 'deleted:' : '';
 		$file      = str_replace('\\', '/', $matches[2]);
 		$entries[] = sprintf('%s%s@@%d', $status, $file, isset($binaryList[$file]));
 	}

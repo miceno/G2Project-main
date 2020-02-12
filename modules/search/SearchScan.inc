@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/search/classes/SearchUtilities.class');
 
 /**
@@ -52,6 +50,7 @@ class SearchScanController extends GalleryController {
 			GalleryCoreApi::requireOnce(
 				'modules/search/classes/GallerySearchInterface_1_0.class'
 			);
+
 			list($ret, $ids) = GalleryCoreApi::getAllFactoryImplementationIds('GallerySearchInterface_1_0');
 
 			if ($ret) {
@@ -65,6 +64,7 @@ class SearchScanController extends GalleryController {
 					return array($ret, null);
 				}
 			}
+
 			$itemIds = array();
 
 			foreach ($searchInstances as $id => $instance) {
@@ -85,6 +85,7 @@ class SearchScanController extends GalleryController {
 					}
 				}
 			}
+
 			$itemIds = array_keys($itemIds);
 
 			list($ret, $results['delegate']) = $slideshow->getLinkData($itemIds);
@@ -122,6 +123,7 @@ class SearchScanView extends GalleryView {
 		GalleryCoreApi::requireOnce(
 			'modules/search/classes/GallerySearchInterface_1_0.class'
 		);
+
 		list($ret, $ids) = GalleryCoreApi::getAllFactoryImplementationIds('GallerySearchInterface_1_0');
 
 		if ($ret) {
@@ -196,8 +198,8 @@ class SearchScanView extends GalleryView {
 					}
 				}
 			}
-			$itemIds = array_keys($itemIds);
 
+			$itemIds    = array_keys($itemIds);
 			$thumbnails = array();
 
 			if (!empty($itemIds)) {
@@ -236,6 +238,7 @@ class SearchScanView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$slideshowAvailable = !empty($ids);
 
 		// Render the HTML body

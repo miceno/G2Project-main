@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -56,6 +57,7 @@ function adodb_errormsg($value) {
 	}
 
 	if (isset($ADODB_LANG_ARRAY['LANG']) && $ADODB_LANG_ARRAY['LANG'] == $ADODB_LANG) {
+		// Do Nothing
 	} else {
 		include_once ADODB_DIR . "/lang/adodb-$ADODB_LANG.inc.php";
 	}
@@ -115,6 +117,7 @@ function adodb_error($provider, $dbType, $errno) {
 		default:
 			return DB_ERROR;
 	}
+
 	//print_r($map);
 	//var_dump($errno);
 	if (isset($map[$errno])) {
@@ -125,18 +128,18 @@ function adodb_error($provider, $dbType, $errno) {
 }
 
 //**************************************************************************************
-
 function adodb_error_pg($errormsg) {
 	if (is_numeric($errormsg)) {
 		return (int)$errormsg;
 	}
+
 	// Postgres has no lock-wait timeout.  The best we could do would be to set a statement timeout.
 	static $error_regexps = array(
 		'(Table does not exist\.|Relation [\"\'].*[\"\'] does not exist|sequence does not exist|class ".+" not found)$' => DB_ERROR_NOSUCHTABLE,
 		'Relation [\"\'].*[\"\'] already exists|Cannot insert a duplicate key into (a )?unique index.*|duplicate key.*violates unique constraint' => DB_ERROR_ALREADY_EXISTS,
 		'database ".+" does not exist$'                 => DB_ERROR_NOSUCHDB,
 		'(divide|division) by zero$'                    => DB_ERROR_DIVZERO,
-		'pg_atoi: error in .*: can\'t parse '           => DB_ERROR_INVALID_NUMBER,
+		'pg_atoi: error in .*: cannot parse '           => DB_ERROR_INVALID_NUMBER,
 		'ttribute [\"\'].*[\"\'] not found|Relation [\"\'].*[\"\'] does not have attribute [\"\'].*[\"\']' => DB_ERROR_NOSUCHFIELD,
 		'(parser: parse|syntax) error at or near \"'    => DB_ERROR_SYNTAX,
 		'referential integrity violation'               => DB_ERROR_CONSTRAINT,
@@ -144,6 +147,7 @@ function adodb_error_pg($errormsg) {
 		'canceling statement due to statement timeout$' => DB_ERROR_STATEMENT_TIMEOUT,
 		'could not serialize access due to'             => DB_ERROR_SERIALIZATION_FAILURE,
 	);
+
 	reset($error_regexps);
 
 	foreach ($error_regexps as $regexp => $code) {
@@ -151,6 +155,7 @@ function adodb_error_pg($errormsg) {
 			return $code;
 		}
 	}
+
 	// Fall back to DB_ERROR if there was no mapping.
 	return DB_ERROR;
 }

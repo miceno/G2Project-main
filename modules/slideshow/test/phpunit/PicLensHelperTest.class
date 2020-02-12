@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -40,6 +39,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		}
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
 		$gallery->setConfig('data.gallery.plugins_data', '/');
 	}
@@ -62,11 +62,11 @@ class PicLensHelperTest extends GalleryTestCase {
 	public function _setDownload($url, $data, $outputFile = null, $responseCode = '200 OK') {
 		global $gallery;
 
-		$urlInfo = parse_url($url);
-		$host    = $urlInfo['host'];
-		$path    = $urlInfo['path'];
-
+		$urlInfo  = parse_url($url);
+		$host     = $urlInfo['host'];
+		$path     = $urlInfo['path'];
 		$platform =& $gallery->_platform;
+
 		$platform->setReply('fsockopen', array($host, 80, null, null, 5), 'IN');
 		$platform->setReply(
 			'fwrite',
@@ -81,17 +81,20 @@ class PicLensHelperTest extends GalleryTestCase {
 		if ($outputFile) {
 			$platform->setReply('fopen', array($outputFile, 'wb', 0), 'OUT');
 		}
+
 		$platform->setReply('feof', array('IN'), false);
 		$platform->setReply('fread', array('IN', 4096), $data);
 
 		if ($outputFile) {
 			$platform->setReply('fwrite', array('OUT', $data, null), strlen($data));
 		}
+
 		$platform->setReply('feof', array('IN'), true);
 
 		if ($outputFile) {
 			$platform->setReply('fclose', array('OUT'), true);
 		}
+
 		$platform->setReply('fclose', array('IN'), true);
 	}
 
@@ -102,6 +105,7 @@ class PicLensHelperTest extends GalleryTestCase {
 			'http://gallery.menalto.com/versioncheck/piclens/release',
 			"version=VERSION\njsUrl=http://host/path/js\nswfUrl=http://host/path/swf\n"
 		);
+
 		$this->_setDownload(
 			'http://host/path/js',
 			'JS DATA',
@@ -112,7 +116,6 @@ class PicLensHelperTest extends GalleryTestCase {
 			'SWF DATA',
 			'/modules/slideshow/PicLensLite.swf.new'
 		);
-
 		$gallery->_platform->setReply(
 			'rename',
 			array('/modules/slideshow/piclens.js.new', '/modules/slideshow/piclens.js'),
@@ -136,6 +139,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		);
 
 		list($ret, $version) = PicLensHelper::install();
+
 		$this->assertErrorEquals(ERROR_MISSING_VALUE, $ret);
 	}
 
@@ -146,6 +150,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		);
 
 		list($ret, $version) = PicLensHelper::install();
+
 		$this->assertErrorEquals(ERROR_MISSING_VALUE, $ret);
 	}
 
@@ -156,6 +161,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		);
 
 		list($ret, $version) = PicLensHelper::install();
+
 		$this->assertErrorEquals(ERROR_MISSING_VALUE, $ret);
 	}
 
@@ -166,6 +172,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		);
 
 		list($ret, $version) = PicLensHelper::install();
+
 		$this->assertErrorEquals(ERROR_PLATFORM_FAILURE, $ret);
 	}
 
@@ -176,6 +183,7 @@ class PicLensHelperTest extends GalleryTestCase {
 			'http://gallery.menalto.com/versioncheck/piclens/release',
 			"version=VERSION\njsUrl=http://host/path/js\nswfUrl=http://host/path/swf\n"
 		);
+
 		$this->_setDownload(
 			'http://host/path/js',
 			'JS DATA',
@@ -195,6 +203,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		);
 
 		list($ret, $version) = PicLensHelper::install();
+
 		$this->assertErrorEquals(ERROR_PLATFORM_FAILURE, $ret);
 	}
 
@@ -205,6 +214,7 @@ class PicLensHelperTest extends GalleryTestCase {
 			'http://gallery.menalto.com/versioncheck/piclens/release',
 			"version=VERSION\njsUrl=http://host/path/js\nswfUrl=http://host/path/swf\n"
 		);
+
 		$this->_setDownload(
 			'http://host/path/js',
 			'JS DATA',
@@ -236,6 +246,7 @@ class PicLensHelperTest extends GalleryTestCase {
 		);
 
 		list($ret, $version) = PicLensHelper::install();
+
 		$this->assertErrorEquals(ERROR_PLATFORM_FAILURE, $ret);
 	}
 

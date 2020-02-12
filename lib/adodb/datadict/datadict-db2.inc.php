@@ -11,6 +11,7 @@
  * Set tabs to 4 for best viewing.
  *
  */
+
 // security - hide paths
 if (!defined('ADODB_DIR')) {
 	die();
@@ -32,9 +33,12 @@ class ADODB2_db2 extends ADODB_DataDict {
 				return 'VARCHAR(3600)';
 
 			case 'C2':
-				return 'VARCHAR'; // up to 32K
+				// up to 32K
+				return 'VARCHAR';
+
 			case 'X2':
-				return 'VARCHAR(3600)'; // up to 32000, but default page size too small
+				// up to 32000, but default page size too small
+				return 'VARCHAR(3600)';
 
 			case 'B':
 				return 'BLOB';
@@ -80,7 +84,8 @@ class ADODB2_db2 extends ADODB_DataDict {
 		$suffix = '';
 
 		if ($fautoinc) {
-			return ' GENERATED ALWAYS AS IDENTITY'; // as identity start with
+			// as identity start with
+			return ' GENERATED ALWAYS AS IDENTITY';
 		}
 
 		if (strlen($fdefault)) {
@@ -115,7 +120,6 @@ class ADODB2_db2 extends ADODB_DataDict {
 	}
 
 	public function ChangeTableSQL($tablename, $flds, $tableoptions = false) {
-
 		/**
 		 * Allow basic table changes to DB2 databases
 		 * DB2 will fatally reject changes to non character columns
@@ -123,6 +127,7 @@ class ADODB2_db2 extends ADODB_DataDict {
 		 */
 		$validTypes   = array('CHAR', 'VARC');
 		$invalidTypes = array('BIGI', 'BLOB', 'CLOB', 'DATE', 'DECI', 'DOUB', 'INTE', 'REAL', 'SMAL', 'TIME');
+
 		// check table exists
 		$cols = $this->MetaColumns($tablename);
 
@@ -132,8 +137,9 @@ class ADODB2_db2 extends ADODB_DataDict {
 
 		// already exists, alter table instead
 		list($lines, $pkey) = $this->_GenFields($flds);
-		$alter              = 'ALTER TABLE ' . $this->TableName($tablename);
-		$sql                = array();
+
+		$alter = 'ALTER TABLE ' . $this->TableName($tablename);
+		$sql   = array();
 
 		foreach ($lines as $id => $v) {
 			if (isset($cols[$id]) && is_object($cols[$id])) {
@@ -145,8 +151,10 @@ class ADODB2_db2 extends ADODB_DataDict {
 				 * fields, so account for that too
 				 */
 				$vargs = explode(' ', $v);
+
 				// assume that $vargs[0] is the field name.
 				$i = 0;
+
 				// Find the next non-blank value;
 				for ($i = 1; $i < sizeof($vargs); $i++) {
 					if ($vargs[$i] != '') {
@@ -159,6 +167,7 @@ class ADODB2_db2 extends ADODB_DataDict {
 				if (in_array(substr($vargs[$i], 0, 4), $invalidTypes)) {
 					continue;
 				}
+
 				// insert the appropriate DB2 syntax
 				if (in_array(substr($vargs[$i], 0, 4), $validTypes)) {
 					array_splice($vargs, $i, 0, array('SET', 'DATA', 'TYPE'));
@@ -172,8 +181,10 @@ class ADODB2_db2 extends ADODB_DataDict {
 							break;
 						}
 					}
+
 					array_splice($vargs, $i, 2, '');
 				}
+
 				$v     = implode(' ', $vargs);
 				$sql[] = $alter . $this->alterCol . ' ' . $v;
 			} else {

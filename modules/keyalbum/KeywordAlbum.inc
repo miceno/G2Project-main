@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -46,12 +45,15 @@ class KeywordAlbumView extends GalleryView {
 		if (!isset($item)) {
 			return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null, null, null);
 		}
+
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'keyalbum');
 
 		if ($ret) {
 			return array($ret, null, null, null);
 		}
+
 		list($keyword, $itemId) = GalleryUtilities::getRequestVariables('keyword', 'itemId');
+
 		$item->create(
 			$module->translate(
 				array(
@@ -70,6 +72,7 @@ class KeywordAlbumView extends GalleryView {
 		if ($ret) {
 			return array($ret, null, null, null);
 		}
+
 		$item->setDescription($moduleParams['description']);
 
 		if (!empty($itemId)) {
@@ -79,6 +82,7 @@ class KeywordAlbumView extends GalleryView {
 			if ($ret) {
 				return array($ret, null, null, null);
 			}
+
 			list($ret, $hasPermission) = GalleryCoreApi::hasItemPermission($itemId, 'core.view');
 
 			if ($ret) {
@@ -86,16 +90,17 @@ class KeywordAlbumView extends GalleryView {
 			}
 
 			if (!$hasPermission) {
-				// Avoid information disclosure, act as if the item didn't exist.
+				// Avoid information disclosure, act as if the item does not exist.
 				return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null, null, null);
 			}
 
 			// Provide parent, parent URL and get-children function to Theme API
-			$item->urlParams           = array(
+			$item->urlParams = array(
 				'view'        => 'keyalbum.KeywordAlbum',
 				'keyword'     => $keyword,
 				'highlightId' => $itemId,
 			);
+
 			$item->getChildrenFunction = array('KeywordAlbumView', 'getChildIds');
 			$viewItem->parent          = $item;
 			$item                      = $viewItem;
@@ -133,8 +138,11 @@ class KeywordAlbumView extends GalleryView {
 		$theme =& $template->getVariableByReference('theme');
 
 		list($keyword, $itemId) = GalleryUtilities::getRequestVariables('keyword', 'itemId');
-		$rawKeyword             = $keyword;
+
+		$rawKeyword = $keyword;
+
 		GalleryUtilities::unsanitizeInputValues($rawKeyword, false);
+
 		$theme['pageUrl'] = array(
 			'view'    => 'keyalbum.KeywordAlbum',
 			'keyword' => $rawKeyword,
@@ -149,11 +157,12 @@ class KeywordAlbumView extends GalleryView {
 			}
 		} else {
 			// Item in dynamic album; use core.ShowItem to check permission, increment view count
-			list($ret, $showItem) = GalleryView::doStatic()->loadView('core.ShowItem');
+			list($ret, $showItem) = GalleryView::getMe()->loadView('core.ShowItem');
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $result) = $showItem->loadTemplate($template, $form);
 
 			if ($ret) {
@@ -178,6 +187,7 @@ class KeywordAlbumView extends GalleryView {
 	 */
 	public function getChildIds($userId, $keyword = null) {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		if (!isset($keyword)) {
@@ -193,6 +203,7 @@ class KeywordAlbumView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $params) = GalleryCoreApi::fetchAllPluginParameters('module', 'keyalbum');
 
 		if ($ret) {
@@ -231,6 +242,7 @@ class KeywordAlbumView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemIds = array();
 
 		while ($result = $searchResults->nextResult()) {

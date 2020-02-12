@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage/GalleryDatabaseExport.class');
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryStorage.class');
 
@@ -42,7 +40,7 @@ class DatabaseExportTest extends GalleryTestCase {
 			return $ret;
 		}
 
-		// Preload these now, so we don't have to try loading them with the UnitTestPlatform
+		// Preload these now, so we do not have to try loading them with the UnitTestPlatform
 		list($ret, $info) = GalleryCoreApi::loadPlugin('theme', 'matrix');
 
 		if ($ret) {
@@ -58,13 +56,14 @@ class DatabaseExportTest extends GalleryTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$gallery->_storage     = new UnitTestStorage();
 		$storage               =& $gallery->getStorage();
 		$storage->_tablePrefix = 'g2_';
 		$gallery->_phpVm       = new UnitTestPhpVm();
-
-		$this->_export = new GalleryDatabaseExport();
+		$this->_export         = new GalleryDatabaseExport();
 	}
 
 	public function tearDown() {
@@ -85,14 +84,13 @@ class DatabaseExportTest extends GalleryTestCase {
 		}
 	}
 
-	public function progressCallback($percentage) {
-	}
+	public function progressCallback($percentage) {}
 
 	public function testExportPluginStatus() {
 		global $gallery;
-		$storage  =& $gallery->getStorage();
-		$platform =& $gallery->getPlatform();
 
+		$storage                  =& $gallery->getStorage();
+		$platform                 =& $gallery->getPlatform();
 		$this->_export->_callBack = array(
 			'callback' => array($this, 'progressCallback'),
 			'progress' => 0,
@@ -130,18 +128,22 @@ class DatabaseExportTest extends GalleryTestCase {
 
 		$line = '    <plugin-status id="captcha" required-core-api="7.20" required-api="3.6" '
 		. 'version="1.1.5" active="1" type="module"/>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $line, null), strlen($line) + 1);
 
 		$line = '    <plugin-status id="cart" required-core-api="7.27" required-api="3.6" '
 		. 'version="1.0.8" active="0" type="module"/>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $line, null), strlen($line) + 1);
 
 		$line = '    <plugin-status id="core" required-core-api="7.27" required-api="3.6" '
 		. 'version="1.2.12" active="1" type="module"/>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $line, null), strlen($line) + 1);
 
 		$warnings = array();
-		$ret      = $this->_export->_exportPluginStatus('testHandle', 'module', $modules, $warnings);
+
+		$ret = $this->_export->_exportPluginStatus('testHandle', 'module', $modules, $warnings);
 
 		if ($ret) {
 			return $ret;
@@ -167,11 +169,14 @@ class DatabaseExportTest extends GalleryTestCase {
 
 		$line = '    <plugin-status id="matrix" required-core-api="7.20" required-api="2.4" '
 		. 'version="1.1.5" active="1" type="theme"/>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $line, null), strlen($line) + 1);
 
 		$line = '    <plugin-status id="carbon" required-core-api="7.20" required-api="2.5" '
 		. 'version="1.2.5" active="0" type="theme"/>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $line, null), strlen($line) + 1);
+
 		$ret = $this->_export->_exportPluginStatus('testHandle', 'theme', $themes, $warnings);
 
 		if ($ret) {
@@ -181,12 +186,14 @@ class DatabaseExportTest extends GalleryTestCase {
 
 	public function testExportSequences() {
 		global $gallery;
+
 		$storage  =& $gallery->getStorage();
 		$platform =& $gallery->getPlatform();
 
 		$storage->setReply('getUniqueId', array('sequenceid'), array(null, 57));
 
 		$expected = '    <sequence name="sequenceid" start-value="57" />' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$this->_export->_callBack = array(
@@ -194,7 +201,8 @@ class DatabaseExportTest extends GalleryTestCase {
 			'progress' => 0,
 			'total'    => 100,
 		);
-		$ret                      = $this->_export->_exportSequence('testHandle', 'sequenceid');
+
+		$ret = $this->_export->_exportSequence('testHandle', 'sequenceid');
 
 		if ($ret) {
 			return $ret;
@@ -203,12 +211,12 @@ class DatabaseExportTest extends GalleryTestCase {
 
 	public function testExportTableIgnoreData() {
 		global $gallery;
+
 		$storage  =& $gallery->getStorage();
 		$platform =& $gallery->getPlatform();
-
 		$expected = '    <table name="TestTable">' . "\n";
-		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
+		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 		$storage->setReply(
 			'_translateTableName',
 			array('TestTable'),
@@ -235,18 +243,23 @@ class DatabaseExportTest extends GalleryTestCase {
 		);
 
 		$expected = '      <definition module-id="testModule" >' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '        <create-sql><![CDATA[Create Sql Statement]]></create-sql>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '        <table-info type="map"><![CDATA[test data]]></table-info>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '      </definition>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '    </table>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$this->_export->_ignoreTables['testtable'] = 1;
@@ -257,16 +270,19 @@ class DatabaseExportTest extends GalleryTestCase {
 		);
 
 		$warnings = array();
-		$ret      = $this->_export->_exportTable('testHandle', 'TestTable', $warnings);
+
+		$ret = $this->_export->_exportTable('testHandle', 'TestTable', $warnings);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, count($warnings), 'Warnings were issued');
 	}
 
 	public function testExportTableNoCreateSql() {
 		global $gallery;
+
 		$storage  =& $gallery->getStorage();
 		$platform =& $gallery->getPlatform();
 
@@ -287,8 +303,10 @@ class DatabaseExportTest extends GalleryTestCase {
 			),
 			array(null, new UnitTestStorageSearchResults(array(null)))
 		);
+
 		$warnings = array();
-		$ret      = $this->_export->_exportTable('testHandle', 'TestTable2', $warnings);
+
+		$ret = $this->_export->_exportTable('testHandle', 'TestTable2', $warnings);
 
 		if ($ret) {
 			return $ret;
@@ -299,18 +317,21 @@ class DatabaseExportTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$expected = $coreModule->translate(
 			array(
 				'text' => '"%s" has no creation sql and will not be backed up.',
 				'arg1' => 'TestTable2',
 			)
 		);
+
 		$this->assertTrue(count($warnings) > 0, 'Warnings were not issued');
 		$this->assertEquals($expected, $warnings[0], 'The message was not equal');
 	}
 
 	public function testExportDataNoError() {
 		global $gallery;
+
 		$storage  =& $gallery->getStorage();
 		$platform =& $gallery->getPlatform();
 
@@ -319,7 +340,6 @@ class DatabaseExportTest extends GalleryTestCase {
 			array('TestTableMap'),
 			array('g2_TestTableMap', null, null)
 		);
-
 		$storage->setReply(
 			'search',
 			array('SELECT COUNT(*) FROM g2_TestTableMap', null, array()),
@@ -352,20 +372,23 @@ class DatabaseExportTest extends GalleryTestCase {
 		);
 
 		$expected = '        <data>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '          <field name="name" type="' . STORAGE_TYPE_STRING . '" size="'
 			  . STORAGE_SIZE_MEDIUM . '" not-null="1" />' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '          <field name="major" type="' . STORAGE_TYPE_INTEGER . '" size="'
 			  . STORAGE_SIZE_MEDIUM . '" not-null="1" not-null-empty-allowed="1" />' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '          <field name="minor" type="' . STORAGE_TYPE_INTEGER . '" size="'
 			  . STORAGE_SIZE_MEDIUM . '" />' . "\n";
-		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
+		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 		$storage->setReply('_translateColumnName', array('name'), 'g_name');
 		$storage->setReply('_translateColumnName', array('major'), 'g_major');
 		$storage->setReply('_translateColumnName', array('minor'), 'g_minor');
@@ -407,6 +430,7 @@ class DatabaseExportTest extends GalleryTestCase {
 			),
 			'nameValue1'
 		);
+
 		$storage->setReply(
 			'_normalizeValue',
 			array(
@@ -421,6 +445,7 @@ class DatabaseExportTest extends GalleryTestCase {
 			),
 			1
 		);
+
 		$storage->setReply(
 			'_normalizeValue',
 			array(
@@ -433,6 +458,7 @@ class DatabaseExportTest extends GalleryTestCase {
 			),
 			1
 		);
+
 		$storage->setReply(
 			'_normalizeValue',
 			array(
@@ -446,6 +472,7 @@ class DatabaseExportTest extends GalleryTestCase {
 			),
 			'nameValue2'
 		);
+
 		$storage->setReply(
 			'_normalizeValue',
 			array(
@@ -462,12 +489,15 @@ class DatabaseExportTest extends GalleryTestCase {
 		);
 
 		$expected = '          <row><f>nameValue1</f><f>1</f><f>1</f></row>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '          <row><f>nameValue2</f><f>1</f><f null="1" /></row>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$expected = '        </data>' . "\n";
+
 		$platform->setReply('fwrite', array('testHandle', $expected, null), strlen($expected));
 
 		$this->_export->_callBack = array(
@@ -477,7 +507,8 @@ class DatabaseExportTest extends GalleryTestCase {
 		);
 
 		$warnings = array();
-		$ret      = $this->_export->_exportData('testHandle', 'TestTableMap', $warnings);
+
+		$ret = $this->_export->_exportData('testHandle', 'TestTableMap', $warnings);
 
 		if ($ret) {
 			return $ret;
@@ -490,6 +521,7 @@ class DatabaseExportTest extends GalleryTestCase {
 
 	public function testExportDataDescribeFailure() {
 		global $gallery;
+
 		$storage  =& $gallery->getStorage();
 		$platform =& $gallery->getPlatform();
 
@@ -498,13 +530,11 @@ class DatabaseExportTest extends GalleryTestCase {
 			array('TestTable'),
 			array('g2_TestTable', null, null)
 		);
-
 		$storage->setReply(
 			'search',
 			array('SELECT COUNT(*) FROM g2_TestTable', null, array()),
 			array(null, new UnitTestStorageSearchResults(array(array('2'))))
 		);
-
 		$storage->setReply(
 			'describeMap',
 			array('TestTable', null),
@@ -518,7 +548,6 @@ class DatabaseExportTest extends GalleryTestCase {
 				null,
 			)
 		);
-
 		$storage->setReply(
 			'describeEntity',
 			array('TestTable', null),
@@ -540,7 +569,8 @@ class DatabaseExportTest extends GalleryTestCase {
 		);
 
 		$warnings = array();
-		$ret      = $this->_export->_exportData('testHandle', 'TestTable', $warnings);
+
+		$ret = $this->_export->_exportData('testHandle', 'TestTable', $warnings);
 
 		if ($ret) {
 			return $ret;
@@ -559,6 +589,7 @@ class DatabaseExportTest extends GalleryTestCase {
 				'arg1' => 'TestTable',
 			)
 		);
+
 		$this->assertTrue(count($warnings) > 0, 'Warnings were not issued');
 		$this->assertEquals($expectedMsg, $warnings[0], 'The message was not equal');
 
@@ -567,13 +598,16 @@ class DatabaseExportTest extends GalleryTestCase {
 
 	public function testOpenBackupFileForWriting() {
 		global $gallery;
+
 		$gallery->setConfig('data.gallery.backup', '/path/');
+
 		$gallery->setConfig(
 			'storage.config',
 			array(
 				'database' => 'TEST-DB',
 			)
 		);
+
 		$gallery->_platform->setReply('file_exists', array('/path/'), true);
 		$gallery->_platform->setReply('is_dir', array('/path/'), true);
 		$gallery->_phpVm->setReply('rand', array(null, null), 'RAW-RND');
@@ -598,13 +632,16 @@ class DatabaseExportTest extends GalleryTestCase {
 
 	public function testOpenBackupFileForWritingSqLitePathsGetTrimmed() {
 		global $gallery;
+
 		$gallery->setConfig('data.gallery.backup', '/path/');
+
 		$gallery->setConfig(
 			'storage.config',
 			array(
 				'database' => '/full/sqlite/path/to/TEST-DB',
 			)
 		);
+
 		$gallery->_platform->setReply('file_exists', array('/path/'), true);
 		$gallery->_platform->setReply('is_dir', array('/path/'), true);
 		$gallery->_phpVm->setReply('rand', array(null, null), 'RAW-RND');
@@ -629,6 +666,7 @@ class DatabaseExportTest extends GalleryTestCase {
 
 	public function testOpenBackupFileForWritingWithSpecificFilename() {
 		global $gallery;
+
 		$gallery->setConfig('data.gallery.backup', '/path');
 		$gallery->_platform->setReply('fopen', array('/path/FILE', 'wb', 0), 'TEST-HANDLE');
 

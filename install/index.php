@@ -1,8 +1,9 @@
 <?php
+
 /*
  * ATTENTION:
  *
- * If you're seeing this in your browser, and are trying to install Gallery,
+ * If you are seeing this in your browser, and are trying to install Gallery,
  * you either do not have PHP installed, or if it is installed, it is not
  * properly enabled. Please visit the following page for assistance:
  *
@@ -15,20 +16,19 @@
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * Gallery Installer
  * @package Install
@@ -42,24 +42,19 @@
  * in our SQL, as well as reading/writing the config.php
  */
 @ini_set('magic_quotes_runtime', 0);
-
 $g2Base = dirname(__DIR__) . '/';
 
 require_once $g2Base . 'install/GalleryStub.class';
-
 require_once $g2Base . 'install/InstallStep.class';
-
 require_once $g2Base . 'install/StatusTemplate.class';
-
 require_once $g2Base . 'modules/core/classes/GalleryUtilities.class';
-
 require_once $g2Base . 'modules/core/classes/GalleryDataCache.class';
-
 require_once $g2Base . 'lib/support/GallerySetupUtilities.class';
+
 define('INDEX_PHP', basename(__FILE__));
 
 /*
- * If gettext isn't enabled, subvert the _() text translation function
+ * If gettext is not enabled, subvert the _() text translation function
  * and just pass the string on through in English
  */
 if (!function_exists('_')) {
@@ -92,18 +87,19 @@ foreach ($stepOrder as $stepName) {
 GallerySetupUtilities::startSession();
 
 require_once $g2Base . 'modules/core/classes/GalleryStatus.class';
-
 require_once $g2Base . 'modules/core/classes/GalleryTranslator.class';
 
 if (empty($_SESSION['language'])) {
 	// Select language based on preferences sent from browser
-	$_SESSION['language'] = GalleryTranslator::doStatic()->getLanguageCodeFromRequest();
+	$_SESSION['language'] = GalleryTranslator::getMe()->getLanguageCodeFromRequest();
 }
 
 if (function_exists('dgettext')) {
 	$gallery    = new GalleryStub();
-	$translator = GalleryTranslator::doStatic();
+	$translator = GalleryTranslator::getMe();
+
 	$translator->init($_SESSION['language'], true);
+
 	unset($gallery);
 	bindtextdomain('gallery2_install', dirname(__DIR__) . '/locale');
 	textdomain('gallery2_install');
@@ -111,6 +107,7 @@ if (function_exists('dgettext')) {
 	if (function_exists('bind_textdomain_codeset')) {
 		bind_textdomain_codeset('gallery2_install', 'UTF-8');
 	}
+
 	// Set the appropriate charset in our HTTP header
 	if (!headers_sent()) {
 		header('Content-Type: text/html; charset=UTF-8');
@@ -131,7 +128,7 @@ if (!isset($_GET['startOver']) && !empty($_SESSION['install_steps'])) {
 	}
 }
 
-// If we don't have our steps in our session, initialize them now.
+// If we do not have our steps in our session, initialize them now.
 if (empty($steps) || !is_array($steps)) {
 	$steps = array();
 
@@ -144,11 +141,12 @@ if (empty($steps) || !is_array($steps)) {
 			$step->setStepNumber($i);
 			$step->setInError(false);
 			$step->setComplete(false);
+
 			$steps[] = $step;
 		}
 	}
 
-	// Don't do this in the loop, since not all steps are relevant
+	// Do not do this in the loop, since not all steps are relevant
 	$steps[count($steps) - 1]->setIsLastStep(true);
 }
 
@@ -162,13 +160,14 @@ for ($i = 0; $i < $stepNumber; $i++) {
 		break;
 	}
 }
+
 $currentStep =& $steps[$stepNumber];
 
 if (!empty($_GET['doOver'])) {
 	$currentStep->setComplete(false);
 }
 
-// If the current step is incomplete, the rest of the steps can't be complete either
+// If the current step is incomplete, the rest of the steps cannot be complete either
 if (!$currentStep->isComplete()) {
 	for ($i = $stepNumber + 1; $i < count($steps); $i++) {
 		$steps[$i]->setComplete(false);
@@ -182,15 +181,18 @@ if ($currentStep->processRequest()) {
 
 	// Round percentage to the nearest 5
 	$templateData['errors'] = array();
+
 	$currentStep->loadTemplateData($templateData);
 
 	// Render the output
 	$template = new StatusTemplate();
+
 	$template->renderHeaderBodyAndFooter($templateData);
 }
 
 function processAutoCompleteRequest() {
 	$path = !empty($_GET['path']) ? $_GET['path'] : '';
+
 	// Undo the damage caused by magic_quotes
 	if (get_magic_quotes_gpc()) {
 		$path = stripslashes($path);
@@ -219,12 +221,14 @@ function processAutoCompleteRequest() {
 			if ($file == '.' || $file == '..' || ($match && strncmp($file, $match, $matchLength))) {
 				continue;
 			}
+
 			$file = $path . $file;
 
 			if (is_dir($file)) {
 				$dirList[] = $file;
 			}
 		}
+
 		closedir($dir);
 		sort($dirList);
 	}
@@ -281,10 +285,10 @@ function populateDataDirectory($dataBase) {
 
 /**
  * Secure the storage folder from attempts to access it directly via the web by adding a
- * .htaccess with a "Deny from all" directive. This won't have any effect on webservers other
+ * .htaccess with a "Deny from all" directive. This would not have any effect on webservers other
  * than Apache 1.2+ though.
- * Since we can't reliably tell whether the storage folder is web-accessible or not,
- * we add this in all cases. It doesn't hurt.
+ * Since we cannot reliably tell whether the storage folder is web-accessible or not,
+ * we add this in all cases. It does not hurt.
  * @param string $dataBase absolute filesystem path to the storage folder
  * @return boolean true if the .htaccess file has been created successfully
  */
@@ -310,10 +314,11 @@ function secureStorageFolder($dataBase) {
 
 // Returns something like https://example.com
 function getBaseUrl() {
-	// Can't use GalleryUrlGenerator::makeUrl since it's an object method
+	// Cannot use GalleryUrlGenerator::makeUrl since it is an object method
 	if (!($hostName = GalleryUtilities::getServerVar('HTTP_X_FORWARDED_HOST'))) {
 		$hostName = GalleryUtilities::getServerVar('HTTP_HOST');
 	}
+
 	$protocol = (GalleryUtilities::getServerVar('HTTPS') == 'on') ? 'https' : 'http';
 
 	return sprintf('%s://%s', $protocol, $hostName);
@@ -324,10 +329,11 @@ function getGalleryDirUrl() {
 	global $g2Base;
 
 	include_once $g2Base . 'modules/core/classes/GalleryUrlGenerator.class';
+
 	$urlPath = preg_replace(
 		'|^(.*/)install/index.php(?:\?.*)?$|s',
 		'$1',
-		GalleryUrlGenerator::doStatic()->getCurrentRequestUri()
+		GalleryUrlGenerator::getMe()->getCurrentRequestUri()
 	);
 
 	return getBaseUrl() . $urlPath;
@@ -338,10 +344,7 @@ function generateUrl($uri, $print = true) {
 	if (!strncmp($uri, 'index.php', 9)) {
 		// Cookieless browsing: If session.use_trans_sid is on then it will add the session id.
 		if (!GallerySetupUtilities::areCookiesSupported() && !ini_get('session.use_trans_sid')) {
-			/*
-			 * Don't use SID since it's a constant and we change (regenerate) the session id
-			 * in the request
-			 */
+			// Do not use SID as it is a constant and we regenerate the session id in the request
 			$sid  = session_name() . '=' . session_id();
 			$uri .= !strpos($uri, '?') ? '?' : '&amp;';
 			$uri .= $sid;
@@ -356,9 +359,9 @@ function generateUrl($uri, $print = true) {
 }
 
 /*
- * We don't store the steps in the session in raw form because that
+ * We do not store the steps in the session in raw form because that
  * will break in environments where session.auto_start is on since
- * it will try to instantiate the classes before they've been defined
+ * it will try to instantiate the classes before they have been defined
  */
 $_SESSION['install_steps'] = serialize($steps);
 

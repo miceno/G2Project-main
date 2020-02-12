@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -38,6 +37,7 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		global $gallery;
 
 		$this->_originalSession        = $gallery->_session;
@@ -46,6 +46,7 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 
 	public function tearDown() {
 		global $gallery;
+
 		$gallery->_templateAdapter =& $this->_galleryTemplateAdapter;
 		$gallery->_session         = $this->_originalSession;
 
@@ -58,12 +59,13 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 
 	public function testUpdateIndex() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('form[action][update]', 1);
 
 		$mockAdapter               = new MockTemplateAdapter();
 		$gallery->_templateAdapter =& $mockAdapter;
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -79,11 +81,13 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 		$this->assertEquals(1, $mockAdapter->getCallbackCount());
 
 		$callback = $mockAdapter->getCallback(0);
+
 		$this->assertEquals(array($this->_controller, 'updatePluginStatus'), $callback[0]);
 	}
 
 	public function testSaveRepositories() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('form[repositories][released]', 1);
 		GalleryUtilities::putRequestVariable(
 			'form[repositories][experimental]',
@@ -95,6 +99,7 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][update]', 1);
 
 		$this->_markPluginParametersForCleanup('module', 'core');
+
 		$ret = GalleryCoreApi::setPluginParameter(
 			'module',
 			'core',
@@ -108,8 +113,8 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 
 		$mockAdapter               = new MockTemplateAdapter();
 		$gallery->_templateAdapter =& $mockAdapter;
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -141,11 +146,14 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][upgradeAll]', 1);
 
 		$repository = new UnitTestRepository();
+
 		$repository->setReply('getAllUpgradeablePackages', array(), array(null, array()));
+
 		$this->_controller->_repositories['test'] = $repository;
 
 		// Test case when no upgradeable packages exist.
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -174,11 +182,14 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 		);
 
 		$repository = new UnitTestRepository();
+
 		$repository->setReply('getAllUpgradeablePackages', array(), array(null, $packages));
+
 		$this->_controller->_repositories['test'] = $repository;
 
 		// Test case when some packages are upgradeable.
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -191,7 +202,7 @@ class AdminRepositoryControllerTest extends GalleryControllerTestCase {
 		);
 
 		/*
-		 * We don't test the download process itself here, because it shares
+		 * We do not test the download process itself here, because it shares
 		 * the general download code path that is tested in testDownload.
 		 */
 	}
@@ -208,7 +219,6 @@ class AdminRepositoryControllerTestUrlGenerator {
 		return implode(',', $buf);
 	}
 }
-
 
 class AdminRepositoryControllerTestSession extends GallerySession {
 	public $_testStatus;

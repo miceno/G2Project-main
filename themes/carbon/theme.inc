@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -31,10 +30,15 @@ class CarbonTheme extends GalleryTheme {
 
 		$this->setId('carbon');
 		$this->setName($gallery->i18n('Carbon'));
-		$this->setDescription($gallery->i18n('Gallery2 theme by mincel.com'));
-		$this->setVersion('7.0.0');
-		$this->setRequiredCoreApi(array(7, 51));
-		$this->setRequiredThemeApi(array(2, 5));
+		$this->setDescription(
+			$gallery->i18n(
+				'Gallery2 theme by mincel.com'
+			)
+		);
+		$this->setVersion('2.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredThemeApi(array(3, 0));
+
 		$this->setStandardSettings(
 			array(
 				'rows'                 => 3,
@@ -110,30 +114,35 @@ class CarbonTheme extends GalleryTheme {
 			'type'  => 'checkbox',
 			'value' => $params['navigatorPhotoTop'],
 		);
+
 		$settings[] = array(
 			'key'   => 'navigatorPhotoBottom',
 			'name'  => $this->translate('Show bottom photo navigator'),
 			'type'  => 'checkbox',
 			'value' => $params['navigatorPhotoBottom'],
 		);
+
 		$settings[] = array(
 			'key'   => 'photoProperties',
 			'name'  => $this->translate('Show \'Photo Properties\' icon'),
 			'type'  => 'checkbox',
 			'value' => $params['photoProperties'],
 		);
+
 		$settings[] = array(
 			'key'   => 'fullSize',
 			'name'  => $this->translate('Show \'Full Size\' icon'),
 			'type'  => 'checkbox',
 			'value' => $params['fullSize'],
 		);
+
 		$settings[] = array(
 			'key'   => 'itemDetails',
 			'name'  => $this->translate('Show item details on album pages'),
 			'type'  => 'checkbox',
 			'value' => $params['itemDetails'],
 		);
+
 		$settings[] = array(
 			'key'        => 'albumUpperBlocks',
 			'name'       => $this->translate(
@@ -145,6 +154,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['albumUpperBlocks'],
 		);
+
 		$settings[] = array(
 			'key'        => 'photoUpperBlocks',
 			'name'       => $this->translate(
@@ -156,6 +166,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['photoUpperBlocks'],
 		);
+
 		$settings[] = array(
 			'key'        => 'sidebarTop',
 			'name'       => $this->translate('Sidebar top position'),
@@ -165,6 +176,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['sidebarTop'],
 		);
+
 		$settings[] = array(
 			'key'        => 'maxMicroThumbs',
 			'name'       => $this->translate(
@@ -176,6 +188,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['maxMicroThumbs'],
 		);
+
 		$settings[] = array(
 			'key'        => 'logoImageLocation',
 			'name'       => $this->translate('URL or path to alternate logo image'),
@@ -185,6 +198,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['logoImageLocation'],
 		);
+
 		$settings[] = array(
 			'key'        => 'extraLink',
 			'name'       => $this->translate('Extra link for top navigation bar'),
@@ -194,6 +208,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['extraLink'],
 		);
+
 		$settings[] = array(
 			'key'        => 'extraLinkUrl',
 			'name'       => $this->translate('URL for the extra link'),
@@ -203,6 +218,7 @@ class CarbonTheme extends GalleryTheme {
 			),
 			'value'      => $params['extraLinkUrl'],
 		);
+
 		$settings[] = array(
 			'key'        => 'copyright',
 			'name'       => $this->translate('Copyright message to display on footer'),
@@ -305,6 +321,7 @@ class CarbonTheme extends GalleryTheme {
 		if (!empty($params['showMicroThumbs'])) {
 			$dataTypes[] = 'navThumbnails';
 		}
+
 		$ret = $this->loadCommonTemplateData($template, $item, $params, $dataTypes);
 
 		if ($ret) {
@@ -400,11 +417,13 @@ class CarbonTheme extends GalleryTheme {
 				if ($ret) {
 					return $ret;
 				}
+
 				$ret = $this->setParameter($newKey, $value);
 
 				if ($ret) {
 					return $ret;
 				}
+
 				$ret = $this->removeParameter($oldKey);
 
 				if ($ret) {

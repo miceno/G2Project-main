@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -160,8 +159,10 @@ class GalleryPluginHelper_medium {
 						$pluginIds[] = $file;
 					}
 				}
+
 				$platform->closedir($dir);
 			}
+
 			GalleryDataCache::put($cacheKey, $pluginIds);
 		}
 
@@ -241,6 +242,7 @@ class GalleryPluginHelper_medium {
 
 			// Invalidate our cache
 			$cacheKey = "GalleryPluginHelper::fetchAllParameters($pluginType, $pluginId, $itemId)";
+
 			GalleryDataCache::remove($cacheKey);
 			GalleryDataCache::removeFromDisk(
 				array(
@@ -280,8 +282,9 @@ class GalleryPluginHelper_medium {
 			return $ret;
 		}
 
-		// Invalidate the entire cache for this plugin, because we can't invalidate by value
+		// Invalidate the entire cache for this plugin, because we cannot invalidate by value
 		$cacheKey = "GalleryPluginHelper::fetchAllParameters\($pluginType, $pluginId, .*\)";
+
 		GalleryDataCache::removeByPattern($cacheKey);
 		GalleryDataCache::removeFromDisk(
 			array(
@@ -354,12 +357,13 @@ class GalleryPluginHelper_medium {
 		}
 
 		/*
-		 * Figure out if this is an insert or an update.  It's an insert if we don't have an
-		 * existing parameter by that name.  Otherwise, it's an update.
+		 * Figure out if this is an insert or an update.  It is an insert if we do not have an
+		 * existing parameter by that name.  Otherwise, it is an update.
 		 */
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/helpers/GalleryPluginHelper_simple.class'
 		);
+
 		list($ret, $params) = GalleryPluginHelper_simple::_fetchAllParameters($pluginType, $pluginId, $itemId);
 
 		if ($ret) {
@@ -399,6 +403,7 @@ class GalleryPluginHelper_medium {
 
 			// Invalidate our cache
 			$cacheKey = "GalleryPluginHelper::fetchAllParameters($pluginType, $pluginId, $id)";
+
 			GalleryDataCache::remove($cacheKey);
 			GalleryDataCache::removeFromDisk(
 				array(
@@ -459,6 +464,7 @@ class GalleryPluginHelper_medium {
 		}
 
 		$cacheKey = "GalleryPluginHelper::fetchAllParameters($pluginType, $pluginId, $itemId)";
+
 		GalleryDataCache::remove($cacheKey);
 
 		return null;
@@ -503,6 +509,7 @@ class GalleryPluginHelper_medium {
 		}
 
 		$cacheKey = "GalleryPluginHelper::fetchAllParameters($pluginType, $pluginId, $itemId)";
+
 		GalleryDataCache::remove($cacheKey);
 
 		return null;

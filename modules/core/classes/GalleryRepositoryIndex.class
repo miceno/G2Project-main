@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepositoryUtilities.class');
 
 /**
@@ -62,12 +60,12 @@ class GalleryRepositoryIndex {
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic($source) {
-		$singleton = new GalleryRepositoryIndex($source);
+	public static function getMe($source) {
+		$instance = new GalleryRepositoryIndex($source);
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -77,13 +75,14 @@ class GalleryRepositoryIndex {
 	 */
 	public function update() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
+		$platform     =& $gallery->getPlatform();
 		$indexUrl     = $gallery->getConfig('repository.url') . $this->_source . '/index';
 		$indexHashUrl = $indexUrl . '.hash';
+		$path         = $this->getRepositoryCacheDir();
 
-		$path                     = $this->getRepositoryCacheDir();
 		list($success1, $ignored) = GalleryUtilities::guaranteeDirExists($path . 'modules');
+
 		list($success2, $ignored) = GalleryUtilities::guaranteeDirExists($path . 'themes');
 
 		if (!$success1 || !$success2) {
@@ -218,6 +217,7 @@ class GalleryRepositoryIndex {
 	 */
 	public function existsInCache() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->file_exists($this->getRepositoryCacheDir() . 'index.repository');
@@ -229,8 +229,8 @@ class GalleryRepositoryIndex {
 	 */
 	public function load() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
+		$platform  =& $gallery->getPlatform();
 		$indexPath = $this->getRepositoryCacheDir() . 'index.repository';
 
 		if (false === ($index = $platform->file_get_contents($indexPath))) {
@@ -251,6 +251,7 @@ class GalleryRepositoryIndex {
 			if ($ret->getErrorCode() & ERROR_BAD_PARAMETER) {
 				// Remove the broken index so that a subsequent download will fix it
 				$platform->unlink($indexPath);
+
 				$ret = GalleryCoreApi::error(
 					ERROR_BAD_PARAMETER,
 					__FILE__,
@@ -278,6 +279,7 @@ class GalleryRepositoryIndex {
 
 			return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 		}
+
 		$this->_isLoaded = true;
 
 		return null;
@@ -364,7 +366,8 @@ class GalleryRepositoryIndex {
 
 			foreach ($data['languages'][$stringRevision] as $langCode => $version) {
 				list($language, $country) = explode('_', $langCode . '_');
-				$installed                = empty($country) ? !empty($languages[$language]) : !empty($languages[$language][$country]);
+
+				$installed = empty($country) ? !empty($languages[$language]) : !empty($languages[$language][$country]);
 
 				if ($installed) {
 					$languageData[$langCode] = $version;
@@ -390,7 +393,7 @@ class GalleryRepositoryIndex {
 
 	/**
 	 * Returns the specified plugin's name in the active language.
-	 * If it's not available in the active language, fall back to 'en_US'.
+	 * If it is not available in the active language, fall back to 'en_US'.
 	 *
 	 * @param string $pluginType
 	 * @param string $pluginId
@@ -619,6 +622,7 @@ class GalleryRepositoryIndex {
 					if ($ret) {
 						return array($ret, null);
 					}
+
 					$pluginList[$pluginType][$pluginId]['localVersion'] = $version;
 				}
 			}
@@ -670,9 +674,9 @@ class GalleryRepositoryIndex {
 	 */
 	public function getLanguagePackageFiles($locales) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$files = array();
+		$platform =& $gallery->getPlatform();
+		$files    = array();
 
 		if (!is_array($locales)) {
 			$locales = array($locales);
@@ -702,6 +706,7 @@ class GalleryRepositoryIndex {
 						if ($ret) {
 							return array($ret, null);
 						}
+
 						$requiredCoreApi   = $plugin->getRequiredCoreApi();
 						$requiredPluginApi = $pluginType == 'module' ? $plugin->getRequiredModuleApi() : $plugin->getRequiredThemeApi();
 					} else {
@@ -723,7 +728,8 @@ class GalleryRepositoryIndex {
 						continue;
 					}
 
-					$stringsRevision        = $entry['header']['stringsRevision'];
+					$stringsRevision = $entry['header']['stringsRevision'];
+
 					list($ret, $pluginName) = $this->getPluginName($pluginType, $pluginId);
 
 					if ($ret) {
@@ -754,6 +760,7 @@ class GalleryRepositoryIndex {
 							&& (empty($revision[$locale])
 							  || $package['version'] < $revision[$locale]);
 						}
+
 						/*
 						 * We want this pack if it is not installed or if the the local revision is
 						 * older than the repository revision
@@ -764,6 +771,7 @@ class GalleryRepositoryIndex {
 							if ($ret) {
 								return array($ret, null);
 							}
+
 							$files[$pluginType][$pluginId]['name']                = $pluginName;
 							$files[$pluginType][$pluginId]['files']['descriptor'] = $descriptorUrl;
 							$files[$pluginType][$pluginId]['files'][$locale]      = $packageUrl;

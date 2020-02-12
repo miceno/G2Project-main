@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class AdminEditGroupUsersController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminEditGroupUsersController();
+		if (!isset($instance)) {
+			$instance = new AdminEditGroupUsersController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -54,7 +53,8 @@ class AdminEditGroupUsersController extends GalleryController {
 		$results = $error = $status = array();
 
 		// Load the group
-		$groupId           = GalleryUtilities::getRequestVariables('groupId');
+		$groupId = GalleryUtilities::getRequestVariables('groupId');
+
 		list($ret, $group) = GalleryCoreApi::loadEntitiesById($groupId, 'GalleryGroup');
 
 		if ($ret) {
@@ -77,7 +77,7 @@ class AdminEditGroupUsersController extends GalleryController {
 					$error[] = 'form[error][list][noUserSelected]';
 				} else {
 					foreach ($form['userIds'] as $userId => $dummy) {
-						// Can't remove yourself from the site admins list
+						// Cannot remove yourself from the site admins list
 						if ($group->getGroupType() == GROUP_SITE_ADMINS
 							&& $userId == $gallery->getActiveUserId()
 						) {
@@ -101,6 +101,7 @@ class AdminEditGroupUsersController extends GalleryController {
 						if ($ret) {
 							return array($ret, null);
 						}
+
 						$removedUsers++;
 					}
 
@@ -158,6 +159,7 @@ class AdminEditGroupUsersController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'core.AdminEditGroupUsers';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -170,16 +172,16 @@ class AdminEditGroupUsersController extends GalleryController {
  */
 class AdminEditGroupUsersView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminEditGroupUsersView();
+		if (!isset($instance)) {
+			$instance = new AdminEditGroupUsersView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -204,7 +206,8 @@ class AdminEditGroupUsersView extends GalleryView {
 		}
 
 		// Load the group
-		$groupId           = GalleryUtilities::getRequestVariables('groupId');
+		$groupId = GalleryUtilities::getRequestVariables('groupId');
+
 		list($ret, $group) = GalleryCoreApi::loadEntitiesById($groupId, 'GalleryGroup');
 
 		if ($ret) {

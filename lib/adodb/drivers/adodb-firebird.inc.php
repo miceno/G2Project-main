@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,9 +8,7 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
 */
 
 // security - hide paths
@@ -23,7 +22,8 @@ class ADODB_firebird extends ADODB_ibase {
 	public $databaseType = 'firebird';
 	public $dialect      = 3;
 
-	public $sysTimeStamp = 'CURRENT_TIMESTAMP'; //"cast('NOW' as timestamp)";
+	//"cast('NOW' as timestamp)";
+	public $sysTimeStamp = 'CURRENT_TIMESTAMP';
 
 	public function ServerInfo() {
 		$arr['dialect'] = $this->dialect;
@@ -46,13 +46,14 @@ class ADODB_firebird extends ADODB_ibase {
 
 				break;
 		}
+
 		$arr['version']     = ADOConnection::_findvers($s);
 		$arr['description'] = $s;
 
 		return $arr;
 	}
 
-	// Note that Interbase 6.5 uses this ROWS instead - don't you love forking wars!
+	// Note that Interbase 6.5 uses this ROWS instead - do not you love forking wars!
 	// 		SELECT col1, col2 FROM table ROWS 5 -- get 5 rows
 	//		SELECT col1, col2 FROM TABLE ORDER BY col1 ROWS 3 TO 7 -- first 5 skip 2
 	public function SelectLimit($sql, $nrows = -1, $offset = -1, $inputarr = false, $secs = 0) {
@@ -63,9 +64,9 @@ class ADODB_firebird extends ADODB_ibase {
 		if ($nrows >= 0) {
 			$str .= "FIRST $nrows ";
 		}
-		$str .= ($offset >= 0) ? "SKIP $offset " : '';
 
-		$sql = preg_replace('/^[ \t]*select/i', $str, $sql);
+		$str .= ($offset >= 0) ? "SKIP $offset " : '';
+		$sql  = preg_replace('/^[ \t]*select/i', $str, $sql);
 
 		if ($secs) {
 			$rs = $this->CacheExecute($secs, $sql, $inputarr);
@@ -76,7 +77,6 @@ class ADODB_firebird extends ADODB_ibase {
 		return $rs;
 	}
 }
-
 
 class ADORecordSet_firebird extends ADORecordSet_ibase {
 	public $databaseType = 'firebird';

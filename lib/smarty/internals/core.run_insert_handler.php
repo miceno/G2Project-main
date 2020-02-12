@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -51,6 +52,7 @@ function smarty_core_run_insert_handler($params, &$smarty) {
 		} else {
 			$smarty->_eval($_params['php_resource']);
 		}
+
 		unset($params['args']['script']);
 	}
 
@@ -61,6 +63,7 @@ function smarty_core_run_insert_handler($params, &$smarty) {
 		$_params = array();
 
 		include_once SMARTY_CORE_DIR . 'core.get_microtime.php';
+
 		$smarty->_smarty_debug_info[] = array(
 			'type'      => 'insert',
 			'filename'  => 'insert_' . $params['args']['name'],

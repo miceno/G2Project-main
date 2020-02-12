@@ -21,10 +21,13 @@ class ADODB2_mysql extends ADODB_DataDict {
 	public $databaseType       = 'mysql';
 	public $alterCol           = ' MODIFY COLUMN';
 	public $alterTableAddIndex = true;
-	public $dropTable          = 'DROP TABLE IF EXISTS %s'; // requires mysql 3.22 or later
 
-	public $dropIndex    = 'DROP INDEX %s ON %s';
-	public $renameColumn = 'ALTER TABLE %s CHANGE COLUMN %s %s %s';    // needs column-definition!
+	// requires mysql 3.22 or later
+	public $dropTable = 'DROP TABLE IF EXISTS %s';
+	public $dropIndex = 'DROP INDEX %s ON %s';
+
+	// needs column-definition!
+	public $renameColumn = 'ALTER TABLE %s CHANGE COLUMN %s %s %s';
 
 	public function MetaType($t, $len = -1, $fieldobj = false) {
 		if (is_object($t)) {
@@ -32,9 +35,12 @@ class ADODB2_mysql extends ADODB_DataDict {
 			$t        = $fieldobj->type;
 			$len      = $fieldobj->max_length;
 		}
+
 		$is_serial = is_object($fieldobj) && $fieldobj->primary_key && $fieldobj->auto_increment;
 
-		$len = -1; // mysql max_length is not accurate
+		// mysql max_length is not accurate
+		$len = -1;
+
 		switch (strtoupper($t)) {
 			case 'STRING':
 			case 'CHAR':
@@ -197,7 +203,6 @@ class ADODB2_mysql extends ADODB_DataDict {
 	CREATE [UNIQUE|FULLTEXT] INDEX index_name
 		ON tbl_name (col_name[(length)],... )
 	*/
-
 	public function _IndexSQL($idxname, $tabname, $flds, $idxoptions) {
 		$sql = array();
 

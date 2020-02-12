@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -51,8 +50,10 @@ class RepositoryPackageTest extends GalleryTestCase {
 		}
 
 		$this->_package = new RepositoryPackage();
+
 		$this->_package->setTemplate(new RepositoryTestTemplate());
 		$this->_package->setTemplateFile('test.tpl');
+
 		$this->_package->_outputDir = 'someoutputdir/';
 
 		// Prepare the data we expect from the methods tested for comparison.
@@ -121,6 +122,7 @@ class RepositoryPackageTest extends GalleryTestCase {
 		);
 
 		$platform = new UnitTestPlatform();
+
 		$platform->setReply(
 			'file_get_contents',
 			array('pluginDirectory/file1'),
@@ -136,7 +138,8 @@ class RepositoryPackageTest extends GalleryTestCase {
 
 		// Send data to template.
 		$this->_package->_descriptor = $testDescriptor;
-		$ret                         = $this->_package->writeSinglePackageToDisk('package1');
+
+		$ret = $this->_package->writeSinglePackageToDisk('package1');
 
 		if ($ret) {
 			return $ret;
@@ -144,12 +147,13 @@ class RepositoryPackageTest extends GalleryTestCase {
 
 		// Get data from template.
 		$templateVariables = $this->_package->_template->getVariables();
+
 		$this->assertEquals($this->_expectedPackageData['package1'], $templateVariables, '');
 
 		// Verify that the package was named appropriately.
 		$packagePath = $this->_package->getOutputDir() . $this->_package->getOutputFile();
-		$this->assertEquals($expectedPackagePath, $packagePath, 'Package written to wrong path []');
 
+		$this->assertEquals($expectedPackagePath, $packagePath, 'Package written to wrong path []');
 		$this->assertTrue($platform->isComplete(), $platform->getRemaining());
 	}
 
@@ -157,8 +161,8 @@ class RepositoryPackageTest extends GalleryTestCase {
 		global $gallery;
 
 		$this->_package->_descriptor = new RepositoryPackageTestDescriptor();
+		$platform                    = new UnitTestPlatform();
 
-		$platform = new UnitTestPlatform();
 		$platform->setReply(
 			'file_get_contents',
 			array('pluginDirectory/file1'),
@@ -221,7 +225,6 @@ class RepositoryPackageTest extends GalleryTestCase {
 		$templateVariables = $this->_package->_template->getVariables();
 
 		$this->assertEquals($this->_expectedPackageData['package1'] + $this->_expectedPackageData['package2'], $templateVariables, 'package data');
-
 		$this->assertTrue($platform->isComplete(), $platform->getRemaining());
 	}
 
@@ -233,13 +236,11 @@ class RepositoryPackageTest extends GalleryTestCase {
 			$this->_package->getPackageFileName('base'),
 			'Unexpected package file name generated.'
 		);
-
 		$this->assertEquals(
 			'testplugin-1.0.0-19700411131300-test.package',
 			$this->_package->getPackageFileName('test'),
 			'Unexpected package file name generated.'
 		);
-
 		$this->assertEquals(
 			'testplugin-lang-en_EN-2.2-2.2.package',
 			$this->_package->getPackageFileName('lang-en_EN'),
@@ -260,7 +261,6 @@ class RepositoryPackageTest extends GalleryTestCase {
 			'mock-filename',
 			$testPackage->getPackageHash('package-type', 20)
 		);
-
 		$this->assertEquals(
 			'moc',
 			$testPackage->getPackageHash('package-type', 3)
@@ -286,15 +286,13 @@ class RepositoryPackageTestDescriptor {
 	public $_packages;
 	public $_directories;
 	public $_files;
-
 	public $_pluginId;
 	public $_pluginType;
 	public $_pluginDir;
 	public $_pluginVersion;
 
 	public function __construct() {
-		$this->_packages = array('package1', 'package2');
-
+		$this->_packages    = array('package1', 'package2');
 		$this->_directories = array(
 			'package1' => array('dir1', 'dir2'),
 			'package2' => array('dir2', 'dir3'),

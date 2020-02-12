@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * @version $Revision: 18156 $
  * @package RepositoryTools
@@ -44,6 +44,7 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		global $gallery;
 
 		// This maps to ../data/MANIFEST
@@ -131,17 +132,22 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 
 		$gallery->_translator = new RepositoryDescriptorTestTranslator();
 		$gallery->_platform   = new UnitTestPlatform();
+
 		$gallery->_platform->setReply('file_exists', array('/MANIFEST'), true);
 	}
 
 	public function _getDescriptorWithFakeFileMetadata() {
 		$data  = array();
 		$utils = new RepositoryDescriptorTestUtilities();
+
 		$utils->setGetFileRevision('/MANIFEST', '14604');
 		$utils->setGetFileRevision('/po/aa.po', '14444');
+
 		$descriptor = new RepositoryDescriptor_FakeFileMetaDataTest($this->_canonicalFileMetaData);
+
 		$descriptor->setUtilities($utils);
 		$descriptor->setTemplate(new RepositoryTestTemplate());
+
 		$descriptor->_pluginDir = '/';
 
 		return $descriptor;
@@ -152,7 +158,8 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 	 */
 	public function testDescriptorGeneration() {
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
@@ -272,14 +279,17 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 		global $gallery;
 
 		$gallery->_platform = new UnitTestPlatform();
+
 		$gallery->_platform->setReply('file_exists', array('/MANIFEST'), false);
 
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(),
 			$descriptor->_data,
@@ -294,29 +304,28 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 		$data        = array();
 		$descriptor  = new RepositoryDescriptor();
 		$utils       = new RepositoryDescriptorTestUtilities();
+
 		$utils->setGetFileRevision($testDataDir . 'po/strings.raw', '22222');
 		$descriptor->setUtilities($utils);
 
-		$platform = new UnitTestPlatform();
-
+		$platform      = new UnitTestPlatform();
 		$manifestLines = file($testDataDir . 'MANIFEST');
-		$platform->setReply('file', array($testDataDir . 'MANIFEST', null), $manifestLines);
 
+		$platform->setReply('file', array($testDataDir . 'MANIFEST', null), $manifestLines);
 		$platform->setReply(
 			'file_get_contents',
 			array($testDataDir . 'MANIFEST'),
 			str_repeat('x', 12121)
 		);
 		$gallery->setPlatform($platform);
-
 		$descriptor->getFileMetaData(dirname(__DIR__) . '/data/', $data);
-
 		$this->assertEquals($this->_canonicalFileMetaData, $data);
 	}
 
 	public function testGetDirectoriesInPackage() {
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
@@ -328,7 +337,7 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 		);
 
 		/*
-		 * It's important that parent dirs show up before child dirs because we'll be calling
+		 * It is important that parent dirs show up before child dirs because we will be calling
 		 * mkdir on them in this order.
 		 */
 		$this->assertEquals(
@@ -339,7 +348,8 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 
 	public function testGetFilesInPackage() {
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
@@ -349,7 +359,6 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 			array('MANIFEST', 'file.1', 'file.2', 'po/strings.raw'),
 			$descriptor->getFilesInPackage('base')
 		);
-
 		$this->assertEquals(
 			array('locale/aa/LC_MESSAGES/test.mo', 'po/aa.mo', 'po/aa.po'),
 			$descriptor->getFilesInPackage('lang-aa')
@@ -358,7 +367,8 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 
 	public function testGetPackages() {
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
@@ -372,52 +382,71 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 
 	public function testCheckIntegrityMissingManifest() {
 		global $gallery;
+
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
 		}
 
 		$platform = new UnitTestPlatform();
+
 		$platform->setReply('is_readable', array($descriptor->getPluginDir() . 'MANIFEST'), false);
 		$gallery->setPlatform($platform);
-
 		$this->assertEquals(
 			array('Missing MANIFEST'),
 			$descriptor->checkIntegrity()
 		);
-
 		$this->assertTrue($platform->isComplete(), $platform->getRemaining());
 	}
 
 	/**
 	 * I'd rather test each of these errors individually, but RepositoryDescriptor is structured
-	 * in such a way that it's hard to get data into it easily, so it's easiest to just test our
+	 * in such a way that it is hard to get data into it easily, so it is easiest to just test our
 	 * whole test MANIFEST at once.
 	 */
 	public function testCheckIntegrity() {
 		global $gallery;
+
 		$descriptor = $this->_getDescriptorWithFakeFileMetadata();
-		$ret        = $descriptor->generate(new RepositoryDescriptorTestPlugin());
+
+		$ret = $descriptor->generate(new RepositoryDescriptorTestPlugin());
 
 		if ($ret) {
 			return $ret;
 		}
 
 		$phpVm = new RepositoryDescriptorTestPhpVm();
-		$phpVm->setCrc32('file.1', 1);     // wrong checksum
-		$phpVm->setCrc32('file.2', 12345); // correct checksum
-		$phpVm->setCrc32('strings.raw', 12345); // correct checksum
-		$phpVm->setCrc32('aa.po', 12345); // correct checksum
-		$phpVm->setCrc32('aa.mo', 12345); // correct checksum
-		$phpVm->setCrc32('test.mo', 12345); // correct checksum
-		$phpVm->setCrc32('file.test', 12345); // correct checksum
-		$gallery->_phpVm = $phpVm;
 
-		$platform = new UnitTestPlatform();
-		$base     = $descriptor->getPluginDir();
+		// wrong checksum
+		$phpVm->setCrc32('file.1', 1);
+
+		// correct checksum
+		$phpVm->setCrc32('file.2', 12345);
+
+		// correct checksum
+		$phpVm->setCrc32('strings.raw', 12345);
+
+		// correct checksum
+		$phpVm->setCrc32('aa.po', 12345);
+
+		// correct checksum
+		$phpVm->setCrc32('aa.mo', 12345);
+
+		// correct checksum
+		$phpVm->setCrc32('test.mo', 12345);
+
+		// correct checksum
+		$phpVm->setCrc32('file.test', 12345);
+
+		$gallery->_phpVm = $phpVm;
+		$platform        = new UnitTestPlatform();
+		$base            = $descriptor->getPluginDir();
+
 		$platform->setReply('is_readable', array($base . 'MANIFEST'), true);
+
 		$platform->setReply(
 			'stat',
 			array($base . 'MANIFEST'),
@@ -433,6 +462,7 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 		// file.2 is newer than the MANIFEST, and has the wrong size
 		$platform->setReply('file_exists', array($base . 'file.2'), true);
 		$platform->setReply('file_get_contents', array($base . 'file.2'), 'file.2');
+
 		$platform->setReply(
 			'stat',
 			array($base . 'file.2'),
@@ -448,6 +478,7 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 		// the rest of the files are older than the MANIFEST and have the right file size
 		$platform->setReply('file_exists', array($base . 'po/aa.po'), true);
 		$platform->setReply('file_get_contents', array($base . 'po/aa.po'), 'aa.po');
+
 		$platform->setReply(
 			'stat',
 			array($base . 'po/aa.po'),
@@ -456,8 +487,10 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 				9 => 1,
 			)
 		);
+
 		$platform->setReply('file_exists', array($base . 'po/aa.mo'), true);
 		$platform->setReply('file_get_contents', array($base . 'po/aa.mo'), 'aa.mo');
+
 		$platform->setReply(
 			'stat',
 			array($base . 'po/aa.mo'),
@@ -466,12 +499,14 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 				9 => 1,
 			)
 		);
+
 		$platform->setReply('file_exists', array($base . 'locale/aa/LC_MESSAGES/test.mo'), true);
 		$platform->setReply(
 			'file_get_contents',
 			array($base . 'locale/aa/LC_MESSAGES/test.mo'),
 			'test.mo'
 		);
+
 		$platform->setReply(
 			'stat',
 			array($base . 'locale/aa/LC_MESSAGES/test.mo'),
@@ -480,12 +515,14 @@ class RepositoryDescriptorTest extends GalleryTestCase {
 				9 => 1,
 			)
 		);
+
 		$platform->setReply('file_exists', array($base . 'test/phpunit/file.test'), true);
 		$platform->setReply(
 			'file_get_contents',
 			array($base . 'test/phpunit/file.test'),
 			'file.test'
 		);
+
 		$platform->setReply(
 			'stat',
 			array($base . 'test/phpunit/file.test'),

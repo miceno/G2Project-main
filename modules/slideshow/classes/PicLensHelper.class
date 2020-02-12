@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -35,9 +34,9 @@ class PicLensHelper {
 	 */
 	public static function install() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$info = PicLensHelper::getLatestPicLensInfo();
+		$platform =& $gallery->getPlatform();
+		$info     = PicLensHelper::getLatestPicLensInfo();
 
 		if (empty($info)) {
 			return array(GalleryCoreApi::error(ERROR_PLATFORM_FAILURE), null);
@@ -47,9 +46,10 @@ class PicLensHelper {
 			return array(GalleryCoreApi::error(ERROR_MISSING_VALUE), null);
 		}
 
-		$codeDir        = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow/';
-		$jsPath         = "${codeDir}piclens.js";
-		$swfPath        = "${codeDir}PicLensLite.swf";
+		$codeDir = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow/';
+		$jsPath  = "${codeDir}piclens.js";
+		$swfPath = "${codeDir}PicLensLite.swf";
+
 		list($success1) = GalleryCoreApi::fetchWebFile($info['jsUrl'], "$jsPath.new");
 		list($success2) = GalleryCoreApi::fetchWebFile($info['swfUrl'], "$swfPath.new");
 
@@ -75,10 +75,11 @@ class PicLensHelper {
 	/**
 	 * Get information about the latest version of the PicLens code.
 	 *
-	 * @return array('version' => version number,
-	 *               'jsUrl' => url to the JS file,
-	 *               'swfUrl' => url to the SWF file)
-	 * @static
+	 * @return array(
+	 *   'version' => version number,
+	 *   'jsUrl' => url to the JS file,
+	 *   'swfUrl' => url to the SWF file
+	 * )
 	 */
 	public static function getLatestPicLensInfo() {
 		$url                  = 'http://gallery.menalto.com/versioncheck/piclens/release';
@@ -92,6 +93,7 @@ class PicLensHelper {
 
 		foreach (explode("\n", $body) as $line) {
 			$pair = explode('=', $line, 2);
+
 			GalleryUtilities::sanitizeInputValues($pair);
 
 			if (count($pair) == 2) {
@@ -107,9 +109,9 @@ class PicLensHelper {
 	 */
 	public static function uninstall() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$codeDir = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow/';
+		$platform =& $gallery->getPlatform();
+		$codeDir  = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow/';
 
 		foreach (array('piclens.js', 'PicLensLite.swf') as $file) {
 			$path = "{$codeDir}$file";

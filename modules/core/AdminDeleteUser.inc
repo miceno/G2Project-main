@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,8 +26,8 @@
  * presented with a choice between two radio buttons, between 'Delete user x and...'
  * a) 'assign a new owner for all his items' and
  * b) 'delete all his items and assign a new owner for all non empty albums'
- * Next there's a textfield 'New owner' in the form. Leaving blank this form means to assign the
- * items to the default new owner, 'admin'.  If user x didn't own any items, Joe can just decide
+ * Next there is a textfield 'New owner' in the form. Leaving blank this form means to assign the
+ * items to the default new owner, 'admin'.  If user x did not own any items, Joe can just decide
  * between 'cancel' and 'delete'.  When clicking 'cancel', Joe is redirected to the AdminUsers
  * view.  When hitting 'delete' and in case
  * a) the controller checks for the new owner field and assigns the new owner to all items of
@@ -43,16 +42,16 @@
  */
 class AdminDeleteUserController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminDeleteUserController();
+		if (!isset($instance)) {
+			$instance = new AdminDeleteUserController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -70,8 +69,7 @@ class AdminDeleteUserController extends GalleryController {
 		$results = array();
 		$status  = array();
 		$error   = array();
-
-		$userId = GalleryUtilities::getRequestVariables('userId');
+		$userId  = GalleryUtilities::getRequestVariables('userId');
 
 		if (isset($form['action']['cancel'])) {
 			// Go back to the AdminUsers view
@@ -96,16 +94,20 @@ class AdminDeleteUserController extends GalleryController {
 				if ($ret) {
 					if (!($ret->getErrorCode() & ERROR_MISSING_OBJECT)) {
 						return array($ret, null);
-					}   // the user was spelled incorrectly, return an error page
+					} // the user was spelled incorrectly, return an error page
+
 					$error[] = 'form[error][text][noSuchUser]';
 				} elseif ($newOwner->getId() == $userId) {
-					// new Owner = deleted user, doesn't make sense
+					// new Owner = deleted user, does not make sense
 					$error[] = 'form[error][text][newOwnerIsDeletedUser]';
 				} elseif ($newOwner->getId() == $anonymousUserId) {
 					$error[] = 'form[error][text][newOwnerIsGuest]';
 				}
-			} else { // new owner field is empty, set the default new owner: 'admin'
-				$activeUserId         = $gallery->getActiveUserId(); // activeUser = site admin
+			} else {
+				// new owner field is empty, set the default new owner: 'admin'
+				// activeUser = site admin
+				$activeUserId = $gallery->getActiveUserId();
+
 				list($ret, $newOwner) = GalleryCoreApi::loadEntitiesById($activeUserId, 'GalleryUser');
 
 				if ($ret) {
@@ -128,10 +130,10 @@ class AdminDeleteUserController extends GalleryController {
 			}
 
 			/*
-			 * Only continue to delete the user if we have no errors and if we don't try
+			 * Only continue to delete the user if we have no errors and if we do not try
 			 * to delete the anonymous user or the active user.  In theory we should never
-			 * get to this point unless we're operating on a valid user, so don't bother
-			 * sending errors back in case we can't delete.
+			 * get to this point unless we are operating on a valid user, so do not bother
+			 * sending errors back in case we cannot delete.
 			 */
 			if (empty($error) && $userId != $anonymousUserId
 				&& $userId != $gallery->getActiveUserId()
@@ -145,7 +147,7 @@ class AdminDeleteUserController extends GalleryController {
 					if ($form['deletionVariant'] == 'deleteItems') {
 						/*
 						 * Delete all items the user has permission to delete,
-						 * don't delete albums that still contain items
+						 * do not delete albums that still contain items
 						 */
 						$ret = GalleryCoreApi::deleteUserItems($user->getId());
 
@@ -182,6 +184,7 @@ class AdminDeleteUserController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'core.AdminDeleteUser';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -194,16 +197,16 @@ class AdminDeleteUserController extends GalleryController {
  */
 class AdminDeleteUserView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminDeleteUserView();
+		if (!isset($instance)) {
+			$instance = new AdminDeleteUserView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -216,7 +219,8 @@ class AdminDeleteUserView extends GalleryView {
 			return array($ret, null);
 		}
 
-		$userId           = GalleryUtilities::getRequestVariables('userId');
+		$userId = GalleryUtilities::getRequestVariables('userId');
+
 		list($ret, $user) = GalleryCoreApi::loadEntitiesById($userId, 'GalleryUser');
 
 		if ($ret) {
@@ -231,12 +235,14 @@ class AdminDeleteUserView extends GalleryView {
 
 		$AdminDeleteUser         = array();
 		$AdminDeleteUser['user'] = (array)$user;
+
 		// Get all items / the item count of the oldUser
 		list($ret, $itemIds) = GalleryCoreApi::fetchAllItemIdsByOwnerId($user->getId());
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$AdminDeleteUser['numberOfItems'] = count($itemIds);
 
 		$template->setVariable('AdminDeleteUser', $AdminDeleteUser);

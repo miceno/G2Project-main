@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/comment/classes/AkismetApi.class');
 GalleryCoreApi::requireOnce('modules/comment/classes/GalleryCommentHelper.class');
 
@@ -41,6 +39,7 @@ class CommentSiteAdminController extends GalleryController {
 	 */
 	public function handleRequest($form) {
 		global $gallery;
+
 		$ret = GalleryCoreApi::assertUserIsSiteAdministrator();
 
 		if ($ret) {
@@ -69,7 +68,7 @@ class CommentSiteAdminController extends GalleryController {
 			}
 
 			if (!empty($form['apiKey']) && $form['apiKey'] != $currentApiKey) {
-				// First validate locally (don't rely on remote server for input validation)
+				// First validate locally (do not rely on remote server for input validation)
 				if (!preg_match('/^[A-Za-z0-9]+$/', trim($form['apiKey']))) {
 					$error[] = 'form[error][apiKey][invalid]';
 				}
@@ -93,6 +92,7 @@ class CommentSiteAdminController extends GalleryController {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$ret = $module->setParameter(
 					'comments.latest',
 					(isset($form['latest']) && $form['latest']) ? 1 : 0
@@ -124,10 +124,12 @@ class CommentSiteAdminController extends GalleryController {
 			}
 		} elseif (isset($form['action']['checkAllWithAkismet'])) {
 			$templateAdapter =& $gallery->getTemplateAdapter();
+
 			$templateAdapter->registerTrailerCallback(
 				array($this, 'checkAllWithAkismet'),
 				array(new AkismetApi())
 			);
+
 			$delegate['view'] = 'core.ProgressBar';
 		}
 
@@ -139,6 +141,7 @@ class CommentSiteAdminController extends GalleryController {
 		} else {
 			$results['delegate'] = $delegate;
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -152,6 +155,7 @@ class CommentSiteAdminController extends GalleryController {
 	 */
 	public function checkAllWithAkismet($akismet) {
 		global $gallery;
+
 		$templateAdapter =& $gallery->getTemplateAdapter();
 		$session         =& $gallery->getSession();
 		$urlGenerator    =& $gallery->getUrlGenerator();
@@ -163,7 +167,8 @@ class CommentSiteAdminController extends GalleryController {
 			return $ret;
 		}
 
-		$status             = array();
+		$status = array();
+
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'comment');
 
 		if ($ret) {
@@ -172,9 +177,9 @@ class CommentSiteAdminController extends GalleryController {
 
 		/*
 		 * Disable the Akismet GalleryEntity::save listener so that if Akismet reports a message
-		 * as spam and we change its publish status, we don't report it back to Akismet.
+		 * as spam and we change its publish status, we do not report it back to Akismet.
 		 */
-		GalleryCommentHelper::doStatic()->setAkismetSaveListenerSwitch(false);
+		GalleryCommentHelper::getMe()->setAkismetSaveListenerSwitch(false);
 
 		$checkingCommentMessage = $module->translate('Checking all comments with Akismet');
 		$checkedCount           = 0;
@@ -183,8 +188,9 @@ class CommentSiteAdminController extends GalleryController {
 
 		while (true) {
 			$batchSize = 100;
+
 			/** @todo Should we include UNPUBLISHED comments here as well? */
-			list($ret, $comments, $total) = GalleryCommentHelper::doStatic()->fetchAllComments(
+			list($ret, $comments, $total) = GalleryCommentHelper::getMe()->fetchAllComments(
 				$rootId,
 				$batchSize,
 				$checkedCount,
@@ -228,6 +234,7 @@ class CommentSiteAdminController extends GalleryController {
 					}
 
 					$comment->setPublishStatus(COMMENT_PUBLISH_STATUS_SPAM);
+
 					$ret = $comment->save();
 
 					if ($ret) {
@@ -239,6 +246,7 @@ class CommentSiteAdminController extends GalleryController {
 					if ($ret) {
 						return $ret;
 					}
+
 					$spamCount++;
 				}
 			}
@@ -256,14 +264,15 @@ class CommentSiteAdminController extends GalleryController {
 
 		$templateAdapter->updateProgressBar($module->translate('Done checking comments'), '', 1);
 
-		GalleryCommentHelper::doStatic()->setAkismetSaveListenerSwitch(true);
+		GalleryCommentHelper::getMe()->setAkismetSaveListenerSwitch(true);
 
 		$status['checked'] = array(
 			'total'     => $total,
 			'spamCount' => $spamCount,
 		);
-		$statusId          = $session->putStatus($status);
-		$continueUrl       = $urlGenerator->generateUrl(
+
+		$statusId    = $session->putStatus($status);
+		$continueUrl = $urlGenerator->generateUrl(
 			array(
 				'view'     => 'core.SiteAdmin',
 				'subView'  => 'comment.CommentSiteAdmin',
@@ -273,6 +282,7 @@ class CommentSiteAdminController extends GalleryController {
 				'forceFullUrl' => true,
 			)
 		);
+
 		$templateAdapter->completeProgressBar($continueUrl, false);
 
 		return null;
@@ -301,18 +311,17 @@ class CommentSiteAdminView extends GalleryView {
 
 		if ($form['formName'] != 'CommentSiteAdmin') {
 			$form['formName'] = 'CommentSiteAdmin';
-
 			$form['latest']   = isset($params['comments.latest']) ? $params['comments.latest'] : '';
 			$form['show']     = $params['comments.show'];
 			$form['moderate'] = !empty($params['comments.moderate']);
 			$form['apiKey']   = isset($params['akismet.apiKey']) ? $params['akismet.apiKey'] : '';
 		}
 
-		$form['latest']   = !empty($form['latest']);
-		$form['moderate'] = !empty($form['moderate']);
-
+		$form['latest']                    = !empty($form['latest']);
+		$form['moderate']                  = !empty($form['moderate']);
 		$CommentSiteAdmin                  = array();
 		$CommentSiteAdmin['akismetActive'] = !empty($params['akismet.active']);
+
 		$template->setVariable('CommentSiteAdmin', $CommentSiteAdmin);
 		$template->setVariable('controller', 'comment.CommentSiteAdmin');
 

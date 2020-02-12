@@ -1,26 +1,25 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
  * Helper class for handling locking.  It delegates to the active GalleryLockSystem
- * implementation that we're using, which is stored in the Gallery instance.
+ * implementation that we are using, which is stored in the Gallery instance.
  * @package GalleryCore
  * @subpackage Helpers
  * @author Bharat Mediratta <bharat@menalto.com>
@@ -34,15 +33,19 @@ class GalleryLockHelper_simple {
 	 */
 	public static function getLockIds() {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			// Swallow this error; the API does not allow us to return one here
 			$result = array();
 
-			return $result;  // Doing it this way keeps the Code Audit happy
+			// Doing it this way keeps the Code Audit happy
+			return $result;
 		}
+
 		$lockSystem =& $result[1];
 
 		return $lockSystem->getLockIds();
@@ -54,12 +57,15 @@ class GalleryLockHelper_simple {
 	 */
 	public static function acquireReadLock($ids, $timeout = 10) {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$lockSystem =& $result[1];
 
 		list($ret, $lockId) = $lockSystem->acquireReadLock($ids, $timeout);
@@ -85,11 +91,13 @@ class GalleryLockHelper_simple {
 		 */
 		$storage =& $gallery->getStorage();
 		$result  =& $gallery->getLockSystem();
-		$ret     = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$lockSystem =& $result[1];
 
 		// Get the parent entity id
@@ -132,6 +140,7 @@ class GalleryLockHelper_simple {
 				$tmp[] = $id;
 			}
 		}
+
 		$parentIds = $tmp;
 
 		if (empty($parentIds)) {
@@ -155,17 +164,20 @@ class GalleryLockHelper_simple {
 	 */
 	public static function isReadLocked($ids) {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
-			// This method doesn't return a status code.  What should we do?
+			// This method does not return a status code.  What should we do?
 			if ($gallery->getDebug()) {
 				$gallery->debug($ret->getAsHtml());
 			}
 
 			return false;
 		}
+
 		$lockSystem =& $result[1];
 
 		return $lockSystem->isReadLocked($ids);
@@ -177,12 +189,15 @@ class GalleryLockHelper_simple {
 	 */
 	public static function acquireWriteLock($ids, $timeout = 10) {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$lockSystem =& $result[1];
 
 		list($ret, $lockId) = $lockSystem->acquireWriteLock($ids, $timeout);
@@ -200,17 +215,20 @@ class GalleryLockHelper_simple {
 	 */
 	public static function isWriteLocked($ids) {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
-			// This method doesn't return a status code.  What should we do?
+			// This method does not return a status code.  What should we do?
 			if ($gallery->getDebug()) {
 				$gallery->debug($ret->getAsHtml());
 			}
 
 			return false;
 		}
+
 		$lockSystem =& $result[1];
 
 		return $lockSystem->isWriteLocked($ids);
@@ -222,12 +240,15 @@ class GalleryLockHelper_simple {
 	 */
 	public static function releaseLocks($lockIds) {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$lockSystem =& $result[1];
 
 		$ret = $lockSystem->releaseLocks($lockIds);
@@ -245,12 +266,15 @@ class GalleryLockHelper_simple {
 	 */
 	public static function releaseAllLocks() {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$lockSystem =& $result[1];
 
 		$ret = $lockSystem->releaseAllLocks();
@@ -268,12 +292,15 @@ class GalleryLockHelper_simple {
 	 */
 	public static function refreshLocks($freshUntil) {
 		global $gallery;
+
 		$result =& $gallery->getLockSystem();
-		$ret    = $result[0];
+
+		$ret = $result[0];
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$lockSystem =& $result[1];
 
 		$ret = $lockSystem->refreshLocks($freshUntil);

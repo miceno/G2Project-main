@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemAddAlbumController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemAddAlbumController();
+		if (!isset($instance)) {
+			$instance = new ItemAddAlbumController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -50,6 +49,7 @@ class ItemAddAlbumController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Make sure we have permission do edit this item
@@ -114,7 +114,8 @@ class ItemAddAlbumController extends GalleryController {
 
 				// Figure out where to redirect upon success
 				$redirect['itemId'] = $instance->getId();
-				$ret                = GalleryCoreApi::assertHasItemPermission($instance->getId(), 'core.edit');
+
+				$ret = GalleryCoreApi::assertHasItemPermission($instance->getId(), 'core.edit');
 
 				if (empty($ret)) {
 					$redirect['view']       = 'core.ItemAdmin';
@@ -149,9 +150,9 @@ class ItemAddAlbumController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'core.ItemAddAlbum';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
-
 
 		return array(null, $results);
 	}
@@ -162,16 +163,16 @@ class ItemAddAlbumController extends GalleryController {
  */
 class ItemAddAlbumView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemAddAlbumView();
+		if (!isset($instance)) {
+			$instance = new ItemAddAlbumView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -185,6 +186,7 @@ class ItemAddAlbumView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Make sure we have permission do edit this item

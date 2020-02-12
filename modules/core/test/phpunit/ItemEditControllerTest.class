@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -56,6 +55,7 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 		$this->_unregisterFactoryImplementationForTest('ItemEditOption');
 
 		$path = 'modules/core/test/phpunit/ItemEditControllerTest.class';
+
 		$this->_registerFactoryImplementationForTest(
 			'ItemEditPlugin',
 			'ItemEditControllerTestPluginSuccess',
@@ -63,7 +63,6 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 			$path,
 			'coreTest'
 		);
-
 		$this->_registerFactoryImplementationForTest(
 			'ItemEditPlugin',
 			'ItemEditControllerTestPluginFailAndWarn',
@@ -71,7 +70,6 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 			$path,
 			'coreTest'
 		);
-
 		$this->_registerFactoryImplementationForTest(
 			'ItemEditOption',
 			'ItemEditControllerTestOption',
@@ -83,7 +81,6 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 				'ItemEditControllerTestPluginRequiresProgressBar',
 			)
 		);
-
 		$this->_registerFactoryImplementationForTest(
 			'ItemEditPlugin',
 			'ItemEditControllerTestPluginRequiresProgressBar',
@@ -91,7 +88,6 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 			$path,
 			'coreTest'
 		);
-
 		$this->_registerFactoryImplementationForTest(
 			'ItemEditOption',
 			'ItemEditControllerTestOptionWithProgressBar',
@@ -119,6 +115,7 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('editPlugin', 'ItemEditControllerTestPluginSuccess');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -143,6 +140,7 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('editPlugin', 'ItemEditControllerTestPluginSuccess');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -171,6 +169,7 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][save]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -212,8 +211,8 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 
 		$gallery->_templateAdapter = new MockTemplateAdapter();
 		$templateAdapter           =& $gallery->getTemplateAdapter();
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -237,6 +236,7 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 		} else {
 			$callback       = $templateAdapter->getCallback(0);
 			$callbackMethod = $callback[0][1];
+
 			$this->assertEquals('runProgressBarOptions', $callbackMethod);
 		}
 	}
@@ -254,8 +254,8 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 
 		$gallery->_templateAdapter = new MockTemplateAdapter();
 		$templateAdapter           =& $gallery->getTemplateAdapter();
+		$results                   = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -279,6 +279,7 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 		} else {
 			$callback       = $templateAdapter->getCallback(0);
 			$callbackMethod = $callback[0][1];
+
 			$this->assertEquals('runProgressBarOptions', $callbackMethod);
 		}
 	}
@@ -293,7 +294,6 @@ class ItemEditControllerTest extends GalleryControllerTestCase {
 class ItemEditControllerTestPluginSuccess {
 	public function handleRequest($form, &$item, &$preferred) {
 		// TODO: We should verify the item is legit here
-
 		// Check to see if we have a preferred source
 		list($ret, $preferredTable) = GalleryCoreApi::fetchPreferredsByItemIds(array($item->getId()));
 
@@ -330,7 +330,6 @@ class ItemEditControllerTestPluginFailAndWarn extends ItemEditPlugin {
 	}
 }
 
-
 /**
  * Test plugin that requires a progress bar
  *
@@ -344,7 +343,7 @@ class ItemEditControllerTestPluginRequiresProgressBar extends ItemEditPlugin {
 }
 
 /**
- * Test ItemEditOption that returns warnings and errors and doesn't require a progress bar.
+ * Test ItemEditOption that returns warnings and errors and does not require a progress bar.
  *
  * @package GalleryCore
  * @subpackage PHPUnit

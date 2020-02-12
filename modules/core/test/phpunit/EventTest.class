@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,6 +31,7 @@ class EventTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -39,11 +39,14 @@ class EventTest extends GalleryTestCase {
 		}
 
 		$EventTestPlatform = new EventTestPlatform();
+
 		$gallery->setPlatform($EventTestPlatform);
+
 		$this->_platform =& $gallery->getPlatform();
 
 		// Register a new module
 		GalleryDataCache::reset();
+
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'EventTest');
 
 		if ($ret) {
@@ -94,14 +97,16 @@ class EventTest extends GalleryTestCase {
 
 	public function testPostEvent() {
 		$eventName = 'EventTest::test';
+		$listener  = new EventTestEventListener($this);
 
-		$listener = new EventTestEventListener($this);
 		GalleryCoreApi::registerEventListener($eventName, $listener);
 
 		$event = GalleryCoreApi::newEvent($eventName);
 		$bogus = 'bogus entity';
+
 		$event->setEntity($bogus);
 		$event->setData('some data');
+
 		list($ret, $result) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -114,14 +119,16 @@ class EventTest extends GalleryTestCase {
 
 	public function testPostEventReturnData() {
 		$eventName = 'EventTest::test2';
+		$listener  = new EventTestEventListener($this);
 
-		$listener = new EventTestEventListener($this);
 		GalleryCoreApi::registerEventListener($eventName, $listener);
 
 		$event = GalleryCoreApi::newEvent($eventName);
 		$bogus = 'bogus entity';
+
 		$event->setEntity($bogus);
 		$event->setData('send result');
+
 		list($ret, $result) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -137,6 +144,7 @@ class EventTest extends GalleryTestCase {
 		global $gallery;
 
 		$listener = new EventTestEventListener($this);
+
 		$this->_registerTestEventListener('GalleryEntity::save', $listener);
 
 		list($ret, $item) = $this->_createRandomDataItem($this->_getRootId());
@@ -144,9 +152,11 @@ class EventTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($item);
 
 		$event = $listener->getEvent();
+
 		$this->assertEquals('GalleryEntity::save', $event ? $event->getEventName() : 'unset');
 
 		list($ret, $permissions) = GalleryCoreApi::fetchAllPermissionsForItem($item->getId());
@@ -154,6 +164,7 @@ class EventTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				array(
@@ -171,6 +182,7 @@ class EventTest extends GalleryTestCase {
 		 * factory implementations
 		 */
 		$listener = new EventTestEventListener();
+
 		$this->_registerTestEventListener('Gallery::ActivatePlugin', $listener);
 
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'EventTest');
@@ -197,15 +209,19 @@ class EventTest extends GalleryTestCase {
 	public function testEmbeddedEntityIsAReference() {
 		$event  = new GalleryEvent();
 		$entity = new GalleryEntity();
+
 		$event->setEntity($entity);
 
-		// Embedded entity has the new value, even if we don't get it by reference
+		// Embedded entity has the new value, even if we do not get it by reference
 		$entity->setId(1000);
+
 		$embeddedEntity = $event->getEntity();
+
 		$this->assertEquals(1000, $embeddedEntity->getId());
 
 		// Get embedded entity by reference and change it, then see that it affects the original
 		$embeddedEntity =& $event->getEntity();
+
 		$embeddedEntity->setId(2000);
 		$this->assertEquals(2000, $entity->getId());
 	}
@@ -216,8 +232,9 @@ class EventTest extends GalleryTestCase {
  * @package GalleryCore
  * @subpackage PHPUnit
  */
-class EventTestEventListener // extends GalleryEventListener
-{
+
+// extends GalleryEventListener
+class EventTestEventListener {
 	public $_event;
 	public $_factory;
 
@@ -229,12 +246,15 @@ class EventTestEventListener // extends GalleryEventListener
 		switch ($event->getEventName()) {
 			case 'GalleryEntity::save':
 				global $gallery;
+
 				$item = $event->getEntity();
-				$ret  = GalleryCoreApi::removeItemPermissions($item->getId());
+
+				$ret = GalleryCoreApi::removeItemPermissions($item->getId());
 
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$ret = GalleryCoreApi::addUserPermission(
 					$item->getId(),
 					$gallery->getActiveUserId(),
@@ -282,6 +302,7 @@ class EventTestPlatform extends GalleryPlatform {
 					array_push($this->_list, $name);
 				}
 			}
+
 			array_push($this->_list, 'eventtest');
 
 			return 'eventtest';
@@ -293,6 +314,7 @@ class EventTestPlatform extends GalleryPlatform {
 	public function is_dir($path) {
 		global $gallery;
 		static $ignorePath;
+
 		$ignorePath = $gallery->getConfig('data.gallery.plugins_data') . 'modules/eventtest';
 
 		if (substr($path, -17) == 'modules/eventtest'
@@ -348,7 +370,7 @@ class EventTestModule extends GalleryModule {
 		$this->setVersion('1.0.0');
 		$this->setGroup('mock', 'Mock');
 		$this->setRequiredCoreApi(GalleryCoreApi::getApiVersion());
-		$this->setRequiredModuleApi(GalleryModule::doStatic()->getApiVersion());
+		$this->setRequiredModuleApi(GalleryModule::getMe()->getApiVersion());
 	}
 
 	public function performFactoryRegistrations() {
@@ -369,5 +391,4 @@ class EventTestModule extends GalleryModule {
 	}
 }
 
-class EventTestFactory {
-}
+class EventTestFactory {}

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,19 +8,13 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
 	Original Authors: Martin Jansen <mj#php.net>
 	Richard Tango-Lowy <richtl#arscognita.com>
 */
-
 require_once 'Auth/Container.php';
-
 require_once 'adodb.inc.php';
-
 require_once 'adodb-pear.inc.php';
-
 require_once 'adodb-errorpear.inc.php';
 
 /**
@@ -122,7 +117,7 @@ class Auth_Container_ADOdb extends Auth_Container {
 	 * Prepare database connection
 	 *
 	 * This function checks if we have already opened a connection to
-	 * the database. If that's not the case, a new connection is opened.
+	 * the database. If that is not the case, a new connection is opened.
 	 *
 	 * @access private
 	 * @return mixed True or a DB error object.
@@ -142,7 +137,7 @@ class Auth_Container_ADOdb extends Auth_Container {
 	 * Prepare query to the database
 	 *
 	 * This function checks if we have already opened a connection to
-	 * the database. If that's not the case, a new connection is opened.
+	 * the database. If that is not the case, a new connection is opened.
 	 * After that the query is passed to the database.
 	 *
 	 * @access public
@@ -200,6 +195,7 @@ class Auth_Container_ADOdb extends Auth_Container {
 			if (is_array($this->options['db_fields'])) {
 				$this->options['db_fields'] = join($this->options['db_fields'], ', ');
 			}
+
 			$this->options['db_fields'] = ', ' . $this->options['db_fields'];
 		}
 	}
@@ -235,10 +231,9 @@ class Auth_Container_ADOdb extends Auth_Container {
 			$sql_from = $this->options['usernamecol'] . ', ' . $this->options['passwordcol'] . $this->options['db_fields'];
 		}
 
-		$query = 'SELECT ' . $sql_from .
+		$query            = 'SELECT ' . $sql_from .
 				' FROM ' . $this->options['table'] .
 				' WHERE ' . $this->options['usernamecol'] . ' = ' . $this->db->Quote($username);
-
 		$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 		$rset             = $this->db->Execute($query);
 		$res              = $rset->fetchRow();
@@ -266,6 +261,7 @@ class Auth_Container_ADOdb extends Auth_Container {
 				) {
 					continue;
 				}
+
 				// Use reference to the auth object if exists
 				// This is because the auth session variable can change so a static call to setAuthData does not make sence
 				if (is_object($this->_auth_obj)) {
@@ -285,7 +281,6 @@ class Auth_Container_ADOdb extends Auth_Container {
 
 	// }}}
 	// {{{ listUsers()
-
 	public function listUsers() {
 		$err = $this->_prepare();
 
@@ -307,7 +302,8 @@ class Auth_Container_ADOdb extends Auth_Container {
 			$sql_from,
 			$this->options['table']
 		);
-		$res   = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
+
+		$res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
 
 		if (DB::isError($res)) {
 			return PEAR::raiseError($res->getMessage(), $res->getCode());

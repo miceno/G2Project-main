@@ -1,5 +1,6 @@
 #!/usr/bin/php -f
 <?php
+
 /*
  * PHP script to extract strings from all the files and print
  * to stdout for use with xgettext.
@@ -10,22 +11,20 @@
  *
  * http://cvs.horde.org/co.php/horde/COPYING?r=2.1
  *
- * I'm not exactly sure what the license restrictions are in this case,
+ * Not exactly sure what the license restrictions are in this case,
  * but I want to give full credit to the original authors:
  *
  * Copyright 2000-2002 Joris Braakman <jbraakman@yahoo.com>
  * Copyright 2001-2002 Chuck Hagenbuch <chuck@horde.org>
  * Copyright 2001-2002 Jan Schneider <jan@horde.org>
  *
- * We've modified the script somewhat to make it work cleanly with the
- * way that Gallery embeds internationalized text, so let's tack on our
- * own copyrights.
+ * We have modified the script somewhat to make it work cleanly with the
+ * way that Gallery embeds internationalized text
  *
  * Copyright (C) 2002-2008 Bharat Mediratta <bharat@menalto.com>
  *
  * $Id: extract.php 17580 2008-04-13 00:38:13Z tnalmdal $
  */
-
 if (!empty($_SERVER['SERVER_NAME'])) {
 	errorExit("You must run this from the command line\n");
 }
@@ -44,16 +43,16 @@ array_shift($_SERVER['argv']);
 
 foreach ($_SERVER['argv'] as $moduleDir) {
 	if (preg_match('#^/cygdrive/(\w+)/(.*)$#', trim($moduleDir), $matches)) {
-		// Cygwin and Window PHP filesystem function don't play nice together.
+		// Cygwin and Window PHP filesystem function do not play nice together.
 		$moduleDir = $matches[1] . ':\\' . str_replace('/', '\\', $matches[2]);
 	}
 
 	if (!is_dir($moduleDir)) {
 		continue;
 	}
+
 	chdir($moduleDir);
 	find('.');
-
 	$oldStringsRaw = "$moduleDir/po/strings.raw";
 
 	if (file_exists($oldStringsRaw)) {
@@ -76,6 +75,7 @@ foreach ($strings as $string => $otherFiles) {
 	if (!empty($otherFiles)) {
 		echo ' /* also in: ' . implode(' ', $otherFiles) . ' */';
 	}
+
 	echo "\n";
 }
 
@@ -90,18 +90,22 @@ function find($dir) {
 			if ($file == '.' || $file == '..') {
 				continue;
 			}
+
 			$listing[] = $file;
 		}
+
 		closedir($dh);
 		sort($listing);
+
 		global $exts;
+
 		$dir = ($dir == '.') ? '' : ($dir . '/');
 
 		foreach ($listing as $file) {
 			$filename = $dir . $file;
 
 			if (is_dir($filename)) {
-				// Don't parse unit tests
+				// Do not parse unit tests
 				if ($file != 'test') {
 					$subdirs[] = $filename;
 				}
@@ -121,6 +125,7 @@ function find($dir) {
  */
 function extractStrings($filename) {
 	global $strings;
+
 	$strings["\n/* $filename */"] = array();
 	$startSize                    = count($strings);
 	$localStrings                 = array();
@@ -143,8 +148,7 @@ function extractStrings($filename) {
 				&& $tokens[$i + 1] === '('
 			) {
 				// Found a function call for translation, process the contents
-				for ($i += 2; is_array($tokens[$i]) && $tokens[$i][0] == T_WHITESPACE; $i++) {
-				}
+				for ($i += 2; is_array($tokens[$i]) && $tokens[$i][0] == T_WHITESPACE; $i++) {}
 
 				if (is_array($tokens[$i]) && $tokens[$i][0] == T_VARIABLE) {
 					// Skip translate($variable)
@@ -182,7 +186,7 @@ function extractStrings($filename) {
 						|| substr($lastString, 1, 5) === 'count')
 					) {
 						/*
-						 * Convert 'argN' => code to 'argN' => null so we don't eval that code.
+						 * Convert 'argN' => code to 'argN' => null so we do not eval that code.
 						 * Add 'null' to $buf now, then ignore content until next , or ) not in
 						 * a deeper nested ().
 						 */
@@ -190,11 +194,12 @@ function extractStrings($filename) {
 						$ignore = $parenCount;
 					}
 				}
+
 				$param = GalleryUtilities::doEval('return ' . $buf . ';');
 
 				if (is_string($param)) {
 					// Escape double quotes and newlines
-					$text   = strtr(
+					$text = strtr(
 						$param,
 						array(
 							'"'    => '\"',
@@ -202,6 +207,7 @@ function extractStrings($filename) {
 							"\n"   => '\n',
 						)
 					);
+
 					$string = 'gettext("' . $text . '")';
 
 					if (!isset($strings[$string])) {
@@ -209,6 +215,7 @@ function extractStrings($filename) {
 					} elseif (!isset($localStrings[$string])) {
 						$strings[$string][] = $filename;
 					}
+
 					$localStrings[$string] = true;
 				} elseif (is_array($param)) {
 					foreach (array('text', 'one', 'many') as $key) {
@@ -246,6 +253,7 @@ function extractStrings($filename) {
 					} elseif (!isset($localStrings[$string])) {
 						$strings[$string][] = $filename;
 					}
+
 					$localStrings[$string] = true;
 				}
 			}
@@ -274,21 +282,24 @@ function extractStrings($filename) {
 			if (preg_match('/\stext="(.*?[^\\\\])"/s', $string, $matches)) {
 				$text = $matches[1];
 			} elseif (preg_match("/text='(.*?)'/s", $string, $matches)) {
-				$text = str_replace('"', '\"', $matches[1]);    // Escape double quotes
+				// Escape double quotes
+				$text = str_replace('"', '\"', $matches[1]);
 			}
 
 			// one=.....
 			if (preg_match('/\sone="(.*?[^\\\\])"/s', $string, $matches)) {
 				$one = $matches[1];
 			} elseif (preg_match("/\sone='(.*?)'/s", $string, $matches)) {
-				$one = str_replace('"', '\"', $matches[1]);    // Escape double quotes
+				// Escape double quotes
+				$one = str_replace('"', '\"', $matches[1]);
 			}
 
 			// many=.....
 			if (preg_match('/\smany="(.*?[^\\\\])"/s', $string, $matches)) {
 				$many = $matches[1];
 			} elseif (preg_match("/\smany='(.*?)'/s", $string, $matches)) {
-				$many = str_replace('"', '\"', $matches[1]);    // Escape double quotes
+				// Escape double quotes
+				$many = str_replace('"', '\"', $matches[1]);
 			}
 
 			// Hint for translators
@@ -340,6 +351,7 @@ function extractStrings($filename) {
 			} elseif (!isset($localStrings[$string])) {
 				$strings[$string][] = $filename;
 			}
+
 			$localStrings[$string] = true;
 		}
 	}
@@ -355,4 +367,5 @@ function errorExit($message) {
 
 	exit(1);
 }
+
 ?>

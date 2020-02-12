@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepositoryIndex.class');
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepositoryUtilities.class');
 
@@ -51,16 +49,16 @@ class GalleryRepository {
 	public $_source;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryRepository();
+		if (!isset($instance)) {
+			$instance = new GalleryRepository();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -95,6 +93,7 @@ class GalleryRepository {
 				if ($ret) {
 					return array($ret, null, null);
 				}
+
 				$sources = array_keys(unserialize($sources));
 			}
 
@@ -103,7 +102,8 @@ class GalleryRepository {
 
 			foreach ($sources as $source) {
 				$repositories[$source] = new $repositoryClassName();
-				$ret                   = $repositories[$source]->init($source);
+
+				$ret = $repositories[$source]->init($source);
 
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_BAD_PARAMETER) {
@@ -114,6 +114,7 @@ class GalleryRepository {
 					}
 				}
 			}
+
 			GalleryDataCache::put($cacheKey, array($repositories, $errorCount));
 		} else {
 			list($repositories, $errorCount) = GalleryDataCache::get($cacheKey);
@@ -133,6 +134,7 @@ class GalleryRepository {
 	) {
 		$cacheKey = 'GalleryRepository::getRepositories(' . join('|', $sources) .
 		",$repositoryClassName)";
+
 		GalleryDataCache::remove($cacheKey);
 	}
 
@@ -176,7 +178,7 @@ class GalleryRepository {
 		if ($ret) {
 			if ($ret->getErrorCode() & ERROR_BAD_PARAMETER) {
 				/*
-				 * No header for the core module.  Maybe the core package isn't available in any
+				 * No header for the core module.  Maybe the core package is not available in any
 				 * this repository.
 				 */
 				return array(null, false, array());
@@ -184,11 +186,12 @@ class GalleryRepository {
 
 			return array($ret, null, null);
 		}
+
 		$repositoryVersion = $header['version'];
 
 		/*
-		 * We only compare versions, not builds, because upgrading the core module isn't something
-		 * that's done very often, at least until it's done manually.
+		 * We only compare versions, not builds, because upgrading the core module is not something
+		 * that is done very often, at least until it is done manually.
 		 */
 		list($ret, $relation) = $this->_utilities->compareVersions($repositoryVersion, $core->getVersion());
 
@@ -441,7 +444,8 @@ class GalleryRepository {
 			$isDowngraded = version_compare($localVersion, $plugin['header']['version'], '>');
 
 			list($providedCoreApiVersion, $providedPluginApiVersion) = $this->_utilities->getProvidedApis($pluginType, $coreApis);
-			$pluginList[$pluginId]                                   = array(
+
+			$pluginList[$pluginId] = array(
 				'type'              => $pluginType,
 				'name'              => $plugin['descriptions'][$language]['name'],
 				'description'       => $plugin['descriptions'][$language]['description'],
@@ -598,14 +602,14 @@ class GalleryRepository {
 	public function createPluginsDirectory() {
 		global $gallery;
 
-		// Create repository cache directory if it doesn't exist.
+		// Create repository cache directory if it does not exist.
 		$repositoryCachePath = $gallery->getConfig('repository.cache');
 		$platform            =& $gallery->getPlatform();
 
 		list($success, $created) = GalleryUtilities::guaranteeDirExists($repositoryCachePath);
 
 		if (!$success) {
-			return array(false, $gallery->i18n('Couldn\'t create repository cache path.'));
+			return array(false, $gallery->i18n('Could not create repository cache path.'));
 		}
 
 		// Create repository cache subdirectories.
@@ -616,7 +620,7 @@ class GalleryRepository {
 				return array(
 					false,
 					$gallery->i18n(
-						'Couldn\'t create cache subdirectory. '
+						'Could not create cache subdirectory. '
 						. 'Make sure the web server has write permissions in it.'
 					),
 				);
@@ -695,6 +699,7 @@ class GalleryRepository {
 	 */
 	public function downloadAndUnpack($pluginType, $pluginId, $packageName, $relativePackageUrl) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$phpVm    = $gallery->getPhpVm();
 
@@ -731,7 +736,7 @@ class GalleryRepository {
 					ERROR_PLATFORM_FAILURE,
 					__FILE__,
 					__LINE__,
-					"Couldn't create directory [$pluginOutputDir]"
+					"Could not create directory [$pluginOutputDir]"
 				),
 				null,
 			);
@@ -786,22 +791,23 @@ class GalleryRepository {
 	) {
 		global $gallery;
 
-		$status             = array();
+		$status = array();
+
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
 
 		if ($ret) {
 			return array($ret, null, null);
 		}
 
-		$packageUrls = $pluginDownloadData['files'];
-		$pluginName  = $pluginDownloadData['name'];
-
-		$preparingText   = $module->translate(
+		$packageUrls   = $pluginDownloadData['files'];
+		$pluginName    = $pluginDownloadData['name'];
+		$preparingText = $module->translate(
 			array(
 				'text' => 'Preparing %s',
 				'arg1' => $pluginName,
 			)
 		);
+
 		$downloadingText = $module->translate(
 			array(
 				'text' => 'Downloading %s',
@@ -939,6 +945,7 @@ class GalleryRepository {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$ret = $this->_utilities->updatePackageMetaData(
 				$pluginType,
 				$pluginId,
@@ -951,6 +958,7 @@ class GalleryRepository {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$reactivatePlugin |= $packageName == 'base';
 		}
 
@@ -963,7 +971,7 @@ class GalleryRepository {
 	 *
 	 * @param string $packageName name of the package to check
 	 * @param array $descriptor descriptor of the plugin the package belongs to
-	 * @return array of files that can't be overwritten (empty array if everything is ok)
+	 * @return array of files that cannot be overwritten (empty array if everything is ok)
 	 */
 	public function preVerifyPackage($packageName, $descriptor) {
 		return $this->_utilities->preVerifyPackage(
@@ -999,6 +1007,7 @@ class GalleryRepository {
 	 */
 	public function scanPlugin($pluginType, $pluginId) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Erase all data for this plugin
@@ -1019,9 +1028,9 @@ class GalleryRepository {
 
 		if (!$platform->file_exists($manifestPath)) {
 			/*
-			 * We won't know the revision of this module, so ignore it.  TODO: perhaps we should
+			 * We would not know the revision of this module, so ignore it.  TODO: perhaps we should
 			 * fall back on the revision of the module.inc file?  But if this is a user-written or
-			 * a contrib module, then it is probably not in svn which means that isn't valid
+			 * a contrib module, then it is probably not in svn which means that is not valid
 			 * anyway.  Ignoring it is probably safest.
 			 */
 			return null;
@@ -1040,7 +1049,8 @@ class GalleryRepository {
 		}
 
 		$locked = $platform->is_writeable($manifestPath) ? 0 : 1;
-		$ret    = GalleryCoreApi::addMapEntry(
+
+		$ret = GalleryCoreApi::addMapEntry(
 			'GalleryPluginPackageMap',
 			array(
 				'pluginType'     => $pluginType,
@@ -1074,6 +1084,7 @@ class GalleryRepository {
 					if ($ret) {
 						return $ret;
 					}
+
 					$ret = GalleryCoreApi::addMapEntry(
 						'GalleryPluginPackageMap',
 						array(
@@ -1186,9 +1197,9 @@ class GalleryRepository {
 	 */
 	public function downloadAndUnpackPackages($filesToDownload, &$callback) {
 		global $gallery;
-		$phpVm    = $gallery->getPhpVm();
-		$platform =& $gallery->getPlatform();
 
+		$phpVm     = $gallery->getPhpVm();
+		$platform  =& $gallery->getPlatform();
 		$utilities = $this->_utilities;
 
 		list($ret, $aggregateFile) = $utilities->downloadAggregatePackages(
@@ -1240,14 +1251,16 @@ class GalleryRepository {
 
 					continue;
 				}
-				$pluginOutputDir = GalleryCoreApi::getCodeBasePath("{$pluginType}s/$pluginId/");
 
-				$descriptor = $data['descriptor'];
+				$pluginOutputDir = GalleryCoreApi::getCodeBasePath("{$pluginType}s/$pluginId/");
+				$descriptor      = $data['descriptor'];
 
 				foreach ($data['files'] as $packageFile) {
 					$gallery->guaranteeTimeLimit(30);
+
 					// Unpack files from package.
 					$utilities->unpackPackage($cacheDir . $packageFile[1], $pluginOutputDir);
+
 					$installedPackageCount++;
 
 					$ret = $utilities->verifyPackageIntegrity(
@@ -1271,6 +1284,7 @@ class GalleryRepository {
 					if ($ret) {
 						return array($ret, null, null);
 					}
+
 					$ret = $utilities->updatePackageMetaData(
 						$pluginType,
 						$pluginId,
@@ -1313,6 +1327,7 @@ class GalleryRepository {
 		foreach ($packages as $pluginType => $plugins) {
 			foreach ($plugins as $pluginId => $data) {
 				$gallery->guaranteeTimeLimit(30);
+
 				// Make sure output directory exists.
 				$pluginOutputDir = GalleryCoreApi::getCodeBasePath("{$pluginType}s/$pluginId/");
 
@@ -1324,7 +1339,7 @@ class GalleryRepository {
 							ERROR_PLATFORM_FAILURE,
 							__FILE__,
 							__LINE__,
-							"Couldn't create directory [$pluginOutputDir]"
+							"Could not create directory [$pluginOutputDir]"
 						),
 						null,
 					);
@@ -1358,6 +1373,7 @@ class GalleryRepository {
 						$status['failedToInstall'][$pluginType][$pluginId][] = $packageFile[1];
 						$callback['current']++;
 					}
+
 					$percentage = $callback['current'] / $callback['total'];
 					call_user_func($callback['method'], $callback['title'], '', $percentage);
 				}
@@ -1376,11 +1392,11 @@ class GalleryRepository {
 	 */
 	public function removeObsoleteFiles($pluginType, $pluginId) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
+		$platform     =& $gallery->getPlatform();
 		$manifestPath = GalleryCoreApi::getCodeBasePath("{$pluginType}s/$pluginId/MANIFEST");
+		$manifest     = array();
 
-		$manifest = array();
 		GalleryUtilities::readIndividualManifest($manifestPath, $manifest);
 
 		foreach ($manifest as $file => $detail) {

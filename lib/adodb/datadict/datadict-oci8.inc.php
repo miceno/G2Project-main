@@ -148,10 +148,12 @@ class ADODB2_oci8 extends ADODB_DataDict {
 	}
 
 	public function AddColumnSQL($tabname, $flds) {
-		$tabname            = $this->TableName($tabname);
-		$f                  = array();
+		$tabname = $this->TableName($tabname);
+		$f       = array();
+
 		list($lines, $pkey) = $this->_GenFields($flds);
-		$s                  = "ALTER TABLE $tabname ADD (";
+
+		$s = "ALTER TABLE $tabname ADD (";
 
 		foreach ($lines as $v) {
 			$f[] = "\n $v";
@@ -164,14 +166,17 @@ class ADODB2_oci8 extends ADODB_DataDict {
 	}
 
 	public function AlterColumnSQL($tabname, $flds, $tableflds = '', $tableoptions = '') {
-		$tabname            = $this->TableName($tabname);
-		$f                  = array();
+		$tabname = $this->TableName($tabname);
+		$f       = array();
+
 		list($lines, $pkey) = $this->_GenFields($flds);
-		$s                  = "ALTER TABLE $tabname MODIFY(";
+
+		$s = "ALTER TABLE $tabname MODIFY(";
 
 		foreach ($lines as $v) {
 			$f[] = "\n $v";
 		}
+
 		$s    .= implode(', ', $f) . ')';
 		$sql[] = $s;
 
@@ -209,7 +214,8 @@ class ADODB2_oci8 extends ADODB_DataDict {
 	public function _CreateSuffix($fname, &$ftype, $fnotnull, $fdefault, $fautoinc, $fconstraint, $funsigned) {
 		$suffix = '';
 
-		if ($fdefault == "''" && $fnotnull) {// this is null in oracle
+		if ($fdefault == "''" && $fnotnull) {
+			// this is null in oracle
 			$fnotnull = false;
 
 			if ($this->debug) {
@@ -257,6 +263,7 @@ class ADODB2_oci8 extends ADODB_DataDict {
 			} else {
 				$tab = $tabname;
 			}
+
 			$seqname  = $this->schema . '.' . $this->seqPrefix . $tab;
 			$trigname = $this->schema . '.' . $this->trigPrefix . $this->seqPrefix . $tab;
 		} else {
@@ -267,6 +274,7 @@ class ADODB2_oci8 extends ADODB_DataDict {
 		if (strlen($seqname) > 30) {
 			$seqname = $this->seqPrefix . uniqid('');
 		} // end if
+
 		if (strlen($trigname) > 30) {
 			$trigname = $this->trigPrefix . uniqid('');
 		} // end if
@@ -274,24 +282,27 @@ class ADODB2_oci8 extends ADODB_DataDict {
 		if (isset($tableoptions['REPLACE'])) {
 			$sql[] = "DROP SEQUENCE $seqname";
 		}
+
 		$seqCache = '';
 
 		if (isset($tableoptions['SEQUENCE_CACHE'])) {
 			$seqCache = $tableoptions['SEQUENCE_CACHE'];
 		}
+
 		$seqIncr = '';
 
 		if (isset($tableoptions['SEQUENCE_INCREMENT'])) {
 			$seqIncr = ' INCREMENT BY ' . $tableoptions['SEQUENCE_INCREMENT'];
 		}
+
 		$seqStart = '';
 
 		if (isset($tableoptions['SEQUENCE_START'])) {
 			$seqIncr = ' START WITH ' . $tableoptions['SEQUENCE_START'];
 		}
-		$sql[] = "CREATE SEQUENCE $seqname $seqStart $seqIncr $seqCache";
-		$sql[] = "CREATE OR REPLACE TRIGGER $trigname BEFORE insert ON $tabname FOR EACH ROW WHEN (NEW.$this->seqField IS NULL OR NEW.$this->seqField = 0) BEGIN select $seqname.nextval into :new.$this->seqField from dual; END;";
 
+		$sql[]          = "CREATE SEQUENCE $seqname $seqStart $seqIncr $seqCache";
+		$sql[]          = "CREATE OR REPLACE TRIGGER $trigname BEFORE insert ON $tabname FOR EACH ROW WHEN (NEW.$this->seqField IS NULL OR NEW.$this->seqField = 0) BEGIN select $seqname.nextval into :new.$this->seqField from dual; END;";
 		$this->seqField = false;
 
 		return $sql;
@@ -312,7 +323,6 @@ class ADODB2_oci8 extends ADODB_DataDict {
 		[reference_definition]
 		or CHECK (expr)
 	*/
-
 	public function _IndexSQL($idxname, $tabname, $flds, $idxoptions) {
 		$sql = array();
 
@@ -339,6 +349,7 @@ class ADODB2_oci8 extends ADODB_DataDict {
 		if (is_array($flds)) {
 			$flds = implode(', ', $flds);
 		}
+
 		$s = 'CREATE' . $unique . ' INDEX ' . $idxname . ' ON ' . $tabname . ' (' . $flds . ')';
 
 		if (isset($idxoptions[$this->upperName])) {
@@ -348,7 +359,6 @@ class ADODB2_oci8 extends ADODB_DataDict {
 		if (isset($idxoptions['oci8'])) {
 			$s .= $idxoptions['oci8'];
 		}
-
 
 		$sql[] = $s;
 

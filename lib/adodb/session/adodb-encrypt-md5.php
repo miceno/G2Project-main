@@ -9,7 +9,6 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 	  Set tabs to 4 for best viewing.
-
 */
 
 // security - hide paths
@@ -18,7 +17,6 @@ if (!defined('ADODB_SESSION')) {
 }
 
 require_once ADODB_SESSION . '/crypt.inc.php';
-
 
 class ADODB_Encrypt_MD5 {
 	public function write($data, $key) {
@@ -35,3 +33,4 @@ class ADODB_Encrypt_MD5 {
 }
 
 return 1;
+

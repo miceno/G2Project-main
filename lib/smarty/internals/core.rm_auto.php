@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -12,7 +13,6 @@
  */
 
 // $auto_base, $auto_source = null, $auto_id = null, $exp_time = null
-
 function smarty_core_rm_auto($params, &$smarty) {
 	if (!@is_dir($params['auto_base'])) {
 		return false;
@@ -26,6 +26,7 @@ function smarty_core_rm_auto($params, &$smarty) {
 		);
 
 		include_once SMARTY_CORE_DIR . 'core.rmdir.php';
+
 		$_res = smarty_core_rmdir($_params, $smarty);
 	} else {
 		$_tname = $smarty->_get_auto_filename($params['auto_base'], $params['auto_source'], $params['auto_id']);
@@ -48,6 +49,7 @@ function smarty_core_rm_auto($params, &$smarty) {
 			);
 
 			include_once SMARTY_CORE_DIR . 'core.rmdir.php';
+
 			$_res = smarty_core_rmdir($_params, $smarty);
 		} else {
 			// remove matching file names

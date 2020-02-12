@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -42,11 +41,13 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		// Register a dummy toolkit
 		$path = 'modules/core/test/phpunit/ItemEditPhotoThumbnailPluginTest.class';
-		$ret  = GalleryCoreApi::registerFactoryImplementation(
+
+		$ret = GalleryCoreApi::registerFactoryImplementation(
 			'GalleryToolkit',
 			'ItemEditPhotoThumbnailPluginTestToolkit',
 			'ItemEditPhotoThumbnailPluginTestToolkit',
@@ -58,6 +59,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markToolkitForCleanup('ItemEditPhotoThumbnailPluginTestToolkit');
 
 		// Register operations that we can perform on our mock data items
@@ -133,6 +135,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markFactoryModuleForCleanup('coreTest');
 
 		list($ret, $this->_item) = $this->_createRandomDataItem(
@@ -214,6 +217,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_item, $this->_derivative[0]);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Thumbnail cropped successfully')),
 			$results
@@ -243,6 +247,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_item, $this->_derivative[0]);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Thumbnail cropped successfully')),
 			$results
@@ -272,6 +277,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_item, $this->_derivative[0]);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Thumbnail cropped successfully')),
 			$results
@@ -333,6 +339,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 		GalleryUtilities::putRequestVariable('form[action][reset]', 1);
 
 		$results = $this->handleRequest($this->_item2, $this->_derivative[2]);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Thumbnail reset successfully')),
 			$results,
@@ -356,13 +363,13 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 
 	public function testLocale() {
 		/*
-		 * Verify that percentages don't get written like 12,5 if the current locale
+		 * Verify that percentages do not get written like 12,5 if the current locale
 		 * uses a comma for the fraction separator.
 		 */
 		$currentLocale = setlocale(LC_ALL, '0');
 
 		foreach (array('de_DE', 'german') as $locale) {
-			$lTest = ($newLocale = GalleryTranslator::doStatic()->_setlocale(LC_ALL, $locale));
+			$lTest = ($newLocale = GalleryTranslator::getMe()->_setlocale(LC_ALL, $locale));
 
 			if ($lTest !== false) {
 				break;
@@ -380,6 +387,7 @@ class ItemEditPhotoThumbnailPluginTest extends ItemEditPluginTestCase {
 		GalleryUtilities::putRequestVariable('form[crop][height]', '200');
 
 		$results = $this->handleRequest($this->_item, $this->_derivative[0]);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Thumbnail cropped successfully')),
 			$results
@@ -451,6 +459,7 @@ class ItemEditPhotoThumbnailPluginTestToolkit extends GalleryToolkit {
 		$context = array()
 	) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if ($sourceFilename != $destFilename) {
@@ -458,6 +467,7 @@ class ItemEditPhotoThumbnailPluginTestToolkit extends GalleryToolkit {
 		}
 
 		$fd = $platform->fopen($destFilename, 'a');
+
 		$platform->fwrite($fd, $operationName);
 		$platform->fclose($fd);
 

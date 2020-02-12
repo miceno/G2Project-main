@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -85,6 +84,7 @@ class MaintenanceHelper_simple {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$result = $searchResults->nextResult();
 		$info   = null;
 
@@ -112,7 +112,8 @@ class MaintenanceHelper_simple {
 	public static function addRun($taskId, $timestamp, $success, $details) {
 		global $gallery;
 
-		$storage           =& $gallery->getStorage();
+		$storage =& $gallery->getStorage();
+
 		list($ret, $runId) = $storage->getUniqueId();
 
 		if ($ret) {
@@ -145,7 +146,7 @@ class MaintenanceHelper_simple {
 
 		$currentMode = $gallery->getConfig('mode.maintenance');
 
-		// If already in the requested mode, don't have to do anything.
+		// If already in the requested mode, do not have to do anything.
 		if ($currentMode !== $mode) {
 			$platform    =& $gallery->getPlatform();
 			$versionFile = $gallery->getConfig('data.gallery.version');
@@ -166,6 +167,7 @@ class MaintenanceHelper_simple {
 				if (is_string($mode)) {
 					$modeText .= ":$mode";
 				}
+
 				$versionsData[] = $modeText;
 			}
 
@@ -174,13 +176,13 @@ class MaintenanceHelper_simple {
 			$data = implode("\n", $versionsData);
 
 			if (!$platform->atomicWrite($versionFile, $data)) {
-				$gallery->debug('Error: Can\'t write to versions file');
+				$gallery->debug('Error: Cannot write to versions file');
 
 				return GalleryCoreApi::error(
 					ERROR_PLATFORM_FAILURE,
 					__FILE__,
 					__LINE__,
-					'Can\'t write to the versions file'
+					'Cannot write to the versions file'
 				);
 			}
 

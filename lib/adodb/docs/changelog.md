@@ -11,8 +11,8 @@ Older changelogs:
 	- Replace each() with foreach. #373
 	- Replace deprecated create_function() calls. #404
 	- Replace $php_errormsg with error_get_last(). #405
-- adodb: Don't call `dl()` when the function is disabled #406
-- adodb: Don't bother with magic quotes when not available #407
+- adodb: Do not call `dl()` when the function is disabled #406
+- adodb: Do not bother with magic quotes when not available #407
 - adodb: fix potential SQL injection vector in SelectLimit(). #190 #311 #401
 
 ## 5.20.11 - Withdrawn
@@ -412,7 +412,7 @@ Released together with [v4.990](changelog_v4.x.md#4990---11-jul-2008)
 - Thanks Zoltan Monori (monzol#fotoprizma.hu) for bug fixes in iterator, SelectLimit, GetRandRow, etc.
 - Under heavy loads, the performance monitor for oci8 disables Ixora views.
 - Fixed sybase driver SQLDate to use str_replace(). Also for adodb5, changed sybase driver UnixDate and UnixTimeStamp calls to static.
-- Changed oci8 lob handler to use & reference `$this->_refLOBs[$numlob]['VAR'] = &$var`.
+- Changed oci8 lob handler to use & reference `$this->_refLOBs[$numlob]['VAR'] =& $var`.
 - We now strtolower the get_class() function in PEAR::isError() for php5 compat.
 - CacheExecute did not retrieve cache recordsets properly for 5.04 (worked in 4.98). Fixed.
 - New ADODB_Cache_File class for file caching defined in adodb.inc.php.

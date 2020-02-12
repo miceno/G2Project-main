@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditPhotoThumbnail extends ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditPhotoThumbnail();
+		if (!isset($instance)) {
+			$instance = new ItemEditPhotoThumbnail();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -91,18 +90,21 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 				$cropHeight = 100;
 			} else {
 				// Sanitize inputs to fit within 0-100 (if cropper miscalculates)
-				$cropX      = GalleryUtilities::roundToString(
+				$cropX = GalleryUtilities::roundToString(
 					max(0, 100 * $form['crop']['x'] / $source->getWidth()),
 					3
 				);
-				$cropY      = GalleryUtilities::roundToString(
+
+				$cropY = GalleryUtilities::roundToString(
 					max(0, 100 * $form['crop']['y'] / $source->getHeight()),
 					3
 				);
-				$cropWidth  = GalleryUtilities::roundToString(
+
+				$cropWidth = GalleryUtilities::roundToString(
 					min(100, 100 * $form['crop']['width'] / $source->getWidth()),
 					3
 				);
+
 				$cropHeight = GalleryUtilities::roundToString(
 					min(100, 100 * $form['crop']['height'] / $source->getHeight()),
 					3
@@ -124,6 +126,7 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null, null);
 			}
+
 			$thumbnail->setDerivativeOperations($operations);
 
 			$ret = $thumbnail->save();
@@ -144,6 +147,7 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null, null);
 			}
+
 			$status = $module->translate('Thumbnail cropped successfully');
 		} elseif (isset($form['action']['reset'], $thumbnail)) {
 			list($ret, $lock) = GalleryCoreApi::acquireWriteLock($thumbnail->getId());
@@ -182,6 +186,7 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null, null);
 			}
+
 			$status = $module->translate('Thumbnail reset successfully');
 		}
 
@@ -239,7 +244,7 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 		}
 
 		/*
-		 * The source may be quite large.  However, it's the only input image that we can really
+		 * The source may be quite large.  However, it is the only input image that we can really
 		 * display at this point because the resized derivatives though they may be smaller, can
 		 * have different derivative commands from the source.
 		 */
@@ -259,7 +264,7 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 		$crop['height'] = round($crop['heightPercent'] * $source->getHeight() / 100);
 
 		/*
-		 * It's possible that the source was created before we had an appropriate image toolkit,
+		 * It is possible that the source was created before we had an appropriate image toolkit,
 		 * so its dimensions can be set to zero, which will cause us problems.  In that case,
 		 * try rescanning it.
 		 */
@@ -271,21 +276,25 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			list($ret, $source) = $source->refresh();
 
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$ret = $source->rescan();
 
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$ret = $source->save();
 
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$ret = GalleryCoreApi::releaseLocks($lockId);
 
 			if ($ret) {
@@ -343,8 +352,8 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 			$ItemEditPhotoThumbnail['editThumbnail']['cropWidth']           = $crop['width'];
 			$ItemEditPhotoThumbnail['editThumbnail']['cropHeight']          = $crop['height'];
 			$ItemEditPhotoThumbnail['editThumbnail']['targetThumbnailSize'] = $targetThumbnailSize;
+			$aspectlist = array();
 
-			$aspectlist         = array();
 			list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
 
 			if ($ret) {
@@ -356,41 +365,49 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 				'width'  => 5,
 				'height' => 3,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('Photo 6x4'),
 				'width'  => 6,
 				'height' => 4,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('Photo 7x5'),
 				'width'  => 7,
 				'height' => 5,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('Photo 10x8'),
 				'width'  => 10,
 				'height' => 8,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('Fullscreen 4x3'),
 				'width'  => 4,
 				'height' => 3,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('Widescreen 16x9'),
 				'width'  => 16,
 				'height' => 9,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('CinemaScope 2.35x1'),
 				'width'  => 47,
 				'height' => 20,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('Square 1x1'),
 				'width'  => 1,
 				'height' => 1,
 			);
+
 			$aspectRatioList[] = array(
 				'label'  => $module->translate('As Image'),
 				'width'  => $item->getWidth(),
@@ -403,14 +420,12 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 			$orientationList['portrait']                                = $module->translate('Portrait');
 			$ItemEditPhotoThumbnail['editThumbnail']['orientationList'] = $orientationList;
 
-
 			/*
 			 * Figure out which aspect ratio / orientation is closest to the current crop
 			 * settings so that we can start out with those values selected in the dropdowns.
 			 */
 			$currentAspect = round($crop['width'] / $crop['height'], 2);
-
-			$i = 0;
+			$i             = 0;
 
 			// Set defaults
 			$selectedAspect                                             = 0;
@@ -435,8 +450,10 @@ class ItemEditPhotoThumbnail extends ItemEditPlugin {
 
 					break;
 				}
+
 				$i++;
 			}
+
 			$ItemEditPhotoThumbnail['editThumbnail']['selectedAspect']      = $selectedAspect;
 			$ItemEditPhotoThumbnail['editThumbnail']['selectedOrientation'] = $selectedOrientation;
 			$ItemEditPhotoThumbnail['editThumbnail']['cropRatioWidth']      = $aspectRatioList[$selectedAspect]['width'];

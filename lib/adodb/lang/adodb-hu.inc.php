@@ -1,4 +1,5 @@
 <?php
+
 // Hungarian language, encoding by ISO 8859-2 charset (Iso Latin-2)
 // Halászvári Gábor <g.halaszvari#portmax.hu>
 $ADODB_LANG_ARRAY = array(
@@ -31,3 +32,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'nincs ilyen adatbázis',
 	DB_ERROR_ACCESS_VIOLATION    => 'nincs jogosultság',
 );
+

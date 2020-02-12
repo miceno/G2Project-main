@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -12,7 +13,6 @@
  */
 
 //  $resource_type, $resource_name
-
 function smarty_core_is_secure($params, &$smarty) {
 	if (!$smarty->security || $smarty->security_settings['INCLUDE_ANY']) {
 		return true;

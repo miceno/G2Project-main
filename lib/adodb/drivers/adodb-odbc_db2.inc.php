@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,79 +8,58 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   DB2 data driver. Requires ODBC.
-
 From phpdb list:
-
 Hi Andrew,
-
 thanks a lot for your help. Today we discovered what
 our real problem was:
-
 After "playing" a little bit with the php-scripts that try
 to connect to the IBM DB2, we set the optional parameter
 Cursortype when calling odbc_pconnect(....).
-
 And the exciting thing: When we set the cursor type
 to SQL_CUR_USE_ODBC Cursor Type, then
 the whole query speed up from 1 till 10 seconds
 to 0.2 till 0.3 seconds for 100 records. Amazing!!!
-
 Therfore, PHP is just almost fast as calling the DB2
-from Servlets using JDBC (don't take too much care
+from Servlets using JDBC (do not take too much care
 about the speed at whole: the database was on a
 completely other location, so the whole connection
 was made over a slow network connection).
-
 I hope this helps when other encounter the same
 problem when trying to connect to DB2 from
 PHP.
-
 Kind regards,
 Christian Szardenings
-
 2 Oct 2001
 Mark Newnham has discovered that the SQL_CUR_USE_ODBC is not supported by
 IBM's DB2 ODBC driver, so this must be a 3rd party ODBC driver.
-
 From the IBM CLI Reference:
-
 SQL_ATTR_ODBC_CURSORS (DB2 CLI v5)
 This connection attribute is defined by ODBC, but is not supported by DB2
 CLI. Any attempt to set or get this attribute will result in an SQLSTATE of
 HYC00 (Driver not capable).
-
 A 32-bit option specifying how the Driver Manager uses the ODBC cursor
 library.
-
 So I guess this means the message [above] was related to using a 3rd party
 odbc driver.
-
 Setting SQL_CUR_USE_ODBC ========================
 To set SQL_CUR_USE_ODBC for drivers that require it, do this:
-
 $db = NewADOConnection('odbc_db2');
 $db->curMode = SQL_CUR_USE_ODBC;
+
 $db->Connect($dsn, $userid, $pwd);
 
-
-
 USING CLI INTERFACE ===================
-
 I have had reports that the $host and $database params have to be reversed in
 Connect() when using the CLI interface. From Halmai Csongor csongor.halmai#nexum.hu:
-
 > The symptom is that if I change the database engine from postgres or any other to DB2 then the following
 > connection command becomes wrong despite being described this version to be correct in the docs.
 >
+
 > $connection_object->Connect( $DATABASE_HOST, $DATABASE_AUTH_USER_NAME, $DATABASE_AUTH_PASSWORD, $DATABASE_NAME )
 >
 > In case of DB2 I had to swap the first and last arguments in order to connect properly.
-
-
 System Error 5 ==============
 IF you get a System Error 5 when trying to Connect/Load, it could be a permission problem. Give the user connecting
 to DB2 full rights to the DB2 SQLLIB directory, and place the user in the DBUSERS group.
@@ -103,6 +83,7 @@ if (!defined('ADODB_ODBC_DB2')) {
 		public $sysTime         = 'CURRENT TIME';
 		public $sysDate         = 'CURRENT DATE';
 		public $sysTimeStamp    = 'CURRENT TIMESTAMP';
+
 		// The complete string representation of a timestamp has the form
 		// yyyy-mm-dd-hh.mm.ss.nnnnnn.
 		public $fmtTimeStamp    = "'Y-m-d-H.i.s'";
@@ -116,16 +97,19 @@ if (!defined('ADODB_ODBC_DB2')) {
 			if (strncmp(PHP_OS, 'WIN', 3) === 0) {
 				$this->curmode = SQL_CUR_USE_ODBC;
 			}
+
 			parent::__construct();
 		}
 
 		public function IfNull($field, $ifNull) {
-			return " COALESCE($field, $ifNull) "; // if DB2 UDB
+			// if DB2 UDB
+			return " COALESCE($field, $ifNull) ";
 		}
 
 		public function ServerInfo() {
 			//odbc_setoption($this->_connectionID,1,101 /*SQL_ATTR_ACCESS_MODE*/, 1 /*SQL_MODE_READ_ONLY*/);
 			$vers = $this->GetOne('select versionnumber from sysibm.sysversions');
+
 			//odbc_setoption($this->_connectionID,1,101, 0 /*SQL_MODE_READ_WRITE*/);
 			return array(
 				'description' => 'DB2 ODBC driver',
@@ -151,9 +135,7 @@ if (!defined('ADODB_ODBC_DB2')) {
 			$savem            = $ADODB_FETCH_MODE;
 			$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 			$qid              = odbc_tables($this->_connectionID, '', $qschema, $qtable, '');
-
-			$rs = new ADORecordSet_odbc($qid);
-
+			$rs               = new ADORecordSet_odbc($qid);
 			$ADODB_FETCH_MODE = $savem;
 
 			if (!$rs) {
@@ -161,12 +143,13 @@ if (!defined('ADODB_ODBC_DB2')) {
 
 				return $false;
 			}
+
 			$rs->_has_stupid_odbc_fetch_api_change = $this->_has_stupid_odbc_fetch_api_change;
+			$arr                                   = $rs->GetArray();
 
-			$arr = $rs->GetArray();
 			//print_r($arr);
-
 			$rs->Close();
+
 			$arr2 = array();
 
 			if ($ttype) {
@@ -207,13 +190,16 @@ if (!defined('ADODB_ODBC_DB2')) {
 		public function MetaIndexes($table, $primary = false, $owner = false) {
 			// save old fetch mode
 			global $ADODB_FETCH_MODE;
+
 			$save             = $ADODB_FETCH_MODE;
 			$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
 			if ($this->fetchMode !== false) {
 				$savem = $this->SetFetchMode(false);
 			}
+
 			$false = false;
+
 			// get index details
 			$table = strtoupper($table);
 			$SQL   = "SELECT NAME, UNIQUERULE, COLNAMES FROM SYSIBM.SYSINDEXES WHERE TBNAME='$table'";
@@ -221,29 +207,35 @@ if (!defined('ADODB_ODBC_DB2')) {
 			if ($primary) {
 				$SQL .= " AND UNIQUERULE='P'";
 			}
+
 			$rs = $this->Execute($SQL);
 
 			if (!is_object($rs)) {
 				if (isset($savem)) {
 					$this->SetFetchMode($savem);
 				}
+
 				$ADODB_FETCH_MODE = $save;
 
 				return $false;
 			}
+
 			$indexes = array();
+
 			// parse index data into array
 			while ($row = $rs->FetchRow()) {
-				$indexes[$row[0]]            = array(
+				$indexes[$row[0]] = array(
 					'unique'  => ($row[1] == 'U' || $row[1] == 'P'),
 					'columns' => array(),
 				);
+
 				$cols                        = ltrim($row[2], '+');
 				$indexes[$row[0]]['columns'] = explode('+', $cols);
 			}
 
 			if (isset($savem)) {
 				$this->SetFetchMode($savem);
+
 				$ADODB_FETCH_MODE = $save;
 			}
 
@@ -256,14 +248,15 @@ if (!defined('ADODB_ODBC_DB2')) {
 			if (!$col) {
 				$col = $this->sysDate;
 			}
-			$s = '';
 
+			$s   = '';
 			$len = strlen($fmt);
 
 			for ($i = 0; $i < $len; $i++) {
 				if ($s) {
 					$s .= '||';
 				}
+
 				$ch = $fmt[$i];
 
 				switch ($ch) {
@@ -324,6 +317,7 @@ if (!defined('ADODB_ODBC_DB2')) {
 							$i++;
 							$ch = substr($fmt, $i, 1);
 						}
+
 						$s .= $this->qstr($ch);
 				}
 			}
@@ -339,20 +333,20 @@ if (!defined('ADODB_ODBC_DB2')) {
 				if ($nrows >= 0) {
 					$sql .= " FETCH FIRST $nrows ROWS ONLY ";
 				}
+
 				$rs = $this->Execute($sql, $inputArr);
 			} else {
-				if ($offset > 0 && $nrows < 0) {
-				} else {
+				if ($offset > 0 && $nrows < 0) {} else {
 					$nrows += $offset;
 					$sql   .= " FETCH FIRST $nrows ROWS ONLY ";
 				}
+
 				$rs = ADOConnection::SelectLimit($sql, -1, $offset, $inputArr);
 			}
 
 			return $rs;
 		}
 	}
-
 
 	class ADORecordSet_odbc_db2 extends ADORecordSet_odbc {
 		public $databaseType = 'db2';
@@ -402,10 +396,8 @@ if (!defined('ADODB_ODBC_DB2')) {
 				//case 'BOOLEAN':
 				//case 'BIT':
 				//	return 'L';
-
 				//case 'COUNTER':
 				//	return 'R';
-
 				case 'INT':
 				case 'INTEGER':
 				case 'BIGINT':

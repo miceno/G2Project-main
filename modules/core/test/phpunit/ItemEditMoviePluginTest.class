@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -44,6 +43,7 @@ class ItemEditMoviePluginTest extends ItemEditPluginTestCase {
 
 		$Platform                        = $gallery->getPlatform();
 		$ItemEditMoviePluginTestPlatform = new ItemEditMoviePluginTestPlatform($Platform);
+
 		$gallery->setPlatform($ItemEditMoviePluginTestPlatform);
 
 		list($ret, $this->_album) = $this->_createRandomAlbum($this->_getRootId());
@@ -72,6 +72,7 @@ class ItemEditMoviePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_item, $this->_preferred);
+
 		$this->assertEquals(
 			array(
 				array(),
@@ -100,6 +101,7 @@ class ItemEditMoviePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_item, $this->_preferred);
+
 		$this->assertEquals(
 			array(
 				array(),
@@ -127,6 +129,7 @@ class ItemEditMoviePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_item, $this->_preferred);
+
 		$this->assertEquals(
 			array(
 				array(
@@ -275,6 +278,7 @@ class ItemEditMoviePluginTestPlatform {
 			if (!strcmp($filename, '.') || !strcmp($filename, '..')) {
 				continue;
 			}
+
 			$path = "$dirname/$filename";
 
 			if ($this->is_dir($path)) {
@@ -287,13 +291,15 @@ class ItemEditMoviePluginTestPlatform {
 				return false;
 			}
 		}
+
 		closedir($fd);
 
 		return $this->rmdir($dirname);
 	}
 
 	public function unlink($path) {
-		return unlink($path); // needed to release locks
+		// needed to release locks
+		return unlink($path);
 	}
 
 	public function realpath($file) {

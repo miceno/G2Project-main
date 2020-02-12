@@ -1,9 +1,9 @@
 <?php
+
 /*
 	Bulgarian language, v1.0, 25.03.2004, encoding by UTF-8 charset
 	contributed by Valentin Sheiretsky <valio#valio.eu.org>
 */
-
 $ADODB_LANG_ARRAY = array(
 	'LANG'                       => 'bg',
 	DB_ERROR                     => 'неизвестна грешка',
@@ -34,3 +34,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'несъществуваща база данни',
 	DB_ERROR_ACCESS_VIOLATION    => 'нямате достатъчно права',
 );
+

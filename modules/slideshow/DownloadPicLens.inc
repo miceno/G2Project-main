@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -53,9 +52,8 @@ class DownloadPicLensView extends GalleryView {
 	public function renderImmediate($status = null, $error = null) {
 		global $gallery;
 
-		// Figure out which file we're talking about
-		$file = GalleryUtilities::getRequestVariables('file');
-
+		// Figure out which file we are talking about
+		$file    = GalleryUtilities::getRequestVariables('file');
 		$codeDir = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow/';
 
 		switch ($file) {
@@ -95,11 +93,12 @@ class DownloadPicLensView extends GalleryView {
 	 */
 	public function _sendFile($data) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$phpVm    = $gallery->getPhpVm();
 
 		/**
-		 * Try to prevent Apache's mod_deflate from gzipping the output since it's likely already
+		 * Try to prevent Apache's mod_deflate from gzipping the output since it is likely already
 		 * a binary file and broken versions of mod_deflate sometimes get the byte count wrong.
 		 */
 		if (function_exists('apache_setenv') && !@$gallery->getConfig('apacheSetenvBroken')) {
@@ -113,21 +112,24 @@ class DownloadPicLensView extends GalleryView {
 		}
 
 		$stats = $platform->stat($data['path']);
+
 		$phpVm->header('Content-type: ' . $data['mimeType']);
 		$phpVm->header('Content-Disposition: inline; filename="' . $data['pseudoFileName'] . '"');
+
 		$phpVm->header('Last-Modified: ' . GalleryUtilities::getHttpDate($stats[9]));
 		$phpVm->header('Expires: ' . GalleryUtilities::getHttpDate(2147483647));
 		$phpVm->header('Cache-Control: public');
 
-		// If the request method is HEAD, don't send back the body
+		// If the request method is HEAD, do not send back the body
 		if ($requestMethod == 'head') {
 			$phpVm->header('Content-length: 0');
 		} else {
 			if ($stats[7] > 0) {
 				$phpVm->header('Content-length: ' . $stats[7]);
 			}
+
 			/*
-			 * Don't use readfile() because it buffers the entire file in memory.  Profiling shows
+			 * Do not use readfile() because it buffers the entire file in memory.  Profiling shows
 			 * that this approach is as efficient as fpassthru() but we get to call
 			 * guaranteeTimeLimit which prevents it from failing on very large files
 			 */
@@ -138,9 +140,12 @@ class DownloadPicLensView extends GalleryView {
 					if (strlen($bytes) == 0) {
 						break;
 					}
+
 					echo $bytes;
+
 					$gallery->guaranteeTimeLimit(30);
 				}
+
 				$platform->fclose($fd);
 			}
 		}

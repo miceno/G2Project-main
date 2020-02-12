@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/AdminMaintenance.inc');
 
 /**
@@ -30,16 +28,16 @@ GalleryCoreApi::requireOnce('modules/core/AdminMaintenance.inc');
  */
 class ConvertDatabaseToUtf8Task extends MaintenanceTask {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ConvertDatabaseToUtf8Task();
+		if (!isset($instance)) {
+			$instance = new ConvertDatabaseToUtf8Task();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -54,7 +52,7 @@ class ConvertDatabaseToUtf8Task extends MaintenanceTask {
 			'If you created your database with MySQL 3.x and you upgrade to MySQL 4.x, you ' .
 			'will experience scrambled characters until you convert your database to use ' .
 			'UTF8.  This operation is harmless if your database is already converted, so ' .
-			'it\'s safe to try it if you\'re unsure.  After using this, you should run the ' .
+			'it\'s safe to try it if you are unsure.  After using this, you should run the ' .
 			'\'Delete database cache\' task to get rid of any corruption in your cache.'
 		);
 
@@ -74,7 +72,8 @@ class ConvertDatabaseToUtf8Task extends MaintenanceTask {
 		}
 
 		GalleryCoreApi::requireOnce('modules/core/CoreModuleExtras.inc');
-		list($ret, $converted) = CoreModuleExtras::doStatic()->convertCharacterSetToUtf8(
+
+		list($ret, $converted) = CoreModuleExtras::getMe()->convertCharacterSetToUtf8(
 			$module,
 			new MockStatusMonitor()
 		);
@@ -100,18 +99,18 @@ class ConvertDatabaseToUtf8Task extends MaintenanceTask {
  */
 class MockStatusMonitor {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new MockStatusMonitor();
+		if (!isset($instance)) {
+			$instance = new MockStatusMonitor();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
-	public function renderStatusMessage() {
-	}
+	public function renderStatusMessage() {}
 }
+

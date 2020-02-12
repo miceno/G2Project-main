@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemMoveSingleController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemMoveSingleController();
+		if (!isset($instance)) {
+			$instance = new ItemMoveSingleController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -50,8 +49,8 @@ class ItemMoveSingleController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$itemId = $item->getId();
 
+		$itemId = $item->getId();
 		$status = $error = array();
 
 		if (isset($form['action']['move'])) {
@@ -70,7 +69,7 @@ class ItemMoveSingleController extends GalleryController {
 
 				/*
 				 * Assert that our permissions are correct.  The view should never try to make a
-				 * move that isn't legal so we can just bail if there's an inconsistency.
+				 * move that is not legal so we can just bail if there is an inconsistency.
 				 */
 				list($ret, $canView) = GalleryCoreApi::hasItemPermission($newParentId, 'core.view');
 
@@ -79,7 +78,7 @@ class ItemMoveSingleController extends GalleryController {
 				}
 
 				if (!$canView) {
-					// Avoid information disclosure, act as if the item didn't exist.
+					// Avoid information disclosure, act as if the item does not exist.
 					return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 				}
 
@@ -119,7 +118,7 @@ class ItemMoveSingleController extends GalleryController {
 				}
 			}
 
-			// Make sure we don't have recursive moves
+			// Make sure we do not have recursive moves
 			if (empty($error)) {
 				list($ret, $newParentAncestorIds) = GalleryCoreApi::fetchParentSequence($newParentId);
 
@@ -143,7 +142,8 @@ class ItemMoveSingleController extends GalleryController {
 					return array($ret, null);
 				}
 
-				$oldParentId           = $item->getParentId();
+				$oldParentId = $item->getParentId();
+
 				list($ret, $lockIds[]) = GalleryCoreApi::acquireReadLockParents($oldParentId);
 
 				if ($ret) {
@@ -160,7 +160,7 @@ class ItemMoveSingleController extends GalleryController {
 					return array($ret, null);
 				}
 
-				// Write lock the item we're moving
+				// Write lock the item we are moving
 				list($ret, $lockIds[]) = GalleryCoreApi::acquireWriteLock($itemId);
 
 				if ($ret) {
@@ -235,6 +235,7 @@ class ItemMoveSingleController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'core.ItemMoveSingle';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -247,21 +248,21 @@ class ItemMoveSingleController extends GalleryController {
  */
 class ItemMoveSingleView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemMoveSingleView();
+		if (!isset($instance)) {
+			$instance = new ItemMoveSingleView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
 	 * @see GalleryView::loadTemplate
-	 * @todo Scalability - Don't load all album-items into memory. Need a way to load the items
+	 * @todo Scalability - Do not load all album-items into memory. Need a way to load the items
 	 *       incrementally, e.g. with an AJAX-powered tree widget.
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
@@ -273,6 +274,7 @@ class ItemMoveSingleView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		if ($form['formName'] != 'ItemMoveSingle') {
@@ -288,6 +290,7 @@ class ItemMoveSingleView extends GalleryView {
 		} else {
 			return array(GalleryCoreApi::error(ERROR_BAD_DATA_TYPE), null);
 		}
+
 		$permissions = array($permissions, 'core.view');
 
 		// Get ids of all all albums where we can add this items
@@ -304,8 +307,7 @@ class ItemMoveSingleView extends GalleryView {
 			return array($ret, null);
 		}
 
-		$albumTree = GalleryUtilities::createAlbumTree($albums);
-
+		$albumTree                       = GalleryUtilities::createAlbumTree($albums);
 		$ItemMoveSingle                  = array();
 		$ItemMoveSingle['albumTree']     = $albumTree;
 		$ItemMoveSingle['itemTypeNames'] = $item->itemTypeName();

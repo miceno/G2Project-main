@@ -1,4 +1,5 @@
 <?php
+
 /*
  * These are sample descriptors that should be generated from our mock plugins. If the plugin is
  * changed, the changes must be reflected here as well. It is also used in the index generation test
@@ -9,7 +10,7 @@ $sampleModuleDescriptor = array(
 		'id'                => 'testModule',
 		'version'           => '1.0.0',
 		'requiredCoreApi'   => GalleryCoreApi::getApiVersion(),
-		'requiredPluginApi' => GalleryModule::doStatic()->getApiVersion(),
+		'requiredPluginApi' => GalleryModule::getMe()->getApiVersion(),
 		'stringsRevision'   => '22222',
 		'buildTimestamp'    => '11111',
 	),
@@ -175,7 +176,7 @@ $sampleThemeDescriptor = array(
 		'id'                => 'testTheme',
 		'version'           => '1.0.0',
 		'requiredCoreApi'   => GalleryCoreApi::getApiVersion(),
-		'requiredPluginApi' => GalleryTheme::doStatic()->getApiVersion(),
+		'requiredPluginApi' => GalleryTheme::getMe()->getApiVersion(),
 		'stringsRevision'   => '22222',
 		'buildTimestamp'    => '11111',
 	),
@@ -322,3 +323,4 @@ $sampleThemeDescriptor = array(
 		),
 	),
 );
+

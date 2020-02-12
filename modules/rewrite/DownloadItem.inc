@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -59,6 +58,7 @@ class DownloadItemView extends GalleryView {
 		if (empty($itemId)) {
 			return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 		}
+
 		list($ret, $image) = GalleryCoreApi::loadEntitiesById($itemId, 'GalleryEntity');
 
 		if ($ret) {
@@ -102,16 +102,19 @@ class DownloadItemView extends GalleryView {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $album) = GalleryCoreApi::loadEntitiesById($albumId, 'GalleryItem');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $canViewRoot) = GalleryCoreApi::hasItemPermission($albumId, 'core.view');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$galleryTitle = '';
 
 		if ($canViewRoot) {
@@ -119,7 +122,9 @@ class DownloadItemView extends GalleryView {
 		}
 
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
+
 		$template = new GalleryTemplate(dirname(dirname(__DIR__)));
+
 		$template->setVariable('l10Domain', 'modules_rewrite');
 		$template->setVariable('item', (array)$item);
 		$template->setVariable('image', (array)$image);
@@ -142,8 +147,8 @@ class DownloadItemView extends GalleryView {
 	 */
 	public function _assertPermissions($item, $derivativeType) {
 		global $gallery;
-		$session =& $gallery->getSession();
 
+		$session             =& $gallery->getSession();
 		$itemIdForPermission = $item->getId();
 
 		if (!empty($derivativeType)) {
@@ -171,6 +176,7 @@ class DownloadItemView extends GalleryView {
 				// DERIVATIVE_TYPE_IMAGE_PREFERRED uses core.viewSource
 			}
 		}
+
 		$ret = GalleryCoreApi::assertHasItemPermission($itemIdForPermission, $permission);
 
 		if ($ret) {

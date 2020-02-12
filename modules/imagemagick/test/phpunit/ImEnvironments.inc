@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * @version $Revision: 17804 $
  * @package ImageMagick
@@ -150,9 +150,7 @@ $imEnvironment[] = array(
 	'identify'             => array(
 		''                    => 'Version: @(#)ImageMagick 4.2.9 99/09/01 cristy@mystic.es.dupont.com
 Copyright: Copyright 1999 E. I. du Pont de Nemours and Company
-
 Usage: identify [ options ... ] file [ file ... ]
-
 Where options include:
   -ping           efficiently determine image characteristics
   -size geometry  width and height of image
@@ -226,9 +224,7 @@ $imEnvironment[] = array(
 	'identify'             => array(
 		''                    => 'Version: @(#)ImageMagick 5.4.2 01/01/02 Q:16 http://www.imagemagick.org
 Copyright: Copyright (C) 2002 ImageMagick Studio LLC
-
 Usage: identify [ -option value ... ] file [ file ... ]
-
 Where options include:
   -cache threshold   megabytes of memory available to the pixel cache
   -debug             display copious debugging information
@@ -276,7 +272,6 @@ identify: Missing an image file name.',
  * ImageMagick 6.0.7
  * --------------------------------------------------------------------------
  */
-
 $imEnvironment[] = array(
 	'name'                 => 'ImageMagick',
 	'version'              => '6.0.7',
@@ -326,7 +321,6 @@ $imEnvironment[] = array(
 		''                    => 'Version: ImageMagick 6.0.7 09/11/04 Q16 http://www.imagemagick.org
 Copyright: Copyright (C) 1999-2004 ImageMagick Studio LLC
 Usage: identify [options ...] file [ [options ...] file ... ]
-
 Where options include:
   -authenticate value  decrypt image with this password
   -channel type        Red, Green, Blue, Opacity, Index, Cyan, Yellow,
@@ -387,7 +381,6 @@ test.pdf[1] PDF 612x792 612x792+0+0 PseudoClass 256c 947kb 0.030u 0:01',
  * ImageMagick 6.1.3
  * --------------------------------------------------------------------------
  */
-
 $imEnvironment[] = array(
 	'name'                 => 'ImageMagick',
 	'version'              => '6.1.3',
@@ -447,9 +440,7 @@ $imEnvironment[] = array(
 	'identify'             => array(
 		''                    => 'Version: ImageMagick 6.1.3 11/01/04 Q16 http://www.imagemagick.org
 Copyright: Copyright (C) 1999-2004 ImageMagick Studio LLC
-
 Usage: identify [options ...] file [ [options ...] file ... ]
-
 Where options include:
   -authenticate value  decrypt image with this password
   -channel type        Red, Green, Blue, Opacity, Index, Cyan, Yellow,
@@ -511,7 +502,6 @@ test.pdf[1] PDF 612x792 612x792+0+0 PseudoClass 256c 947kb 0.030u 0:01',
  * ImageMagick 6.2.7 (coalesce / deconstruct changes)
  * --------------------------------------------------------------------------
  */
-
 $im627                 = $imEnvironment[count($imEnvironment) - 1];
 $im627['version']      = '6.2.7';
 $im627['identify'][''] = 'Version: ImageMagick 6.2.7 11/01/05 Q16 http://www.imagemagick.org
@@ -554,9 +544,7 @@ $imEnvironment[] = array(
 		''                    => 'identify: Improper arguments supplied, please see manual.
 Version: GraphicsMagick 1.0.5 November 26, 2004 Q8 http://www.GraphicsMagick.org/
 Copyright: Copyright (C) 2002, 2003, 2004 GraphicsMagick Group
-
 Usage: identify [options ...] file [ [options ...] file ... ]
-
 Where options include:
   -authenticate value  decrypt image with this password
   -debug events        display copious debugging information
@@ -600,3 +588,4 @@ test.pdf[1] PDF 612x792+0+0 PseudoClass 256c 8-bit 946.8k 0.030u 0:01',
 		),
 	),
 );
+

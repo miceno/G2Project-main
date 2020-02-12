@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,11 +8,8 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   SAPDB data driver. Requires ODBC.
-
 */
 
 // security - hide paths
@@ -31,8 +29,10 @@ if (!defined('ADODB_SAPDB')) {
 		public $concat_operator = '||';
 		public $sysDate         = 'DATE';
 		public $sysTimeStamp    = 'TIMESTAMP';
+
 		// used by DBDate() as the default date format used by the database
 		public $fmtDate = "'Y-m-d'";
+
 		// used by DBTimeStamp as the default timestamp fmt.
 		public $fmtTimeStamp    = "'Y-m-d H:i:s'";
 		public $hasInsertId     = true;
@@ -61,12 +61,12 @@ if (!defined('ADODB_SAPDB')) {
 
 		public function MetaIndexes($table, $primary = false, $owner = false) {
 			$table = $this->Quote(strtoupper($table));
-
-			$sql = 'SELECT INDEXNAME,TYPE,COLUMNNAME FROM INDEXCOLUMNS ' .
+			$sql   = 'SELECT INDEXNAME,TYPE,COLUMNNAME FROM INDEXCOLUMNS ' .
 			" WHERE TABLENAME=$table" .
 			' ORDER BY INDEXNAME,COLUMNNO';
 
 			global $ADODB_FETCH_MODE;
+
 			$save             = $ADODB_FETCH_MODE;
 			$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -79,6 +79,7 @@ if (!defined('ADODB_SAPDB')) {
 			if (isset($savem)) {
 				$this->SetFetchMode($savem);
 			}
+
 			$ADODB_FETCH_MODE = $save;
 
 			if (!is_object($rs)) {
@@ -104,14 +105,15 @@ if (!defined('ADODB_SAPDB')) {
 
 		public function MetaColumns($table, $normalize = true) {
 			global $ADODB_FETCH_MODE;
+
 			$save             = $ADODB_FETCH_MODE;
 			$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
 			if ($this->fetchMode !== false) {
 				$savem = $this->SetFetchMode(false);
 			}
-			$table = $this->Quote(strtoupper($table));
 
+			$table  = $this->Quote(strtoupper($table));
 			$retarr = array();
 
 			foreach ($this->GetAll("SELECT COLUMNNAME,DATATYPE,LEN,DEC,NULLABLE,MODE,\"DEFAULT\",CASE WHEN \"DEFAULT\" IS NULL THEN 0 ELSE 1 END AS HAS_DEFAULT FROM COLUMNS WHERE tablename=$table ORDER BY pos") as $column) {
@@ -145,12 +147,14 @@ if (!defined('ADODB_SAPDB')) {
 						}
 					}
 				}
+
 				$retarr[$fld->name] = $fld;
 			}
 
 			if (isset($savem)) {
 				$this->SetFetchMode($savem);
 			}
+
 			$ADODB_FETCH_MODE = $save;
 
 			return $retarr;
@@ -181,7 +185,6 @@ if (!defined('ADODB_SAPDB')) {
 		 * See http://listserv.sap.com/pipermail/sapdb.general/2002-January/010405.html
 		 */
 	}
-
 
 	class ADORecordSet_sapdb extends ADORecordSet_odbc {
 		public $databaseType = 'sapdb';

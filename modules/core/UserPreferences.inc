@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class UserPreferencesController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserPreferencesController();
+		if (!isset($instance)) {
+			$instance = new UserPreferencesController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -66,23 +65,22 @@ class UserPreferencesController extends GalleryController {
 			$redirect['subView'] = 'core.UserPreferences';
 		} elseif (isset($form['action']['save'])) {
 			// Validate our data before we continue.
-
 			// full name is optional
-
 			// language is optional for everybody
-
 			list($ret, $isAdmin) = GalleryCoreApi::isUserInSiteAdminGroup();
 
 			if ($ret) {
 				return array($ret, null);
 			}
 
-			$userId             = $gallery->getActiveUserId();
+			$userId = $gallery->getActiveUserId();
+
 			list($ret, $lockId) = GalleryCoreApi::acquireWriteLock($userId);
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $user) = GalleryCoreApi::loadEntitiesById($userId, 'GalleryUser');
 
 			if ($ret) {
@@ -112,30 +110,32 @@ class UserPreferencesController extends GalleryController {
 
 				if (!$user->isCorrectPassword($form['currentPassword'])) {
 					$error[] = 'form[error][currentPassword][incorrect]';
+					$event   = GalleryCoreApi::newEvent('Gallery::FailedLogin');
 
-					$event = GalleryCoreApi::newEvent('Gallery::FailedLogin');
 					$event->setData(
 						array(
 							'userName' => $user->getUserName(),
 						)
 					);
+
 					list($ret, $ignored) = GalleryCoreApi::postEvent($event);
 
 					if ($ret) {
 						return array($ret, null);
 					}
 				}
+
 				/*
 				 * To be consistent, we really should post a Gallery::Login event here to show
-				 * that the user successfully authenticated.  But they're not really logging in so
-				 * that's misleading.  Perhaps we should rename the events to Gallery::Authenticate
+				 * that the user successfully authenticated.  But they are not really logging in so
+				 * that is misleading.  Perhaps we should rename the events to Gallery::Authenticate
 				 * and Gallery::FailedAuthenticate to be more accurate, and then post those here?
 				 *
 				 * @see UserChangePasswordController::handleRequest
 				 */
 			}
 
-			// Set a default if for some reason it doesn't get sent from the browser
+			// Set a default if for some reason it does not get sent from the browser
 			$form['email'] = empty($form['email']) ? '' : $form['email'];
 
 			// Require a password to change the email address
@@ -152,8 +152,10 @@ class UserPreferencesController extends GalleryController {
 
 				if (isset($form['language'])) {
 					$user->setLanguage($form['language']);
+
 					// update the effective language in the current session
 					$session =& $gallery->getSession();
+
 					$session->put('core.language', $form['language']);
 				}
 
@@ -184,6 +186,7 @@ class UserPreferencesController extends GalleryController {
 			$results['delegate']['view']    = 'core.UserAdmin';
 			$results['delegate']['subView'] = 'core.UserPreferences';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -196,16 +199,16 @@ class UserPreferencesController extends GalleryController {
  */
 class UserPreferencesView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserPreferencesView();
+		if (!isset($instance)) {
+			$instance = new UserPreferencesView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -226,7 +229,7 @@ class UserPreferencesView extends GalleryView {
 
 		$user = $gallery->getActiveUser();
 
-		// Locked users aren't allowed to edit themselves - display message
+		// Locked users are not allowed to edit themselves - display message
 		if ($user->isLocked()) {
 			return array(
 				null,

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -26,7 +25,7 @@ class RedirectToInstallerStep extends UpgradeStep {
 	public function loadTemplateData(&$templateData) {
 		global $gallery, $stepNumber;
 
-		// Add @ here in case we haven't yet upgraded config.php to include galleryBaseUrl
+		// Add @ here in case we have not yet upgraded config.php to include galleryBaseUrl
 		$baseUrl = @$gallery->getConfig('galleryBaseUrl');
 
 		if (empty($baseUrl)) {
@@ -37,13 +36,13 @@ class RedirectToInstallerStep extends UpgradeStep {
 		}
 
 		/*
-		 * Don't redirect immediately because the user might actually want to upgrade
+		 * Do not redirect immediately because the user might actually want to upgrade
 		 * but accidentally lost config.php.
 		 */
 		$this->setComplete(false);
-		// Fix progress bar / hack
-		$stepNumber = 1;
 
+		// Fix progress bar / hack
+		$stepNumber                   = 1;
 		$templateData['installerUrl'] = $url;
 		$templateData['bodyFile']     = 'RedirectToInstaller.html';
 	}

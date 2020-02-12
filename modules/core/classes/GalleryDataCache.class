@@ -1,28 +1,27 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
  * Utility class for caching data
  *
  * Very useful in the case where retrieving or building data sets is expensive, and the data
- * doesn't change during the lifetime of the request.  This class serves as a hash table where
+ * does not change during the lifetime of the request.  This class serves as a hash table where
  * any data class can store and retrieve cached data.
  *
  * @package GalleryCore
@@ -58,7 +57,7 @@ class GalleryDataCache {
 
 	/**
 	 * Is in-memory caching enabled?
-	 * @return boolean true if it's enabled
+	 * @return boolean true if it is enabled
 	 */
 	public static function isMemoryCachingEnabled() {
 		$cache =& GalleryDataCache::_getCache();
@@ -162,7 +161,7 @@ class GalleryDataCache {
 	}
 
 	/**
-	 * Perform some pruning of our cache to prevent it from growing too large when we're doing
+	 * Perform some pruning of our cache to prevent it from growing too large when we are doing
 	 * exceptionally long operations like adding many items in one request.
 	 *
 	 * @access private
@@ -174,7 +173,6 @@ class GalleryDataCache {
 
 		foreach ($cache['positions'] as $key => $position) {
 			unset($cache['keys'][$key], $cache['positions'][$key]);
-
 
 			if ($numToExpire-- == 0) {
 				break;
@@ -288,6 +286,7 @@ class GalleryDataCache {
 		}
 
 		global $gallery;
+
 		$platform  =& $gallery->getPlatform();
 		$cacheFile = GalleryDataCache::getCachePath($pathInfo);
 
@@ -302,6 +301,7 @@ class GalleryDataCache {
 					GalleryCoreApi::requireOnce($classFile);
 				}
 			}
+
 			$data = unserialize(substr($buf, $marker + 1));
 
 			return $data;
@@ -323,6 +323,7 @@ class GalleryDataCache {
 		}
 
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if (in_array(
@@ -376,8 +377,10 @@ class GalleryDataCache {
 		}
 
 		global $gallery;
+
 		$cacheFile = GalleryDataCache::getCachePath($pathInfo);
 		$platform  =& $gallery->getPlatform();
+
 		GalleryUtilities::guaranteeDirExists(dirname($cacheFile));
 
 		// This will either succeed, or leave no trace of its attempt.
@@ -437,7 +440,8 @@ class GalleryDataCache {
 		switch ($pathInfo['type']) {
 			case 'entity':
 				list($first, $second) = GalleryDataCache::getCacheTuple($pathInfo['itemId']);
-				$cacheFile            = sprintf(
+
+				$cacheFile = sprintf(
 					'%sentity/%s/%s/%d.inc',
 					$base,
 					$first,
@@ -449,7 +453,8 @@ class GalleryDataCache {
 
 			case 'derivative':
 				list($first, $second) = GalleryDataCache::getCacheTuple($pathInfo['itemId']);
-				$cacheFile            = sprintf(
+
+				$cacheFile = sprintf(
 					'%sderivative/%s/%s/%d.dat',
 					$base,
 					$first,
@@ -461,7 +466,8 @@ class GalleryDataCache {
 
 			case 'derivative-relative':
 				list($first, $second) = GalleryDataCache::getCacheTuple($pathInfo['itemId']);
-				$cacheFile            = sprintf(
+
+				$cacheFile = sprintf(
 					'derivative/%s/%s/%d.dat',
 					$first,
 					$second,
@@ -472,7 +478,8 @@ class GalleryDataCache {
 
 			case 'fast-download':
 				list($first, $second) = GalleryDataCache::getCacheTuple($pathInfo['itemId']);
-				$cacheFile            = sprintf(
+
+				$cacheFile = sprintf(
 					'%sentity/%s/%s/%d-fast.inc',
 					$base,
 					$first,
@@ -493,8 +500,10 @@ class GalleryDataCache {
 						if (strstr($pathInfo['itemId'], '..') !== false) {
 							$pathInfo['itemId'] = '0';
 						}
+
 						list($first, $second) = GalleryDataCache::getCacheTuple($pathInfo['itemId']);
-						$cacheFile            = sprintf(
+
+						$cacheFile = sprintf(
 							'%s%s/%s/%s/%s/%s.inc',
 							$base,
 							$pathInfo['type'],
@@ -551,10 +560,11 @@ class GalleryDataCache {
 	 */
 	public static function cachePermissions($ids, $permission) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		if (!isset($session)) {
-			// No session means we've got no cache
+			// No session means we have got no cache
 			return;
 		}
 
@@ -566,7 +576,7 @@ class GalleryDataCache {
 
 		/*
 		 * We want to put all the permissions that we cache in this request into one entry in
-		 * the session.  However we're going to get several separate requests.  So start by
+		 * the session.  However we are going to get several separate requests.  So start by
 		 * pruning down the total number of cached permission sets, then create a new set
 		 * and add all cached values to that.
 		 */
@@ -578,6 +588,7 @@ class GalleryDataCache {
 			}
 
 			array_unshift($permissions, array());
+
 			// Trim down the cache
 			$max = 6;
 
@@ -598,19 +609,21 @@ class GalleryDataCache {
 
 		// Make sure the session permission cache is not too large
 		$maxEntries = 40;
+
 		// Add our new data to the head of the list
 		while (($id = array_shift($ids)) && $maxEntries > $newEntries++) {
 			$permissions[0][$permission][$id] = 1;
 		}
 
 		GalleryDataCache::put($cacheKey, $newEntries);
+
 		$session->put('permissionCache', $permissions);
 	}
 
 	/**
 	 * Look up the given permission in the cache.  Return true if the permission
-	 * exists in the cache, false if it doesn't.  A return of false doesn't mean
-	 * that the user doesn't have the permission -- just that it's not in the
+	 * exists in the cache, false if it does not.  A return of false does not mean
+	 * that the user does not have the permission -- just that it is not in the
 	 * cache.
 	 *
 	 * @param int $id the item id
@@ -619,6 +632,7 @@ class GalleryDataCache {
 	 */
 	public static function hasPermission($id, $permission) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		if (!isset($session)) {
@@ -626,6 +640,7 @@ class GalleryDataCache {
 		}
 
 		$permissions = $session->get('permissionCache');
+
 		/*
 		 * Since we add all new data to the head of the list, the odds are good
 		 * that we should find our answer in the first iteration of this loop.
@@ -646,6 +661,7 @@ class GalleryDataCache {
 	 */
 	public static function clearPermissionCache() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		if (isset($session)) {
@@ -669,6 +685,7 @@ class GalleryDataCache {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$acceleration = unserialize($acceleration);
 
 		list($ret, $isAnonymous) = GalleryCoreApi::isAnonymousUser();
@@ -695,6 +712,7 @@ class GalleryDataCache {
 
 		$key    = md5(serialize($keyData) . '|' . $extraKey . '|' . implode(',', $aclIds));
 		$userId = $gallery->getActiveUserId();
+
 		/*
 		 * Note: there is no complete index for this WHERE clause because the MySQL query optimizer
 		 * would still use the PK for this query. This should not lead to a performance decrease as
@@ -745,7 +763,8 @@ class GalleryDataCache {
 	public static function putPageData($type, $itemId, $keyData, $value) {
 		global $gallery;
 
-		$userId             = $gallery->getActiveUserId();
+		$userId = $gallery->getActiveUserId();
+
 		list($ret, $aclIds) = GalleryCoreApi::fetchAccessListIds('core.view', $userId);
 
 		if ($ret) {
@@ -785,7 +804,8 @@ class GalleryDataCache {
 				)
 			);
 
-			$storage                  =& $gallery->getStorage();
+			$storage =& $gallery->getStorage();
+
 			list($ret, $affectedRows) = $storage->getAffectedRows();
 
 			if ($ret) {
@@ -810,8 +830,8 @@ class GalleryDataCache {
 					/*
 					 * Nearly always this update/insert should be OK in one pass.
 					 * However, 2 simultaneous requests may both fail to update, then both
-					 * try to insert.. the 2nd insert will fail.  In this rare case we'll
-					 * loop and try once more to update.. if it still fails we'll error out.
+					 * try to insert.. the 2nd insert will fail.  In this rare case we will
+					 * loop and try once more to update.. if it still fails we will error out.
 					 */
 					if ($i < 1) {
 						continue;
@@ -860,8 +880,8 @@ class GalleryDataCache {
 	}
 
 	/**
-	 * Should we use the cache for this page or not?  Right now we cache a page if it's a GET
-	 * request, the browser hasn't specified that it wants uncached data, and the caching policy
+	 * Should we use the cache for this page or not?  Right now we cache a page if it is a GET
+	 * request, the browser has not specified that it wants uncached data, and the caching policy
 	 * for the given user class is appropriate.
 	 *
 	 * @param string $action
@@ -879,6 +899,7 @@ class GalleryDataCache {
 
 		if ($action == 'read') {
 			$noCache = (GalleryUtilities::getServerVar('HTTP_PRAGMA') == 'no-cache' ||
+
 			GalleryUtilities::getServerVar('HTTP_CACHE_CONTROL') == 'no-cache');
 
 			if ($noCache) {
@@ -887,7 +908,7 @@ class GalleryDataCache {
 		}
 
 		/*
-		 * Don't cache guest preview pages since we want a realtime preview
+		 * Do not cache guest preview pages since we want a realtime preview
 		 * and they are infrequently visited
 		 */
 		$session =& $gallery->getSession();
@@ -901,7 +922,9 @@ class GalleryDataCache {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$acceleration            = unserialize($acceleration);
+
+		$acceleration = unserialize($acceleration);
+
 		list($ret, $isAnonymous) = GalleryCoreApi::isAnonymousUser();
 
 		if ($ret) {
@@ -921,6 +944,7 @@ class GalleryDataCache {
 	 */
 	public static function _getExtraPageCacheKey() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		// Add session specific flags & values to the cache key
@@ -929,10 +953,10 @@ class GalleryDataCache {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$isEmbedded = (int)$gallery->isEmbedded();
 		$extraKey   = (int)($session->isUsingCookies()) . '-' . $languageCode . '-' . $isEmbedded;
-
-		$mode = $session->get('exif.module.LoadExifInfo.mode');
+		$mode       = $session->get('exif.module.LoadExifInfo.mode');
 
 		if (!empty($mode) && $mode != 'summary') {
 			$extraKey .= '-exif' . $mode;
@@ -960,6 +984,7 @@ class GalleryDataCache {
 		if ($ret) {
 			return $ret;
 		}
+
 		$acceleration = unserialize($acceleration);
 
 		list($ret, $isAnonymous) = GalleryCoreApi::isAnonymousUser();

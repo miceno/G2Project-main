@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -44,6 +43,7 @@ class ShowAllCommentsView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$ret = GalleryCoreApi::assertHasItemPermission($item->getId(), 'comment.view');
 
 		if ($ret) {
@@ -55,13 +55,14 @@ class ShowAllCommentsView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$page = GalleryUtilities::getRequestVariables('page');
 
 		if (empty($page)) {
 			$page = 1;
 		}
 
-		list($ret, $comments, $count) = GalleryCommentHelper::doStatic()->fetchAllComments(
+		list($ret, $comments, $count) = GalleryCommentHelper::getMe()->fetchAllComments(
 			$item->getId(),
 			$showCount,
 			($page - 1) * $showCount,
@@ -98,11 +99,13 @@ class ShowAllCommentsView extends GalleryView {
 
 		if (!empty($itemIds)) {
 			$itemIds = array_keys($itemIds);
-			$ret     = GalleryCoreApi::studyPermissions($itemIds);
+
+			$ret = GalleryCoreApi::studyPermissions($itemIds);
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $itemList) = GalleryCoreApi::loadEntitiesById($itemIds, 'GalleryItem');
 
 			if ($ret) {
@@ -122,7 +125,8 @@ class ShowAllCommentsView extends GalleryView {
 		}
 
 		$cacheControl = false;
-		// Pages shouldn't be cached if any of the comments is not accessible for anonymous
+
+		// Pages should not be cached if any of the comments is not accessible for anonymous
 		list($ret, $anonymousUserId) = GalleryCoreApi::getAnonymousUserId();
 
 		if ($ret) {
@@ -143,7 +147,8 @@ class ShowAllCommentsView extends GalleryView {
 			) as $canFlag => $permission) {
 				$can[$comment['id']][$canFlag] = isset($permissions[$permission]);
 			}
-			// If we already set cache control, don't check any more
+
+			// If we already set cache control, do not check any more
 			if (!$cacheControl) {
 				// If !comment.view || !core.view
 				list($ret, $anonymousViewable) = GalleryCoreApi::hasItemPermission(
@@ -172,6 +177,7 @@ class ShowAllCommentsView extends GalleryView {
 
 				if (!$anonymousViewable) {
 					$this->setCacheControl($template, 'no-cache');
+
 					$cacheControl = true;
 				}
 			}
@@ -190,6 +196,7 @@ class ShowAllCommentsView extends GalleryView {
 						}
 					}
 				}
+
 				$itemData[$comment['parentId']] = $it;
 			}
 		}
@@ -207,7 +214,8 @@ class ShowAllCommentsView extends GalleryView {
 					'page'   => 1,
 				),
 			);
-			$navigator['back']  = array(
+
+			$navigator['back'] = array(
 				'urlParams' => array(
 					'view'   => 'comment.ShowAllComments',
 					'itemId' => $item->getId(),
@@ -224,6 +232,7 @@ class ShowAllCommentsView extends GalleryView {
 					'page'   => $page + 1,
 				),
 			);
+
 			$navigator['last'] = array(
 				'urlParams' => array(
 					'view'   => 'comment.ShowAllComments',
@@ -244,6 +253,7 @@ class ShowAllCommentsView extends GalleryView {
 				'navigator'  => $navigator,
 			)
 		);
+
 		$template->style('modules/comment/comment.css');
 		$template->javascript('lib/yui/utilities.js');
 		$template->javascript('lib/yui/container-min.js');

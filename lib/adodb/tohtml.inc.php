@@ -1,4 +1,5 @@
 <?php
+
 /*
   @version   v5.20.12  30-Mar-2018
   @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -6,16 +7,20 @@
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
-
   Some pretty-printing by Chris Oxenreider <oxenreid@state.net>
 */
 
 // specific code for tohtml
 global $gSQLMaxRows,$gSQLBlockRows,$ADODB_ROUND;
 
-$ADODB_ROUND   = 4; // rounding
-$gSQLMaxRows   = 1000; // max no of rows to download
-$gSQLBlockRows = 20; // max no of rows per table block
+// rounding
+$ADODB_ROUND = 4;
+
+// max no of rows to download
+$gSQLMaxRows = 1000;
+
+// max no of rows per table block
+$gSQLBlockRows = 20;
 
 // RecordSet to HTML Table
 //------------------------------------------------------------
@@ -24,11 +29,9 @@ $gSQLBlockRows = 20; // max no of rows per table block
 // web browsers normally require the whole table to be downloaded
 // before it can be rendered, so we break the output into several
 // smaller faster rendering tables.
-//
 // $rs: the recordset
 // $ztabhtml: the table tag attributes (optional)
 // $zheaderarray: contains the replacement strings for the headers (optional)
-//
 //  USAGE:
 //	include('adodb.inc.php');
 //	$db = ADONewConnection('mysql');
@@ -36,14 +39,12 @@ $gSQLBlockRows = 20; // max no of rows per table block
 //	$rs = $db->Execute('select col1,col2,col3 from table');
 //	rs2html($rs, 'BORDER=2', array('Title1', 'Title2', 'Title3'));
 //	$rs->Close();
-//
 // RETURNS: number of rows displayed
-
-
 function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialchars = true, $echo = true) {
 	$s     = '';
 	$rows  = 0;
 	$docnt = false;
+
 	global $gSQLMaxRows,$gSQLBlockRows,$ADODB_ROUND;
 
 	if (!$rs) {
@@ -55,6 +56,7 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 	if (!$ztabhtml) {
 		$ztabhtml = "BORDER='1' WIDTH='98%'";
 	}
+
 	//else $docnt = true;
 	$typearr = array();
 	$ncols   = $rs->FieldCount();
@@ -69,7 +71,9 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 			} else {
 				$fname = htmlspecialchars($field->name);
 			}
+
 			$typearr[$i] = $rs->MetaType($field->type, $field->max_length);
+
 		//print " $field->name $field->type $typearr[$i] ";
 		} else {
 			$fname       = 'Field ' . ($i + 1);
@@ -79,8 +83,10 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 		if (strlen($fname) == 0) {
 			$fname = '&nbsp;';
 		}
+
 		$hdr .= "<TH>$fname</TH>";
 	}
+
 	$hdr .= "\n</tr>";
 
 	if ($echo) {
@@ -106,8 +112,7 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 
 			switch ($type) {
 				case 'D':
-					if (strpos($v, ':') !== false) {
-					} else {
+					if (strpos($v, ':') !== false) {} else {
 						if (empty($v)) {
 							$s .= "<TD> &nbsp; </TD>\n";
 						} else {
@@ -116,6 +121,7 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 
 						break;
 					}
+
 					// Fall Through
 				case 'T':
 					if (empty($v)) {
@@ -132,6 +138,7 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 					} else {
 						$v = round($v, $ADODB_ROUND);
 					}
+
 					// Fall Through
 				case 'I':
 					$vv = stripslashes((trim($v)));
@@ -139,9 +146,11 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 					if (strlen($vv) == 0) {
 						$vv .= '&nbsp;';
 					}
+
 					$s .= '	<TD align=right>' . $vv . "</TD>\n";
 
 					break;
+
 				/*
 				case 'B':
 				if (substr($v,8,2)=="BM" ) $v = substr($v,8);
@@ -151,31 +160,36 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 				@ftruncate($fd,0);
 				@fwrite($fd,$v);
 				@fclose($fd);
+
 				if (!function_exists ("mime_content_type")) {
 				  function mime_content_type ($file) {
 					return exec("file -bi ".escapeshellarg($file));
 				  }
 				}
+
 				$t = mime_content_type($tmpname);
 				$s .= (substr($t,0,5)=="image") ? " <td><img src='$tmpname' alt='$t'></td>\\n" : " <td><a
 				href='$tmpname'>$t</a></td>\\n";
-				break;
-				*/
 
+				break;
+
+				*/
 				default:
 					if ($htmlspecialchars) {
 						$v = htmlspecialchars(trim($v));
 					}
+
 					$v = trim($v);
 
 					if (strlen($v) == 0) {
 						$v = '&nbsp;';
 					}
+
 					$s .= '	<TD>' . str_replace("\n", '<br>', stripslashes($v)) . "</TD>\n";
 			}
 		} // for
-		$s .= "</TR>\n\n";
 
+		$s    .= "</TR>\n\n";
 		$rows += 1;
 
 		if ($rows >= $gSQLMaxRows) {
@@ -188,12 +202,14 @@ function rs2html(&$rs, $ztabhtml = false, $zheaderarray = false, $htmlspecialcha
 
 		// additional EOF check to prevent a widow header
 		if (!$rs->EOF && $rows % $gSQLBlockRows == 0) {
-			//if (connection_aborted()) break;// not needed as PHP aborts script, unlike ASP
+			// not needed as PHP aborts script, unlike ASP
+			//if (connection_aborted()) break;
 			if ($echo) {
 				echo $s . "</TABLE>\n\n";
 			} else {
 				$html .= $s . "</TABLE>\n\n";
 			}
+
 			$s = $hdr;
 		}
 	} // while
@@ -219,7 +235,8 @@ function arr2html(&$arr, $ztabhtml = '', $zheaderarray = '') {
 		$ztabhtml = 'BORDER=1';
 	}
 
-	$s = "<TABLE $ztabhtml>";//';print_r($arr);
+	//';print_r($arr);
+	$s = "<TABLE $ztabhtml>";
 
 	if ($zheaderarray) {
 		$s .= '<TR>';
@@ -227,6 +244,7 @@ function arr2html(&$arr, $ztabhtml = '', $zheaderarray = '') {
 		for ($i = 0; $i < sizeof($zheaderarray); $i++) {
 			$s .= "	<TH>{$zheaderarray[$i]}</TH>\n";
 		}
+
 		$s .= "\n</TR>";
 	}
 
@@ -241,6 +259,7 @@ function arr2html(&$arr, $ztabhtml = '', $zheaderarray = '') {
 				if (empty($val)) {
 					$val = '&nbsp;';
 				}
+
 				$s .= "	<TD>$val</TD>\n";
 			}
 		} elseif ($a) {
@@ -248,8 +267,10 @@ function arr2html(&$arr, $ztabhtml = '', $zheaderarray = '') {
 		} else {
 			$s .= "	<TD>&nbsp;</TD>\n";
 		}
+
 		$s .= "\n</TR>\n";
 	}
+
 	$s .= '</TABLE>';
 	echo $s;
 }

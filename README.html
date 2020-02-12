@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>README: Gallery 2.4</title>
@@ -132,7 +131,8 @@
 		* Licensed under MIT
 		* Based on Bootstrap
 		*/
-		/*!
+
+/*!
 		* Bootstrap v3.3.7 (http://getbootstrap.com)
 		* Copyright 2011-2016 Twitter, Inc.
 		* Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -397,11 +397,14 @@
 				font-size: 1.125rem;
 			}
 		}
+
 	</style>
 	<script>
+
 	//<![CDATA[
 	function toggle(objId, togId) {
 		var o = document.getElementById(objId), t = document.getElementById(togId);
+
 		if (o.style.display == 'none') {
 			o.style.display = 'block'; t.innerHTML = '-';
 		} else {
@@ -409,21 +412,25 @@
 			t.innerHTML = '+';
 		}
 	}
+
 	/*
 	* if the URL does not contain http or is on sourceforge, replace relative urls
-	* with an alert instead of a link that probably won't work
+	* with an alert instead of a link that probably would not work
 	*/
 	function fixURLs() {
 		if ((document.location.toString().indexOf('http') != 0) || (document.location.toString().match(/(\bsourceforge\b|\bsf.net\b|\bmenalto\b)/))) {
 			var as = document.getElementsByTagName("a");
+
 			for (var i = 0; i < as.length; i++) {
 				href = as[i].getAttribute('href');
+
 				if (href) {
 					/* links to replace do not begin with # or http or irc */
 					if ((href.search('http') != 0) && (href.search('irc') != 0) && (href.toString().charAt(0) != '#')) {
 						/* Do not use setAttribute for onclick (workaround for IE) */
 						as[i].onclick = function() {
 							alert('Link disabled as it seems this file is not on a webserver');
+
 							return false;
 						};
 						as[i].setAttribute('title', "Link only works when accessing this file on a web server");
@@ -433,10 +440,10 @@
 			}
 		}
 	}
+
 	// ]]>
 	</script>
 </head>
-
 <body onload="fixURLs();">
 	<div class="container">
 		<div>
@@ -1818,7 +1825,7 @@
 			<li>
 				<b>Graphics Toolkits</b> - Gallery 2 works with many different toolkits (<a href="http://netpbm.sourceforge.net" target="_blank">NetPBM</a>, <a href="http://www.imagemagick.org/" target="_blank">ImageMagick</a>, <a href="http://php.net/gd" target="_blank">GD</a> or <a href="http://www.graphicsmagick.org/" target="_blank">GraphicsMagick</a>).
 				<br>
-				You need to activate at least one or you would not get any thumbnails, but there's no limit on how many you can have. In fact, more is better because they can work together.
+				You need to activate at least one or you would not get any thumbnails, but there is no limit on how many you can have. In fact, more is better because they can work together.
 			</li>
 		</ol>
 		<span class="toc-link">
@@ -1845,7 +1852,7 @@
 						If you do not have shell access, you can ask your provider to do it for you, or you can make a miniature PHP script containing one of the above commands. Some webhosting companies offer a control panel with a web file-browser which is capable of extracting / unarchiving archive files. It is worth a try to check if this option is available.
 					</li>
 					<li>
-						<b>Easiest (but slowest) way:</b> If you don't have shell access, you can upload the complete contents of the Gallery 2 archive to the webserver with an FTP program. This may take a lot of time and be error-prone. In this case, pay special attention to the &rsquo;System Checks&rsquo; step of the installer and make sure that there are no missing or modified files. Consider using a smart FTP program like <a href="http://filezilla.sourceforge.net/" target="_blank">FileZilla</a> to make sure that your transfer goes smoothly.
+						<b>Easiest (but slowest) way:</b> If you do not have shell access, you can upload the complete contents of the Gallery 2 archive to the webserver with an FTP program. This may take a lot of time and be error-prone. In this case, pay special attention to the &rsquo;System Checks&rsquo; step of the installer and make sure that there are no missing or modified files. Consider using a smart FTP program like <a href="http://filezilla.sourceforge.net/" target="_blank">FileZilla</a> to make sure that your transfer goes smoothly.
 					</li>
 					<li>
 						<b>Advanced way</b>: The best way to install Gallery <b>and</b> stay up to date if you have shell access to your webserver is to use <a href="https://github.com/dakanji/G2Project-main" target="_blank">Github</a>.
@@ -1955,7 +1962,7 @@
 				Warning When Upgrading from Gallery 2.0!
 			</h3>
 			<p>
-				Third party modules and themes designed for Gallery 2.0 will not work with Gallery 2.3. During the upgrade process, these modules and themes will be automatically deactivated for you. You can find updated versions for most of these modules and themes here: <a href="http://codex.gallery2.org/Gallery2:User_Contributions">http://codex.gallery2.org/Gallery2:User_Contributions</a>
+				Third party modules and themes designed for Gallery 2.0 will not work with Gallery 2.4. During the upgrade process, these modules and themes will be automatically deactivated for you. You can find updated versions for most of these modules and themes here: <a href="http://codex.gallery2.org/Gallery2:User_Contributions">http://codex.gallery2.org/Gallery2:User_Contributions</a>
 			</p>
 		</div>
 		<ol>
@@ -1966,7 +1973,7 @@
 				Download the latest code for any active third party modules that you are using, or deactivate them. If in doubt, deactivating is safe.
 			</li>
 			<li>
-				<a href="#get_latest_code">Get the latest code</a> and unpack it over your existing copy of Gallery 2. Keep your existing config.php in place, and don't touch your (g2data) data folder or the database. If you are using Git, you can just do "git update" at any time. Alternatively, you can use the <a href="http://codex.gallery2.org/Gallery2:Preinstaller" target="_blank">Gallery 2 Pre-Installer</a> to get the latest codebase.
+				<a href="#get_latest_code">Get the latest code</a> and unpack it over your existing copy of Gallery 2. Keep your existing config.php in place, and do not touch your (g2data) data folder or the database. If you are using Git, you can just do "git update" at any time. Alternatively, you can use the <a href="http://codex.gallery2.org/Gallery2:Preinstaller" target="_blank">Gallery 2 Pre-Installer</a> to get the latest codebase.
 			</li>
 			<li>If you use a PHP accelerator / cache (e.g. Turk mmCache, Ioncube PHPA, eaccelerator, Zend Studio, etc.), flush (clear) the cache of the accelerator. Omitting this step can <i>sometimes</i> lead to errors during and after the upgrade process.
 			</li>

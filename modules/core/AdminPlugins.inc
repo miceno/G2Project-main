@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepository.class');
 
 /**
@@ -29,16 +27,16 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepository.class');
  */
 class AdminPluginsView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminPluginsView();
+		if (!isset($instance)) {
+			$instance = new AdminPluginsView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -58,6 +56,7 @@ class AdminPluginsView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$themeGroup = array(
 			'group'      => 'theme',
 			'groupLabel' => $core->translate('Themes'),
@@ -77,10 +76,10 @@ class AdminPluginsView extends GalleryView {
 			}
 
 			/*
-			 * It's possible that we have some out-of-date plugins which haven't been deactivated
+			 * It is possible that we have some out-of-date plugins which have not been deactivated
 			 * yet, since the deactivation only occurs when we try to load the module.  Load all
 			 * the active plugins now to force the version check, then reload the plugin status
-			 * when we're done to pick up any changes we trigger.
+			 * when we are done to pick up any changes we trigger.
 			 */
 			foreach ($pluginStatus[$type] as $pluginId => $status) {
 				if (!empty($status['active'])) {
@@ -101,6 +100,7 @@ class AdminPluginsView extends GalleryView {
 
 			$platform =& $gallery->getPlatform();
 			$g2Dir    = dirname(dirname(__DIR__)) . '/';
+
 			GalleryCoreApi::requireOnce('modules/core/PluginCallback.inc');
 
 			foreach ($pluginStatus[$type] as $pluginId => $status) {
@@ -110,9 +110,8 @@ class AdminPluginsView extends GalleryView {
 					return array($ret, null);
 				}
 
-				$test1 = $platform->is_writeable("$g2Dir{$type}s/$pluginId");
-				$test2 = $platform->is_writeable("$g2Dir{$type}s/$pluginId/$type.inc");
-
+				$test1                     = $platform->is_writeable("$g2Dir{$type}s/$pluginId");
+				$test2                     = $platform->is_writeable("$g2Dir{$type}s/$pluginId/$type.inc");
 				$entry                     = array();
 				$entry['type']             = $type;
 				$entry['name']             = $plugin->translate($plugin->getName());
@@ -122,7 +121,7 @@ class AdminPluginsView extends GalleryView {
 				$entry['installedVersion'] = isset($status['version']) ? $status['version'] : null;
 				$entry['deletable']        = ($test1 && $test2) ? 1 : 0;
 
-				list($ret, $entry['state']) = PluginCallbackView::doStatic()->getPluginState(
+				list($ret, $entry['state']) = PluginCallbackView::getMe()->getPluginState(
 					$type,
 					$plugin,
 					$status
@@ -140,7 +139,7 @@ class AdminPluginsView extends GalleryView {
 
 				if ($entry['state'] == 'incompatible') {
 					$entry['api']['required']['plugin'] = join('.', $type == 'theme' ? $plugin->getRequiredThemeApi() : $plugin->getRequiredModuleApi());
-					$entry['api']['provided']['plugin'] = join('.', GalleryModule::doStatic()->getApiVersion());
+					$entry['api']['provided']['plugin'] = join('.', GalleryModule::getMe()->getApiVersion());
 					$entry['api']['required']['core']   = join('.', $plugin->getRequiredCoreApi());
 					$entry['api']['provided']['core']   = join('.', GalleryCoreApi::getApiVersion());
 				}
@@ -152,10 +151,11 @@ class AdminPluginsView extends GalleryView {
 				}
 			}
 		}
-		usort($plugins, array($this, 'pluginSort'));
 
-		$AdminPlugins                             = array();
-		$AdminPlugins['plugins']                  = $plugins;
+		usort($plugins, array($this, 'pluginSort'));
+		$AdminPlugins            = array();
+		$AdminPlugins['plugins'] = $plugins;
+
 		list($ret, $AdminPlugins['defaultTheme']) = GalleryCoreApi::getPluginParameter(
 			'module',
 			'core',
@@ -170,7 +170,7 @@ class AdminPluginsView extends GalleryView {
 			$ret,
 			$repositories,
 			$repositoryInitErrorCount
-		) = GalleryRepository::doStatic()->getRepositories();
+		) = GalleryRepository::getMe()->getRepositories();
 
 		if ($ret) {
 			return array($ret, null);
@@ -230,6 +230,7 @@ class AdminPluginsView extends GalleryView {
 				'other'    => 4,
 			);
 		}
+
 		$ag = $a['group'];
 		$bg = $b['group'];
 
@@ -240,11 +241,13 @@ class AdminPluginsView extends GalleryView {
 			if ($ao != $bo) {
 				return ($ao > $bo) ? 1 : -1;
 			}
+
 			$ag = isset($a['groupLabel']) ? $a['groupLabel'] : $ag;
 			$bg = isset($b['groupLabel']) ? $b['groupLabel'] : $bg;
 
 			return ($ag > $bg) ? 1 : -1;
 		}
+
 		$as  = $a['state'];
 		$bs  = $b['state'];
 		$aso = $stateOrder[$as];

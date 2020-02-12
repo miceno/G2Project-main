@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -40,11 +39,12 @@ class ArchiveUploadHelper {
 	 */
 	public static function testBinary($unzipPath) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		/*
-		 * If the path is not restricted by open_basedir, then verify that it's legal.
-		 * Else just hope that it's valid and use it.
+		 * If the path is not restricted by open_basedir, then verify that it is legal.
+		 * Else just hope that it is valid and use it.
 		 */
 		if (!$platform->isRestrictedByOpenBaseDir($unzipPath)) {
 			if (!$platform->file_exists($unzipPath) || !$platform->is_file($unzipPath)) {
@@ -63,7 +63,8 @@ class ArchiveUploadHelper {
 				array($unzipPath, '-v', dirname(__DIR__) . '/data/test.zip'),
 			)
 		);
-		$valid                           = false;
+
+		$valid = false;
 
 		foreach ($results as $resultLine) {
 			if (strpos($resultLine, 'test.txt') !== false) {
@@ -86,6 +87,7 @@ class ArchiveUploadHelper {
 	 */
 	public static function findUnzipBinary() {
 		global $gallery;
+
 		$platform  =& $gallery->getPlatform();
 		$slash     = $platform->getDirectorySeparator();
 		$validPath = null;
@@ -107,8 +109,10 @@ class ArchiveUploadHelper {
 				if ($path[strlen($path) - 1] != $slash) {
 					$path .= $slash;
 				}
+
 				$paths[] = $path . 'unzip.exe';
 			}
+
 			$paths[] = 'C:\unzip\unzip.exe';
 			$paths[] = 'C:\\cygwin\\bin\\zip.exe';
 		} elseif (GalleryUtilities::isA($platform, 'UnixPlatform')) {
@@ -122,8 +126,10 @@ class ArchiveUploadHelper {
 				if ($path[strlen($path) - 1] != $slash) {
 					$path .= $slash;
 				}
+
 				$paths[] = $path . 'unzip';
 			}
+
 			$paths[] = '/usr/bin/unzip';
 			$paths[] = '/usr/local/bin/unzip';
 			$paths[] = '/bin/unzip';

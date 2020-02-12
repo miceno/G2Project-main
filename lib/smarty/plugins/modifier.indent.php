@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -22,3 +23,4 @@
 function smarty_modifier_indent($string, $chars = 4, $char = ' ') {
 	return preg_replace('!^!m', str_repeat($char, $chars), $string);
 }
+

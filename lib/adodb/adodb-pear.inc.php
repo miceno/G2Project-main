@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -15,9 +16,8 @@
  * and Tomas V.V.Cox <cox@idecnet.com>. Portions (c)1997-2002 The PHP Group.
  */
 
- /*
+/*
  We support:
-
  DB_Common
  ---------
 	 query - returns PEAR_Error on error
@@ -29,13 +29,11 @@
 	quote
 	nextID
 	disconnect
-
 	getOne
 	getAssoc
 	getRow
 	getCol
 	getAll
-
  DB_Result
  ---------
 	 numRows - returns -1 if not supported
@@ -44,13 +42,10 @@
 	fetchRows - does not support passing of fetchmode
 	free
  */
-
 define('ADODB_PEAR', __DIR__);
 
 require_once 'PEAR.php';
-
 require_once ADODB_PEAR . '/adodb-errorpear.inc.php';
-
 require_once ADODB_PEAR . '/adodb.inc.php';
 
 if (!defined('DB_OK')) {
@@ -58,7 +53,7 @@ if (!defined('DB_OK')) {
 	define('DB_ERROR', -1);
 
 	/**
-	 * This is a special constant that tells DB the user hasn't specified
+	 * This is a special constant that tells DB the user has not specified
 	 * any particular get mode, so the default should be used.
 	 */
 	define('DB_FETCHMODE_DEFAULT', 0);
@@ -74,7 +69,6 @@ if (!defined('DB_OK')) {
 	define('DB_FETCHMODE_ASSOC', 2);
 
 	// for compatibility
-
 	define('DB_GETMODE_ORDERED', DB_FETCHMODE_ORDERED);
 	define('DB_GETMODE_ASSOC', DB_FETCHMODE_ASSOC);
 
@@ -105,6 +99,7 @@ class DB {
 	 */
 	public function factory($type) {
 		include_once ADODB_DIR . "/drivers/adodb-$type.inc.php";
+
 		$obj = NewADOConnection($type);
 
 		if (!is_object($obj)) {
@@ -182,6 +177,7 @@ class DB {
 						$persist = $v;
 
 						break;
+
 					// ibase
 					case 'dialect':
 						$obj->dialect = $v;
@@ -197,11 +193,13 @@ class DB {
 						$obj->buffers = $v;
 
 						break;
+
 					// ado
 					case 'charpage':
 						$obj->charPage = $v;
 
 						break;
+
 					// mysql
 					case 'clientflags':
 						$obj->clientFlags = $v;
@@ -269,6 +267,7 @@ class DB {
 	 */
 	public function isWarning($value) {
 		return false;
+
 		/*
 		 * return is_object($value) &&
 		 *	(get_class( $value ) == "db_warning" ||

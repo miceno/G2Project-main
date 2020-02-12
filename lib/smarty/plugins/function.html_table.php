@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -137,6 +138,7 @@ function smarty_function_html_table($params, &$smarty) {
 			$output .= $cols[$r];
 			$output .= "</th>\n";
 		}
+
 		$output .= "</tr></thead>\n";
 	}
 
@@ -160,8 +162,10 @@ function smarty_function_html_table($params, &$smarty) {
 				$output .= '<td' . smarty_function_html_table_cycle('td', $td_attr, $c) . ">$trailpad</td>\n";
 			}
 		}
+
 		$output .= "</tr>\n";
 	}
+
 	$output .= "</tbody>\n";
 	$output .= "</table>\n";
 

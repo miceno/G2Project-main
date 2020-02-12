@@ -1,7 +1,6 @@
 <?php
 
 // Russian language file contributed by "Cyrill Malevanov" cyrill#malevanov.spb.ru.
-
 $ADODB_LANG_ARRAY = array(
 	'LANG'                       => 'ru',
 	DB_ERROR                     => 'неизвестная ошибка',
@@ -32,3 +31,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'не существует БД',
 	DB_ERROR_ACCESS_VIOLATION    => 'недостаточно прав доступа',
 );
+

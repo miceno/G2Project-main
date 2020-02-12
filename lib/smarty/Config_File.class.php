@@ -40,6 +40,7 @@ class Config_File {
 	 * Options
 	 * @var boolean
 	 */
+
 	/**
 	 * Controls whether variables with the same name overwrite each other.
 	 */
@@ -61,11 +62,13 @@ class Config_File {
 	 * If set to true, \r or \r\n will be changed to \n.
 	 */
 	public $fix_newlines = true;
+
 	// #@-
 
 	/** @access private */
 	public $_config_path = '';
 	public $_config_data = array();
+
 	// #@-
 
 	/**
@@ -114,12 +117,12 @@ class Config_File {
 
 			return;
 		}
+
 		$file_name = $this->_config_path . $file_name;
 
 		if (!isset($this->_config_data[$file_name])) {
 			$this->load_file($file_name, false);
 		}
-
 
 		if (!empty($var_name)) {
 			if (empty($section_name)) {
@@ -153,7 +156,8 @@ class Config_File {
 	 */
 	public function &get_key($config_key) {
 		list($file_name, $section_name, $var_name) = explode('/', $config_key, 3);
-		$result                                    = &$this->get($file_name, $section_name, $var_name);
+
+		$result =& $this->get($file_name, $section_name, $var_name);
 
 		return $result;
 	}
@@ -249,7 +253,6 @@ class Config_File {
 
 		$contents = ($size = filesize($config_file)) ? fread($fp, $size) : '';
 		fclose($fp);
-
 		$this->_config_data[$config_file] = $this->parse_contents($contents);
 
 		return true;
@@ -318,6 +321,7 @@ class Config_File {
 						'vars' => array(),
 					);
 				}
+
 				$vars =& $config_data['sections'][$section_name]['vars'];
 
 				continue;
@@ -342,14 +346,17 @@ class Config_File {
 							break;
 						}
 					}
+
 					$booleanize = false;
 				} else {
 					// handle simple value
 					$var_value  = preg_replace('/^([\'"])(.*)\1$/', '\2', rtrim($match[2]));
 					$booleanize = $this->booleanize;
 				}
+
 				$this->_set_config_var($vars, $var_name, $var_value, $booleanize);
 			}
+
 			// else unparsable line / means it is a comment / means ignore it
 		}
 
@@ -369,6 +376,7 @@ class Config_File {
 			if (!$this->read_hidden) {
 				return;
 			}
+
 			$var_name = substr($var_name, 1);
 		}
 

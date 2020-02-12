@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -202,7 +201,7 @@ class GalleryChildEntityHelper_simple {
 	 * @param string|array $requiredPermission a single required permission-id (can be null)
 	 *                                         or an array or permission-ids
 	 * @param boolean $linkableOnly whether to restrict to linkable items only
-	 * @param int $userId the userid we're doing this for (defaults to active user id)
+	 * @param int $userId the userid we are doing this for (defaults to active user id)
 	 * @return array GalleryStatus a status code
 	 *               array of item ids
 	 * @access private
@@ -249,6 +248,7 @@ class GalleryChildEntityHelper_simple {
 			if (empty($query)) {
 				return array(null, array());
 			}
+
 			array_unshift($data, $item->getId());
 			$options = array(
 				'limit' => array(
@@ -293,8 +293,8 @@ class GalleryChildEntityHelper_simple {
 		if ($ret) {
 			return array($ret, null, null);
 		}
-		$join = array_flip($join);
 
+		$join    = array_flip($join);
 		$idJoins = $class ? array(
 			$class => 'id',
 		) : array();
@@ -312,6 +312,7 @@ class GalleryChildEntityHelper_simple {
 			if (empty($aclIds)) {
 				return array(null, null, null);
 			}
+
 			$idJoins['GalleryAccessSubscriberMap'] = 'itemId';
 			$where[]                               = '[GalleryAccessSubscriberMap::accessListId] IN ('
 			. GalleryUtilities::makeMarkers(count($aclIds)) . ')';
@@ -327,10 +328,10 @@ class GalleryChildEntityHelper_simple {
 			$join['INNER JOIN [' . $table . '] ON [BASE::ID] = ['
 			. $table . '::' . $column . ']'] = 1;
 		}
-		// Don't self join
+
+		// Do not self join
 		$baseId = '[' . $baseTable . '::' . $baseIdColumn . ']';
 		unset($join['INNER JOIN [' . $baseTable . '] ON [BASE::ID] = ' . $baseId], $join['LEFT JOIN [' . $baseTable . '] ON [BASE::ID] = ' . $baseId]);
-
 
 		// Postgres requires the order by column to be in the select list
 		$select = empty($select) ? '' : ', ' . implode(', ', $select);
@@ -374,6 +375,7 @@ class GalleryChildEntityHelper_simple {
 			if (!is_array($permission)) {
 				$permission = array($permission);
 			}
+
 			list($ret, $permissionMap) = GalleryCoreApi::fetchPermissionsForItems($parentIds);
 
 			if ($ret) {
@@ -418,6 +420,7 @@ class GalleryChildEntityHelper_simple {
 	 */
 	public static function _fetchDescendentItemIds($item, $offset, $count, $class, $requiredPermission) {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		if (!GalleryUtilities::isA($item, 'GalleryItem')) {
@@ -429,11 +432,13 @@ class GalleryChildEntityHelper_simple {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$sequence = implode('/', $sequence);
 
 		if (!empty($sequence)) {
 			$sequence .= '/';
 		}
+
 		$sequence .= $item->getId() . '/%';
 
 		if ($requiredPermission) {
@@ -445,6 +450,7 @@ class GalleryChildEntityHelper_simple {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$aclMarkers = GalleryUtilities::makeMarkers(count($aclIds));
 
 			if (empty($aclIds)) {
@@ -453,6 +459,7 @@ class GalleryChildEntityHelper_simple {
 		}
 
 		$data[] = $sequence;
+
 		// Prepare the query
 		if ($requiredPermission) {
 			$query = '
@@ -469,7 +476,8 @@ class GalleryChildEntityHelper_simple {
 			AND
 			[GalleryAccessSubscriberMap::accessListId] IN (' . $aclMarkers . ')
 			';
-			$data  = array_merge($data, $aclIds);
+
+			$data = array_merge($data, $aclIds);
 		} else {
 			$query = '
 			SELECT
@@ -562,10 +570,11 @@ class GalleryChildEntityHelper_simple {
 	 */
 	public static function _getOrderInfo($orderBy, $orderDirection) {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		/*
-		 * Don't simply plug getOrderBy into the SQL clause, or we could open
+		 * Do not simply plug getOrderBy into the SQL clause, or we could open
 		 * the door for SQL injection.
 		 */
 		$usingDefaults = false;
@@ -576,11 +585,13 @@ class GalleryChildEntityHelper_simple {
 			if ($ret) {
 				return array($ret, null, null, null, null);
 			}
+
 			list($ret, $orderDirection) = GalleryCoreApi::getPluginParameter('module', 'core', 'default.orderDirection');
 
 			if ($ret) {
 				return array($ret, null, null, null, null);
 			}
+
 			$usingDefaults = true;
 		}
 
@@ -693,11 +704,13 @@ class GalleryChildEntityHelper_simple {
 					if ($ret) {
 						return array($ret, null, null, null, null);
 					}
+
 					list($ret, $as) = $storage->getFunctionSql('AS', array());
 
 					if ($ret) {
 						return array($ret, null, null, null, null);
 					}
+
 					$order[]  = 2 + count($order);
 					$select[] = "$case $as albumsFirst";
 					$join[]   = 'LEFT JOIN [GalleryAlbumItem=1] ON [BASE::ID] = [GalleryAlbumItem=1::id]';
@@ -721,6 +734,7 @@ class GalleryChildEntityHelper_simple {
 						for ($i = 1; $i <= 3; $i++) {
 							$orderClause = str_replace("%$i%", $i + 1 + count($order), $orderClause);
 						}
+
 						$order[] = $orderClause;
 
 						if (!empty($conditionClause)) {
@@ -733,6 +747,7 @@ class GalleryChildEntityHelper_simple {
 
 						break;
 					}
+
 					// Sort order implementation is missing -- fall through to the default
 					if ($usingDefaults) {
 						return GalleryChildEntityHelper_simple::_getOrderInfo(

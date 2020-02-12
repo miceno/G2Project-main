@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class AdminGroupsController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminGroupsController();
+		if (!isset($instance)) {
+			$instance = new AdminGroupsController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -50,8 +49,7 @@ class AdminGroupsController extends GalleryController {
 		}
 
 		$results = $status = $error = array();
-
-		$group = null;
+		$group   = null;
 
 		if (!empty($form['text']['groupName'])) {
 			list($ret, $group) = GalleryCoreApi::fetchGroupByGroupName($form['text']['groupName']);
@@ -88,8 +86,8 @@ class AdminGroupsController extends GalleryController {
 				$error[] = 'form[error][text][noSuchGroup]';
 			} else {
 				/*
-				 * In theory we should never get to this point unless we're operating on a valid
-				 * group, so don't bother sending errors back in case we can't delete.
+				 * In theory we should never get to this point unless we are operating on a valid
+				 * group, so do not bother sending errors back in case we cannot delete.
 				 */
 				if ($group->getGroupType() != GROUP_NORMAL) {
 					$error[] = 'form[error][text][cantDeleteGroup]';
@@ -109,8 +107,8 @@ class AdminGroupsController extends GalleryController {
 				$error[] = 'form[error][text][noSuchGroup]';
 			} else {
 				/*
-				 * In theory we should never get to this point unless we're operating on a valid
-				 * group, so don't bother sending errors back in case we can't delete.
+				 * In theory we should never get to this point unless we are operating on a valid
+				 * group, so do not bother sending errors back in case we cannot delete.
 				 */
 				if ($group->getGroupType() == GROUP_ALL_USERS
 					|| $group->getGroupType() == GROUP_EVERYBODY
@@ -146,16 +144,16 @@ class AdminGroupsController extends GalleryController {
  */
 class AdminGroupsView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminGroupsView();
+		if (!isset($instance)) {
+			$instance = new AdminGroupsView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**

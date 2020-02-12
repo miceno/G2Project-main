@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -47,6 +46,7 @@ class DatabaseBackupStep extends UpgradeStep {
 	 */
 	public function processRequest() {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		if (!isset($_GET['backupDatabase'])) {
@@ -66,6 +66,7 @@ class DatabaseBackupStep extends UpgradeStep {
 			if ($ret) {
 				$templateData['stackTrace'] = $ret->getAsHtml();
 				$templateData['errors'][]   = _('Error attempting to enable maintenance mode.');
+
 				$this->_template->renderHeaderBodyAndFooter($templateData);
 
 				return false;
@@ -76,10 +77,13 @@ class DatabaseBackupStep extends UpgradeStep {
 
 		// Set up the progress bar.
 		$this->_template->renderHeader(true);
+
 		$this->_progressTitle = _('Backing up the Gallery database');
+
 		$this->_template->renderStatusMessage($this->_progressTitle, '', 0);
 
-		$exporter                          = $storage->getDatabaseExporter();
+		$exporter = $storage->getDatabaseExporter();
+
 		list($ret, $backupFile, $warnings) = $exporter->exportToXmlFile(array($this, 'backupCallback'));
 
 		if (!$ret) {
@@ -105,7 +109,7 @@ class DatabaseBackupStep extends UpgradeStep {
 			$templateData['bodyFile'] = 'DatabaseBackupRequest.html';
 		}
 
-		// If maintenance mode was not set by the this step, then don't unset it.
+		// If maintenance mode was not set by the this step, then do not unset it.
 		if (!$mode) {
 			$ret = GalleryCoreApi::setMaintenanceMode(false);
 
@@ -135,7 +139,8 @@ class DatabaseBackupStep extends UpgradeStep {
 		$templateData['storeConfig'] = $gallery->getConfig('storage.config');
 
 		// Load all table versions
-		$storage                   =& $gallery->getStorage();
+		$storage =& $gallery->getStorage();
+
 		list($ret, $tableVersions) = $storage->getTableVersions();
 
 		if ($ret) {
@@ -143,7 +148,8 @@ class DatabaseBackupStep extends UpgradeStep {
 			$templateData['canDoBackup'] = false;
 		} else {
 			list($major, $minor) = $tableVersions['Schema'];
-			$canDoBackup         = version_compare("$major.$minor", '1.2', '>=');
+
+			$canDoBackup = version_compare("$major.$minor", '1.2', '>=');
 
 			if ($canDoBackup) {
 				// Verify that the type / info fields are populated
@@ -151,6 +157,7 @@ class DatabaseBackupStep extends UpgradeStep {
 					SELECT
 						[::name] FROM [GallerySchema]
 					WHERE 
+
 						[::type] in (\'map\',  \'entity\')';
 
 				list($ret, $results) = $storage->search(
@@ -170,6 +177,7 @@ class DatabaseBackupStep extends UpgradeStep {
 					$canDoBackup = $results->resultCount() > 0;
 				}
 			}
+
 			$templateData['canDoBackup'] = $canDoBackup;
 		}
 	}

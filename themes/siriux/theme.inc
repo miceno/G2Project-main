@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -31,10 +30,15 @@ class SiriuxTheme extends GalleryTheme {
 
 		$this->setId('siriux');
 		$this->setName($gallery->i18n('Siriux'));
-		$this->setDescription($gallery->i18n('Siriux.net Gallery theme'));
+		$this->setDescription(
+			$gallery->i18n(
+				'Siriux.net Gallery theme'
+			)
+		);
 		$this->setVersion('7.0.0');
-		$this->setRequiredCoreApi(array(7, 20));
-		$this->setRequiredThemeApi(array(2, 4));
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredThemeApi(array(3, 0));
+
 		$this->setStandardSettings(
 			array(
 				'perPage'        => 9,
@@ -99,7 +103,10 @@ class SiriuxTheme extends GalleryTheme {
 
 		// Find the thumbnail size for this album
 		$theme['params']['thumbnailSize'] = 150;
-		list($ret, $preferences)          = GalleryCoreApi::fetchDerivativePreferencesForItem($item->getId());
+
+		list($ret, $preferences) = GalleryCoreApi::fetchDerivativePreferencesForItem(
+			$item->getId()
+		);
 
 		if ($ret) {
 			return array($ret, null);
@@ -107,7 +114,11 @@ class SiriuxTheme extends GalleryTheme {
 
 		foreach ($preferences as $preference) {
 			if ($preference['derivativeType'] == DERIVATIVE_TYPE_IMAGE_THUMBNAIL
-				&& preg_match('/thumbnail\|(\d+)/', $preference['derivativeOperations'], $matches)
+				&& preg_match(
+					'/thumbnail\|(\d+)/',
+					$preference['derivativeOperations'],
+					$matches
+				)
 			) {
 				$theme['params']['thumbnailSize'] = $matches[1];
 
@@ -246,6 +257,7 @@ class SiriuxTheme extends GalleryTheme {
 			),
 			'value'      => $params['contentWidth'],
 		);
+
 		$settings[] = array(
 			'key'   => 'groupByYear',
 			'name'  => $this->translate(
@@ -254,6 +266,7 @@ class SiriuxTheme extends GalleryTheme {
 			'type'  => 'checkbox',
 			'value' => $params['groupByYear'],
 		);
+
 		$settings[] = array(
 			'key'   => 'enableImageMap',
 			'name'  => $this->translate(

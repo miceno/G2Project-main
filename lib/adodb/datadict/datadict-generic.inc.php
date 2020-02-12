@@ -93,30 +93,43 @@ class ADODB2_generic extends ADODB_DataDict {
 }
 
 /*
+
 //db2
 	 function ActualType($meta)
+
 	{
 		switch($meta) {
 		case 'C': return 'VARCHAR';
+
 		case 'X': return 'VARCHAR';
 
-		case 'C2': return 'VARCHAR'; // up to 32K
+		// up to 32K
+		case 'C2': return 'VARCHAR';
+
 		case 'X2': return 'VARCHAR';
 
 		case 'B': return 'BLOB';
 
 		case 'D': return 'DATE';
+
 		case 'T': return 'TIMESTAMP';
 
 		case 'L': return 'SMALLINT';
+
 		case 'I': return 'INTEGER';
+
 		case 'I1': return 'SMALLINT';
+
 		case 'I2': return 'SMALLINT';
+
 		case 'I4': return 'INTEGER';
+
 		case 'I8': return 'BIGINT';
 
 		case 'F': return 'DOUBLE';
+
 		case 'N': return 'DECIMAL';
+
 		default:
 			return $meta;
 		}
@@ -124,30 +137,43 @@ class ADODB2_generic extends ADODB_DataDict {
 
 // ifx
 function ActualType($meta)
+
 	{
 		switch($meta) {
-		case 'C': return 'VARCHAR';// 255
+		// 255
+		case 'C': return 'VARCHAR';
+
 		case 'X': return 'TEXT';
 
 		case 'C2': return 'NVARCHAR';
+
 		case 'X2': return 'TEXT';
 
 		case 'B': return 'BLOB';
 
 		case 'D': return 'DATE';
+
 		case 'T': return 'DATETIME';
 
 		case 'L': return 'SMALLINT';
+
 		case 'I': return 'INTEGER';
+
 		case 'I1': return 'SMALLINT';
+
 		case 'I2': return 'SMALLINT';
+
 		case 'I4': return 'INTEGER';
+
 		case 'I8': return 'DECIMAL(20)';
 
 		case 'F': return 'FLOAT';
+
 		case 'N': return 'DECIMAL';
+
 		default:
 			return $meta;
 		}
 	}
+
 */

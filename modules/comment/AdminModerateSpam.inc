@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/comment/classes/GalleryCommentHelper.class');
 
 /**
@@ -52,7 +50,7 @@ class AdminModerateSpamController extends GalleryController {
 
 			while (true) {
 				/** @todo use a progress bar here */
-				list($ret, $comments, $count) = GalleryCommentHelper::doStatic()->fetchAllComments(
+				list($ret, $comments, $count) = GalleryCommentHelper::getMe()->fetchAllComments(
 					$rootId,
 					$batchSize,
 					null,
@@ -114,6 +112,7 @@ class AdminModerateSpamView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $showCount) = GalleryCoreApi::getPluginParameter('module', 'comment', 'comments.show');
 
 		if ($ret) {
@@ -126,7 +125,7 @@ class AdminModerateSpamView extends GalleryView {
 			$page = 1;
 		}
 
-		list($ret, $comments, $count) = GalleryCommentHelper::doStatic()->fetchAllComments(
+		list($ret, $comments, $count) = GalleryCommentHelper::getMe()->fetchAllComments(
 			$rootId,
 			$showCount,
 			($page - 1) * $showCount,
@@ -166,11 +165,13 @@ class AdminModerateSpamView extends GalleryView {
 
 		if (!empty($itemIds)) {
 			$itemIds = array_keys($itemIds);
-			$ret     = GalleryCoreApi::studyPermissions($itemIds);
+
+			$ret = GalleryCoreApi::studyPermissions($itemIds);
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			list($ret, $itemList) = GalleryCoreApi::loadEntitiesById($itemIds, 'GalleryItem');
 
 			if ($ret) {
@@ -218,6 +219,7 @@ class AdminModerateSpamView extends GalleryView {
 						}
 					}
 				}
+
 				$itemData[$comment['parentId']] = $it;
 			}
 		}
@@ -226,6 +228,7 @@ class AdminModerateSpamView extends GalleryView {
 			'page'      => $page,
 			'pageCount' => ceil($count / $showCount),
 		);
+
 		$urlParams = array(
 			'view'    => 'core.SiteAdmin',
 			'subView' => 'comment.AdminModerateSpam',
@@ -241,7 +244,8 @@ class AdminModerateSpamView extends GalleryView {
 					)
 				),
 			);
-			$navigator['back']  = array(
+
+			$navigator['back'] = array(
 				'urlParams' => array_merge(
 					$urlParams,
 					array(
@@ -262,6 +266,7 @@ class AdminModerateSpamView extends GalleryView {
 					)
 				),
 			);
+
 			$navigator['last'] = array(
 				'urlParams' => array_merge(
 					$urlParams,
@@ -274,6 +279,7 @@ class AdminModerateSpamView extends GalleryView {
 		}
 
 		$template->setVariable('controller', 'comment.AdminModerateSpam');
+
 		$template->setVariable(
 			'AdminModerateSpam',
 			array(
@@ -285,6 +291,7 @@ class AdminModerateSpamView extends GalleryView {
 				'total'      => $count,
 			)
 		);
+
 		$template->style('modules/comment/comment.css');
 		$template->javascript('lib/yui/utilities.js');
 		$template->javascript('lib/yui/container-min.js');

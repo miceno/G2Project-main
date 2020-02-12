@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -25,7 +24,7 @@
  *   GalleryUtilities::getFileExtension($filename);
  *
  * Try not to jam too many methods into this class.  Only put methods here if they are of obvious
- * value to the class layer and there's no other home for them.
+ * value to the class layer and there is no other home for them.
  *
  * @package GalleryCore
  * @subpackage Classes
@@ -45,14 +44,14 @@ class GalleryUtilities {
 	public static function getFileNameComponents($filename) {
 		$pos = strrpos($filename, '.');
 
-		// No dot == it's all base, no extension
+		// No dot == it is all base, no extension
 		if ($pos === false) {
 			return array($filename, '');
 		}
 
 		$pos++;
 
-		// If it's the last char in the name, just return the base
+		// If it is the last char in the name, just return the base
 		if ($pos >= strlen($filename)) {
 			return array(substr($filename, 0, $pos - 1), '');
 		}
@@ -103,7 +102,7 @@ class GalleryUtilities {
 			/*
 			 * Later during our sanitization process we call stripslashes on our file name.  But it
 			 * may legitimately have backslashes in it (eg. c:\apache\tmp\php195.jpg), so make sure
-			 * those are escaped at this time.  There's gotta be a better way to handle this.
+			 * those are escaped at this time.  There should be a better way to handle this.
 			 */
 			$file = $_FILES[$key];
 
@@ -128,6 +127,7 @@ class GalleryUtilities {
 		if ($prefix) {
 			$key = GALLERY_FORM_VARIABLE_PREFIX . $key;
 		}
+
 		$form = array();
 
 		if (isset($_POST[$key]) && is_array($_POST[$key])) {
@@ -138,7 +138,7 @@ class GalleryUtilities {
 			/*
 			 * Later during our sanitization process we call stripslashes on our file name.  But it
 			 * may legitimately have backslashes in it (eg. c:\apache\tmp\php195.jpg), so make sure
-			 * those are escaped at this time.  There's gotta be a better way to handle this.
+			 * those are escaped at this time.  There should be a better way to handle this.
 			 */
 			$postForm = $_FILES[$key];
 
@@ -147,6 +147,7 @@ class GalleryUtilities {
 					$postForm['tmp_name'][$i] = addslashes($postForm['tmp_name'][$i]);
 				}
 			}
+
 			$form = GalleryUtilities::array_merge_replace($form, $postForm);
 		}
 
@@ -204,6 +205,7 @@ class GalleryUtilities {
 				if (!isset($array[$key])) {
 					$array[$key] = array();
 				}
+
 				$array[$key] = GalleryUtilities::array_merge_replace($array[$key], $value);
 			} else {
 				if (isset($array[$key]) && is_array($array[$key])) {
@@ -214,6 +216,7 @@ class GalleryUtilities {
 						$array    = array();
 						$array[0] = $temp;
 					}
+
 					$array[$key] = $value;
 				}
 			}
@@ -232,6 +235,7 @@ class GalleryUtilities {
 		if ($prefix) {
 			$key = GALLERY_FORM_VARIABLE_PREFIX . $key;
 		}
+
 		unset($_POST[$key], $_FILES[$key], $_GET[$key]);
 	}
 
@@ -288,7 +292,7 @@ class GalleryUtilities {
 
 	/**
 	 * Return the specified request variables (omit Gallery variable prefix).  Should be used only
-	 * when interacting with an external API where prefix can't be used.  Accept any number of keys
+	 * when interacting with an external API where prefix cannot be used.  Accept any number of keys
 	 * and return that number of values, in order.
 	 * @param one or more string parameters
 	 * @return mixed a single string value or many values
@@ -326,6 +330,7 @@ class GalleryUtilities {
 		GalleryUtilities::unsanitizeInputValues($value);
 
 		$keyPath = preg_split('/[\[\]]/', $key, -1, PREG_SPLIT_NO_EMPTY);
+
 		GalleryUtilities::_internalPutRequestVariable($keyPath, $value, $_GET);
 	}
 
@@ -358,6 +363,7 @@ class GalleryUtilities {
 		if ($prefix) {
 			$key = GALLERY_FORM_VARIABLE_PREFIX . $key;
 		}
+
 		$value = GalleryUtilities::_getRequestVariable($key);
 
 		return !empty($value);
@@ -372,7 +378,9 @@ class GalleryUtilities {
 		if ($prefix) {
 			$key = GALLERY_FORM_VARIABLE_PREFIX . $key;
 		}
+
 		$keyPath = preg_split('/[\[\]]/', $key, -1, PREG_SPLIT_NO_EMPTY);
+
 		GalleryUtilities::_internalRemoveRequestVariable($keyPath, $_GET);
 		GalleryUtilities::_internalRemoveRequestVariable($keyPath, $_POST);
 	}
@@ -444,6 +452,7 @@ class GalleryUtilities {
 	 */
 	public static function convertPathToUrl($path, $options = array()) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$dirbase  = $platform->realpath(__DIR__ . '/../../..') . '/';
 
@@ -457,6 +466,7 @@ class GalleryUtilities {
 			$dirbase = str_replace($slash, '/', $dirbase);
 			$path    = str_replace($slash, '/', $path);
 		}
+
 		$relativePath = str_replace($dirbase, '', $path);
 
 		// Prepend the Gallery base URL
@@ -472,7 +482,7 @@ class GalleryUtilities {
 
 	/**
 	 * Scale the given width/height to a new target size, maintaining aspect ratio, but only if the
-	 * dimensions are already larger than the target (in other words, don't increase the
+	 * dimensions are already larger than the target (in other words, do not increase the
 	 * dimensions).
 	 * @param int $width
 	 * @param int $height
@@ -509,6 +519,7 @@ class GalleryUtilities {
 		if (!isset($targetHeight)) {
 			$targetHeight = $targetWidth;
 		}
+
 		$aspect = $height / $width;
 
 		if ($aspect < $targetHeight / $targetWidth) {
@@ -604,7 +615,7 @@ class GalleryUtilities {
 			$charArray       = $reg[0];
 			$charArrayLength = count($charArray);
 
-			// if $length < 0, then it's really the end index
+			// if $length < 0, then it is really the end index
 			$cookedStart  = ($start < 0) ? $charArrayLength                 + $start : $start;
 			$cookedLength = ($length < 0) ? $charArrayLength - $cookedStart + $length : $length;
 
@@ -614,6 +625,7 @@ class GalleryUtilities {
 
 				return array(count($slice), join('', $slice));
 			}
+
 			$cookedText   = '';
 			$actualLength = 0;
 
@@ -625,15 +637,17 @@ class GalleryUtilities {
 				}
 
 				if ($actualLength + $size > $cookedLength) {
-					// We're done
+					// We are done
 					break;
 				}
+
 				$cookedText   .= $charArray[$i];
 				$actualLength += $size;
 			}
 
 			return array($actualLength, $cookedText);
 		}
+
 		// How could we get here?  Our regex should match everything
 		$newString = substr($string, $start, $length);
 
@@ -663,17 +677,16 @@ class GalleryUtilities {
 		$decrement[1] = 0;
 
 		// Number of bits to shift each charNum by
-		$shift[1][0] = 0;
-		$shift[2][0] = 6;
-		$shift[2][1] = 0;
-		$shift[3][0] = 12;
-		$shift[3][1] = 6;
-		$shift[3][2] = 0;
-		$shift[4][0] = 18;
-		$shift[4][1] = 12;
-		$shift[4][2] = 6;
-		$shift[4][3] = 0;
-
+		$shift[1][0]   = 0;
+		$shift[2][0]   = 6;
+		$shift[2][1]   = 0;
+		$shift[3][0]   = 12;
+		$shift[3][1]   = 6;
+		$shift[3][2]   = 0;
+		$shift[4][0]   = 18;
+		$shift[4][1]   = 12;
+		$shift[4][2]   = 6;
+		$shift[4][3]   = 0;
 		$pos           = 0;
 		$len           = strlen($source);
 		$encodedString = '';
@@ -708,12 +721,13 @@ class GalleryUtilities {
 				$thisCharOrd = ord(substr($thisLetter, $thisPos, 1));
 
 				if ($thisPos == 0) {
-					$charNum      = intval($thisCharOrd - $decrement[$thisLen]);
+					$charNum      = (int)($thisCharOrd - $decrement[$thisLen]);
 					$decimalCode += ($charNum << $shift[$thisLen][$thisPos]);
 				} else {
-					$charNum      = intval($thisCharOrd - 128);
+					$charNum      = (int)($thisCharOrd - 128);
 					$decimalCode += ($charNum << $shift[$thisLen][$thisPos]);
 				}
+
 				$thisPos++;
 			}
 
@@ -722,6 +736,7 @@ class GalleryUtilities {
 			} else {
 				$encodedLetter = '&#' . $decimalCode . ';';
 			}
+
 			$encodedString .= $encodedLetter;
 		}
 
@@ -742,6 +757,7 @@ class GalleryUtilities {
 		if (is_array($value)) {
 			foreach (array_keys($value) as $key) {
 				$newKey = $key;
+
 				GalleryUtilities::sanitizeInputValues($newKey);
 
 				if ($key != $newKey) {
@@ -752,12 +768,7 @@ class GalleryUtilities {
 				GalleryUtilities::sanitizeInputValues($value[$newKey]);
 			}
 		} else {
-			/*
-			 * Simulate calling htmlspecialchars($value, ENT_COMPAT, 'UTF-8') We avoid using
-			 * htmlspecialchars directly because on some versions of PHP (notable PHP 4.1.2) it
-			 * changes the character set of the input data (in one environment it converted the
-			 * UTF-8 data to ISO-8859-1)
-			 */
+			// Simulate calling htmlspecialchars($value, ENT_COMPAT, 'UTF-8')
 			$value = str_replace(
 				array('&', '"', '<', '>'),
 				array('&amp;', '&quot;', '&lt;', '&gt;'),
@@ -807,6 +818,7 @@ class GalleryUtilities {
 			function ($matches) {
 				foreach ($matches as $match) {
 					return mb_convert_encoding($match, 'UTF-8', 'HTML-ENTITIES');
+
 					//return GalleryUtilities::unicodeValueToUtf8Value($match);
 				}
 			},
@@ -867,7 +879,7 @@ class GalleryUtilities {
 	}
 
 	/**
-	 * Equivalent to html_entity_decode() for PHP < 4.3.0 which doesn't have it.
+	 * Equivalent to html_entity_decode() for PHP < 4.3.0 which does not have it.
 	 * @param string $string with html entities
 	 * @return same string without them
 	 * @deprecated
@@ -897,6 +909,7 @@ class GalleryUtilities {
 	 */
 	public static function htmlSafe($html, $decode = false) {
 		GalleryCoreApi::requireOnce('lib/pear/Safe.php');
+
 		static $parser;
 
 		if (!isset($parser)) {
@@ -907,6 +920,7 @@ class GalleryUtilities {
 		if ($decode) {
 			GalleryUtilities::unsanitizeInputValues($html, false);
 		}
+
 		$html = $parser->parse($html);
 
 		if ($decode) {
@@ -968,8 +982,8 @@ class GalleryUtilities {
 	public static function setResponseHeader($header, $replace = true) {
 		// Use our PHP VM for testability
 		global $gallery;
-		$phpVm = $gallery->getPhpVm();
 
+		$phpVm           = $gallery->getPhpVm();
 		$responseHeaders =& GalleryUtilities::_getResponseHeaders();
 
 		// Special case for HTTP status codes.  See http://php.net/header
@@ -988,6 +1002,7 @@ class GalleryUtilities {
 		}
 
 		$phpVm->header($header);
+
 		$responseHeaders[$key] = $header;
 
 		/*
@@ -1021,6 +1036,7 @@ class GalleryUtilities {
 	 */
 	public static function isPathInList($path, $list) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$slash    = $platform->getDirectorySeparator();
 		$path     = $platform->realpath($path) . $slash;
@@ -1030,8 +1046,9 @@ class GalleryUtilities {
 			if (($element = $platform->realpath($element)) === false) {
 				continue;
 			}
+
 			/*
-			 * Make sure the compare directory has a trailing slash so that /tmp doesn't
+			 * Make sure the compare directory has a trailing slash so that /tmp does not
 			 * accidentally match /tmpfoo
 			 */
 			if ($element[strlen($element) - 1] != $slash) {
@@ -1094,6 +1111,7 @@ class GalleryUtilities {
 	 */
 	public static function guaranteeDirExists($dir) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if ($platform->file_exists($dir)) {
@@ -1107,7 +1125,9 @@ class GalleryUtilities {
 		} else {
 			// To avoid looping if getPluginParameter calls guaranteeDirExists
 			GalleryDataCache::put($cacheKey, 0);
+
 			list($ret, $dirPerms) = GalleryCoreApi::getPluginParameter('module', 'core', 'permissions.directory');
+
 			// Ignore error here, then recheck $dir in case it was created in nested call
 			GalleryDataCache::put($cacheKey, $dirPerms);
 
@@ -1121,6 +1141,7 @@ class GalleryUtilities {
 		if ($parentDir == $dir) {
 			return array(false, array());
 		}
+
 		list($success, $created) = GalleryUtilities::guaranteeDirExists($parentDir);
 
 		if ($success) {
@@ -1144,7 +1165,8 @@ class GalleryUtilities {
 		if (empty($albums)) {
 			$tree = array();
 
-			return $tree;  // Help CodeAudit match up returns
+			// Help CodeAudit match up returns
+			return $tree;
 		}
 
 		// Index the albums by id
@@ -1162,7 +1184,7 @@ class GalleryUtilities {
 		}
 
 		/*
-		 * Prune parents that don't exist.  This can occur if we have multiple roots (unusual) or an
+		 * Prune parents that do not exist.  This can occur if we have multiple roots (unusual) or an
 		 * album in the middle of the hierarchy that is not viewable.
 		 */
 		foreach ($map as $id => $info) {
@@ -1215,17 +1237,17 @@ class GalleryUtilities {
 	}
 
 	/**
-	 * Return approximate filename of given GalleryEntity, or 'unknown' if we can't figure it out.
+	 * Return approximate filename of given GalleryEntity, or 'unknown' if we cannot figure it out.
 	 * @param GalleryEntity $entity
 	 * @return array GalleryStatus a status code
 	 *               string pseudoFileName a filename
 	 */
 	public static function getPseudoFileName($entity) {
 		/*
-		 * If our GalleryEntity is a GalleryFileSystemEntity, then we've got a path component so
-		 * we're cool.  If it's a derivative, then get the pseudo filename of its parent and use
+		 * If our GalleryEntity is a GalleryFileSystemEntity, then we have got a path component so
+		 * we are cool.  If it is a derivative, then get the pseudo filename of its parent and use
 		 * that instead (but make sure the extension matches derivative, as parent mime type may
-		 * differ).  If it's neither, then return 'unknown' for now.
+		 * differ).  If it is neither, then return 'unknown' for now.
 		 */
 		if (GalleryUtilities::isA($entity, 'GalleryFileSystemEntity')) {
 			$pseudoFileName = $entity->getPathComponent();
@@ -1306,8 +1328,10 @@ class GalleryUtilities {
 					$list[] = $dir . '/' . $file . '/MANIFEST';
 				}
 			}
+
 			closedir($dh);
 		}
+
 		$manifest = array();
 
 		foreach ($list as $file) {
@@ -1350,6 +1374,7 @@ class GalleryUtilities {
 					);
 				} else {
 					list($file, $cksum, $cksum_crlf, $size, $size_crlf) = $line;
+
 					$file            = trim($file);
 					$manifest[$file] = array(
 						'checksum'      => $cksum,
@@ -1406,7 +1431,7 @@ class GalleryUtilities {
 	/**
 	 * Verify that the API provided is compatible with the API that we require.
 	 *
-	 * We're only compatible if the major numbers are the same, and the required minor number is
+	 * We are only compatible if the major numbers are the same, and the required minor number is
 	 * less than or equal to the provided minor number.
 	 *
 	 * @param array $required (major, minor)
@@ -1480,12 +1505,13 @@ class GalleryUtilities {
 
 	/**
 	 * Return id of the search engine currently crawling the site by analyzing the current request.
-	 * @return string the crawler id, or null if it's a regular user
+	 * @return string the crawler id, or null if it is a regular user
 	 */
 	public static function identifySearchEngine() {
 		if (!isset($_SERVER['HTTP_USER_AGENT'])) {
 			return null;
 		}
+
 		$userAgent = $_SERVER['HTTP_USER_AGENT'];
 
 		if (strstr($userAgent, 'Google') || strstr($userAgent, 'gsa-crawler')) {
@@ -1530,6 +1556,7 @@ class GalleryUtilities {
 		}
 
 		$value = $_SERVER[$key];
+
 		GalleryUtilities::sanitizeInputValues($value);
 
 		return $value;
@@ -1549,6 +1576,7 @@ class GalleryUtilities {
 		GalleryUtilities::fixCookieVars();
 
 		$value = $_COOKIE[$key];
+
 		GalleryUtilities::sanitizeInputValues($value);
 
 		return $value;
@@ -1568,27 +1596,27 @@ class GalleryUtilities {
 	/**
 	 * Fix the superglobal $_COOKIE to conform with RFC 2965
 	 *
-	 * We don't use $_COOKIE[$cookiename] because it doesn't conform to RFC 2965 (the cookie
-	 * standard), ie. in $_COOKIE, we don't get the cookie with the most specific path for a given
+	 * We do not use $_COOKIE[$cookiename] because it does not conform to RFC 2965 (the cookie
+	 * standard), ie. in $_COOKIE, we do not get the cookie with the most specific path for a given
 	 * cookie name, we get the cookie with the least specific cookie path.  This function does it
 	 * exactly the other way around, to a) fix our cookie/login problems and to b) conform with the
 	 * RFC.  The PHP bug was already fixed in spring 2005, but we will have to deal with broken PHP
 	 * versions for a long time.
 	 * @see http://bugs.php.net/bug.php?id=32802
 	 *
-	 * Fixes also another PHP cookie bug.  PHP doesn't expect the cookie header to have
+	 * Fixes also another PHP cookie bug.  PHP does not expect the cookie header to have
 	 * quoted-strings, but they are perfectly legal according to RFC 2965.
 	 *
 	 * The third bug fixed here is an MS Internet Explorer (IE) bug.  When using default cookie
-	 * domains (no leading dot, don't set the domain in set-cookie), IE is supposed to return only
+	 * domains (no leading dot, do not set the domain in set-cookie), IE is supposed to return only
 	 * cookies that have the exact request-host as their domain.  Example:
 	 * Cookies stored in the browser with cookie domains: .example.com, .www.example.com,
 	 *          example.com, www.example.com
 	 *          The request-host is www.example.com. Thus, IE should return all those cookies but
-	 *          the example.com cookie, because it's a default domain cookie and it doesn't match
+	 *          the example.com cookie, because it is a default domain cookie and it does not match
 	 *          exactly the request-host. But IE returns the example.com cookie too.
 	 * As MS decided that it returns the cookie with the best domain-match first (unspecified in RFC
-	 * 2965), this wouldn't be a problem if PHP didn't select the last cookie in the HTTP_COOKIE
+	 * 2965), this would not be a problem if PHP did not select the last cookie in the HTTP_COOKIE
 	 * header.  But with fixCookieVars(), this case is also fixed.
 	 *
 	 * This function reevaluates the HTTP Cookie header and populates $_COOKIE with the correct
@@ -1607,9 +1635,10 @@ class GalleryUtilities {
 			if (isset($_SERVER['HTTP_COOKIE']) && !empty($_SERVER['HTTP_COOKIE'])) {
 				/*
 				 * Array to keep track of fixed cookies to not make the same mistake as PHP, ie.
-				 * don't assign values to cookies that were already fixed/set before
+				 * do not assign values to cookies that were already fixed/set before
 				 */
 				$fixedCookies = array();
+
 				// Check if the Cookie header contains quoted-strings
 				if (strstr($_SERVER['HTTP_COOKIE'], '"') === false) {
 					/*
@@ -1621,11 +1650,12 @@ class GalleryUtilities {
 
 					while ($tok) {
 						GalleryUtilities::_registerCookieAttr($tok, $fixedCookies);
+
 						$tok = strtok(',;');
 					}
 				} else {
 					/*
-					 * We can't just tokenize the Cookie header string because there are
+					 * We cannot just tokenize the Cookie header string because there are
 					 * quoted-strings and delimiters in quoted-string should be handled as values
 					 * and not as delimiters.  Thus, we have to parse it character by character.
 					 */
@@ -1652,7 +1682,9 @@ class GalleryUtilities {
 										),
 										$fixedCookies
 									);
-									$lastPos = $i + 1; // Next attr starts at next char
+
+									// Next attr starts at next char
+									$lastPos = $i + 1;
 								}
 
 								break;
@@ -1668,8 +1700,10 @@ class GalleryUtilities {
 
 								break;
 						}
+
 						$i++;
 					}
+
 					// Register last attr in header, but only if the syntax is correct
 					if (!$quotedStringOpen) {
 						GalleryUtilities::_registerCookieAttr(
@@ -1696,11 +1730,11 @@ class GalleryUtilities {
 	 * Register a cookie variable safely.
 	 *
 	 * Creates an entry in $_COOKIE for $attr, which is a name=value pair.  We try to mimic the PHP
-	 * source code here: make the entry binary safe, don't register non-NAME attributes (eg. cookie
+	 * source code here: make the entry binary safe, do not register non-NAME attributes (eg. cookie
 	 * version, ...)
 	 *
-	 * The one thing we don't do here is treat array cookies correctly because it would but too
-	 * involving.  But we gracefully just don't replace these array cookies in $_COOKIE, so if they
+	 * The one thing we do not do here is treat array cookies correctly because it would but too
+	 * involving.  But we gracefully just do not replace these array cookies in $_COOKIE, so if they
 	 * are used somewhere, they will be left intact by fixCookieVars().
 	 *
 	 * @param string $attr the cookie var attr, NAME [=VALUE]
@@ -1709,6 +1743,7 @@ class GalleryUtilities {
 	 */
 	public static function _registerCookieAttr($attr, &$fixedCookies) {
 		global $gallery;
+
 		// Split NAME [=VALUE], value is optional for all attributes but the cookie name
 		if (($pos = strpos($attr, '=')) !== false) {
 			$val = substr($attr, $pos + 1);
@@ -1717,33 +1752,40 @@ class GalleryUtilities {
 			// No cookie name=value attr, we can ignore it
 			return null;
 		}
+
 		// Urldecode header data (php-style of name = attr handling)
 		$key = trim(urldecode($key));
-		// Don't accept zero length key
+
+		// Do not accept zero length key
 		if (($len = strlen($key)) == 0) {
 			return null;
 		}
-		// Don't fix cookies with '[', ']' or any array-cookies (for simplicity)
+
+		// Do not fix cookies with '[', ']' or any array-cookies (for simplicity)
 		$pos = strchr($key, '[');
 
 		if (strchr($key, '[') !== false || strchr($key, ']') !== false) {
 			return null;
 		}
+
 		// Make it a binary safe variable name
 		for ($i = 0; $i < $len; $i++) {
 			if ($key[$i] == ' ' || $key[$i] == '.') {
 				$key[$i] = '_';
 			}
 		}
+
 		/*
-		 * Don't register non-NAME attributes like domain, path, ... which are all starting with a
+		 * Do not register non-NAME attributes like domain, path, ... which are all starting with a
 		 * dollar sign according to RFC 2965
 		 */
 		if (strpos($key, '$') === 0) {
 			return null;
 		}
+
 		// Urldecode value
 		$val = trim(urldecode($val));
+
 		// Add slashes if magic_quotes_gpc is on
 		$phpVm = $gallery->getPhpVm();
 
@@ -1759,7 +1801,7 @@ class GalleryUtilities {
 	}
 
 	/**
-	 * ASCII version of PHP's strtolower().  PHP's strtolower doesn't work in all locales as
+	 * ASCII version of PHP's strtolower().  PHP's strtolower does not work in all locales as
 	 * expected, eg. in Turkish, we get non-ASCII characters for an ASCII input string.
 	 * @param string $string
 	 * @return string lowercase version of the string
@@ -1779,9 +1821,6 @@ class GalleryUtilities {
 
 	/**
 	 * Checks whether the given HTTP header is safe.
-	 *
-	 * PHP versions before PHP 4.4.2 / PHP 5.1.2 allowed for HTTP header injection (HTTP RS).
-	 * This function ensures that servers running older PHP versions are protected as well.
 	 *
 	 * @param string $header
 	 * @return bool true if the given header is safe
@@ -1857,10 +1896,10 @@ class GalleryUtilities {
 
 		$tempfile = tempnam(sys_get_temp_dir(), 'EVL');
 		file_put_contents($tempfile, "<?php\n" . $code);
-
 		ob_start();
 
 		include $tempfile;
+
 		$data = ob_get_contents();
 		ob_end_clean();
 		unlink($tempfile);

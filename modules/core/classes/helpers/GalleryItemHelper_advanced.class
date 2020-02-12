@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -36,6 +35,7 @@ class GalleryItemHelper_advanced {
 		foreach ($itemIds as $idx => $id) {
 			$itemIds[$idx] = (int)$id;
 		}
+
 		$storage       =& $gallery->getStorage();
 		$itemIdMarkers = GalleryUtilities::makeMarkers($itemIds);
 
@@ -76,8 +76,7 @@ class GalleryItemHelper_advanced {
 
 		$accessListMarkers = GalleryUtilities::makeMarkers(count($aclIds));
 
-		$query = sprintf(
-			'
+		$query = sprintf('
 			SELECT
 			[GalleryItemAttributesMap=1::itemId],
 			COUNT([GalleryAlbumItem::id]),
@@ -121,6 +120,7 @@ class GalleryItemHelper_advanced {
 				'GalleryDataItem'  => $result[2],
 			);
 		}
+
 		$counts = GalleryUtilities::strArrToIntArr($counts);
 
 		return array(null, $counts);
@@ -172,6 +172,7 @@ class GalleryItemHelper_advanced {
 				) {
 					// The highlight is no longer in this album
 					$gallery->debug('Thumbnail is no longer in the album');
+
 					$highlightHasLeftTheAlbum = true;
 				}
 			}
@@ -179,6 +180,7 @@ class GalleryItemHelper_advanced {
 
 		if (empty($thumbnails) || $highlightHasLeftTheAlbum) {
 			$gallery->debug('Picking new thumbnail');
+
 			list($ret, $album) = GalleryCoreApi::loadEntitiesById($albumId, 'GalleryAlbumItem');
 
 			if ($ret) {
@@ -187,6 +189,7 @@ class GalleryItemHelper_advanced {
 
 			// Grab the first few items and try them on for size
 			list($ret, $childIds) = GalleryCoreApi::fetchChildItemIds($album, 0, 5);
+
 			$gallery->debug('Found childIds');
 			$gallery->debug_r($childIds);
 
@@ -202,12 +205,12 @@ class GalleryItemHelper_advanced {
 				}
 			}
 		} else {
-			// We didn't have to do anything, but the guarantee is met
+			// We did not have to do anything, but the guarantee is met
 			$success = true;
 		}
 
 		if (!$success && $highlightHasLeftTheAlbum) {
-			// We couldn't find a new thumbnail, but the existing one isn't good anymore
+			// We could not find a new thumbnail, but the existing one is not good anymore
 			$ret = GalleryCoreApi::deleteEntityById($thumbnail->getId(), 'GalleryDerivative');
 
 			if ($ret) {
@@ -224,7 +227,7 @@ class GalleryItemHelper_advanced {
 	public static function createAlbum($parentAlbumId, $name, $title, $summary, $description, $keywords) {
 		global $gallery;
 
-		// Can't work without a name and a parentAlbum
+		// Cannot work without a name and a parentAlbum
 		if (empty($parentAlbumId) || empty($name)) {
 			return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
 		}
@@ -287,6 +290,7 @@ class GalleryItemHelper_advanced {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$ret = GalleryCoreApi::setItemOrderWeight($album->getId(), $maxWeight + 1000);
 
 		if ($ret) {
@@ -321,7 +325,8 @@ class GalleryItemHelper_advanced {
 			return $ret;
 		}
 
-		if ($newUserId == $oldUserId) { // Well, why not :)
+		if ($newUserId == $oldUserId) {
+			// Well, why not :)
 			return null;
 		}
 
@@ -350,6 +355,7 @@ class GalleryItemHelper_advanced {
 		if ($ret) {
 			return $ret;
 		}
+
 		// load all items
 		list($ret, $items) = GalleryCoreApi::loadEntitiesById($itemIds, 'GalleryItem');
 
@@ -367,6 +373,7 @@ class GalleryItemHelper_advanced {
 
 			return $ret;
 		}
+
 		// Get all permissions oldOwner has directly or indirectly on the item
 		list($ret, $oldUserPermissions) = GalleryCoreApi::fetchPermissionsForItems($itemIds, $oldOwner->getId());
 
@@ -378,7 +385,7 @@ class GalleryItemHelper_advanced {
 
 		/*
 		 * Foreach item:
-		 *   1 add permissions to newOwner directly that he didn't already have
+		 *   1 add permissions to newOwner directly that he did not already have
 		 *   2 update the item: $item->setownerId($newOwnerId)
 		 *   3 $item->save
 		 */
@@ -393,6 +400,7 @@ class GalleryItemHelper_advanced {
 					}
 				}
 			}
+
 			/*
 			 * Add the new permissions to the item/newOwner map
 			 * (2 db queries: search current directly granted permissions, update)
@@ -415,8 +423,10 @@ class GalleryItemHelper_advanced {
 					return $ret;
 				}
 			}
+
 			// Update the ownerId of the item and save it (1 db query)
 			$item->setownerId($newOwner->getid());
+
 			$ret = $item->save();
 
 			if ($ret) {
@@ -442,7 +452,7 @@ class GalleryItemHelper_advanced {
 	public static function deleteSortOrder($sortOrder) {
 		global $gallery;
 
-		$query                     = '
+		$query = '
 		SELECT
 		[GalleryAlbumItem::id]
 		FROM
@@ -452,6 +462,7 @@ class GalleryItemHelper_advanced {
 		OR [GalleryAlbumItem::orderBy] LIKE ?
 		OR [GalleryAlbumItem::orderBy] = ?
 		';
+
 		list($ret, $searchResults) = $gallery->search(
 			$query,
 			array("$sortOrder|%", "%|$sortOrder", $sortOrder)
@@ -472,7 +483,9 @@ class GalleryItemHelper_advanced {
 
 		while (!empty($ids)) {
 			$gallery->guaranteeTimeLimit(30);
-			$currentIds         = array_splice($ids, 0, $batchSize);
+
+			$currentIds = array_splice($ids, 0, $batchSize);
+
 			list($ret, $lockId) = GalleryCoreApi::acquireWriteLock($currentIds);
 
 			if ($ret) {
@@ -487,6 +500,7 @@ class GalleryItemHelper_advanced {
 
 			foreach ($albums as $album) {
 				$album->setOrderBy('');
+
 				$ret = $album->save();
 
 				if ($ret) {
@@ -531,7 +545,7 @@ class GalleryItemHelper_advanced {
 	public static function deleteRenderer($rendererClassName) {
 		global $gallery;
 
-		$query                     = '
+		$query = '
 		SELECT
 		[GalleryItem::id]
 		FROM
@@ -539,6 +553,7 @@ class GalleryItemHelper_advanced {
 		WHERE
 		[GalleryItem::renderer] = ?
 		';
+
 		list($ret, $searchResults) = $gallery->search($query, array($rendererClassName));
 
 		if ($ret) {
@@ -556,7 +571,9 @@ class GalleryItemHelper_advanced {
 
 		while (!empty($ids)) {
 			$gallery->guaranteeTimeLimit(30);
-			$currentIds         = array_splice($ids, 0, $batchSize);
+
+			$currentIds = array_splice($ids, 0, $batchSize);
+
 			list($ret, $lockId) = GalleryCoreApi::acquireWriteLock($currentIds);
 
 			if ($ret) {
@@ -571,6 +588,7 @@ class GalleryItemHelper_advanced {
 
 			foreach ($items as $item) {
 				$item->setRenderer(null);
+
 				$ret = $item->save();
 
 				if ($ret) {

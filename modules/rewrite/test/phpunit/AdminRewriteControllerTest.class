@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -33,6 +32,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -61,19 +61,23 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 
 		// Make sure we use the mock parser
 		GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteHelper.class');
+
 		list($ret, $parser) = RewriteHelper::getRewriteParser(true);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('adminrewritemock', $parser->getParserId(), 'parserId');
 
 		// Set up our mock platform
 		$this->_platform = new AdminRewriteMockPlatform();
+
 		$gallery->setPlatform($this->_platform);
 
 		// Register a new module
 		GalleryDataCache::reset();
+
 		list($ret, $this->_module) = GalleryCoreApi::loadPlugin('module', 'adminrewritemock');
 
 		if ($ret) {
@@ -119,6 +123,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][refresh]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -145,6 +150,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -170,13 +176,16 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$expected               = array();
 		$expected['rewrite'][0] = array(
 			'pattern' => 'uv/%path%',
 		);
+
 		$expected['rewrite'][1] = array(
 			'pattern' => 'ud/%itemId%-%serialNumber%/%fileName%',
 		);
+
 		$this->assertEquals($expected, unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -188,6 +197,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$expected = array(
 			array(
 				'match'     => array(
@@ -220,6 +230,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 				),
 			),
 		);
+
 		$this->assertEquals($expected, unserialize($value), 'shortUrls');
 	}
 
@@ -227,6 +238,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][rules]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -252,6 +264,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -263,6 +276,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'shortUrls');
 	}
 
@@ -272,6 +286,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[rules][adminrewritemock][4][active]', true);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -298,6 +313,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -309,6 +325,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'shortUrls');
 	}
 
@@ -318,6 +335,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[rules][rewrite][0][pattern]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -341,6 +359,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -352,6 +371,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'shortUrls');
 	}
 
@@ -363,6 +383,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[rules][rewrite][1][pattern]', 'dupe/');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -389,6 +410,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -400,6 +422,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'shortUrls');
 	}
 
@@ -409,6 +432,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[rules][rewrite][0][pattern]', 'uv/%badKey%');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -432,6 +456,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -443,6 +468,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'shortUrls');
 	}
 
@@ -455,6 +481,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -478,6 +505,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -489,6 +517,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'shortUrls');
 	}
 
@@ -507,6 +536,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -532,6 +562,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'adminrewritemock' => array(
@@ -556,6 +587,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				array(
@@ -582,6 +614,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[accessList][1]', 'unit2.test');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -607,6 +640,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array('unit1.test', 'unit2.test'), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -618,6 +652,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('0', $value, 'activeRules');
 	}
 
@@ -627,6 +662,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[allowEmptyReferer]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -652,6 +688,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(array(), unserialize($value), 'activeRules');
 
 		list($ret, $value) = GalleryCoreApi::getPluginParameter(
@@ -663,6 +700,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('1', $value, 'activeRules');
 	}
 
@@ -671,6 +709,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[phpunit]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -692,6 +731,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][testParser]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -712,6 +752,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[phpunit]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -736,6 +777,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][adminParser]', 1);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -759,6 +801,7 @@ class AdminRewriteControllerTest extends GalleryControllerTestCase {
  * @subpackage PHPUnit
  */
 GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteParser.class');
+
 class AdminRewriteMockParser extends RewriteParser {
 	public function __construct() {
 		$this->_setParserId('adminrewritemock');
@@ -811,11 +854,11 @@ class AdminRewriteMockParser extends RewriteParser {
 		$activeRules = null,
 		$upgradeModule = null
 	) {
-		if (is_null($parser)) {
+		if (null === $parser) {
 			return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null, null);
 		}
 
-		if (is_null($activeRules)) {
+		if (null === $activeRules) {
 			list($ret, $activeRules) = GalleryCoreApi::getPluginParameter(
 				'module',
 				'rewrite',
@@ -825,6 +868,7 @@ class AdminRewriteMockParser extends RewriteParser {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$activeRules = unserialize($activeRules);
 		}
 
@@ -912,6 +956,8 @@ class AdminRewriteMockModule extends GalleryModule {
 		$this->setId('adminrewritemock');
 		$this->setName('AdminRewrite Test Module');
 		$this->setDescription('Unit test module');
+
+		// Update upgrade() as required
 		$this->setVersion('7.0.0');
 		$this->setGroup('data', 'Gallery');
 		$this->setRequiredCoreApi(GalleryCoreApi::getApiVersion());
@@ -919,20 +965,21 @@ class AdminRewriteMockModule extends GalleryModule {
 	}
 
 	public function getRewriteRules() {
-		$rules = array();
-
+		$rules    = array();
 		$rules[0] = array(
 			'pattern' => 'phpunit/dummy/%itemId%.htm',
 			'match'   => array(
 				'view' => 'phpunit.Test',
 			),
 		);
+
 		$rules[1] = array(
 			'pattern' => 'phpunit/conflict/',
 			'match'   => array(
 				'view' => 'phpunit.Test',
 			),
 		);
+
 		$rules[2] = array(
 			'pattern' => 'phpunit/invalid/',
 		);
@@ -946,6 +993,7 @@ class AdminRewriteMockModule extends GalleryModule {
 				),
 			),
 		);
+
 		$rules[4] = array(
 			'conditions' => array(
 				array(
@@ -983,6 +1031,7 @@ class AdminRewriteMockPlatform extends GalleryPlatform {
 					array_push($this->_list, $file);
 				}
 			}
+
 			array_push($this->_list, 'adminrewritemock');
 
 			return 'adminrewritemock';

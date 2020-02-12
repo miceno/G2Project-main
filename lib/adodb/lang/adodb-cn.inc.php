@@ -1,4 +1,5 @@
 <?php
+
 // Chinese language file contributed by "Cuiyan (cysoft)" cysoft#php.net.
 // Simplified Chinese
 $ADODB_LANG_ARRAY = array(
@@ -31,3 +32,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => '没有相应的数据库',
 	DB_ERROR_ACCESS_VIOLATION    => '没有合适的权限',
 );
+

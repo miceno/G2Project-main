@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -59,7 +58,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 		}
 
 		/*
-		 * Also check the grandchild album - to make sure that descendents don't
+		 * Also check the grandchild album - to make sure that descendents do not
 		 * just return children
 		 */
 		list($ret, $this->_grandchildAlbum) = $this->_createRandomAlbum(
@@ -74,12 +73,13 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		$Platform                  = $gallery->getPlatform();
 		$ItemEditThemeTestPlatform = new ItemEditThemeTestPlatform($Platform);
+
 		$gallery->setPlatform($ItemEditThemeTestPlatform);
 
 		$this->_preferred = null;
 
 		// Reset test theme
-		ItemEditThemeControllerTestTheme::doStatic()->reset();
+		ItemEditThemeControllerTestTheme::getMe()->reset();
 	}
 
 	public function _setTheme(&$item, $themeId) {
@@ -90,6 +90,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 		}
 
 		$item->setTheme($themeId);
+
 		$ret = $item->save();
 
 		if ($ret) {
@@ -109,6 +110,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(array(array(), null), $results);
 	}
 
@@ -119,6 +121,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully saved theme settings')),
 			$results
@@ -130,7 +133,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 				'setParameter(rows, 3)',
 				'setParameter(columns, 4)',
 			),
-			ItemEditThemeControllerTestTheme::doStatic()->getMap()
+			ItemEditThemeControllerTestTheme::getMe()->getMap()
 		);
 	}
 
@@ -141,6 +144,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array('form[error][key][rows][invalid]'), null),
 			$results
@@ -150,6 +154,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 		$this->assertTrue(GalleryUtilities::hasRequestVariable('form[errorMessage]'));
 
 		$errorMessage = GalleryUtilities::getRequestVariables('form[errorMessage]');
+
 		$this->assertEquals('You must enter a number greater than 0', $errorMessage['rows']);
 	}
 
@@ -161,6 +166,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully saved theme settings')),
 			$results
@@ -172,7 +178,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 				'setParameter(rows, 3)',
 				sprintf('removeParameter(columns, %d)', $this->_album->getId()),
 			),
-			ItemEditThemeControllerTestTheme::doStatic()->getMap()
+			ItemEditThemeControllerTestTheme::getMe()->getMap()
 		);
 	}
 
@@ -187,10 +193,12 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully saved theme settings')),
 			$results
 		);
+
 		// Verify - 3 albums should be set
 		$this->assertEquals(
 			array(
@@ -201,7 +209,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 				'setParameter(columns, 4)',
 				'setParameter(columns, 4)',
 			),
-			ItemEditThemeControllerTestTheme::doStatic()->getMap()
+			ItemEditThemeControllerTestTheme::getMe()->getMap()
 		);
 	}
 
@@ -218,6 +226,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_grandchildAlbum, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully saved theme settings')),
 			$results
@@ -227,7 +236,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 				'setParameter(rows, 3)',
 				'setParameter(columns, 4)',
 			),
-			ItemEditThemeControllerTestTheme::doStatic()->getMap()
+			ItemEditThemeControllerTestTheme::getMe()->getMap()
 		);
 	}
 
@@ -243,6 +252,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully changed theme')),
 			$results
@@ -253,6 +263,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('ItemEditThemeControllerTest', $this->_album->getTheme());
 	}
 
@@ -267,6 +278,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully changed theme')),
 			$results
@@ -277,7 +289,9 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$themeId = $this->_album->getTheme();
+
 		$this->assertTrue(empty($themeId));
 	}
 
@@ -311,6 +325,7 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest($this->_album, $this->_preferred);
+
 		$this->assertEquals(
 			array(array(), $this->_translate('Successfully changed theme')),
 			$results
@@ -321,11 +336,13 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $childAlbum) = $this->_childAlbum->refresh();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $grandchildAlbum) = $this->_grandchildAlbum->refresh();
 
 		if ($ret) {
@@ -347,16 +364,16 @@ class ItemEditThemePluginTest extends ItemEditPluginTestCase {
  */
 class ItemEditThemeControllerTestTheme {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditThemeControllerTestTheme();
+		if (!isset($instance)) {
+			$instance = new ItemEditThemeControllerTestTheme();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	public function getId() {
@@ -377,6 +394,7 @@ class ItemEditThemeControllerTestTheme {
 			),
 			'value'      => 4,
 		);
+
 		$settings[] = array(
 			'key'        => 'columns',
 			'name'       => 'Columns per album page',
@@ -512,7 +530,8 @@ class ItemEditThemeTestPlatform {
 	}
 
 	public function fclose($handle) {
-		return fclose($handle); // needed to release locks
+		// needed to release locks
+		return fclose($handle);
 	}
 
 	public function getDirectorySeparator() {
@@ -520,11 +539,11 @@ class ItemEditThemeTestPlatform {
 	}
 
 	public function unlink($path) {
-		return unlink($path); // needed to release locks
+		// needed to release locks
+		return unlink($path);
 	}
 
-	public function closedir($path) {
-	}
+	public function closedir($path) {}
 
 	public function realpath($path) {
 		return realpath($path);

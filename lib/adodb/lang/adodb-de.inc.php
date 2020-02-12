@@ -1,4 +1,5 @@
 <?php
+
 // contributed by "Heinz Hombergs" <opn@hhombergs.de>
 $ADODB_LANG_ARRAY = array(
 	'LANG'                       => 'de',
@@ -30,3 +31,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'keine Datenbank',
 	DB_ERROR_ACCESS_VIOLATION    => 'ungenügende Rechte',
 );
+

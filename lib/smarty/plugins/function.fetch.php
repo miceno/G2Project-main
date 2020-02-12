@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -47,6 +48,7 @@ function smarty_function_fetch($params, &$smarty) {
 			while (!feof($fp)) {
 				$content .= fgets($fp, 4096);
 			}
+
 			fclose($fp);
 		} else {
 			$smarty->_trigger_fatal_error('[plugin] fetch cannot read file \'' . $params['file'] . '\'');
@@ -81,6 +83,7 @@ function smarty_function_fetch($params, &$smarty) {
 				if (!empty($uri_parts['pass'])) {
 					$pass = $uri_parts['pass'];
 				}
+
 				// loop through parameters, setup headers
 				foreach ($params as $param_key => $param_value) {
 					switch ($param_key) {
@@ -117,6 +120,7 @@ function smarty_function_fetch($params, &$smarty) {
 
 									return;
 								}
+
 								$extra_headers[] = $param_value;
 							}
 
@@ -222,9 +226,9 @@ function smarty_function_fetch($params, &$smarty) {
 				while (!feof($fp)) {
 					$content .= fgets($fp, 4096);
 				}
-				fclose($fp);
-				$csplit = preg_split("!\r\n\r\n!", $content, 2);
 
+				fclose($fp);
+				$csplit  = preg_split("!\r\n\r\n!", $content, 2);
 				$content = $csplit[1];
 
 				if (!empty($params['assign_headers'])) {
@@ -241,6 +245,7 @@ function smarty_function_fetch($params, &$smarty) {
 				while (!feof($fp)) {
 					$content .= fgets($fp, 4096);
 				}
+
 				fclose($fp);
 			} else {
 				$smarty->_trigger_fatal_error('[plugin] fetch cannot read file \'' . $params['file'] . '\'');
@@ -249,7 +254,6 @@ function smarty_function_fetch($params, &$smarty) {
 			}
 		}
 	}
-
 
 	if (!empty($params['assign'])) {
 		$smarty->assign($params['assign'], $content);

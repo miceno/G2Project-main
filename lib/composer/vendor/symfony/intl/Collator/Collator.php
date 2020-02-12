@@ -8,9 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Symfony\Component\Intl\Collator;
-
 use Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 use Symfony\Component\Intl\Globals\IntlGlobals;
@@ -47,20 +45,16 @@ class Collator
 
     /* Attribute constants values */
     const DEFAULT_VALUE = -1;
-
     const PRIMARY = 0;
     const SECONDARY = 1;
     const TERTIARY = 2;
     const DEFAULT_STRENGTH = 2;
     const QUATERNARY = 3;
     const IDENTICAL = 15;
-
     const OFF = 16;
     const ON = 17;
-
     const SHIFTED = 20;
     const NON_IGNORABLE = 21;
-
     const LOWER_FIRST = 24;
     const UPPER_FIRST = 25;
 
@@ -100,7 +94,7 @@ class Collator
      *
      * @param array &$array   Input array
      * @param int   $sortFlag Flags for sorting, can be one of the following:
-     *                        Collator::SORT_REGULAR - compare items normally (don't change types)
+     *                        Collator::SORT_REGULAR - compare items normally (do not change types)
      *                        Collator::SORT_NUMERIC - compare items numerically
      *                        Collator::SORT_STRING - compare items as strings
      *
@@ -293,3 +287,4 @@ class Collator
         throw new MethodNotImplementedException(__METHOD__);
     }
 }
+

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,9 +8,7 @@ Released under both BSD license and Lesser GPL library license.
 Whenever there is any discrepancy between the two licenses,
 the BSD license will take precedence. See License.txt.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
 	Microsoft Access ADO data driver. Requires ADO and ODBC. Works only on MS Windows.
 */
 
@@ -28,20 +27,25 @@ if (!defined('_ADODB_ADO_LAYER')) {
 
 class ADODB_ado_access extends ADODB_ado {
 	public $databaseType = 'ado_access';
-	public $hasTop       = 'top';        // support mssql SELECT TOP 10 * FROM TABLE
-	public $fmtDate      = '#Y-m-d#';
-	public $fmtTimeStamp = '#Y-m-d h:i:sA#';// note no comma
+
+	// support mssql SELECT TOP 10 * FROM TABLE
+	public $hasTop  = 'top';
+	public $fmtDate = '#Y-m-d#';
+
+	// note no comma
+	public $fmtTimeStamp = '#Y-m-d h:i:sA#';
 	public $sysDate      = "FORMAT(NOW,'yyyy-mm-dd')";
 	public $sysTimeStamp = 'NOW';
 	public $upperCase    = 'ucase';
 
-	/*function BeginTrans() { return false;}
-
-	function CommitTrans() { return false;}
-
-	function RollbackTrans() { return false;}*/
+	/*
+	 * function BeginTrans() { return false;}
+	 *
+	 * function CommitTrans() { return false;}
+	 *
+	 * function RollbackTrans() { return false;}
+	 */
 }
-
 
 class ADORecordSet_ado_access extends ADORecordSet_ado {
 	public $databaseType = 'ado_access';

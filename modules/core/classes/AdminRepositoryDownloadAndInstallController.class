@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepository.class');
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepositoryUtilities.class');
 
@@ -30,16 +28,16 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryRepositoryUtilities.cla
  */
 class AdminRepositoryDownloadAndInstallController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminRepositoryDownloadAndInstallController();
+		if (!isset($instance)) {
+			$instance = new AdminRepositoryDownloadAndInstallController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -54,6 +52,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 	 */
 	public function performDownloadAndInstallation($installPackages, $repositories) {
 		global $gallery;
+
 		$session         =& $gallery->getSession();
 		$platform        =& $gallery->getPlatform();
 		$phpVm           = $gallery->getPhpVm();
@@ -76,22 +75,22 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 		if ($ret) {
 			return $ret;
 		}
+
 		$titleText = $module->translate('Updating Packages');
+
 		$templateAdapter->updateProgressBar($titleText, '', 0);
 
 		// Create download file list.
 		list($ret, $sourcedFiles) = $this->_createDownloadFileList($installPackages, $repositories);
 
 		$totalActions = $this->_countInstallActions($sourcedFiles);
-
-		$status = array(
+		$status       = array(
 			'error' => array(),
 		);
 
 		// Download files.
 		$currentAction = 0;
-
-		$callback = array(
+		$callback      = array(
 			'method'  => array($templateAdapter, 'updateProgressBar'),
 			'title'   => $titleText,
 			'current' => 0,
@@ -103,12 +102,11 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 
 			foreach ($files as $pluginType => $plugins) {
 				foreach ($plugins as $pluginId => $pluginDownloadData) {
-					$packageUrls = $pluginDownloadData['files'];
-					$pluginName  = $pluginDownloadData['name'];
+					$packageUrls    = $pluginDownloadData['files'];
+					$pluginName     = $pluginDownloadData['name'];
+					$downloadStatus = array();
 
-					$downloadStatus                                = array();
 					list($ret, $reactivatePlugin, $downloadStatus) = $repository->downloadPackagesForPlugin(
-
 						$pluginType,
 						$pluginId,
 						$pluginDownloadData,
@@ -126,7 +124,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 					}
 
 					/*
-					 * Our plugin status caches are no longer valid because we've just installed
+					 * Our plugin status caches are no longer valid because we have just installed
 					 * some new code.  Load the status and ignore the cache which forces a cache
 					 * update.  @todo: add a real cache flushing method in the api instead
 					 */
@@ -140,15 +138,12 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 					 * This next block is duplicated in PluginCallback.
 					 * @todo: Refactor this code duplication away
 					 */
-
 					$templateAdapter->updateProgressBar(
 						$titleText,
 						sprintf($module->translate('Cleaning up obsolete files %s'), $pluginName),
 						$currentAction++ / $totalActions
 					);
-
 					$repository->removeObsoleteFiles($pluginType, $pluginId);
-
 					$templateAdapter->updateProgressBar(
 						$titleText,
 						sprintf($module->translate('Activating %s'), $pluginName),
@@ -159,7 +154,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 						/**
 						 * Some plugins may already be loaded (e.g. the default theme, or
 						 * authentication modules) so PHP will not let us evaluate the newly
-						 * downloaded code.  This means that we can't upgrade those modules
+						 * downloaded code.  This means that we cannot upgrade those modules
 						 * via DP; the site admin must do it by hand on the AdminPlugins page.
 						 * For now, just notify the user.
 						 *
@@ -188,7 +183,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 									return $ret;
 								}
 							} else {
-								// Themes don't need this step
+								// Themes do not need this step
 								$autoConfigured = true;
 							}
 
@@ -201,6 +196,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 								if ($ret) {
 									return $ret;
 								}
+
 								// Ignore the redirect
 							}
 
@@ -223,6 +219,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 		} else {
 			$message = $module->translate('Update complete.');
 		}
+
 		$templateAdapter->updateProgressBar($titleText, $message, 1);
 
 		// Show link to return to the previously selected tab.
@@ -230,7 +227,9 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 		$redirect['subView'] = 'core.AdminRepository';
 
 		$session->putStatus($status);
+
 		$urlGenerator =& $gallery->getUrlGenerator();
+
 		$templateAdapter->completeProgressBar($urlGenerator->generateUrl($redirect), true);
 
 		return null;
@@ -257,6 +256,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$sourcedFiles[$source] = empty($sourcedFiles[$source]) ? $tmp : array_merge($sourcedFiles[$source], $tmp);
 		}
 
@@ -345,7 +345,7 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 
 	/**
 	 * Update the repository index, and scan all installed plugins and update
-	 * GalleryPluginPackageMap with a complete listing of everything that's installed.
+	 * GalleryPluginPackageMap with a complete listing of everything that is installed.
 	 *
 	 * @todo Show a summary page (or at least a link to it) which contains details about
 	 * the exact tasks that were performed and any errors that were encountered.
@@ -357,16 +357,19 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 	 */
 	public function updatePluginStatus($pluginStatus, $repositories, $redirect) {
 		global $gallery;
+
 		$templateAdapter =& $gallery->getTemplateAdapter();
 		$platform        =& $gallery->getPlatform();
+		$status          = array();
 
-		$status             = array();
 		list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'core');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$heading = $module->translate('Updating Repository Index');
+
 		$templateAdapter->updateProgressBar($heading, '', 0);
 
 		// Erase all plugin data, so that a full scan drops old entries
@@ -385,19 +388,21 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 			list(
 				$ret,
 				$message
-			) = GalleryRepository::doStatic()->translateRepositoryName($source);
+			) = GalleryRepository::getMe()->translateRepositoryName($source);
 
 			if ($ret) {
 				return $ret;
 			}
 
 			$templateAdapter->updateProgressBar($heading, $message, $currentProgress);
+
 			$ret = $repository->downloadIndex();
 
 			if ($ret) {
 				/** @todo: Internationalize this error message */
 				$status['error']['download'][] = $ret->getErrorMessage();
 			}
+
 			$currentProgress += $indexWeight * $increment;
 		}
 
@@ -406,38 +411,41 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 
 		if (!isset($repository)) {
 			/*
-			 * The loop below needs a working repository, but we don't have one because all of our
+			 * The loop below needs a working repository, but we do not have one because all of our
 			 * existing indexes are missing or corrupted.  So create a new bogus one expressly for
 			 * the purpose of calling GalleryRepository::scanPlugin().
 			 */
 			$repository = new GalleryRepository();
+
 			$repository->init('bogus');
 		}
 
 		foreach (array('module', 'theme') as $pluginType) {
 			foreach (array_keys($pluginStatus[$pluginType]) as $pluginId) {
 				$gallery->guaranteeTimeLimit(30);
-
 				$templateAdapter->updateProgressBar(
 					$heading,
 					$pluginType . $sSlash . $pluginId,
 					$currentProgress
 				);
+
 				$ret = $repository->scanPlugin($pluginType, $pluginId);
 
 				if ($ret && !($ret->getErrorCode() & ERROR_STORAGE_FAILURE)) {
 					/*
-					 * Something is wrong with this plugin. Maybe it's a 3rd party plugin w/o
+					 * Something is wrong with this plugin. Maybe it is a 3rd party plugin w/o
 					 * MANIFEST file, maybe it has no revisions in the po files, maybe the
 					 * module.inc is foobar. Just log and ignore it.
 					 */
 					if ($gallery->getDebug()) {
 						$gallery->debug_r($ret);
 					}
+
 					$status['error']['scanPlugin'][] = $pluginId;
 				} elseif ($ret) {
 					return $ret;
 				}
+
 				$currentProgress += $increment;
 			}
 		}
@@ -449,9 +457,11 @@ class AdminRepositoryDownloadAndInstallController extends GalleryController {
 		);
 
 		$session =& $gallery->getSession();
+
 		$session->putStatus($status);
 
 		$urlGenerator =& $gallery->getUrlGenerator();
+
 		$templateAdapter->completeProgressBar($urlGenerator->generateUrl($redirect), true);
 
 		return null;

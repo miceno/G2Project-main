@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemReorderController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemReorderController();
+		if (!isset($instance)) {
+			$instance = new ItemReorderController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -50,6 +49,7 @@ class ItemReorderController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Check permissions
@@ -62,7 +62,7 @@ class ItemReorderController extends GalleryController {
 		$status = $error = array();
 
 		if (isset($form['action']['reorder'])) {
-			// Verify that we've got what we need
+			// Verify that we have got what we need
 			if (empty($form['selectedId'])) {
 				$error[] = 'form[error][selectedId][missing]';
 			}
@@ -79,8 +79,9 @@ class ItemReorderController extends GalleryController {
 
 			// Make sure that the selectedId and targetId are children of the album
 			if (empty($error)) {
-				$selectedId           = (int)$form['selectedId'];
-				$targetId             = (int)$form['targetId'];
+				$selectedId = (int)$form['selectedId'];
+				$targetId   = (int)$form['targetId'];
+
 				list($ret, $entities) = GalleryCoreApi::loadEntitiesById(array($selectedId, $targetId), 'GalleryItem');
 
 				if ($ret) {
@@ -96,7 +97,7 @@ class ItemReorderController extends GalleryController {
 				if (!isset($permissions[$selectedId]['core.view'])
 					|| !isset($permissions[$selectedId]['core.view'])
 				) {
-					// Avoid information disclosure, act as if the items didn't exist.
+					// Avoid information disclosure, act as if the items does not exist.
 					return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 				}
 
@@ -135,7 +136,7 @@ class ItemReorderController extends GalleryController {
 						$delta = (int)(($next - $orderWeights[$targetId]) / 2);
 					} else {
 						/*
-						 * We couldn't get a weight, which means that the
+						 * We could not get a weight, which means that the
 						 * target is at the edge.  So go beyond the edge
 						 */
 						$delta = $before ? -1000 : 1000;
@@ -150,13 +151,14 @@ class ItemReorderController extends GalleryController {
 						return array(GalleryCoreApi::error(ERROR_UNKNOWN), null);
 					}
 
-					// A delta of 0 means that we don't have room, so rebalance
+					// A delta of 0 means that we do not have room, so rebalance
 					$ret = GalleryCoreApi::rebalanceChildOrderWeights($itemId);
 
 					if ($ret) {
 						return array($ret, null);
 					}
 				}
+
 				$newWeight = $orderWeights[$targetId] + $delta;
 
 				$ret = GalleryCoreApi::setItemOrderWeight($selectedId, $newWeight);
@@ -166,7 +168,9 @@ class ItemReorderController extends GalleryController {
 				}
 
 				$event = GalleryCoreApi::newEvent('Gallery::ItemOrder');
+
 				$event->setData($itemId);
+
 				list($ret) = GalleryCoreApi::postEvent($event);
 
 				if ($ret) {
@@ -189,6 +193,7 @@ class ItemReorderController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'core.ItemReorder';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -201,16 +206,16 @@ class ItemReorderController extends GalleryController {
  */
 class ItemReorderView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemReorderView();
+		if (!isset($instance)) {
+			$instance = new ItemReorderView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -225,6 +230,7 @@ class ItemReorderView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		if ($form['formName'] == 'ItemReorder') {
@@ -274,8 +280,10 @@ class ItemReorderView extends GalleryView {
 				} else {
 					$peerTypes['data'][$peerItem->getId()] = 1;
 				}
+
 				$peers[$peerItem->getId()]['selected'] = isset($form['selectedIds'][$peerItem->getId()]);
 			}
+
 			$ItemReorder['peers']     = $peers;
 			$ItemReorder['peerTypes'] = $peerTypes;
 		}

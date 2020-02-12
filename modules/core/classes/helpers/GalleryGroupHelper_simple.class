@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -33,7 +32,8 @@ class GalleryGroupHelper_simple {
 	public static function fetchGroupNames($count = null, $offset = null, $substring = null) {
 		global $gallery;
 
-		$data  = array();
+		$data = array();
+
 		$query = '
 	SELECT
 	  [GalleryGroup::id],
@@ -47,6 +47,7 @@ class GalleryGroupHelper_simple {
 	WHERE
 	  [GalleryGroup::groupName] LIKE ?
 	    ';
+
 			$data[] = "%$substring%";
 		}
 
@@ -85,7 +86,8 @@ class GalleryGroupHelper_simple {
 	public static function fetchGroupCount($substring = null) {
 		global $gallery;
 
-		$data  = array();
+		$data = array();
+
 		$query = '
 	SELECT
 	  COUNT([GalleryGroup::id])
@@ -98,6 +100,7 @@ class GalleryGroupHelper_simple {
 	WHERE
 	  [GalleryGroup::groupName] LIKE ?
 	    ';
+
 			$data[] = "%$substring%";
 		}
 
@@ -119,7 +122,7 @@ class GalleryGroupHelper_simple {
 	public static function fetchGroupByGroupName($groupName = null) {
 		global $gallery;
 
-		$query                     = '
+		$query = '
 	SELECT
 	  [GalleryGroup::id]
 	FROM
@@ -127,6 +130,7 @@ class GalleryGroupHelper_simple {
 	WHERE
 	  [GalleryGroup::groupName] = ?
 	';
+
 		list($ret, $searchResults) = $gallery->search($query, array($groupName));
 
 		if ($ret) {
@@ -136,8 +140,10 @@ class GalleryGroupHelper_simple {
 		if ($searchResults->resultCount() == 0) {
 			return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 		}
-		$result            = $searchResults->nextResult();
-		$id                = $result[0];
+
+		$result = $searchResults->nextResult();
+		$id     = $result[0];
+
 		list($ret, $group) = GalleryCoreApi::loadEntitiesById($id, 'GalleryGroup');
 
 		if ($ret) {

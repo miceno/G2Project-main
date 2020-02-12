@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -61,6 +62,7 @@ function smarty_function_cycle($params, &$smarty) {
 		) {
 			$cycle_vars[$name]['index'] = 0;
 		}
+
 		$cycle_vars[$name]['values'] = $params['values'];
 	}
 
@@ -82,6 +84,7 @@ function smarty_function_cycle($params, &$smarty) {
 
 	if (isset($params['assign'])) {
 		$print = false;
+
 		$smarty->assign($params['assign'], $cycle_array[$cycle_vars[$name]['index']]);
 	}
 

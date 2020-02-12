@@ -103,11 +103,10 @@ class ArrayDeclarationSpacingSniff extends Sniff {
 				$error      = 'There must be no space between the "array" keyword and the opening parenthesis';
 				$error_code = 'SpaceAfterKeyword';
 
-				$nextNonWhitespace = $this->phpcsFile->findNext(\T_WHITESPACE, ($stackPtr + 1), ($opener + 1), true);
-
-				if ($nextNonWhitespace !== $opener) {
-					// Don't auto-fix: Something other than whitespace found between keyword and open parenthesis.
-					$this->phpcsFile->addError($error, $stackPtr, $error_code);
+				$nextNonWhitespace = $this->phpcsFile->findNext( \T_WHITESPACE, ( $stackPtr + 1 ), ( $opener + 1 ), true );
+				if ( $nextNonWhitespace !== $opener ) {
+					// Do not auto-fix: Something other than whitespace found between keyword and open parenthesis.
+					$this->phpcsFile->addError( $error, $stackPtr, $error_code );
 				} else {
 					$fix = $this->phpcsFile->addFixableError($error, $stackPtr, $error_code);
 
@@ -147,7 +146,7 @@ class ArrayDeclarationSpacingSniff extends Sniff {
 				}
 			}
 
-			// This array is empty, so the below checks aren't necessary.
+			// This array is empty, so the checks below are not necessary.
 			return;
 		}
 		unset($nextNonWhitespace);
@@ -261,7 +260,10 @@ class ArrayDeclarationSpacingSniff extends Sniff {
 			}
 		}
 
-		// Check that there is a single space after the array opener and before the array closer.
+		/*
+		 * Check that there is a single space after the array opener and before the array closer.
+		 */
+
 /*
  * DA-OVERRIDE
  * This block adds spaces after/before opening/closing brackets in arrays
@@ -405,8 +407,8 @@ class ArrayDeclarationSpacingSniff extends Sniff {
 					true
 				);
 
-				if (false === $next) {
-					// Shouldn't happen, but just in case.
+				if ( false === $next ) {
+					// Should not happen, but just in case.
 					$end_of_last_item = $end_of_this_item;
 
 					continue;
@@ -417,8 +419,8 @@ class ArrayDeclarationSpacingSniff extends Sniff {
 				}
 			}
 
-			if (false === $first_content) {
-				// Shouldn't happen, but just in case.
+			if ( false === $first_content ) {
+				// Should not happen, but just in case.
 				$end_of_last_item = $end_of_this_item;
 
 				continue;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -19,6 +20,7 @@ function smarty_core_write_file($params, &$smarty) {
 		);
 
 		include_once SMARTY_CORE_DIR . 'core.create_dir_structure.php';
+
 		smarty_core_create_dir_structure($_params, $smarty);
 	}
 
@@ -45,6 +47,7 @@ function smarty_core_write_file($params, &$smarty) {
 		@unlink($params['filename']);
 		@rename($_tmp_file, $params['filename']);
 	}
+
 	@chmod($params['filename'], $smarty->_file_perms);
 
 	return true;

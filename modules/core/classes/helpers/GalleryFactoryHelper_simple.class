@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -36,6 +35,7 @@ class GalleryFactoryHelper_simple {
 			'itemId' => 'GalleryFactoryHelper_loadRegistry',
 			'id'     => '_all',
 		);
+
 		GalleryDataCache::removeFromDisk($cacheParams);
 
 		$registry =& GalleryFactoryHelper_simple::_getSingleton();
@@ -71,7 +71,7 @@ class GalleryFactoryHelper_simple {
 				'id'     => '_all',
 			);
 
-			// Don't get by reference here, it'll detach $registry from the singleton
+			// Do not get by reference here, it will detach $registry from the singleton
 			$registry = GalleryDataCache::getFromDisk($cacheParams);
 
 			if (!isset($registry)) {
@@ -104,7 +104,6 @@ class GalleryFactoryHelper_simple {
 					$registry['implementations'][$result[0]][$result[1]] = $result[3];
 					$registry['ids'][$result[0]][$result[2]]             = $result[1];
 					$registry['pluginIds'][$result[0]][$result[1]]       = $result[5];
-
 					$hints = unserialize($result[4]);
 
 					if (isset($hints)) {
@@ -113,6 +112,7 @@ class GalleryFactoryHelper_simple {
 						}
 					}
 				}
+
 				GalleryDataCache::putToDisk($cacheParams, $registry);
 			}
 		}
@@ -135,6 +135,7 @@ class GalleryFactoryHelper_simple {
 		if (!is_array($hints)) {
 			$hints = array($hints);
 		}
+
 		$hints[] = '*';
 
 		foreach ($hints as $hint) {
@@ -152,7 +153,8 @@ class GalleryFactoryHelper_simple {
 		}
 
 		// Right now we just use the first available hint
-		$className            = $classNames[0];
+		$className = $classNames[0];
+
 		list($ret, $instance) = GalleryFactoryHelper_simple::newInstance($classType, $className);
 
 		if ($ret) {
@@ -182,6 +184,7 @@ class GalleryFactoryHelper_simple {
 
 				return array(null, null);
 			}
+
 			$classNames = array_keys($registry['implementations'][$classType]);
 			$className  = $classNames[0];
 		}
@@ -196,8 +199,7 @@ class GalleryFactoryHelper_simple {
 
 		if (!class_exists($className)) {
 			$relativePath = $registry['implementations'][$classType][$className];
-
-			$platform =& $gallery->getPlatform();
+			$platform     =& $gallery->getPlatform();
 
 			if (!$platform->file_exists(
 				GalleryCoreApi::getCodeBasePath($relativePath)
@@ -246,7 +248,8 @@ class GalleryFactoryHelper_simple {
 			return array(null, null);
 		}
 
-		$className            = $registry['ids'][$classType][$id];
+		$className = $registry['ids'][$classType][$id];
+
 		list($ret, $instance) = GalleryFactoryHelper_simple::newInstance($classType, $className);
 
 		if ($ret) {

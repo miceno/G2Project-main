@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,16 +27,16 @@
  */
 class GalleryRepositoryUtilities {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryRepositoryUtilities();
+		if (!isset($instance)) {
+			$instance = new GalleryRepositoryUtilities();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -113,12 +112,12 @@ class GalleryRepositoryUtilities {
 	public function compareVersions($version1, $version2, $build1 = null, $build2 = null) {
 		$relation = '';
 
-		// Compare versions if they're different.
+		// Compare versions if they are different.
 		if ($version1 != $version2) {
 			$relation = $this->compareRevisions($version1, $version2);
 		}
 
-		// Compare builds if they're specified and if versions are identical.
+		// Compare builds if they are specified and if versions are identical.
 		if (!empty($build1) && !empty($build2) && empty($relation)) {
 			if ($build1 != $build2) {
 				$relation = $build1 > $build2 ? 'newer' : 'older';
@@ -145,9 +144,8 @@ class GalleryRepositoryUtilities {
 			return 'equal';
 		}
 
-		$revision1 = explode('.', $revision1);
-		$revision2 = explode('.', $revision2);
-
+		$revision1    = explode('.', $revision1);
+		$revision2    = explode('.', $revision2);
 		$subRevisions = max(count($revision1), count($revision2));
 
 		for ($i = 0; $i < $subRevisions; $i ++) {
@@ -184,10 +182,12 @@ class GalleryRepositoryUtilities {
 	 */
 	public function getFirstBytesFromFile($path, $bytes) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if ($file = $platform->fopen($path, 'r')) {
 			$data = $platform->fread($file, $bytes);
+
 			$platform->fclose($file);
 		} else {
 			return array(
@@ -288,7 +288,6 @@ class GalleryRepositoryUtilities {
 		$requiredPluginApi,
 		$providedApis = null
 	) {
-
 		/*
 		 * We must explicitly convert version numbers to integers because
 		 * GalleryUtilities::isCompatibleWithApi only works with integers.
@@ -301,8 +300,10 @@ class GalleryRepositoryUtilities {
 		// If no provided core API versions were specified, get versions from installed core.
 		list($providedCoreApi, $providedPluginApi) = $this->getProvidedApis($pluginType, $providedApis);
 
-		return GalleryUtilities::isCompatibleWithApi($requiredCoreApi, $providedCoreApi)
-		&& GalleryUtilities::isCompatibleWithApi($requiredPluginApi, $providedPluginApi);
+		$compatibleCoreApi   = GalleryUtilities::isCompatibleWithApi($requiredCoreApi, $providedCoreApi);
+		$compatiblePluginApi = GalleryUtilities::isCompatibleWithApi($requiredPluginApi, $providedPluginApi);
+
+		return $compatibleCoreApi && $compatiblePluginApi;
 	}
 
 	/**
@@ -319,12 +320,18 @@ class GalleryRepositoryUtilities {
 	public function getProvidedApis($pluginType, $providedApis = null) {
 		if (empty($providedApis)) {
 			$providedCoreApi = GalleryCoreApi::getApiVersion();
+
 			/*
 			 * GalleryModule will be loaded, but GalleryTheme may not be, yet because this
 			 * is typically called from controller code.
 			 */
 			GalleryCoreApi::requireOnce('modules/core/classes/GalleryTheme.class');
-			$providedPluginApi = $pluginType == 'module' ? GalleryModule::doStatic()->getApiVersion() : GalleryTheme::doStatic()->getApiVersion();
+
+			if ($pluginType == 'module') {
+				$providedPluginApi = GalleryModule::getMe()->getApiVersion();
+			} else {
+				$providedPluginApi = GalleryTheme::getMe()->getApiVersion();
+			}
 		} else {
 			$providedCoreApi[0]   = (int)$providedApis['core'][0];
 			$providedCoreApi[1]   = (int)$providedApis['core'][1];
@@ -355,6 +362,7 @@ class GalleryRepositoryUtilities {
 				null,
 			);
 		}
+
 		list($ret, $searchResults) = GalleryCoreApi::getMapEntry(
 			'GalleryPluginPackageMap',
 			array('locked', 'packageVersion', 'packageBuild', 'packageName'),
@@ -420,7 +428,7 @@ class GalleryRepositoryUtilities {
 	 * to save bandwidth.
 	 *
 	 * @param string $url url to download from
-	 * @param string $ignoreCompression don't try to get the compressed version of the file
+	 * @param string $ignoreCompression do not try to get the compressed version of the file
 	 * @return array boolean file was successfully downloaded
 	 *           string file contents
 	 */
@@ -436,6 +444,7 @@ class GalleryRepositoryUtilities {
 		}
 
 		$url .= '?' . $this->_getApiQueryParams();
+
 		list($successful, $contents, $response, $headers, $actualUrl) = GalleryCoreApi::fetchWebPage($url);
 
 		if (empty($contents) || !$successful) {
@@ -468,7 +477,6 @@ class GalleryRepositoryUtilities {
 		$packageBuild,
 		$locked
 	) {
-
 		// Check if specified package exists in the database.
 		list($ret, $searchResults) = GalleryCoreApi::getMapEntry(
 			'GalleryPluginPackageMap',
@@ -492,6 +500,7 @@ class GalleryRepositoryUtilities {
 				"Multiple records found [$pluginType] [$pluginId] [$package]"
 			);
 		}
+
 		$existsInDatabase = $searchResults->resultCount() > 0;
 
 		// Add or update package data.
@@ -538,14 +547,13 @@ class GalleryRepositoryUtilities {
 	 * @param string $pluginId the plugin id
 	 * @param string $packageName name of the package to check
 	 * @param array $descriptor descriptor of the plugin the package belongs to
-	 * @return array of files that can't be overwritten (empty array if everything is ok)
+	 * @return array of files that cannot be overwritten (empty array if everything is ok)
 	 */
 	public function preVerifyPackage($pluginType, $pluginId, $packageName, $descriptor) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$errorMessages = array();
-
+		$platform        =& $gallery->getPlatform();
+		$errorMessages   = array();
 		$pluginOutputDir = sprintf(
 			'%s%ss/%s/',
 			GalleryCoreApi::getCodeBasePath(),
@@ -586,6 +594,7 @@ class GalleryRepositoryUtilities {
 
 								break;
 							}
+
 							$checkPath = dirname($checkPath) . '/';
 						}
 					}
@@ -607,8 +616,8 @@ class GalleryRepositoryUtilities {
 	 */
 	public function verifyPackageIntegrity($pluginType, $pluginId, $packageName, $descriptor) {
 		global $gallery;
-		$errorMessages = array();
 
+		$errorMessages   = array();
 		$pluginOutputDir = sprintf(
 			'%s%ss/%s/',
 			GalleryCoreApi::getCodeBasePath(),
@@ -626,9 +635,9 @@ class GalleryRepositoryUtilities {
 					$checksum = strlen($metaData['hash']) == 32 ? md5($contents) : sprintf('%u', crc32($contents));
 
 					/**
-					 * hash_crlf and bytes_crlf were introduced in r17072 (2.3) so they don't
-					 * exist in older packages.  Set them to null if they don't exist so that we
-					 * don't get errors below.
+					 * hash_crlf and bytes_crlf were introduced in r17072 (2.3) so they do not
+					 * exist in older packages.  Set them to null if they do not exist so that we
+					 * do not get errors below.
 					 *
 					 * @todo: remove this when all of our DP packages have been generated these
 					 * fields.
@@ -642,7 +651,7 @@ class GalleryRepositoryUtilities {
 					}
 
 					if (!$platform->file_exists($filePath)) {
-						$errorMessage = "'$filePath' doesn't exist.";
+						$errorMessage = "'$filePath' does not exist.";
 					} elseif (!in_array(
 						$platform->filesize($filePath),
 						array($metaData['bytes'], $metaData['bytes_crlf'])
@@ -650,7 +659,7 @@ class GalleryRepositoryUtilities {
 					) {
 						$errorMessage = "Size of '$filePath' did not match package descriptor.";
 					} elseif (false === $contents) {
-						$errorMessage = "Couldn't read '$filePath'.";
+						$errorMessage = "Could not read '$filePath'.";
 					} elseif (!in_array(
 						$checksum,
 						array($metaData['hash'], $metaData['hash_crlf'])
@@ -691,9 +700,9 @@ class GalleryRepositoryUtilities {
 	 */
 	public function splitAggregatePackage($source, $outputFile, &$callback) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$phpVm    = $gallery->getPhpVm();
-
 		$packages = array(
 			'module' => array(),
 			'theme'  => array(),
@@ -710,8 +719,7 @@ class GalleryRepositoryUtilities {
 		// Sample: file: modules/albumselect-1.0.10-12345.descriptor.gz 12345
 		$descriptorPattern = '#^file:\s+((module|theme)s/([a-zA-Z0-9]+)-(?:\.?\d+){2,}-\d+'
 		. '\.descriptor)(\.gz)?\s+(\d+)$#';
-
-		$handle = $platform->fopen($outputFile, 'r');
+		$handle            = $platform->fopen($outputFile, 'r');
 
 		if (empty($handle)) {
 			return array(
@@ -719,11 +727,12 @@ class GalleryRepositoryUtilities {
 					ERROR_PLATFORM_FAILURE,
 					__FILE__,
 					__LINE__,
-					'Couldn\'t open aggregate package file'
+					'Could not open aggregate package file'
 				),
 				null,
 			);
 		}
+
 		$cacheDir = $gallery->getConfig('repository.cache') . $source . '/';
 
 		while (($line = $platform->fgets($handle, 4096)) !== false) {
@@ -737,10 +746,12 @@ class GalleryRepositoryUtilities {
 				$isDescriptor = false;
 			} elseif (preg_match($basePattern, $line, $matches)) {
 				list($value, $file, $pluginType, $pluginId, $needsInflation, $byteCount) = $matches;
+
 				$packageName  = 'base';
 				$isDescriptor = false;
 			} elseif (preg_match($descriptorPattern, $line, $matches)) {
 				list($value, $file, $pluginType, $pluginId, $needsInflation, $byteCount) = $matches;
+
 				$packageName  = null;
 				$isDescriptor = true;
 			} else {
@@ -813,6 +824,7 @@ class GalleryRepositoryUtilities {
 				++$callback['current'] / $callback['total']
 			);
 		}
+
 		$platform->fclose($handle);
 
 		return array(null, $packages);
@@ -826,6 +838,7 @@ class GalleryRepositoryUtilities {
 	 */
 	public function unpackPackage($packageFile, $outputDirecory) {
 		include $packageFile;
+
 		call_user_func($unpackFunction, $outputDirecory);
 	}
 
@@ -839,11 +852,12 @@ class GalleryRepositoryUtilities {
 
 		if (empty($apiQueryParams)) {
 			GalleryCoreApi::requireOnce('modules/core/classes/GalleryTheme.class');
+
 			$apiQueryParams = sprintf(
 				'coreApi=%s&moduleApi=%s&themeApi=%s',
 				join('.', GalleryCoreApi::getApiVersion()),
-				join('.', GalleryModule::doStatic()->getApiVersion()),
-				join('.', GalleryTheme::doStatic()->getApiVersion())
+				join('.', GalleryModule::getMe()->getApiVersion()),
+				join('.', GalleryTheme::getMe()->getApiVersion())
 			);
 		}
 
@@ -860,6 +874,7 @@ class GalleryRepositoryUtilities {
 	 */
 	public function downloadAggregatePackages($source, $filesToDownload) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$phpVm    = $gallery->getPhpVm();
 
@@ -873,7 +888,7 @@ class GalleryRepositoryUtilities {
 					ERROR_PLATFORM_FAILURE,
 					__FILE__,
 					__LINE__,
-					'Couldn\'t create temporary file'
+					'Could not create temporary file'
 				),
 				null,
 			);

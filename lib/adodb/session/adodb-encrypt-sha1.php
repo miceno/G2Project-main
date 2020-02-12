@@ -1,10 +1,10 @@
 <?php
+
 if (!defined('ADODB_SESSION')) {
 	die();
 }
 
 require_once ADODB_SESSION . '/crypt.inc.php';
-
 
 class ADODB_Encrypt_SHA1 {
 	public function write($data, $key) {
@@ -19,7 +19,5 @@ class ADODB_Encrypt_SHA1 {
 		return $sha1crypt->decrypt($data, $key);
 	}
 }
-
-
 
 return 1;

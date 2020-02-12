@@ -8,9 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Symfony\Component\Intl\Data\Generator;
-
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Intl\Data\Provider\LanguageDataProvider;
 use Symfony\Component\Intl\Data\Provider\RegionDataProvider;
@@ -33,7 +31,6 @@ class LocaleDataGenerator
     private $languageDataProvider;
     private $scriptDataProvider;
     private $regionDataProvider;
-
     public function __construct($dirName, LanguageDataProvider $languageDataProvider, ScriptDataProvider $scriptDataProvider, RegionDataProvider $regionDataProvider)
     {
         $this->dirName = (string) $dirName;
@@ -46,7 +43,6 @@ class LocaleDataGenerator
     {
         $filesystem = new Filesystem();
         $localeScanner = new LocaleScanner();
-
         $writers = $config->getBundleWriters();
 
         // Prepare filesystem directories
@@ -61,22 +57,19 @@ class LocaleDataGenerator
         // Flip to facilitate lookup
         $flippedLocales = array_flip($locales);
 
-        // Don't generate names for aliases (names will be generated for the
+        // Do not generate names for aliases (names will be generated for the
         // locale they are duplicating)
         $displayLocales = array_diff_key($flippedLocales, $aliases);
-
         ksort($displayLocales);
 
         // Generate a list of (existing) locale fallbacks
         $fallbackMapping = $this->generateFallbackMapping($displayLocales, $aliases);
-
         $localeNames = array();
 
         // Generate locale names for all locales that have translations in
         // at least the language or the region bundle
         foreach ($displayLocales as $displayLocale => $_) {
             $localeNames[$displayLocale] = array();
-
             foreach ($locales as $locale) {
                 try {
                     // Generate a locale name in the language of each display locale
@@ -96,7 +89,6 @@ class LocaleDataGenerator
         // Only keep the differences
         foreach ($displayLocales as $displayLocale => $_) {
             $fallback = $displayLocale;
-
             while (isset($fallbackMapping[$fallback])) {
                 $fallback = $fallbackMapping[$fallback];
                 $localeNames[$displayLocale] = array_diff(
@@ -139,13 +131,12 @@ class LocaleDataGenerator
     private function generateLocaleName($locale, $displayLocale)
     {
         $name = null;
-
         $lang = \Locale::getPrimaryLanguage($locale);
         $script = \Locale::getScript($locale);
         $region = \Locale::getRegion($locale);
         $variants = \Locale::getAllVariants($locale);
 
-        // Currently the only available variant is POSIX, which we don't want
+        // Currently the only available variant is POSIX, which we do not want
         // to include in the list
         if (\count($variants) > 0) {
             return;
@@ -153,10 +144,9 @@ class LocaleDataGenerator
 
         // Some languages are translated together with their region,
         // i.e. "en_GB" is translated as "British English"
-        // we don't include these languages though because they mess up
+        // we do not include these languages though because they mess up
         // the name sorting
         // $name = $this->langBundle->getLanguageName($displayLocale, $lang, $region);
-
         // Some languages are simply not translated
         // Example: "az" (Azerbaijani) has no translation in "af" (Afrikaans)
         if (null === ($name = $this->languageDataProvider->getName($lang, $displayLocale))) {
@@ -167,7 +157,6 @@ class LocaleDataGenerator
         //if (!$langBundle->get('Variants')) {
         //    continue;
         //}
-
         $extras = array();
 
         // Discover the name of the script part of the locale
@@ -210,7 +199,6 @@ class LocaleDataGenerator
     private function generateFallbackMapping(array $displayLocales, array $aliases)
     {
         $mapping = array();
-
         foreach ($displayLocales as $displayLocale => $_) {
             $mapping[$displayLocale] = null;
             $fallback = $displayLocale;
@@ -224,6 +212,7 @@ class LocaleDataGenerator
                 // Check whether the fallback exists
                 if (isset($displayLocales[$fallback])) {
                     $mapping[$displayLocale] = $fallback;
+
                     break;
                 }
             }
@@ -232,3 +221,4 @@ class LocaleDataGenerator
         return $mapping;
     }
 }
+

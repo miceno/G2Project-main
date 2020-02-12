@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -72,6 +71,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -129,6 +129,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
 		$results = GalleryUtilities::strArrToIntArr($results);
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -176,6 +177,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -224,6 +226,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -240,7 +243,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 			$results
 		);
 
-		// make sure they're really missing
+		// make sure they are really missing
 		foreach ($items as $item) {
 			$ret = $this->_verifyMissing($item->getId());
 
@@ -251,7 +254,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 	}
 
 	/**
-	 * try to delete a bunch of items some of which we don't have permission
+	 * try to delete a bunch of items some of which we do not have permission
 	 * to do so
 	 */
 	public function testDeleteMultipleItemsWithoutPermission() {
@@ -278,6 +281,7 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 				if ($ret) {
 					return $ret;
 				}
+
 				$ret = GalleryCoreApi::addUserPermission(
 					$items[$i]->getId(),
 					$gallery->getActiveUserId(),
@@ -325,9 +329,9 @@ class ItemDeleteControllerTest extends GalleryControllerTestCase {
 	}
 
 	/**
-	 * Test deleting a random item that doesn't exist.  We should get a
+	 * Test deleting a random item that does not exist.  We should get a
 	 * permission denied (since the permission check happens before we even
-	 * verify that it's a valid item to prevent information leakage)
+	 * verify that it is a valid item to prevent information leakage)
 	 */
 	public function testDeleteBogusItem() {
 		list($ret, $bogusId) = $this->_getUnusedId();

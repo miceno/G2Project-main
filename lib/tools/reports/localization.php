@@ -1,30 +1,29 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 // Authors: Jens Tkotz, Bharat Mediratta
 define('G2_SUPPORT_URL_FRAGMENT', '../../support/');
 
 require_once __DIR__ . '/../../support/security.inc';
+
 ini_set('magic_quotes_runtime', false);
 set_time_limit(0);
-
 $type = 'summary';
 
 if (!empty($_REQUEST['type']) && $_REQUEST['type'] == 'detail') {
@@ -32,10 +31,11 @@ if (!empty($_REQUEST['type']) && $_REQUEST['type'] == 'detail') {
 } elseif (php_sapi_name() == 'cli' && $argv[1] == 'detail') {
 	$type = 'detail';
 }
+
 $precision = isset($_GET['precision']) ? (int)$_GET['precision'] : ($type == 'detail' ? 2 : 1);
 $pow       = 10 ** $precision;
+$poFiles   = findPoFiles('../../..');
 
-$poFiles = findPoFiles('../../..');
 list($reportData, $mostRecentPoDate, $totalTranslated) = parsePoFiles($poFiles);
 
 require __DIR__ . '/localization/main_' . $type . '.inc';
@@ -54,6 +54,7 @@ function findPoFiles($dir) {
 			if ($file == '.' || $file == '..') {
 				continue;
 			}
+
 			$path = $dir . '/' . $file;
 
 			if (is_dir($path)) {
@@ -75,6 +76,7 @@ function parsePoFiles($poFiles) {
 	 * single data structure.
 	 */
 	global $pow;
+
 	$poData           = $seenPlugins           = $maxMessageCount           = array();
 	$mostRecentPoDate = $totalTranslated = 0;
 
@@ -82,15 +84,18 @@ function parsePoFiles($poFiles) {
 		if (!preg_match('|((?:\w+/)+)po/(\w{2}(?:_\w{2})?)\.po|', $poFile, $matches)) {
 			continue;
 		}
+
 		list($plugin, $locale) = array($matches[1], $matches[2]);
-		$seenPlugins[$plugin]  = 1;
-		$stat                  = stat($poFile);
+
+		$seenPlugins[$plugin] = 1;
+		$stat                 = stat($poFile);
 
 		if ($stat && $stat['mtime'] > $mostRecentPoDate) {
 			$mostRecentPoDate = $stat['mtime'];
 		}
 
 		$fuzzy = $translated = $untranslated = $obsolete = 0;
+
 		/*
 		 * Untranslated:
 		 *   msgid "foo"
@@ -161,6 +166,7 @@ function parsePoFiles($poFiles) {
 				if (preg_match('/^\s*"(.*)"/', $line, $matches)) {
 					$msgId = $line;
 				}
+
 				$lastLineWasEmptyMsgId = 0;
 
 				continue;
@@ -187,13 +193,16 @@ function parsePoFiles($poFiles) {
 					if ($nextIsFuzzy) {
 						$fuzzy++;
 					}
+
 					$translated++;
 				} else {
 					if ($nextIsFuzzy) {
 						echo "ERROR: DISCARD FUZZY for [$locale, $plugin, $msgId]<br>";
 					}
+
 					$untranslated++;
 				}
+
 				$msgId                  = null;
 				$nextIsFuzzy            = 0;
 				$lastLineWasEmptyMsgStr = 0;
@@ -215,6 +224,7 @@ function parsePoFiles($poFiles) {
 						if ($nextIsFuzzy) {
 							$fuzzy++;
 						}
+
 						$translated++;
 						$msgId       = null;
 						$nextIsFuzzy = 0;
@@ -222,6 +232,7 @@ function parsePoFiles($poFiles) {
 				}
 			}
 		}
+
 		// Catch msgstr "" in last line
 		if (!empty($msgId) && $lastLineWasEmptyMsgStr) {
 			$untranslated++;
@@ -235,6 +246,7 @@ function parsePoFiles($poFiles) {
 			$percentDone      = floor(($translated - $fuzzy) * 100 * $pow / $total) / $pow;
 			$exactPercentDone = ($translated - $fuzzy) * 100                        / $total;
 		}
+
 		$poData[$locale]['plugins'][$plugin] = array(
 			'translated'       => $translated,
 			'untranslated'     => $untranslated,
@@ -245,7 +257,8 @@ function parsePoFiles($poFiles) {
 			'exactPercentDone' => $exactPercentDone,
 			'name'             => $plugin,
 		);
-		$totalTranslated                    += $translated - $fuzzy;
+
+		$totalTranslated += $translated - $fuzzy;
 
 		foreach (array('translated', 'untranslated', 'fuzzy', 'obsolete') as $key) {
 			if (!isset($summary[$locale][$key])) {
@@ -255,7 +268,7 @@ function parsePoFiles($poFiles) {
 			$summary[$locale][$key] += $poData[$locale]['plugins'][$plugin][$key];
 		}
 
-		// Keep track of the largest message count we've seen per plugin
+		// Keep track of the largest message count we have seen per plugin
 		if (empty($maxMessageCount[$plugin]) || $total > $maxMessageCount[$plugin]) {
 			$maxMessageCount[$plugin] = $total;
 		}
@@ -278,6 +291,7 @@ function parsePoFiles($poFiles) {
 				$pluginTotal += $poData[$locale]['plugins'][$plugin]['translated'] - $poData[$locale]['plugins'][$plugin]['fuzzy'];
 			}
 		}
+
 		uasort($poData[$locale]['plugins'], 'sortByPercentDone');
 
 		// Figure out total percentage
@@ -291,6 +305,7 @@ function parsePoFiles($poFiles) {
 		foreach (array('translated', 'untranslated', 'fuzzy', 'obsolete') as $key) {
 			$poData[$locale]['summary'][$key] = floor($summary[$locale][$key] * 100 * $pow / $overallTotal) / $pow;
 		}
+
 		$poData[$locale]['summary']['total'] = $overallTotal;
 	}
 

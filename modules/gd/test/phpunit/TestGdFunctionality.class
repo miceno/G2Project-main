@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -38,17 +37,10 @@ class TestGdFunctionality {
 	public $_resources;
 	public $_outputFiles;
 
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	/**
 	 * Set the environment we want to simulate
-	 * -> 1. PHP 4.1.0, GD 1.8.2 not bundled (4.1.0|1.6.2|0)
-	 *    2. PHP 4.2.0, GD 1.8.2 not bundled
-	 * -> 3. PHP 4.3.1, GD 2.0 bundled       (4.3.1|2.0|1)
-	 *    4. PHP 4.3.9, GD 1.6.2 not bundled
-	 * -> 5. PHP 4.3.9RC1, GD 2.0.28 bundled (4.3.9RC1|2.0.28|1)
-	 *    6. PHP 5.0.1, GD 2.0.28 bundled
 	 */
 	public function setEnvironment($environment) {
 		$this->_gdEnvironment = $environment;
@@ -120,17 +112,20 @@ class TestGdFunctionality {
 			'y'        => $this->getResourceData($res, 'y'),
 			'mimeType' => $mimeType,
 		);
-		$other                         = $this->getResourceData($res, 'other');
+
+		$other = $this->getResourceData($res, 'other');
 
 		if (is_array($other)) {
 			$this->_outputFiles[$filename] = array_merge($this->_outputFiles[$filename], $other);
 		}
+
 		$history = $this->getResourceData($res, 'history');
 
 		if (is_array($history)) {
-			$history                       = array(
+			$history = array(
 				'history' => $history,
 			);
+
 			$this->_outputFiles[$filename] = array_merge($this->_outputFiles[$filename], $history);
 		}
 	}
@@ -156,7 +151,6 @@ class TestGdFunctionality {
 	 * This will do nothing with images, but simulate what might
 	 * happen.
 	 */
-
 	public function phpinfo($section = null) {
 		if ($section != '8') {
 			return array(GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE), null);
@@ -173,6 +167,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$out = strtr(
 			$this->_gdEnvironment['phpinfo(8)'],
 			array_flip(get_html_translation_table(HTML_ENTITIES))
@@ -193,6 +188,7 @@ class TestGdFunctionality {
 		if (!isset($this->_outputFiles[$filename])) {
 			return false;
 		}
+
 		unset($this->_outputFiles[$filename]);
 
 		return true;
@@ -219,6 +215,7 @@ class TestGdFunctionality {
 						return 150 << 10;
 				}
 		}
+
 		echo "filesize $filename<br/>\n";
 
 		return 0;
@@ -274,7 +271,9 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource();
+
 		$this->setResourceData($res, 'x', $width);
 		$this->setResourceData($res, 'y', $height);
 		$this->setResourceData($res, 'trueColor', false);
@@ -294,7 +293,9 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource();
+
 		$this->setResourceData($res, 'x', $width);
 		$this->setResourceData($res, 'y', $height);
 		$this->setResourceData($res, 'trueColor', true);
@@ -314,6 +315,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource($filename);
 
 		return array(null, $res);
@@ -331,6 +333,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource($filename);
 
 		return array(null, $res);
@@ -348,6 +351,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource($filename);
 
 		return array(null, $res);
@@ -365,6 +369,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource($filename);
 
 		return array(null, $res);
@@ -382,6 +387,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource($filename);
 
 		return array(null, $res);
@@ -399,6 +405,7 @@ class TestGdFunctionality {
 				null,
 			);
 		}
+
 		$res = $this->getNewResource($filename);
 
 		return array(null, $res);
@@ -421,6 +428,7 @@ class TestGdFunctionality {
 		if (!$this->isValidFile($filename)) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE);
 		}
+
 		$this->saveResource($res, $filename, 'image/gif');
 
 		return null;
@@ -443,6 +451,7 @@ class TestGdFunctionality {
 		if (!$this->isValidFile($filename)) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE);
 		}
+
 		$this->saveResource($res, $filename, 'image/jpeg');
 
 		return null;
@@ -465,6 +474,7 @@ class TestGdFunctionality {
 		if (!$this->isValidFile($filename)) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE);
 		}
+
 		$this->saveResource($res, $filename, 'image/png');
 
 		return null;
@@ -487,6 +497,7 @@ class TestGdFunctionality {
 		if (!$this->isValidFile($filename)) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE);
 		}
+
 		$this->saveResource($res, $filename, 'image/vnd.wap.wbmp');
 
 		return null;
@@ -509,6 +520,7 @@ class TestGdFunctionality {
 		if (!$this->isValidFile($filename)) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE);
 		}
+
 		$this->saveResource($res, $filename, 'image/x-xbitmap');
 
 		return null;
@@ -531,6 +543,7 @@ class TestGdFunctionality {
 		if (!$this->isValidFile($filename)) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE);
 		}
+
 		$this->saveResource($res, $filename, 'image/x-xpixmap');
 
 		return null;
@@ -628,6 +641,7 @@ class TestGdFunctionality {
 		if (!empty($previousData)) {
 			$this->setResourceData($dstRes, 'history', $previousData);
 		}
+
 		$this->setResourceData(
 			$dstRes,
 			'other',
@@ -715,7 +729,9 @@ class TestGdFunctionality {
 			$newX = $this->getResourceData($srcRes, 'x');
 			$newY = $this->getResourceData($srcRes, 'y');
 		}
+
 		$res = $this->copyResource($srcRes);
+
 		$this->setResourceData($res, 'x', $newX);
 		$this->setResourceData($res, 'y', $newY);
 
@@ -801,6 +817,7 @@ class TestGdFunctionality {
 		if ($color !== null) {
 			$this->setResourceData($res, 'transparentColor', $color);
 		}
+
 		$transparentColor = $this->getResourceData($res, 'transparentColor');
 
 		return $transparentColor == '' ? 1 : $transparentColor;

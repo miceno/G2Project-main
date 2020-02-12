@@ -1,6 +1,5 @@
 <?php
 
-
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -10,23 +9,16 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 	  Set tabs to 4 for best viewing.
-
 */
-
 if (!function_exists('mcrypt_encrypt')) {
 	trigger_error('Mcrypt functions are not available', E_USER_ERROR);
 
 	return 0;
 }
 
-
 class ADODB_Encrypt_MCrypt {
 	public $_cipher;
-
-
 	public $_mode;
-
-
 	public $_source;
 
 	public function getCipher() {

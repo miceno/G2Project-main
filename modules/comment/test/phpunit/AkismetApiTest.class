@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/comment/classes/GalleryComment.class');
 GalleryCoreApi::requireOnce('modules/comment/classes/AkismetApi.class');
 
@@ -44,12 +42,16 @@ class AkismetApiTest extends GalleryTestCase {
 		}
 
 		$this->_comment = new GalleryComment();
-		$this->_comment->setPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
-		$this->_akismet = new AkismetApiTest_AkismetApiWithMockRequest();
 
+		$this->_comment->setPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
+
+		$this->_akismet  = new AkismetApiTest_AkismetApiWithMockRequest();
 		$this->_platform = new UnitTestPlatform();
+
 		$gallery->setPlatform($this->_platform);
+
 		$AkismetApiTest_MockUrlGenerator = new AkismetApiTest_MockUrlGenerator();
+
 		$gallery->setUrlGenerator($AkismetApiTest_MockUrlGenerator);
 	}
 
@@ -65,7 +67,6 @@ class AkismetApiTest extends GalleryTestCase {
 			array('comment-check', $this->_comment, true),
 			array(null, 'false', 'HTTP/1.0 200 OK', 'headers')
 		);
-
 		$this->assertEquals(
 			array(null, false),
 			$this->_akismet->checkComment($this->_comment)
@@ -78,7 +79,6 @@ class AkismetApiTest extends GalleryTestCase {
 			array('comment-check', $this->_comment, true),
 			array(null, 'true', 'HTTP/1.0 200 OK', 'headers')
 		);
-
 		$this->assertEquals(
 			array(null, true),
 			$this->_akismet->checkComment($this->_comment)
@@ -91,7 +91,6 @@ class AkismetApiTest extends GalleryTestCase {
 			array('comment-check', $this->_comment, true),
 			array(null, 'false', 'HTTP/1.0 404 Not Found', 'headers')
 		);
-
 		$this->assertEquals(
 			array(null, false),
 			$this->_akismet->checkComment($this->_comment)
@@ -105,7 +104,6 @@ class AkismetApiTest extends GalleryTestCase {
 			array('comment-check', $this->_comment, false),
 			array(null, 'false', 'HTTP/1.0 200 OK', 'headers')
 		);
-
 		$this->assertEquals(
 			array(null, false),
 			$this->_akismet->checkComment($this->_comment)
@@ -118,7 +116,6 @@ class AkismetApiTest extends GalleryTestCase {
 			array('submit-spam', $this->_comment, false),
 			array(null, 'body', 'HTTP/1.0 200 OK', 'headers')
 		);
-
 		$this->assertEquals(null, $this->_akismet->submitSpam($this->_comment));
 	}
 
@@ -128,13 +125,12 @@ class AkismetApiTest extends GalleryTestCase {
 			array('submit-ham', $this->_comment, false),
 			array(null, 'body', 'HTTP/1.0 200 OK', 'headers')
 		);
-
 		$this->assertEquals(null, $this->_akismet->submitHam($this->_comment));
 	}
 
 	/**
 	 * Convenience method to digest an HTTP response and put it into the form that
-	 * GalleryCoreApi::postToWebPage can digest when it's talking to our mock platform.
+	 * GalleryCoreApi::postToWebPage can digest when it is talking to our mock platform.
 	 * @todo This should get refactored up into UnitTestPlatform so that other tests can use it.
 	 * @access private
 	 */
@@ -146,6 +142,7 @@ class AkismetApiTest extends GalleryTestCase {
 			$tmp[] = str_replace('%2B', '+', urlencode($key)) . '=' .
 			str_replace('%2B', '+', urlencode($value));
 		}
+
 		$request .= join('&', $tmp);
 
 		$platform->setReply('fsockopen', array($host, $port, null, null, 5), 'HANDLE');
@@ -164,6 +161,7 @@ class AkismetApiTest extends GalleryTestCase {
 
 	public function testVerifyApiKey_Valid() {
 		$this->_akismet->setReply('_getUserAgent', array(), array(null, 'USER_AGENT'));
+
 		$this->_setHttpRequestResponse(
 			$this->_platform,
 			'rest.akismet.com',
@@ -194,6 +192,7 @@ class AkismetApiTest extends GalleryTestCase {
 
 	public function testVerifyApiKey_Invalid() {
 		$this->_akismet->setReply('_getUserAgent', array(), array(null, 'USER_AGENT'));
+
 		$this->_setHttpRequestResponse(
 			$this->_platform,
 			'rest.akismet.com',
@@ -224,6 +223,7 @@ class AkismetApiTest extends GalleryTestCase {
 
 	public function testRequest() {
 		$this->_markPluginParametersForCleanup('module', 'comment');
+
 		$ret = GalleryCoreApi::setPluginParameter('module', 'comment', 'akismet.apiKey', 'API_KEY');
 
 		if ($ret) {
@@ -299,6 +299,7 @@ class AkismetApiTest extends GalleryTestCase {
 		);
 
 		$akismet = new AkismetApiTest_AkismetApiWithMockUserAgent();
+
 		$this->assertEquals(
 			array(
 				null,
@@ -314,6 +315,7 @@ class AkismetApiTest extends GalleryTestCase {
 
 	public function testRequest_WithoutRequestSpecificDetails() {
 		$this->_markPluginParametersForCleanup('module', 'comment');
+
 		$ret = GalleryCoreApi::setPluginParameter('module', 'comment', 'akismet.apiKey', 'API_KEY');
 
 		if ($ret) {
@@ -375,6 +377,7 @@ class AkismetApiTest extends GalleryTestCase {
 		);
 
 		$akismet = new AkismetApiTest_AkismetApiWithMockUserAgent();
+
 		$this->assertEquals(
 			array(
 				null,
@@ -395,7 +398,6 @@ class AkismetApiTest extends GalleryTestCase {
 			// The HTTP status 200 message should processed independently of the HTTP version
 			array(null, 'body', 'HTTP/1.0 200 OK', 'headers')
 		);
-
 		$this->assertEquals(null, $this->_akismet->submitHam($this->_comment));
 	}
 }

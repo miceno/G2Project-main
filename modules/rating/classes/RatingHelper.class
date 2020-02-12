@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -70,7 +69,7 @@ class RatingHelper {
 			}
 		}
 
-		// Set defaults if a requested ID isn't found
+		// Set defaults if a requested ID is not found
 		foreach ($itemIds as $itemId) {
 			if (!isset($data[$itemId])) {
 				$data[$itemId] = array(
@@ -87,10 +86,11 @@ class RatingHelper {
 
 		// Check for existing votes from this user!
 		$session =& $gallery->getSession();
+
 		/*
-		 * If the user doesn't have a persistent session yet, it's a guest user without a session
+		 * If the user does not have a persistent session yet, it is a guest user without a session
 		 * and since we create a persistent session when a guest rates, we know that this guest
-		 * user hasn't rated any item yet
+		 * user has not rated any item yet
 		 */
 		if ($session->isPersistent()) {
 			$searchParams = array(
@@ -149,7 +149,7 @@ class RatingHelper {
 	public static function rateItem($itemId, $rating, $userId) {
 		global $gallery;
 
-		// Make sure the user isn't a search engine crawler
+		// Make sure the user is not a search engine crawler
 		$botId = GalleryUtilities::identifySearchEngine();
 
 		if (isset($botId)) {
@@ -165,7 +165,6 @@ class RatingHelper {
 
 		// Use this to get new IDs and check affected rows for updates
 		$storage = $gallery->getStorage();
-
 		$session =& $gallery->getSession();
 
 		if (!$session->isPersistent()) {
@@ -174,6 +173,7 @@ class RatingHelper {
 			 * Add some session data to force the creation of a persistent session (sends a cookie)
 			 */
 			$session->put('rating', 1);
+
 			$ret = $session->start();
 
 			if ($ret) {
@@ -237,7 +237,8 @@ class RatingHelper {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$query                     = '
+
+		$query = '
 		SELECT
 		' . $avg . ',
 		COUNT([RatingMap::rating])
@@ -246,6 +247,7 @@ class RatingHelper {
 		WHERE
 		[RatingMap::itemId] = ?
 		';
+
 		list($ret, $searchResults) = $gallery->search($query, array((int)$itemId));
 
 		if ($ret) {

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Symfony\Component\Intl;
 
 /**
@@ -74,7 +73,7 @@ final class Locale extends \Locale
                     return 'root';
                 }
 
-                // Don't return default fallback for "root", "meta" or others
+                // Do not return default fallback for "root", "meta" or others
                 // Normal locales have two or three letters
                 if (\strlen($locale) < 4) {
                     return self::$defaultFallback;
@@ -100,7 +99,7 @@ final class Locale extends \Locale
             return 'root';
         }
 
-        // Don't return default fallback for "root", "meta" or others
+        // Do not return default fallback for "root", "meta" or others
         // Normal locales have two or three letters
         if (\strlen($locale) < 4) {
             return self::$defaultFallback;
@@ -114,3 +113,4 @@ final class Locale extends \Locale
     {
     }
 }
+

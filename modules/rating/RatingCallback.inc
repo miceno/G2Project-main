@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -44,6 +43,7 @@ class RatingCallbackView extends GalleryView {
 	 */
 	public function renderImmediate($status = null, $error = null) {
 		global $gallery;
+
 		GalleryCoreApi::requireOnce('modules/rating/classes/RatingHelper.class');
 
 		list($command, $rating) = GalleryUtilities::getRequestVariables('command', 'rating');
@@ -53,6 +53,7 @@ class RatingCallbackView extends GalleryView {
 		if ($ret) {
 			return $ret;
 		}
+
 		$itemId = $item->getId();
 
 		if (!headers_sent()) {
@@ -76,11 +77,13 @@ class RatingCallbackView extends GalleryView {
 				if ($ret) {
 					return $ret;
 				}
+
 				list($ret, $module) = GalleryCoreApi::loadPlugin('module', 'rating');
 
 				if ($ret) {
 					return $ret;
 				}
+
 				$results['votesString'] = $module->translate(
 					array(
 						'one'   => '%d vote',
@@ -96,12 +99,12 @@ class RatingCallbackView extends GalleryView {
 				. $results['votesString'] . "\n"
 				. $results['userRating'] . "\n"
 				. $session->getAuthToken();
+
 				/*
 				 * If this was the first rating from an anonymous user then their session just became
 				 * persistent (see RatingHelper::rateItem); return the authToken so it can be used
 				 * in future rating requests.
 				 */
-
 				break;
 		}
 

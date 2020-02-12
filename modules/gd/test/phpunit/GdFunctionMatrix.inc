@@ -1,5 +1,4 @@
 <?php
-
 $gdEnvironments[] = array(
 	'name'       => '4.1.0|1.6.2-external|Linux',
 	'phpVersion' => '4.1.0',
@@ -398,6 +397,7 @@ $gdEnvironments[] = array(
 		'iptcparse'               => true,
 	),
 );
+
 $gdEnvironments[] = array(
 	'name'       => '4.3.1|2.0-bundled|Linux',
 	'phpVersion' => '4.3.1',
@@ -496,6 +496,7 @@ h2 {font-size: 125%;}
 i {color: #666666;}
 img {float: right; border: 0px;}
 hr {width: 600px; align: center; background-color: #cccccc; border: 0px; height: 1px;}
+
 //--&gt;&lt;/style&gt;
 &lt;title&gt;phpinfo()&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;&lt;div class=&quot;center&quot;&gt;
@@ -911,6 +912,7 @@ hr {width: 600px; align: center; background-color: #cccccc; border: 0px; height:
 		'iptcparse'               => true,
 	),
 );
+
 $gdEnvironments[] = array(
 	'name'       => '4.3.9RC1|2.0.28-bundled|Linux',
 	'phpVersion' => '4.3.9RC1',
@@ -1016,6 +1018,7 @@ h2 {font-size: 125%;}
 i {color: #666666; background-color: #cccccc;}
 img {float: right; border: 0px;}
 hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #000000;}
+
 //--&gt;&lt;/style&gt;
 &lt;title&gt;phpinfo()&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;&lt;div class=&quot;center&quot;&gt;
@@ -1437,3 +1440,4 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
 		'iptcparse'               => true,
 	),
 );
+

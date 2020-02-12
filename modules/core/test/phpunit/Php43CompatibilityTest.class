@@ -1,25 +1,24 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
- * Scan through all of our source code and verify that we're not using anything that is not
+ * Scan through all of our source code and verify that we are not using anything that is not
  * PHP 4.3 compatible
  * @package GalleryCore
  * @subpackage PHPUnit
@@ -31,9 +30,9 @@ class Php43CompatibilityTest extends CodeAuditTestCase {
 		parent::__construct($methodName);
 
 		include __DIR__ . '/Php43IllegalFunctions.inc';
-		$this->_illegalRegexp = $illegalFunctionsRegexp . 'i';
 
-		$this->_exceptions['file_put_contents']['GalleryPlatform.class']           = 1;
+		$this->_illegalRegexp                                            = $illegalFunctionsRegexp . 'i';
+		$this->_exceptions['file_put_contents']['GalleryPlatform.class'] = 1;
 		$this->_exceptions['memory_get_usage']['GalleryTemplateAdapter.class']     = 1;
 		$this->_exceptions['mysqli_get_server_info']['GalleryStorage.class']       = 1;
 		$this->_exceptions['mysqli_get_client_info']['GalleryStorage.class']       = 1;
@@ -51,7 +50,7 @@ class Php43CompatibilityTest extends CodeAuditTestCase {
 	 * @see CodeAuditTestCase::shouldCheckFile
 	 */
 	public function shouldCheckFile($fileName) {
-		// Skip files we don't care about
+		// Skip files we do not care about
 		if ($fileName == 'Php43IllegalFunctions.inc'
 			|| substr($fileName, -10) == 'Test.class'
 			|| substr($fileName, -4) == '.tpl'

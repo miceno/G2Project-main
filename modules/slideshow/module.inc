@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,28 +28,33 @@
 class SlideshowModule extends GalleryModule {
 	public function __construct() {
 		global $gallery;
+
 		$this->setId('slideshow');
 		$this->setName($gallery->i18n('Slideshow'));
 		$this->setDescription($gallery->i18n('Slideshow'));
-		$this->setVersion('7.0.0');
+
+		// Update upgrade() as required
+		$this->setVersion('3.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
+
 		$this->setGroup('display', $gallery->i18n('Display'));
 		$this->setCallbacks('getItemLinks|getSiteAdminViews');
-		$this->setRequiredCoreApi(array(7, 49));
-		$this->setRequiredModuleApi(array(3, 9));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new SlideshowModule();
+		if (!isset($instance)) {
+			$instance = new SlideshowModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -91,9 +95,10 @@ class SlideshowModule extends GalleryModule {
 	 */
 	public function upgrade($currentVersion, $x1 = null) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
-		$dir           = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow';
+		$platform =& $gallery->getPlatform();
+		$dir      = $gallery->getConfig('data.gallery.plugins_data') . 'modules/slideshow';
+
 		list($success) = GalleryUtilities::guaranteeDirExists($dir);
 
 		if (!$success) {
@@ -124,6 +129,7 @@ class SlideshowModule extends GalleryModule {
 			GalleryCoreApi::requireOnce(
 				'modules/slideshow/classes/PicLensHelper.class'
 			);
+
 			list($ret, $version) = PicLensHelper::install();
 
 			if ($ret && $ret->getErrorCode() & ERROR_STORAGE_FAILURE) {
@@ -159,6 +165,7 @@ class SlideshowModule extends GalleryModule {
 	 */
 	public function getItemLinks($items, $wantsDetailedLinks, $permissions, $userId = null) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		list($ret, $picLensVersion) = $this->getParameter('piclens.version');
@@ -170,11 +177,12 @@ class SlideshowModule extends GalleryModule {
 		$links = array();
 
 		foreach ($items as $item) {
-			$itemId            = $item->getId();
-			$jsUrlParams       = array(
+			$itemId      = $item->getId();
+			$jsUrlParams = array(
 				'forJavascript' => true,
 				'forceFullUrl'  => true,
 			);
+
 			$jsUrlParamsDirect = array_merge(
 				$jsUrlParams,
 				array(
@@ -187,7 +195,6 @@ class SlideshowModule extends GalleryModule {
 				 * Photo: do slideshow of parent album, start at this photo.
 				 * Show View Slideshow link, only when album has images in it.
 				 */
-
 				$showSlideshowLink = false;
 
 				if ($item->getCanContainChildren()) {
@@ -209,6 +216,7 @@ class SlideshowModule extends GalleryModule {
 
 					if (!$ret || !empty($query)) {
 						array_unshift($data, $item->getId());
+
 						list($ret, $searchResults) = $gallery->search(
 							$query,
 							$data,
@@ -226,7 +234,7 @@ class SlideshowModule extends GalleryModule {
 
 				if ($showSlideshowLink) {
 					if ($picLensVersion) {
-						$script           = sprintf(
+						$script = sprintf(
 							'var p=PicLensLite;'
 							. 'p.setCallbacks({onNoPlugins:function(){location.href=\'%s\'}});'
 							. 'p.setLiteURLs({swf:\'%s\'});'
@@ -255,6 +263,7 @@ class SlideshowModule extends GalleryModule {
 							),
 							$itemId
 						);
+
 						$links[$itemId][] = array(
 							'text'   => $this->translate('View Slideshow'),
 							'params' => array(
@@ -298,18 +307,19 @@ class SlideshowModule extends GalleryModule {
 	 * @see GalleryModule::getRewriteRules
 	 */
 	public function getRewriteRules() {
-		$rules = array();
-
-		$rule             = array();
-		$rule['comment']  = $this->translate('View Slideshow');
-		$rule['match']    = array(
+		$rules           = array();
+		$rule            = array();
+		$rule['comment'] = $this->translate('View Slideshow');
+		$rule['match']   = array(
 			'view' => 'slideshow.Slideshow',
 		);
-		$rule['onLoad']   = array(
+
+		$rule['onLoad'] = array(
 			'rewrite',
 			'RewriteSimpleHelper',
 			'loadItemIdFromPath',
 		);
+
 		$rule['pattern']  = 'v/%path%/slideshow.html';
 		$rule['keywords'] = array(
 			'path' => array(
@@ -324,7 +334,8 @@ class SlideshowModule extends GalleryModule {
 				),
 			),
 		);
-		$rules[]          = $rule;
+
+		$rules[] = $rule;
 
 		return $rules;
 	}
@@ -334,22 +345,22 @@ class SlideshowModule extends GalleryModule {
 	 */
 	public function handleEvent($event) {
 		global $gallery;
-		$urlGenerator =& $gallery->getUrlGenerator();
 
-		$data = $event->getData();
+		$urlGenerator =& $gallery->getUrlGenerator();
+		$data         = $event->getData();
 
 		if ($event->getEventName() == 'Gallery::BeforeDisplay'
 			&& $data['view']->getViewType() == VIEW_TYPE_SHOW_ITEM
 		) {
 			/**
 			 * We store the template in the entity field because we need a reference to it, and
-			 * that's the only reference to be had.  Theoretically in PHP5 this problem goes away
+			 * that is the only reference to be had.  Theoretically in PHP5 this problem goes away
 			 * and we can store lots of stuff in the data member.  But for now, we store the
 			 * template there, and we get the item by leaning on GalleryView.
 			 */
 			$template =& $event->getEntity();
 
-			list($ret, $item, $ignored) = GalleryView::doStatic()->getItem();
+			list($ret, $item, $ignored) = GalleryView::getMe()->getItem();
 
 			if ($ret) {
 				return array($ret, null);

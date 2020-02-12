@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -87,6 +88,7 @@ function smarty_function_html_radios($params, &$smarty) {
 
 			case 'radios':
 				$smarty->trigger_error('html_radios: the use of the "radios" attribute is deprecated, use "options" instead', E_USER_WARNING);
+
 				$options = (array)$_val;
 
 				break;
@@ -106,8 +108,10 @@ function smarty_function_html_radios($params, &$smarty) {
 	}
 
 	if (!isset($options) && !isset($values)) {
-		return ''; // raise error here?
+		// raise error here?
+		return '';
 	}
+
 	$_html_result = array();
 
 	if (isset($options)) {
@@ -139,6 +143,7 @@ function smarty_function_html_radios_output($name, $value, $output, $selected, $
 			$_output .= '<label>';
 		}
 	}
+
 	$_output .= '<input type="radio" name="'
 		. smarty_function_escape_special_chars($name) . '" value="'
 		. smarty_function_escape_special_chars($value) . '"';
@@ -150,11 +155,13 @@ function smarty_function_html_radios_output($name, $value, $output, $selected, $
 	if ((string)$value == $selected) {
 		$_output .= ' checked="checked"';
 	}
+
 	$_output .= $extra . ' />' . $output;
 
 	if ($labels) {
 		$_output .= '</label>';
 	}
+
 	$_output .= $separator;
 
 	return $_output;

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -61,6 +60,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][reset]', '1');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -83,6 +83,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 
 		$this->_controller->_akismet = new CommentSiteAdminControllerTest_FakeAkismetApi(true);
 		$results                     = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -109,6 +110,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals($expectedValue, $value, $key);
 		}
 	}
@@ -117,6 +119,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][save]', '1');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -135,6 +138,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][save]', '1');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -156,6 +160,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 
 		$this->_controller->_akismet = new CommentSiteAdminControllerTest_FakeAkismetApi(true);
 		$results                     = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -179,6 +184,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals($expectedValue, $value, $key);
 		}
 	}
@@ -191,6 +197,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 
 		$this->_controller->_akismet = new CommentSiteAdminControllerTest_FakeAkismetApi(false);
 		$results                     = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -212,6 +219,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals($expectedValue, $value, $key);
 		}
 	}
@@ -221,10 +229,10 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[apiKey]', '3:15/s');
 		GalleryUtilities::putRequestVariable('form[action][save]', '1');
 
-		// Ensure that the API key gets doesn't get rejected because of a remote server
+		// Ensure that the API key gets does not get rejected because of a remote server
 		$this->_controller->_akismet = new CommentSiteAdminControllerTest_FakeAkismetApi(true);
+		$results                     = $this->handleRequest();
 
-		$results = $this->handleRequest();
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -242,6 +250,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[action][checkAllWithAkismet]', '1');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -256,6 +265,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 
 	public function testCheckAllWithAkismetCallback() {
 		global $gallery;
+
 		$mockTemplateAdapter       = new MockTemplateAdapter();
 		$gallery->_templateAdapter =& $mockTemplateAdapter;
 
@@ -270,6 +280,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($album);
 
 		$ret = $this->_markPluginParametersForCleanup('module', 'core');
@@ -291,16 +302,19 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 
 		for ($i = 0; $i < 2; $i++) {
 			$comment[$i] = new GalleryComment();
-			$ret         = $comment[$i]->create($album->getId());
+
+			$ret = $comment[$i]->create($album->getId());
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$comment[$i]->setPublishStatus(COMMENT_PUBLISH_STATUS_PUBLISHED);
 			$comment[$i]->setCommenterId($gallery->getActiveUserId());
 			$comment[$i]->setSubject('this is a test subject');
 			$comment[$i]->setComment('this is a test comment');
 			$comment[$i]->setHost('127.0.0.1');
+
 			$ret = $comment[$i]->save();
 
 			if ($ret) {
@@ -317,6 +331,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 		}
 
 		$status = $this->_getStatusFromProgressBar();
+
 		$this->assertEquals(
 			array(
 				'checked' => array(
@@ -333,6 +348,7 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals(COMMENT_PUBLISH_STATUS_SPAM, $comment[$i]->getPublishStatus());
 		}
 	}
@@ -342,8 +358,8 @@ class CommentSiteAdminControllerTest extends GalleryControllerTestCase {
 	 */
 	public function _getStatusFromProgressBar() {
 		global $gallery;
-		$session =& $gallery->getSession();
 
+		$session  =& $gallery->getSession();
 		$progress = $gallery->_templateAdapter->getProgressBarDump();
 		preg_match('/statusId=([^,]*)/', $progress[count($progress) - 1], $matches);
 

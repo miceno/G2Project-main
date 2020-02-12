@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -46,7 +45,9 @@ class LanguageTest extends GalleryControllerTestCase {
 
 	public function testGetActiveLanguageCode() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
+
 		$session->remove('core.language');
 
 		list($ret, $language) = $gallery->getActiveLanguageCode();
@@ -54,9 +55,11 @@ class LanguageTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(null, $language, 'not set');
 
 		$user = new GalleryUser();
+
 		$user->setId('testId');
 		$user->setLanguage('test_language');
 		$gallery->setActiveUser($user);
@@ -66,8 +69,8 @@ class LanguageTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$this->assertEquals('test_language', $language, 'user language');
 
+		$this->assertEquals('test_language', $language, 'user language');
 		$gallery->setActiveLanguageCode('sess_language');
 
 		list($ret, $language) = $gallery->getActiveLanguageCode();
@@ -75,14 +78,17 @@ class LanguageTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('sess_language', $language, 'session language');
 	}
 
 	public function testChangeLanguageController() {
 		global $gallery;
+
 		GalleryUtilities::putRequestVariable('language', 'test_language');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'return' => 1,
@@ -97,6 +103,7 @@ class LanguageTest extends GalleryControllerTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('test_language', $language, 'language');
 	}
 
@@ -112,6 +119,7 @@ class LanguageTest extends GalleryControllerTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals($expected, $description, "Testcase: $case");
 		}
 	}
@@ -120,10 +128,13 @@ class LanguageTest extends GalleryControllerTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
-		list($languageData)   = GalleryTranslator::doStatic()->getLanguageData();
+		list($languageData) = GalleryTranslator::getMe()->getLanguageData();
+
 		$expected['en']['US'] = $languageData['en']['US'];
 
 		$gallery->setConfig('data.gallery.locale', '/g2data/');
@@ -139,10 +150,13 @@ class LanguageTest extends GalleryControllerTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
-		list($languageData)   = GalleryTranslator::doStatic()->getLanguageData();
+		list($languageData) = GalleryTranslator::getMe()->getLanguageData();
+
 		$expected['en']['US'] = $languageData['en']['US'];
 		$expected['en']['GB'] = $languageData['en']['GB'];
 		$expected['pt']['BR'] = $languageData['pt']['BR'];
@@ -162,10 +176,13 @@ class LanguageTest extends GalleryControllerTestCase {
 		global $gallery;
 
 		$UnitTestPlatform = new UnitTestPlatform();
+
 		$gallery->setPlatform($UnitTestPlatform);
+
 		$platform =& $gallery->getPlatform();
 
-		list($languageData)   = GalleryTranslator::doStatic()->getLanguageData();
+		list($languageData) = GalleryTranslator::getMe()->getLanguageData();
+
 		$expected['en']['US'] = $languageData['en']['US'];
 		$expected['pt']['BR'] = $languageData['pt']['BR'];
 		$expected['pt']['PT'] = $languageData['pt']['PT'];

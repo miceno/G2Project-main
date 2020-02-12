@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -53,13 +52,22 @@ class MultisiteStep extends InstallStep {
 				$this->_isMultisite     = false;
 				$_SESSION['configPath'] = $baseDir;
 				$_SESSION['baseUri']    = getGalleryDirUrl() . GALLERY_MAIN_PHP;
+
 				$this->setComplete(true);
 				$this->readConfigFile();
+
 				// Remember the value also for the storage and database setup steps
 				$galleryStub->setConfig('isMultisite', false);
-				$uri  = preg_replace('{\?.*}', '', GalleryUrlGenerator::doStatic()->getCurrentRequestUri());
+
+				$uri = preg_replace(
+					'{\?.*}',
+					'',
+					GalleryUrlGenerator::getMe()->getCurrentRequestUri()
+				);
+
 				$uri .= '?step=' . ($this->getStepNumber() + 1);
-				// Cookieless browsing (see index.php), 'session.use_trans_sid' won't help here
+
+				// Cookieless browsing (see index.php), 'session.use_trans_sid' would not help here
 				if (!GallerySetupUtilities::areCookiesSupported()) {
 					$uri .= sprintf('&%s=%s', session_name(), session_id());
 				}
@@ -68,11 +76,13 @@ class MultisiteStep extends InstallStep {
 
 				return false;
 			}
+
 			$this->_configPath = rtrim(
 				$this->sanitize($_POST['configPath']),
 				' ' . DIRECTORY_SEPARATOR
 			);
-			$this->_baseUri    = isset($_POST['baseUri']) ? $_POST['baseUri'] : '';
+
+			$this->_baseUri = isset($_POST['baseUri']) ? $_POST['baseUri'] : '';
 
 			if (substr($this->_baseUri, -4) != '.php'
 				&& substr($this->_baseUri, -1) != '/'
@@ -119,6 +129,7 @@ class MultisiteStep extends InstallStep {
 			if (empty($templateData['error'])) {
 				$_SESSION['configPath'] = $this->_configPath;
 				$_SESSION['baseUri']    = $this->_baseUri;
+
 				$this->setComplete(true);
 				$this->readConfigFile();
 				$galleryStub->setConfig('isMultisite', true);
@@ -142,7 +153,12 @@ class MultisiteStep extends InstallStep {
 		$templateData['baseUri']     = $this->_baseUri;
 		$templateData['galleryDir']  = $galleryDir;
 		$templateData['galleryUrl']  = getGalleryDirUrl();
-		$templateData['bodyFile']    = $this->isComplete() ? 'MultisiteSuccess.html' : 'Multisite.html';
+
+		if ($this->isComplete()) {
+			$templateData['bodyFile'] = 'MultisiteSuccess.html';
+		} else {
+			$templateData['bodyFile'] = 'Multisite.html';
+		}
 	}
 
 	public function populateMultisiteDirectory($dir) {
@@ -152,31 +168,37 @@ class MultisiteStep extends InstallStep {
 		if (!$out = @fopen("$dir/main.php", 'w')) {
 			return false;
 		}
+
 		fwrite(
 			$out,
 			"<?php\ndefine('GALLERY_CONFIG_DIR', __DIR__);\nrequire('" .
 			$galleryDir . "main.php');\n?>\n"
 		);
+
 		fclose($out);
 
 		if (!$out = @fopen("$dir/embed.php", 'w')) {
 			return false;
 		}
+
 		fwrite(
 			$out,
 			"<?php\ndefine('GALLERY_CONFIG_DIR', __DIR__);\nrequire('" .
 			$galleryDir . "embed.php');\n?>\n"
 		);
+
 		fclose($out);
 
 		if (!$out = @fopen("$dir/index.php", 'w')) {
 			return false;
 		}
+
 		fwrite(
 			$out,
 			"<?php\ndefine('GALLERY_CONFIG_DIR', __DIR__);\nrequire('" .
 			$galleryDir . "index.php');\n?>\n"
 		);
+
 		fclose($out);
 
 		if (!is_dir("$dir/upgrade") && !mkdir("$dir/upgrade", 0755)) {
@@ -186,12 +208,15 @@ class MultisiteStep extends InstallStep {
 		if (!$out = @fopen("$dir/upgrade/index.php", 'w')) {
 			return false;
 		}
+
 		fwrite(
 			$out,
 			"<?php\ndefine('GALLERY_CONFIG_DIR', dirname(__DIR__));\nrequire('" .
 			$galleryDir . 'upgrade' . DIRECTORY_SEPARATOR . "index.php');\n?>\n"
 		);
+
 		fclose($out);
+
 		// lib/support/index.php is optional; ignore errors
 		if ((is_dir("$dir/lib") || mkdir("$dir/lib", 0755))
 			&& (is_dir("$dir/lib/support") || mkdir("$dir/lib/support", 0755))
@@ -203,6 +228,7 @@ class MultisiteStep extends InstallStep {
 				")));\nrequire('" . $galleryDir . 'lib' . DIRECTORY_SEPARATOR . 'support' .
 				DIRECTORY_SEPARATOR . "index.php');\n?>\n"
 			);
+
 			fclose($out);
 		}
 
@@ -219,7 +245,9 @@ class MultisiteStep extends InstallStep {
 			@include $configFile;
 			ob_end_clean();
 		}
+
 		global $galleryStub;
+
 		// Copy config data from system checks step which will be used in the install log
 		$gallery->setConfig(
 			'systemchecks.fileintegrity',
@@ -229,6 +257,7 @@ class MultisiteStep extends InstallStep {
 			'systemchecks.issvninstall',
 			$galleryStub->getConfig('systemchecks.issvninstall')
 		);
+
 		// Replace galleryStub
 		$galleryStub = $gallery;
 	}

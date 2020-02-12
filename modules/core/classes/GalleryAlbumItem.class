@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryItem.class');
 
 /**
@@ -52,7 +50,7 @@ class GalleryAlbumItem extends GalleryItem {
 	public $theme;
 
 	/**
-	 * Specify the name of the field that we're using to order children
+	 * Specify the name of the field that we are using to order children
 	 * @var string
 	 *
 	 * @g2 <member>
@@ -64,7 +62,7 @@ class GalleryAlbumItem extends GalleryItem {
 	public $orderBy;
 
 	/**
-	 * Specify the order direction that we're applying to the orderBy field
+	 * Specify the order direction that we are applying to the orderBy field
 	 * @var string
 	 *
 	 * @g2 <member>
@@ -76,16 +74,16 @@ class GalleryAlbumItem extends GalleryItem {
 	public $orderDirection;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryAlbumItem();
+		if (!isset($instance)) {
+			$instance = new GalleryAlbumItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -104,7 +102,7 @@ class GalleryAlbumItem extends GalleryItem {
 	) {
 		global $gallery;
 
-		if (is_null($albumName) || is_null($parentId)) {
+		if (null === $albumName || null === $parentId) {
 			return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 		}
 
@@ -145,6 +143,7 @@ class GalleryAlbumItem extends GalleryItem {
 		if ($useDefaults != 'true') {
 			// Use parent's settings
 			$this->setTheme($theme = $parent->getTheme());
+
 			$this->setOrderBy($parent->getOrderBy());
 			$this->setOrderDirection($parent->getOrderDirection());
 
@@ -155,6 +154,7 @@ class GalleryAlbumItem extends GalleryItem {
 					return $ret;
 				}
 			}
+
 			list($ret, $themeParams) = GalleryCoreApi::fetchAllPluginParameters('theme', $theme, $parent->getId());
 
 			if ($ret) {
@@ -255,6 +255,7 @@ class GalleryAlbumItem extends GalleryItem {
 	 */
 	public function _createDir($albumDir) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($ret, $perm) = GalleryCoreApi::getPluginParameter(
@@ -303,9 +304,9 @@ class GalleryAlbumItem extends GalleryItem {
 	 */
 	public function save($postEvent = true, $x1 = null) {
 		global $gallery;
-		$session =& $gallery->getSession();
 
-		$isNew = $this->testPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
+		$session =& $gallery->getSession();
+		$isNew   = $this->testPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
 
 		$ret = parent::save($postEvent);
 
@@ -380,7 +381,8 @@ class GalleryAlbumItem extends GalleryItem {
 		}
 
 		$storage =& $gallery->getStorage();
-		$ret     = $storage->checkPoint();
+
+		$ret = $storage->checkPoint();
 
 		if ($ret) {
 			return $ret;
@@ -402,7 +404,7 @@ class GalleryAlbumItem extends GalleryItem {
 			return null;
 		}
 
-		// Read lock the parent so that we don't have a race condition below.
+		// Read lock the parent so that we do not have a race condition below.
 		if (GalleryCoreApi::isReadLocked($this->getParentId())
 			|| GalleryCoreApi::isWriteLocked($this->getParentId())
 		) {
@@ -430,7 +432,8 @@ class GalleryAlbumItem extends GalleryItem {
 		 * our locks at the end.
 		 */
 		$error = null;
-		$ret   = parent::rename($newName);
+
+		$ret = parent::rename($newName);
 
 		if ($ret) {
 			$error = $ret;
@@ -481,6 +484,7 @@ class GalleryAlbumItem extends GalleryItem {
 		if ($ret) {
 			return $ret;
 		}
+
 		$oldChildParentSequence = array_merge($oldParentSequence, array($this->getId()));
 
 		/*
@@ -499,6 +503,7 @@ class GalleryAlbumItem extends GalleryItem {
 		if ($ret) {
 			return $ret;
 		}
+
 		$newChildParentSequence = array_merge(
 			$newParentSequence,
 			array($this->getParentId(), $this->getId())

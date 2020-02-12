@@ -8,11 +8,8 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Library for basic performance monitoring and tuning
-
 */
 
 // security - hide paths
@@ -31,8 +28,7 @@ class perf_mssql extends adodb_perf {
 		  tracer varchar(500) NOT NULL,
 		  timer decimal(16,6) NOT NULL
 		)';
-
-	public $settings = array(
+	public $settings       = array(
 		'Ratios',
 		'data cache hit ratio'   => array(
 			'RATIO',
@@ -58,7 +54,6 @@ class perf_mssql extends adodb_perf {
 			'IO',
 			"select cntr_value from master.dbo.sysperfinfo where counter_name = 'Page writes/sec'",
 		),
-
 		'Data Cache',
 		'data cache size'        => array(
 			'DATAC',
@@ -81,15 +76,16 @@ class perf_mssql extends adodb_perf {
 			'SELECT @@MAX_CONNECTIONS',
 			'',
 		),
-
 		false,
 	);
 
 	public function __construct(&$conn) {
 		if ($conn->dataProvider == 'odbc') {
 			$this->sql1 = 'sql1';
+
 			//$this->explain = false;
 		}
+
 		$this->conn = $conn;
 	}
 
@@ -112,31 +108,41 @@ class perf_mssql extends adodb_perf {
 		}
 
 		$s = '<p><b>Explain</b>: ' . htmlspecialchars($sql) . '</p>';
+
 		$this->conn->Execute('SET SHOWPLAN_ALL ON;');
+
 		$sql = str_replace('?', "''", $sql);
+
 		global $ADODB_FETCH_MODE;
 
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 		$rs               = $this->conn->Execute($sql);
+
 		//adodb_printr($rs);
 		$ADODB_FETCH_MODE = $save;
 
 		if ($rs && !$rs->EOF) {
 			$rs->MoveNext();
+
 			$s .= '<table bgcolor=white border=0 cellpadding="1" callspacing=0><tr><td nowrap align=center> Rows<td nowrap align=center> IO<td nowrap align=center> CPU<td align=left> &nbsp; &nbsp; Plan</tr>';
 
 			while (!$rs->EOF) {
-				$s .= '<tr><td>' . round($rs->fields[8], 1) . '<td>' . round($rs->fields[9], 3) . '<td align=right>' . round($rs->fields[10], 3) . '<td nowrap><pre>' . htmlspecialchars($rs->fields[0]) . "</td></pre></tr>\n"; // NOTE CORRUPT </td></pre> tag is intentional!!!!
+				// NOTE CORRUPT </td></pre> tag is intentional!!!!
+				$s .= '<tr><td>' . round($rs->fields[8], 1) . '<td>' . round($rs->fields[9], 3) . '<td align=right>' . round($rs->fields[10], 3) . '<td nowrap><pre>' . htmlspecialchars($rs->fields[0]) . "</td></pre></tr>\n";
+
 				$rs->MoveNext();
 			}
+
 			$s .= '</table>';
 
 			$rs->NextRecordSet();
 		}
 
 		$this->conn->Execute('SET SHOWPLAN_ALL OFF;');
+
 		$this->conn->LogSQL($save);
+
 		$s .= $this->Tracer($sql);
 
 		return $s;
@@ -147,6 +153,7 @@ class perf_mssql extends adodb_perf {
 
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
+
 		//$this->conn->debug=1;
 		$s   = '<table border=1 bgcolor=white><tr><td><b>tablename</b></td><td><b>size_in_k</b></td><td><b>index size</b></td><td><b>reserved size</b></td></tr>';
 		$rs1 = $this->conn->Execute("select distinct name from sysobjects where xtype='U'");
@@ -159,12 +166,16 @@ class perf_mssql extends adodb_perf {
 
 				if ($rs2) {
 					$s .= '<tr><td>' . $tab . '</td><td align=right>' . $rs2->fields[3] . '</td><td align=right>' . $rs2->fields[4] . '</td><td align=right>' . $rs2->fields[2] . '</td></tr>';
+
 					$rs2->Close();
 				}
+
 				$rs1->MoveNext();
 			}
+
 			$rs1->Close();
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		return $s . '</table>';
@@ -178,7 +189,9 @@ class perf_mssql extends adodb_perf {
 
 	public function HealthCheck($cli = false) {
 		$this->conn->Execute('dbcc traceon(3604)');
+
 		$html = adodb_perf::HealthCheck($cli);
+
 		$this->conn->Execute('dbcc traceoff(3604)');
 
 		return $html;

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /** Possible GalleryComment::publishStatus constants */
@@ -38,29 +37,37 @@ class CommentModule extends GalleryModule {
 
 		$this->setId('comment');
 		$this->setName($gallery->i18n('Comments'));
-		$this->setDescription($gallery->i18n('User commenting system'));
-		$this->setVersion('7.0.0'); // Update upgrade() function below too
+		$this->setDescription(
+			$gallery->i18n(
+				'User commenting system'
+			)
+		);
+
+		// Update upgrade() as required
+		$this->setVersion('2.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
+
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
 		$this->setCallbacks(
 			'getItemLinks|getItemSummaries|' .
 			'getSiteAdminViews|getItemAdminViews'
 		);
-		$this->setRequiredCoreApi(array(7, 41));
-		$this->setRequiredModuleApi(array(3, 9));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new CommentModule();
+		if (!isset($instance)) {
+			$instance = new CommentModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -68,6 +75,7 @@ class CommentModule extends GalleryModule {
 	 */
 	public function upgrade($currentVersion, $x1 = null) {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		if (!isset($currentVersion)) {
@@ -82,21 +90,40 @@ class CommentModule extends GalleryModule {
 		switch ($currentVersion) {
 			case '0':
 				// Initial install.  Register our permissions
-				$permissions[]  = array('add', $gallery->i18n('[comment] Add comments'), 0, array());
-				$permissions[]  = array('edit', $gallery->i18n('[comment] Edit comments'), 0, array());
-				$permissions[]  = array(
+				$permissions[] = array(
+					'add',
+					$gallery->i18n('[comment] Add comments'),
+					0,
+					array(),
+				);
+
+				$permissions[] = array(
+					'edit',
+					$gallery->i18n('[comment] Edit comments'),
+					0,
+					array(),
+				);
+
+				$permissions[] = array(
 					'delete',
 					$gallery->i18n('[comment] Delete comments'),
 					0,
 					array(),
 				);
-				 $permissions[] = array('view', $gallery->i18n('[comment] View comments'), 0, array());
-				 $permissions[] = array(
-					 'all',
-					 $gallery->i18n('[comment] All access'),
-					 GALLERY_PERMISSION_COMPOSITE,
-					 array('comment.add', 'comment.edit', 'comment.delete', 'comment.view'),
-				 );
+
+				$permissions[] = array(
+					'view',
+					$gallery->i18n('[comment] View comments'),
+					0,
+					array(),
+				);
+
+				$permissions[] = array(
+					'all',
+					$gallery->i18n('[comment] All access'),
+					GALLERY_PERMISSION_COMPOSITE,
+					array('comment.add', 'comment.edit', 'comment.delete', 'comment.view'),
+				);
 
 				foreach ($permissions as $p) {
 					$ret = GalleryCoreApi::registerPermission(
@@ -180,11 +207,13 @@ class CommentModule extends GalleryModule {
 				if ($ret) {
 					return $ret;
 				}
+
 				$ret = $this->setParameter('validation.level', $level ? 'HIGH' : 'OFF');
 
 				if ($ret) {
 					return $ret;
 				}
+
 				$ret = $this->removeParameter('comments.captcha');
 
 				if ($ret) {
@@ -217,6 +246,7 @@ class CommentModule extends GalleryModule {
 				if ($ret) {
 					return $ret;
 				}
+
 				// Fall Through
 			case '1.1.6':
 				// Add CommentAddNotification class
@@ -237,10 +267,14 @@ class CommentModule extends GalleryModule {
 				// Fall Through
 			case '1.1.12':
 			case '1.1.13':
+			case '1.1.14':
+			case '2.0.0':
+				// Updated GalleryCoreApi requirement to 8.0
+				// Upgraded GalleryModule requirement to 4.0
 			case 'end of upgrade path':
 				/*
-				 * Leave this bogus case at the end of the legitimate case statements so that we
-				 * always properly terminate our upgrade path with a break.
+				 * Leave this bogus case at the end of the legitimate case statements
+				 * so that we always properly terminate our upgrade path with a break.
 				 */
 				break;
 
@@ -344,6 +378,7 @@ class CommentModule extends GalleryModule {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$links = array();
 
 		foreach ($items as $item) {
@@ -388,7 +423,8 @@ class CommentModule extends GalleryModule {
 		}
 
 		GalleryCoreApi::requireOnce('modules/comment/classes/GalleryCommentHelper.class');
-		list($ret, $commentCounts) = GalleryCommentHelper::doStatic()->fetchCommentCounts($ids);
+
+		list($ret, $commentCounts) = GalleryCommentHelper::getMe()->fetchCommentCounts($ids);
 
 		if ($ret) {
 			return array($ret, null);
@@ -418,7 +454,8 @@ class CommentModule extends GalleryModule {
 	 * @see GalleryModule::getItemAdminViews
 	 */
 	public function getItemAdminViews($item) {
-		$views                   = array();
+		$views = array();
+
 		list($ret, $permissions) = GalleryCoreApi::getPermissions($item->getId());
 
 		if ($ret) {
@@ -461,20 +498,20 @@ class CommentModule extends GalleryModule {
 	 * @see GalleryModule::getRewriteRules
 	 */
 	public function getRewriteRules() {
-		$rules = array();
-
-		$rule            = array();
-		$rule['match']   = array(
+		$rules         = array();
+		$rule          = array();
+		$rule['match'] = array(
 			'view' => 'comment.AddComment',
 		);
+
 		$rule['pattern'] = 'c/add/%itemId%.html';
 		$rule['comment'] = $this->translate('Add Comment');
 		$rules[]         = $rule;
-
 		$rule            = array();
 		$rule['match']   = array(
 			'view' => 'comment.ShowAllComments',
 		);
+
 		$rule['pattern'] = 'c/view/%itemId%.html';
 		$rule['comment'] = $this->translate('View Comments');
 		$rules[]         = $rule;

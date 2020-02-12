@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -33,6 +32,7 @@ class GalleryEventLogHelper_medium {
 	 */
 	public static function addEventLogEntry($type, $summary, $details) {
 		global $gallery;
+
 		$phpVm        = $gallery->getPhpVm();
 		$storage      =& $gallery->getStorage();
 		$urlGenerator =& $gallery->getUrlGenerator();
@@ -43,16 +43,15 @@ class GalleryEventLogHelper_medium {
 		/*
 		 * We update the event log table in a round robin fashion so that we have a max of
 		 * $logSize rows at any given time.  When a new row comes in, first try overwriting an
-		 * existing row, and if that fails because the row didn't exist, insert a new row.
+		 * existing row, and if that fails because the row does not exist, insert a new row.
 		 */
-
 		list($ret, $sequenceId) = $storage->getUniqueId(DATABASE_SEQUENCE_EVENT_LOG);
 
 		if ($ret) {
 			return $ret;
 		}
-		$id = $sequenceId % $logSize;
 
+		$id               = $sequenceId % $logSize;
 		$requestVariables = GalleryUtilities::getAllRequestVariables();
 
 		if (!empty($requestVariables)) {
@@ -91,7 +90,8 @@ class GalleryEventLogHelper_medium {
 
 		if ($affectedRows == 0) {
 			$rowData['id'] = $id;
-			$ret           = GalleryCoreApi::addMapEntry('EventLogMap', $rowData, true);
+
+			$ret = GalleryCoreApi::addMapEntry('EventLogMap', $rowData, true);
 
 			if ($ret) {
 				return $ret;

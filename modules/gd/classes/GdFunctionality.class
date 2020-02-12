@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -50,6 +49,7 @@ class GdFunctionality {
 	 */
 	public function tempnam($tmpDir, $prefix) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->tempnam($tmpDir, $prefix);
@@ -61,6 +61,7 @@ class GdFunctionality {
 	 */
 	public function copy($src, $dest) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->copy($src, $dest);
@@ -72,6 +73,7 @@ class GdFunctionality {
 	 */
 	public function unlink($file) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->unlink($file);
@@ -83,6 +85,7 @@ class GdFunctionality {
 	 */
 	public function filesize($file) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->filesize($file);
@@ -95,6 +98,7 @@ class GdFunctionality {
 	 */
 	public function chmod($file) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->chmod($file);
@@ -121,9 +125,6 @@ class GdFunctionality {
 	/**
 	 * Return an array of information about the currently installed GD version
 	 *
-	 * Requires:
-	 * - PHP 4 >= 4.3.0, PHP 5
-	 *
 	 * @return array GalleryStatus
 	 *         array the output of gd_info
 	 */
@@ -131,6 +132,7 @@ class GdFunctionality {
 		if (!function_exists('gd_info')) {
 			return array(GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE), null);
 		}
+
 		$info = @gd_info();
 
 		return array(null, $info);
@@ -142,6 +144,7 @@ class GdFunctionality {
 	 */
 	public function getImageSize($filename) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		return $platform->getimagesize($filename);
@@ -149,9 +152,6 @@ class GdFunctionality {
 
 	/**
 	 * Create a new palette based image with specified width and height
-	 *
-	 * Requires:
-	 * - any PHP
 	 *
 	 * @return array GalleryStatus
 	 *         res GD-resource
@@ -172,10 +172,6 @@ class GdFunctionality {
 	/**
 	 * Create a new true color image with specified width and height
 	 *
-	 * Requires:
-	 * - PHP 4 >= 4.0.6 or PHP 5
-	 * - GD >= 2.0.1
-	 *
 	 * Danger: The imageCreateTruecolor() function is defined even if the
 	 * GD library does not support it! If called in this situation, the call
 	 * will generate a "Fatal error", which cannot be catched. So we have to
@@ -193,6 +189,7 @@ class GdFunctionality {
 				null,
 			);
 		}
+
 		$res = @imagecreatetruecolor($width, $height);
 
 		if (!$res) {
@@ -208,6 +205,7 @@ class GdFunctionality {
 	 */
 	public function isValidFile($filename) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if (!$platform->file_exists($filename)
@@ -261,7 +259,9 @@ class GdFunctionality {
 				null,
 			);
 		}
-		$res                  = @imagecreatefromgif($filename);
+
+		$res = @imagecreatefromgif($filename);
+
 		list($ret, $resource) = $this->checkResource($res, $filename);
 
 		if ($ret) {
@@ -273,10 +273,6 @@ class GdFunctionality {
 
 	/**
 	 * Create a new image from JPEG file or URL.
-	 *
-	 * Requires:
-	 * - any PHP >= 3.0.16
-	 * - GD >= 1.8 (for JPEG support)
 	 *
 	 * @return array GalleryStatus
 	 *         res GD-resource
@@ -290,10 +286,6 @@ class GdFunctionality {
 	/**
 	 * Create a new image from PNG file or URL.
 	 *
-	 * Requires:
-	 * - any PHP >= 3.0.13
-	 * - GD (with PNG support)
-	 *
 	 * @return array GalleryStatus
 	 *         res GD-resource
 	 */
@@ -305,10 +297,6 @@ class GdFunctionality {
 
 	/**
 	 * Create a new image from WBMP (wap-bmp) file or URL.
-	 *
-	 * Requires:
-	 * - PHP 4 >= 4.0.1 or PHP 5
-	 * - GD >= 1.8 (for WBMP support)
 	 *
 	 * @return array GalleryStatus
 	 *         res GD-resource
@@ -322,10 +310,6 @@ class GdFunctionality {
 	/**
 	 * Create a new image from XBM file or URL.
 	 *
-	 * Requires:
-	 * - PHP 4 >= 4.0.1 or PHP 5
-	 * - GD
-	 *
 	 * @return array GalleryStatus
 	 *         res GD-resource
 	 */
@@ -337,10 +321,6 @@ class GdFunctionality {
 
 	/**
 	 * Create a new image from XPM file or URL.
-	 *
-	 * Requires:
-	 * - PHP 4 >= 4.0.1 or PHP 5
-	 * - GD
 	 *
 	 * @return array GalleryStatus
 	 *         res GD-resource
@@ -354,16 +334,13 @@ class GdFunctionality {
 	/**
 	 * Output GIF image to file.
 	 *
-	 * Requires:
-	 * - any PHP
-	 * - GD with GIF support
-	 *
 	 * @return GalleryStatus
 	 */
 	public function imageGif($res, $filename) {
 		if (!function_exists('imageGif')) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE | ERROR_UNSUPPORTED_OPERATION);
 		}
+
 		$result = @imagegif($res, $filename);
 
 		if ($result) {
@@ -376,16 +353,13 @@ class GdFunctionality {
 	/**
 	 * Output JPEG image to file.
 	 *
-	 * Requires:
-	 * - any PHP >= 3.0.16
-	 * - GD >= 1.8
-	 *
 	 * @return GalleryStatus
 	 */
 	public function imageJpeg($res, $filename, $quality = 75) {
 		if (!function_exists('imageJpeg')) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE | ERROR_UNSUPPORTED_OPERATION);
 		}
+
 		$result = @imagejpeg($res, $filename, $quality);
 
 		if ($result) {
@@ -398,16 +372,13 @@ class GdFunctionality {
 	/**
 	 * Output PNG image to file.
 	 *
-	 * Requires:
-	 * - any PHP 3>= 3.0.13
-	 * - GD
-	 *
 	 * @return GalleryStatus
 	 */
 	public function imagePng($res, $filename) {
 		if (!function_exists('imagePng')) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE | ERROR_UNSUPPORTED_OPERATION);
 		}
+
 		$result = @imagepng($res, $filename);
 
 		if ($result) {
@@ -420,16 +391,13 @@ class GdFunctionality {
 	/**
 	 * Output WBMP image to file.
 	 *
-	 * Requires:
-	 * - PHP 3>= 3.0.15 or PHP 4 >= 4.0.1 or PHP 5
-	 * - GD >= 1.8 (for WBMP support)
-	 *
 	 * @return GalleryStatus
 	 */
 	public function imageWbmp($res, $filename) {
 		if (!function_exists('imageWbmp')) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE | ERROR_UNSUPPORTED_OPERATION);
 		}
+
 		$result = @imagewbmp($res, $filename);
 
 		if ($result) {
@@ -442,15 +410,13 @@ class GdFunctionality {
 	/**
 	 * Output XBM image to file.
 	 *
-	 * Requires:
-	 * - PHP 5
-	 *
 	 * @return GalleryStatus
 	 */
 	public function imageXbm($res, $filename) {
 		if (!function_exists('imageXbm')) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE | ERROR_UNSUPPORTED_OPERATION);
 		}
+
 		$result = @imagexbm($res, $filename);
 
 		if ($result) {
@@ -462,10 +428,6 @@ class GdFunctionality {
 
 	/**
 	 * Copy and resize part of an image with resampling
-	 *
-	 * Requires:
-	 * - PHP 4 >= 4.0.6 or PHP 5
-	 * - GD >= 2.0.1
 	 *
 	 * @return GalleryStatus
 	 */
@@ -484,6 +446,7 @@ class GdFunctionality {
 		if (!function_exists('imageCopyResampled')) {
 			return GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE | ERROR_UNSUPPORTED_OPERATION);
 		}
+
 		$result = @imagecopyresampled(
 			$dstRes,
 			$srcRes,
@@ -506,9 +469,6 @@ class GdFunctionality {
 
 	/**
 	 * Copy and resize part of an image
-	 *
-	 * Requires:
-	 * - any PHP
 	 *
 	 * @return GalleryStatus
 	 */
@@ -547,9 +507,6 @@ class GdFunctionality {
 	/**
 	 * Copy and merge part of an image
 	 *
-	 * Requires:
-	 * - PHP 4 >= 4.0.1 or PHP 5
-	 *
 	 * @return GalleryStatus
 	 */
 	public function imageCopyMerge($dstRes, $srcRes, $dstX, $dstY, $srcX, $srcY, $srcW, $srcH, $pct) {
@@ -564,9 +521,6 @@ class GdFunctionality {
 
 	/**
 	 * Copy part of an image
-	 *
-	 * Requires:
-	 * - any PHP >= 3.0.6
 	 *
 	 * @return GalleryStatus
 	 */
@@ -601,9 +555,6 @@ class GdFunctionality {
 	/**
 	 * Copy and merge part of an image
 	 *
-	 * Requires:
-	 * - PHP 4 >= 4.3.0 or PHP 5
-	 *
 	 * @return array GalleryStatus
 	 *         resource new gd resource
 	 */
@@ -614,6 +565,7 @@ class GdFunctionality {
 				null,
 			);
 		}
+
 		$res = @imagerotate($srcRes, $angle, $bgdColor);
 
 		if ($res) {
@@ -634,9 +586,6 @@ class GdFunctionality {
 	/**
 	 * Set the flag to save full alpha channel information (as opposed to single-color transparency)
 	 * when saving PNG images
-	 *
-	 * Requires:
-	 * - PHP 4 >= 4.3.2 or PHP 5
 	 *
 	 * @param resource $res
 	 * @return array GalleryStatus
@@ -666,9 +615,6 @@ class GdFunctionality {
 
 	/**
 	 * Allocate a color for an image.
-	 *
-	 * Requires:
-	 * - PHP 4 >= 4.3.2 or PHP 5
 	 *
 	 * @param resource $res
 	 * @param int $red

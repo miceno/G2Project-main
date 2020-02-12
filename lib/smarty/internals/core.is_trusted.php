@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -12,7 +13,6 @@
  */
 
  // $resource_type, $resource_name
-
 function smarty_core_is_trusted($params, &$smarty) {
 	$_smarty_trusted = false;
 

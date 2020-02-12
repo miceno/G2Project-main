@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditController();
+		if (!isset($instance)) {
+			$instance = new ItemEditController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -52,6 +51,7 @@ class ItemEditController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Make sure we have permission to edit this item
@@ -67,6 +67,7 @@ class ItemEditController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$preferred = empty($preferredTable) ? null : array_shift($preferredTable);
 
 		// Load the thumbnail
@@ -77,10 +78,11 @@ class ItemEditController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$thumbnail = empty($thumbnails) ? null : array_shift($thumbnails);
 
 		// Get all the edit options
-		list($ret, $optionInstances) = ItemEditOption::doStatic()->getAllOptions(
+		list($ret, $optionInstances) = ItemEditOption::getMe()->getAllOptions(
 			$editPlugin,
 			$item,
 			$thumbnail
@@ -105,6 +107,7 @@ class ItemEditController extends GalleryController {
 		}
 
 		$status = array();
+
 		list($ret, $error, $status['editMessage'], $requiresProgressBar) = $plugin->handleRequest(
 			$form,
 			$item,
@@ -148,16 +151,18 @@ class ItemEditController extends GalleryController {
 
 			if (empty($error) && $progressBarOptions) {
 				$templateAdapter =& $gallery->getTemplateAdapter();
+
 				$templateAdapter->registerTrailerCallback(
 					array($this, 'runProgressBarOptions'),
 					array($progressBarOptions, $form, $item, $preferred, $status, $editPlugin)
 				);
+
 				$results['delegate']['view'] = 'core.ProgressBar';
 			}
 		}
 
 		if (empty($results['delegate'])) {
-			// It's not a progress bar view
+			// It is not a progress bar view
 			if (empty($error)) {
 				$results['redirect'] = array(
 					'view'       => 'core.ItemAdmin',
@@ -189,8 +194,7 @@ class ItemEditController extends GalleryController {
 		global $gallery;
 
 		$templateAdapter =& $gallery->getTemplateAdapter();
-
-		$error = array();
+		$error           = array();
 
 		foreach ($options as $option) {
 			$gallery->guaranteeTimeLimit(60);
@@ -208,7 +212,9 @@ class ItemEditController extends GalleryController {
 			$error             = array_merge($error, $optionErrors);
 			$status['warning'] = array_merge($status['warning'], $optionWarnings);
 		}
+
 		$session =& $gallery->getSession();
+
 		$session->putStatus($status);
 
 		$redirect               = array();
@@ -216,8 +222,8 @@ class ItemEditController extends GalleryController {
 		$redirect['subView']    = 'core.ItemEdit';
 		$redirect['itemId']     = $item->getId();
 		$redirect['editPlugin'] = $editPlugin;
+		$urlGenerator           =& $gallery->getUrlGenerator();
 
-		$urlGenerator =& $gallery->getUrlGenerator();
 		$templateAdapter->completeProgressBar($urlGenerator->generateUrl($redirect));
 
 		return null;
@@ -229,16 +235,16 @@ class ItemEditController extends GalleryController {
  */
 class ItemEditView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditView();
+		if (!isset($instance)) {
+			$instance = new ItemEditView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -339,7 +345,7 @@ class ItemEditView extends GalleryView {
 		$defaultEditPlugin = $editPluginIds[0];
 
 		/*
-		 * If the plugin is empty get it from the session.  If it's empty there, default to the
+		 * If the plugin is empty get it from the session.  If it is empty there, default to the
 		 * first plugin we find.  Either way, save the user's preference in the session.
 		 */
 		$session              =& $gallery->getSession();
@@ -352,10 +358,12 @@ class ItemEditView extends GalleryView {
 				$editPlugin = $defaultEditPlugin;
 			}
 		}
+
 		// Input validation of the given editPlugin id.
 		if (!isset($pluginInstances[$editPlugin])) {
 			$editPlugin = $defaultEditPlugin;
 		}
+
 		$session->put($editPluginSessionKey, $editPlugin);
 
 		// Get display data for all plugins
@@ -367,6 +375,7 @@ class ItemEditView extends GalleryView {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$plugins[] = array(
 				'title'      => $title,
 				'id'         => $pluginId,
@@ -375,8 +384,7 @@ class ItemEditView extends GalleryView {
 		}
 
 		// Record our item serial number in the form so that all plugins can use it
-		$form['serialNumber'] = $item->getSerialNumber();
-
+		$form['serialNumber']          = $item->getSerialNumber();
 		$ItemEdit                      = array();
 		$ItemEdit['editPlugin']        = $editPlugin;
 		$ItemEdit['plugins']           = $plugins;
@@ -397,7 +405,7 @@ class ItemEditView extends GalleryView {
 		}
 
 		// Get all the edit options
-		list($ret, $optionInstances) = ItemEditOption::doStatic()->getAllOptions(
+		list($ret, $optionInstances) = ItemEditOption::getMe()->getAllOptions(
 			$editPlugin,
 			$item,
 			$thumbnail
@@ -480,16 +488,16 @@ class ItemEditView extends GalleryView {
  */
 class ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditPlugin();
+		if (!isset($instance)) {
+			$instance = new ItemEditPlugin();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -497,7 +505,7 @@ class ItemEditPlugin {
 	 *
 	 * @param GalleryItem $item
 	 * @param GalleryDerivative $thumbnail item's thumbnail
-	 * @return boolean true if it's supported
+	 * @return boolean true if it is supported
 	 */
 	public function isSupported($item, $thumbnail) {
 		return false;
@@ -584,16 +592,16 @@ class ItemEditPlugin {
  */
 class ItemEditOption {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditOption();
+		if (!isset($instance)) {
+			$instance = new ItemEditOption();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**

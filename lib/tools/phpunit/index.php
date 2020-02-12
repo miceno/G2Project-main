@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * Script for running unit tests
  * @package Gallery
@@ -25,20 +25,13 @@
 define('G2_SUPPORT_URL_FRAGMENT', '../../support/');
 
 require '../../support/security.inc';
-
 require '../../../bootstrap.inc';
-
 require_once '../../../init.inc';
 
-if (function_exists('date_default_timezone_set')) {
-	// PHP 5.3 requires a default be set before using any date/time functions
-	@date_default_timezone_set(date_default_timezone_get());
-}
-
+@date_default_timezone_set(date_default_timezone_get());
 $testReportDir = $gallery->getConfig('data.gallery.base') . 'test/';
-
-$priorRuns = array();
-$glob      = glob("${testReportDir}*");
+$priorRuns     = array();
+$glob          = glob("${testReportDir}*");
 
 if ($glob) {
 	foreach ($glob as $filename) {
@@ -54,8 +47,9 @@ if ($glob) {
 
 if (!empty($_GET['run'])) {
 	list($action, $run) = explode(':', $_GET['run']);
-	$run                = substr($run, 0, strspn($run, '0123456789'));
-	$runFile            = "${testReportDir}run-$run.html";
+
+	$run     = substr($run, 0, strspn($run, '0123456789'));
+	$runFile = "${testReportDir}run-$run.html";
 
 	switch ($action) {
 		case 'frame':
@@ -72,11 +66,11 @@ if (!empty($_GET['run'])) {
 
 			exit;
 
-
 		case 'deleteall':
 			foreach ($priorRuns as $pr) {
 				unlink("${testReportDir}run-$pr[key].html");
 			}
+
 			header('Location: index.php');
 
 			exit;
@@ -87,6 +81,7 @@ if (!empty($_GET['run'])) {
 			if (file_exists($runFile)) {
 				unlink($runFile);
 			}
+
 			header('Location: index.php');
 
 			break;
@@ -95,25 +90,25 @@ if (!empty($_GET['run'])) {
 
 /**
  * Load up main.php so that tests that want _GalleryMain can get to it.  Do it now, though so that
- * we don't mangle the $gallery object during test runs.
+ * we do not mangle the $gallery object during test runs.
  *
- * @todo figure out a way to only do this if we're going to run a test that wants to exercise
+ * @todo figure out a way to only do this if we are going to run a test that wants to exercise
  *       _GalleryMain
  */
 ob_start();
 
 require_once '../../../main.php';
+
 ob_end_clean();
 
 /**
  *
  * This is an output interceptor that allows us to save the HTML output from our test run in the
- * g2data directory.  We only save the output when there's a filter value set which indicates that
- * there's an actual test run in progress.
+ * g2data directory.  We only save the output when there is a filter value set which indicates that
+ * there is an actual test run in progress.
  */
 function PhpUnitOutputInterceptor($message) {
-	global $gallery;
-	global $testReportDir;
+	global $gallery,  $testReportDir;
 
 	if (isset($_GET['filter'])) {
 		if (!file_exists($testReportDir)) {
@@ -151,44 +146,27 @@ function PhpUnitOutputInterceptor($message) {
 	return $message;
 }
 
-	@ini_set('output_buffering', 0);
-	ob_start('PhpUnitOutputInterceptor', 256);
+@ini_set('output_buffering', 0);
+ob_start('PhpUnitOutputInterceptor', 256);
 
-	require_once 'phpunit.inc';
-
-	require_once 'GalleryTestCase.class';
-
-	require_once 'GalleryImmediateViewTestCase.class';
-
-	require_once 'GalleryControllerTestCase.class';
-
-	require_once 'GalleryViewTestCase.class';
-
-	require_once 'ItemAddPluginTestCase.class';
-
-	require_once 'ItemEditPluginTestCase.class';
-
-	require_once 'ItemEditOptionTestCase.class';
-
-	require_once 'CodeAuditTestCase.class';
-
-	require_once 'MockObject.class';
-
-	require_once 'UnitTestPlatform.class';
-
-	require_once 'UnitTestStorage.class';
-
-	require_once 'UnitTestPhpVm.class';
-
-	require_once 'UnitTestUrlGenerator.class';
-
-	require_once 'MockTemplateAdapter.class';
-
-	require_once 'UnitTestTemplate.class';
-
-	require_once 'UnitTestRepository.class';
-
-	require_once 'UnitTestRepositoryUtilities.class';
+require_once 'phpunit.inc';
+require_once 'GalleryTestCase.class';
+require_once 'GalleryImmediateViewTestCase.class';
+require_once 'GalleryControllerTestCase.class';
+require_once 'GalleryViewTestCase.class';
+require_once 'ItemAddPluginTestCase.class';
+require_once 'ItemEditPluginTestCase.class';
+require_once 'ItemEditOptionTestCase.class';
+require_once 'CodeAuditTestCase.class';
+require_once 'MockObject.class';
+require_once 'UnitTestPlatform.class';
+require_once 'UnitTestStorage.class';
+require_once 'UnitTestPhpVm.class';
+require_once 'UnitTestUrlGenerator.class';
+require_once 'MockTemplateAdapter.class';
+require_once 'UnitTestTemplate.class';
+require_once 'UnitTestRepository.class';
+require_once 'UnitTestRepositoryUtilities.class';
 
 function PhpUnitGalleryMain(&$testSuite, $filter) {
 	$ret = GalleryInitFirstPass();
@@ -212,27 +190,32 @@ function PhpUnitGalleryMain(&$testSuite, $filter) {
 
 	// Configure our url Generator, find the correct base URL
 	$urlGenerator = new GalleryUrlGenerator();
-	$ret          = $urlGenerator->init('index.php');
+
+	$ret = $urlGenerator->init('index.php');
 
 	if ($ret) {
 		return $ret;
 	}
+
 	$urlDir       = str_replace('lib/tools/phpunit/', '', $urlGenerator->getCurrentUrlDir());
 	$path         = substr($urlDir, strlen($urlGenerator->makeUrl('/')) - 1);
 	$urlGenerator = new GalleryUrlGenerator();
-	$ret          = $urlGenerator->init($path . GALLERY_MAIN_PHP);
+
+	$ret = $urlGenerator->init($path . GALLERY_MAIN_PHP);
 
 	if ($ret) {
 		return $ret;
 	}
+
 	$gallery->setUrlGenerator($urlGenerator);
 
 	/*
-	 * Commit our transaction here because we're going to have a new
+	 * Commit our transaction here because we are going to have a new
 	 * transaction for every test.
 	 */
 	$storage =& $gallery->getStorage();
-	$ret     = $storage->commitTransaction();
+
+	$ret = $storage->commitTransaction();
 
 	if ($ret) {
 		return $ret;
@@ -261,6 +244,7 @@ function PhpUnitGalleryMain(&$testSuite, $filter) {
 		}
 
 		$suiteArray = array();
+
 		$gallery->guaranteeTimeLimit(120);
 
 		foreach ($moduleStatusList as $moduleId => $moduleStatus) {
@@ -294,9 +278,9 @@ function PhpUnitGalleryMain(&$testSuite, $filter) {
 
 function loadTests($moduleId, $testDir, $filter) {
 	global $gallery;
-	$moduleArray = array();
 
-	$platform =& $gallery->getPlatform();
+	$moduleArray = array();
+	$platform    =& $gallery->getPlatform();
 
 	if ($platform->file_exists($testDir)
 		&& $platform->is_dir($testDir)
@@ -316,6 +300,7 @@ function loadTests($moduleId, $testDir, $filter) {
 				}
 
 				include_once $testDir . '/' . $file;
+
 				$className = $matches[1];
 
 				if (class_exists($className)
@@ -325,6 +310,7 @@ function loadTests($moduleId, $testDir, $filter) {
 				}
 			}
 		}
+
 		$platform->closedir($dir);
 	}
 
@@ -343,9 +329,9 @@ class GalleryTestResult extends TestResult {
 	public function report() {
 		// report result of test run
 		global $compactView;
+
 		$nRun      = $this->countTests();
 		$nFailures = $this->failureCount();
-
 		echo '<script text="text/javascript">completeStatus();</script>';
 
 		if ($nFailures) {
@@ -364,16 +350,19 @@ class GalleryTestResult extends TestResult {
 					$this->_testsRunThenSkipped
 				);
 			}
+
 			printf(
 				"setTxt('testFailCount','%s test%s');",
 				$this->_testsFailed,
 				($this->_testsFailed == 1) ? '' : 's'
 			);
+
 			printf(
 				"setTxt('testErrorCount','%s error%s');",
 				$nFailures,
 				($nFailures == 1) ? '' : 's'
 			);
+
 			printf("setTxt('testReport', '%s');", $this->_getTestResultRecord());
 			printf('setUsername("NAME_PLACEHOLDER", getUsernameFromCookie());');
 			echo "document.getElementById('testSummary').style.display='block';</script>\n";
@@ -389,6 +378,7 @@ class GalleryTestResult extends TestResult {
 		foreach ($failures as $failure) {
 			$newFilter[$failure->getClassName() . '.' . $failure->getTestName()] = 1;
 		}
+
 		printf(
 			'<script type="text/javascript">var failedTestFilter="(%s)$";%s</script>',
 			implode('|', array_keys($newFilter)),
@@ -398,6 +388,7 @@ class GalleryTestResult extends TestResult {
 
 	public function _getTestResultRecord() {
 		global $gallery;
+
 		$storage    =& $gallery->getStorage();
 		$translator =& $gallery->getTranslator();
 
@@ -428,19 +419,17 @@ class GalleryTestResult extends TestResult {
 
 		$ourUName      = php_uname();
 		$explodedUName = explode(' ', $ourUName);
-
-		$webserver = GalleryUtilities::getServerVar('SERVER_SOFTWARE');
-		$php       = 'PHP ' . phpversion();
-		$database  = $storage->getAdoDbType() . ' ' . $storage->getVersion();
-		$OS        = array_shift($explodedUName);
-		$locking   = $params['lock.system'];
-		$language  = $translator->_languageCode;
-		$owner     = 'NAME_PLACEHOLDER';
-		$count     = $this->countTests();
-		$failed    = $this->_testsFailed;
-		$date      = date('Y-m-d', time());
-
-		$buf = sprintf(
+		$webserver     = GalleryUtilities::getServerVar('SERVER_SOFTWARE');
+		$php           = 'PHP ' . phpversion();
+		$database      = $storage->getAdoDbType() . ' ' . $storage->getVersion();
+		$OS            = array_shift($explodedUName);
+		$locking       = $params['lock.system'];
+		$language      = $translator->_languageCode;
+		$owner         = 'NAME_PLACEHOLDER';
+		$count         = $this->countTests();
+		$failed        = $this->_testsFailed;
+		$date          = date('Y-m-d', time());
+		$buf           = sprintf(
 			'|%s||%s||%s||%s||%s||%s||%s||%d||%d||%s||%s',
 			$webserver,
 			$php,
@@ -462,6 +451,7 @@ class GalleryTestResult extends TestResult {
 		if ($this->fRunTests == 1) {
 			echo '<script text="text/javascript">showStatus();</script>';
 		}
+
 		printf('<script type="text/javascript">runningTest("%s");</script>', $test->name());
 		flush();
 	}
@@ -477,6 +467,7 @@ class GalleryTestResult extends TestResult {
 			if (isset($compactView)) {
 				return;
 			}
+
 			$class   = 'Skipped';
 			$text    = 'r.cells[4].lastChild.nodeValue="SKIPPED";';
 			$extra   = 'r.className="skip";';
@@ -506,11 +497,13 @@ class GalleryTestResult extends TestResult {
 				foreach ($test->getExceptions() as $exception) {
 					$failure .= '<li>' . $exception->getMessage() . "</li>\n";
 				}
+
 				$failure .= "</ul>\n";
 				$cmd      = "updateStats(0, 1, 0, $usedMemory)";
 			} else {
 				$class = 'Pass';
 				$text  = 'r.cells[4].lastChild.nodeValue="PASSED";';
+
 				global $testOneByOne;
 
 				if (isset($testOneByOne)) {
@@ -519,9 +512,11 @@ class GalleryTestResult extends TestResult {
 					echo '<meta http-equiv="refresh" content="0; index.php?filter=' .
 					"$x$i-$i" . '&amp;onebyone=true"/>';
 				}
+
 				$cmd = "updateStats(1, 0, 0, $usedMemory)";
 			}
 		}
+
 		echo '<script type="text/javascript">r=document.getElementById(\'testRow'
 		. $this->fRunTests . "');$extra";
 		echo "r.cells[4].className='$class';$text";
@@ -541,6 +536,7 @@ if (isset($_GET['filter'])) {
 	} elseif (!empty($_GET['onebyone'])) {
 		$testOneByOne = $compactView = (int)substr($filter, strrpos($filter, '-') + 1);
 	}
+
 	$range = array();
 	$skip  = explode(',', $filter);
 
@@ -564,6 +560,7 @@ if (isset($_GET['filter'])) {
 			}
 		}
 	}
+
 	$displayFilter = $filter;
 
 	if (count($range) == 0) {
@@ -588,12 +585,16 @@ if (isset($_GET['filter'])) {
 	$displayFilter = null;
 	$range         = array(array(1, FILTER_MAX));
 }
+
 $testSuite = new TestSuite();
-$ret       = PhpUnitGalleryMain($testSuite, $filter);
+
+$ret = PhpUnitGalleryMain($testSuite, $filter);
 
 if ($ret) {
 	$ret = $ret;
+
 	echo $ret->getAsHtml();
+
 	echo $gallery->getDebugBuffer();
 
 	return;
@@ -603,6 +604,7 @@ list($ret, $moduleStatusList) = GalleryCoreApi::fetchPluginStatus('module');
 
 if ($ret) {
 	$ret = $ret;
+
 	echo $ret->getAsHtml();
 
 	return;
@@ -651,12 +653,12 @@ foreach (array(
 }
 
 // Uncomment below to see debug output before tests run
+
 /*
  * print "<pre>";
  * print $gallery->getDebugBuffer();
  * print "</pre>";
  */
-
 require __DIR__ . '/index.tpl';
 
 // Compact any ACLs that were created during this test run
@@ -671,7 +673,8 @@ if ($testSuite->countTestCases() > 0) {
 }
 
 $storage =& $gallery->getStorage();
-$ret     = $storage->commitTransaction();
+
+$ret = $storage->commitTransaction();
 
 if ($ret) {
 	echo $ret->getAsHtml();

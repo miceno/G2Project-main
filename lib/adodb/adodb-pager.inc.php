@@ -8,31 +8,38 @@
 	  Whenever there is any discrepancy between the two licenses,
 	  the BSD license will take precedence.
 	  Set tabs to 4 for best viewing.
-
 	  This class provides recordset pagination with
 	First/Prev/Next/Last links.
-
 	Feel free to modify this class for your own use as
 	it is very basic. To learn how to use it, see the
 	example in adodb/tests/testpaging.php.
-
 	"Pablo Costa" <pablo@cbsp.com.br> implemented Render_PageLinks().
-
 	Please note, this class is entirely unsupported,
 	and no free support requests except for bug reports
 	will be entertained by the author.
-
 */
 class ADODB_Pager {
-	public $id;    // unique id for pager (defaults to 'adodb')
-	public $db;    // ADODB connection object
-	public $sql;   // sql used
-	public $rs;    // recordset generated
-	public $curr_page; // current page number before Render() called, calculated in constructor
-	public $rows;      // number of rows per page
-	public $linksPerPage = 10; // number of links per page in navigation bar
-	public $showPageLinks;
+	// unique id for pager (defaults to 'adodb')
+	public $id;
 
+	// ADODB connection object
+	public $db;
+
+	// sql used
+	public $sql;
+
+	// recordset generated
+	public $rs;
+
+	// current page number before Render() called, calculated in constructor
+	public $curr_page;
+
+	// number of rows per page
+	public $rows;
+
+	// number of links per page in navigation bar
+	public $linksPerPage = 10;
+	public $showPageLinks;
 	public $gridAttributes = 'width=100% border=1 bgcolor=white';
 
 	// Localize text strings here
@@ -46,39 +53,39 @@ class ADODB_Pager {
 	public $htmlSpecialChars  = true;
 	public $page              = 'Page';
 	public $linkSelectedColor = 'red';
-	public $cache             = 0;  // secs to cache with CachePageExecute()
+	public $cache             = 0;
 
+	// secs to cache with CachePageExecute()
 	//----------------------------------------------
 	// constructor
-	//
 	// $db	adodb connection object
 	// $sql	sql statement
 	// $id	optional id to identify which pager,
 	//		if you have multiple on 1 page.
 	//		$id should be only be [a-z0-9]*
-	//
 	public function __construct(&$db, $sql, $id = 'adodb', $showPageLinks = false) {
 		global $PHP_SELF;
 
 		$curr_page = $id . '_curr_page';
 
 		if (!empty($PHP_SELF)) {
-			$PHP_SELF = htmlspecialchars($_SERVER['PHP_SELF']); // htmlspecialchars() to prevent XSS attacks
+			// htmlspecialchars() to prevent XSS attacks
+			$PHP_SELF = htmlspecialchars($_SERVER['PHP_SELF']);
 		}
 
 		$this->sql           = $sql;
 		$this->id            = $id;
 		$this->db            = $db;
 		$this->showPageLinks = $showPageLinks;
-
-		$next_page = $id . '_next_page';
+		$next_page           = $id . '_next_page';
 
 		if (isset($_GET[$next_page])) {
 			$_SESSION[$curr_page] = (int)$_GET[$next_page];
 		}
 
 		if (empty($_SESSION[$curr_page])) {
-			$_SESSION[$curr_page] = 1; // at first page
+			// at first page
+			$_SESSION[$curr_page] = 1;
 		}
 
 		$this->curr_page = $_SESSION[$curr_page];
@@ -114,7 +121,6 @@ class ADODB_Pager {
 
 	//------------------
 	// Link to last page
-	//
 	// for better performance with large recordsets, you can set
 	// $this->db->pageExecuteCountRows = false, which disables
 	// last page counting.
@@ -138,6 +144,7 @@ class ADODB_Pager {
 	// original code by "Pablo Costa" <pablo@cbsp.com.br>
 	public function render_pagelinks() {
 		global $PHP_SELF;
+
 		$pages        = $this->rs->LastPageNo();
 		$linksperpage = $this->linksPerPage ? $this->linksPerPage : $pages;
 
@@ -146,6 +153,7 @@ class ADODB_Pager {
 				$start = $i;
 			}
 		}
+
 		$numbers = '';
 		$end     = $start + $linksperpage - 1;
 		$link    = $this->id . '_next_page';
@@ -153,7 +161,6 @@ class ADODB_Pager {
 		if ($end > $pages) {
 			$end = $pages;
 		}
-
 
 		if ($this->startLinks && $start > 1) {
 			$pos      = $start - 1;
@@ -171,6 +178,7 @@ class ADODB_Pager {
 		if ($this->moreLinks && $end < $pages) {
 			$numbers .= "<a href=$PHP_SELF?$link=$i>$this->moreLinks</a>  ";
 		}
+
 		echo $numbers . ' &nbsp; ';
 	}
 
@@ -190,11 +198,13 @@ class ADODB_Pager {
 	//--------------------------------------------------------
 	// Simply rendering of grid. You should override this for
 	// better control over the format of the grid
-	//
 	// We use output buffering to keep code clean and readable.
 	public function RenderGrid() {
-		global $gSQLBlockRows; // used by rs2html to indicate how many rows to display
+		// used by rs2html to indicate how many rows to display
+		global $gSQLBlockRows;
+
 		include_once ADODB_DIR . '/tohtml.inc.php';
+
 		ob_start();
 		$gSQLBlockRows = $this->rows;
 		rs2html($this->rs, $this->gridAttributes, $this->gridHeader, $this->htmlSpecialChars);
@@ -206,7 +216,6 @@ class ADODB_Pager {
 
 	//-------------------------------------------------------
 	// Navigation bar
-	//
 	// we use output buffering to keep the code easy to read.
 	public function RenderNav() {
 		ob_start();
@@ -230,6 +239,7 @@ class ADODB_Pager {
 			$this->Render_Next(false);
 			$this->Render_Last(false);
 		}
+
 		$s = ob_get_contents();
 		ob_end_clean();
 
@@ -242,10 +252,12 @@ class ADODB_Pager {
 		if (!$this->db->pageExecuteCountRows) {
 			return '';
 		}
+
 		$lastPage = $this->rs->LastPageNo();
 
 		if ($lastPage == -1) {
-			$lastPage = 1; // check for empty rs.
+			// check for empty rs.
+			$lastPage = 1;
 		}
 
 		if ($this->curr_page > $lastPage) {
@@ -277,9 +289,9 @@ class ADODB_Pager {
 		} else {
 			$rs = $this->db->PageExecute($this->sql, $rows, $this->curr_page);
 		}
-		$ADODB_COUNTRECS = $savec;
 
-		$this->rs = $rs;
+		$ADODB_COUNTRECS = $savec;
+		$this->rs        = $rs;
 
 		if (!$rs) {
 			echo "<h3>Query failed: $this->sql</h3>";
@@ -297,8 +309,8 @@ class ADODB_Pager {
 		$footer = $this->RenderPageCount();
 
 		$this->RenderLayout($header, $grid, $footer);
-
 		$rs->Close();
+
 		$this->rs = false;
 	}
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,11 +8,10 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Oracle support via ODBC. Requires ODBC. Works on Windows.
 */
+
 // security - hide paths
 if (!defined('ADODB_DIR')) {
 	die();
@@ -21,10 +21,11 @@ if (!defined('_ADODB_ODBC_LAYER')) {
 	include ADODB_DIR . '/drivers/adodb-odbc.inc.php';
 }
 
-
 class ADODB_odbc_oracle extends ADODB_odbc {
-	public $databaseType    = 'odbc_oracle';
-	public $replaceQuote    = "''"; // string to use to replace quotes
+	public $databaseType = 'odbc_oracle';
+
+	// string to use to replace quotes
+	public $replaceQuote    = "''";
 	public $concat_operator = '||';
 	public $fmtDate         = "'Y-m-d 00:00:00'";
 	public $fmtTimeStamp    = "'Y-m-d h:i:sA'";
@@ -34,7 +35,6 @@ class ADODB_odbc_oracle extends ADODB_odbc {
 	public $sysTimeStamp    = 'SYSDATE';
 
 	//var $_bindInputArray = false;
-
 	public function MetaTables($ttype = false, $showSchema = false, $mask = false) {
 		$false = false;
 		$rs    = $this->Execute($this->metaTablesSQL);
@@ -42,12 +42,14 @@ class ADODB_odbc_oracle extends ADODB_odbc {
 		if ($rs === false) {
 			return $false;
 		}
+
 		$arr  = $rs->GetArray();
 		$arr2 = array();
 
 		for ($i = 0; $i < sizeof($arr); $i++) {
 			$arr2[] = $arr[$i][0];
 		}
+
 		$rs->Close();
 
 		return $arr2;
@@ -63,14 +65,15 @@ class ADODB_odbc_oracle extends ADODB_odbc {
 
 			return $false;
 		}
+
 		$retarr = array();
 
-		while (!$rs->EOF) { //print_r($rs->fields);
+		while (!$rs->EOF) {
+			//print_r($rs->fields);
 			$fld             = new ADOFieldObject();
 			$fld->name       = $rs->fields[0];
 			$fld->type       = $rs->fields[1];
 			$fld->max_length = $rs->fields[2];
-
 
 			if ($ADODB_FETCH_MODE == ADODB_FETCH_NUM) {
 				$retarr[] = $fld;
@@ -80,6 +83,7 @@ class ADODB_odbc_oracle extends ADODB_odbc {
 
 			$rs->MoveNext();
 		}
+
 		$rs->Close();
 
 		return $retarr;
@@ -90,8 +94,8 @@ class ADODB_odbc_oracle extends ADODB_odbc {
 		$last_php_error      = $this->resetLastError();
 		$this->_connectionID = odbc_connect($argDSN, $argUsername, $argPassword, SQL_CUR_USE_ODBC);
 		$this->_errorMsg     = $this->getChangedErrorMsg($last_php_error);
-
 		$this->Execute("ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'");
+
 		//if ($this->_connectionID) odbc_autocommit($this->_connectionID,true);
 		return $this->_connectionID != false;
 	}
@@ -101,8 +105,8 @@ class ADODB_odbc_oracle extends ADODB_odbc {
 		$last_php_error      = $this->resetLastError();
 		$this->_connectionID = odbc_pconnect($argDSN, $argUsername, $argPassword, SQL_CUR_USE_ODBC);
 		$this->_errorMsg     = $this->getChangedErrorMsg($last_php_error);
-
 		$this->Execute("ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'");
+
 		//if ($this->_connectionID) odbc_autocommit($this->_connectionID,true);
 		return $this->_connectionID != false;
 	}

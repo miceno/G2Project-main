@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/search/classes/SearchUtilities.class');
 
 /**
@@ -58,8 +56,7 @@ class SearchShowAllView extends GalleryView {
 		global $gallery;
 
 		// TODO: Parameterize this
-		$pageSize = 20;
-
+		$pageSize               = 20;
 		$items                  = array();
 		$thumbnails             = array();
 		$results                = array();
@@ -77,7 +74,7 @@ class SearchShowAllView extends GalleryView {
 			if (empty($form['searchCriteria'])) {
 				$form['error']['searchCriteria']['missing'] = 1;
 			} else {
-				// If we click next/previous, make sure we don't change search criteria
+				// If we click next/previous, make sure we do not change search criteria
 				if (!empty($form['lastSearchCriteria'])
 					&& $form['lastSearchCriteria'] != $form['searchCriteria']
 					&& (isset($form['action']['nextPage'])
@@ -111,6 +108,7 @@ class SearchShowAllView extends GalleryView {
 				GalleryCoreApi::requireOnce(
 					'modules/search/classes/GallerySearchInterface_1_0.class'
 				);
+
 				list($ret, $searchInstance) = GalleryCoreApi::newFactoryInstanceById(
 					'GallerySearchInterface_1_0',
 					$form['moduleId']
@@ -145,6 +143,7 @@ class SearchShowAllView extends GalleryView {
 						return array($ret, null);
 					}
 				}
+
 				$maxPages = ceil($results['count'] / $pageSize);
 			}
 
@@ -157,6 +156,7 @@ class SearchShowAllView extends GalleryView {
 						$itemIds[$result['itemId']] = 1;
 					}
 				}
+
 				$itemIds = array_keys($itemIds);
 
 				if (!empty($itemIds)) {

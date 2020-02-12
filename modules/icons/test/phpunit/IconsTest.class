@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/icons/classes/IconsImpl.class');
 
 /**
@@ -35,6 +33,7 @@ class IconsTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -54,6 +53,7 @@ class IconsTest extends GalleryTestCase {
 
 	public function tearDown() {
 		global $gallery;
+
 		$gallery->_translator->_isRightToLeft = $this->_saveRtl;
 
 		$ret = parent::tearDown();
@@ -82,6 +82,7 @@ class IconsTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertTrue(isset($iconpack), 'Icon pack was not set');
 		$this->assertTrue(
 			GalleryUtilities::isA($iconpack, 'IconsImpl'),
@@ -95,12 +96,15 @@ class IconsTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$template = new IconsDummyGalleryTemplate();
-		$ret      = $this->_icons->init($template);
+
+		$ret = $this->_icons->init($template);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(null, $template->style);
 	}
 
@@ -110,17 +114,21 @@ class IconsTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$template = new IconsDummyGalleryTemplate();
-		$ret      = $this->_icons->init($template);
+
+		$ret = $this->_icons->init($template);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('modules/icons/iconpacks/_phpunitfoo/icons.css', $template->style);
 	}
 
 	public function testRightToLeft() {
 		global $gallery;
+
 		$gallery->_translator->_isRightToLeft = true;
 
 		$ret = GalleryCoreApi::setPluginParameter('module', 'icons', 'iconpack', '_phpunitfoo');
@@ -128,12 +136,15 @@ class IconsTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$template = new IconsDummyGalleryTemplate();
-		$ret      = $this->_icons->init($template);
+
+		$ret = $this->_icons->init($template);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('modules/icons/iconpacks/_phpunitfoo/icons-rtl.css', $template->style);
 	}
 }
@@ -154,6 +165,5 @@ class IconsDummyGalleryTemplate {
 		$this->style = $path;
 	}
 
-	public function javascript($path) {
-	}
+	public function javascript($path) {}
 }

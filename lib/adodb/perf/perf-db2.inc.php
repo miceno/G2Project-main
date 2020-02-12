@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,11 +8,8 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Library for basic performance monitoring and tuning
-
 */
 
 // security - hide paths
@@ -20,7 +18,6 @@ if (!defined('ADODB_DIR')) {
 }
 
 // Simple guide to configuring db2: so-so http://www.devx.com/gethelpon/10MinuteSolution/16575
-
 // SELECT * FROM TABLE(SNAPSHOT_APPL('SAMPLE', -1)) as t
 class perf_db2 extends adodb_perf {
 	public $createTableSQL = 'CREATE TABLE adodb_logsql (
@@ -31,8 +28,7 @@ class perf_db2 extends adodb_perf {
 		  tracer varchar(500) NOT NULL,
 		  timer decimal(16,6) NOT NULL
 		)';
-
-	public $settings = array(
+	public $settings       = array(
 		'Ratios',
 		'data cache hit ratio' => array(
 			'RATIO',
@@ -42,7 +38,6 @@ class perf_db2 extends adodb_perf {
 				FROM TABLE(SNAPSHOT_APPL('',-2)) as t",
 			'=WarnCacheRatio',
 		),
-
 		'Data Cache',
 		'data cache buffers'   => array(
 			'DATAC',
@@ -65,7 +60,6 @@ class perf_db2 extends adodb_perf {
 			"SELECT count(*) FROM TABLE(SNAPSHOT_APPL_INFO('',-2)) as t",
 			'',
 		),
-
 		false,
 	);
 
@@ -90,6 +84,7 @@ class perf_db2 extends adodb_perf {
 				}
 			}
 		}
+
 		$qno = mt_rand();
 		$ok  = $this->conn->Execute("EXPLAIN PLAN SET QUERYNO=$qno FOR $sql");
 		ob_start();
@@ -103,8 +98,10 @@ class perf_db2 extends adodb_perf {
 				rs2html($rs);
 			}
 		}
+
 		$s = ob_get_contents();
 		ob_end_clean();
+
 		$this->conn->LogSQL($save);
 
 		$s .= $this->Tracer($sql);

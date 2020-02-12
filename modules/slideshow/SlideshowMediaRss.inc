@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
 GalleryCoreApi::requireOnce('modules/slideshow/classes/SlideshowHelper.class');
 
@@ -48,13 +46,19 @@ class SlideshowMediaRssView extends GalleryView {
 	 */
 	public function renderImmediate($status = null, $error = null) {
 		global $gallery;
-		$phpVm = $gallery->getPhpVm();
 
+		$phpVm             = $gallery->getPhpVm();
 		$SlideShowMediaRss = array();
+		$itemId            = null;
+		$prevOffset        = null;
+		$nextOffset        = null;
+		$startId           = null;
 
-		$itemId = $prevOffset = $nextOffset = $startId = null;
-
-		list($itemListString, $startId, $offset) = GalleryUtilities::getRequestVariables('itemList', 'startId', 'offset');
+		list($itemListString, $startId, $offset) = GalleryUtilities::getRequestVariables(
+			'itemList',
+			'startId',
+			'offset'
+		);
 
 		if (isset($startId)) {
 			$startId = (int)$startId;
@@ -68,6 +72,7 @@ class SlideshowMediaRssView extends GalleryView {
 			foreach (explode('|', $itemListString) as $id) {
 				$itemIds[] = (int)$id;
 			}
+
 			list($ret, $items, $start) = SlideshowHelper::buildItemsSlideshow($itemIds);
 
 			if ($ret) {
@@ -82,7 +87,11 @@ class SlideshowMediaRssView extends GalleryView {
 
 			$itemId = $item->getId();
 
-			list($ret, $items, $start, $prevOffset, $nextOffset) = SlideshowHelper::buildAlbumSlideshow($item, $startId, $offset);
+			list($ret, $items, $start, $prevOffset, $nextOffset) = SlideshowHelper::buildAlbumSlideshow(
+				$item,
+				$startId,
+				$offset
+			);
 
 			if ($ret) {
 				return $ret;
@@ -92,7 +101,9 @@ class SlideshowMediaRssView extends GalleryView {
 		if (!$phpVm->headers_sent()) {
 			$phpVm->header('Content-Type: text/xml; charset=UTF-8');
 		}
+
 		$template = new GalleryTemplate(GalleryCoreApi::getCodeBasePath());
+
 		$template->setVariable(
 			'SlideshowMediaRss',
 			array(

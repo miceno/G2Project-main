@@ -1,4 +1,5 @@
 <?php
+
 // Catalan language
 // contributed by "Josep Lladonosa" jlladono#pie.xtec.es
 $ADODB_LANG_ARRAY = array(
@@ -31,3 +32,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_NOSUCHDB            => 'base de dades inexistent',
 	DB_ERROR_ACCESS_VIOLATION    => 'permisos insuficients',
 );
+

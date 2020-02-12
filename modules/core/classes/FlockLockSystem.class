@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryLockSystem.class');
 
 /**
@@ -31,8 +29,8 @@ GalleryCoreApi::requireOnce('modules/core/classes/GalleryLockSystem.class');
  */
 class FlockLockSystem extends GalleryLockSystem {
 	/**
-	 * Reference counts for every lock we're holding so that if we've got a file doubly read locked
-	 * we don't try to delete it until all read locks are released.
+	 * Reference counts for every lock we are holding so that if we have got a file doubly read locked
+	 * we do not try to delete it until all read locks are released.
 	 * @todo When we get rid of double read locks, we can delete this.
 	 * @var array
 	 * @access private
@@ -40,16 +38,16 @@ class FlockLockSystem extends GalleryLockSystem {
 	public $_references;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new FlockLockSystem();
+		if (!isset($instance)) {
+			$instance = new FlockLockSystem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -57,6 +55,7 @@ class FlockLockSystem extends GalleryLockSystem {
 	 */
 	public function _acquireLock($ids, $timeout, $lockType) {
 		global $gallery;
+
 		$platform   =& $gallery->getPlatform();
 		$cutoffTime = time() + $timeout;
 
@@ -73,7 +72,9 @@ class FlockLockSystem extends GalleryLockSystem {
 				// Close the files that we already opened successfully and return an error
 				foreach ($notLocked as $lockInfo) {
 					list($fd, $lockFile) = $lockInfo;
+
 					$platform->fclose($fd);
+
 					/*
 					 * Delete the lock files even if others are locking it too (releaseLock calls
 					 * are too often forgotten in error handling)
@@ -106,11 +107,13 @@ class FlockLockSystem extends GalleryLockSystem {
 
 			foreach ($tmp as $id => $lockInfo) {
 				list($fd, $lockFile) = $lockInfo;
+
 				// Check if we can lock
 				$flockReturned = $platform->flock($fd, $flockType | LOCK_NB, $wouldBlock);
 
 				if ($flockReturned && !$wouldBlock) {
 					$locked[$id] = $lockInfo;
+
 					// Keep track of the number of locks there are for this object
 					if (isset($this->_references[$lockFile])) {
 						$this->_references[$lockFile]++;
@@ -118,14 +121,14 @@ class FlockLockSystem extends GalleryLockSystem {
 						$this->_references[$lockFile] = 1;
 					}
 				} else {
-					// Remember that it's not locked and keep going
+					// Remember that it is not locked and keep going
 					$notLocked[$id] = $lockInfo;
 				}
 			}
 
 			if (!empty($notLocked)) {
 				if (time() > $cutoffTime) {
-					// Couldn't get the locks in time, release the ones that we have and return
+					// Could not get the locks in time, release the ones that we have and return
 					foreach (array_merge($locked, $notLocked) as $lockInfo) {
 						$this->_closeLockFile($lockInfo);
 					}
@@ -148,6 +151,7 @@ class FlockLockSystem extends GalleryLockSystem {
 
 				// Wait a second and try any unacquired locks again
 				$gallery->debug('Waiting for a lock');
+
 				sleep(1);
 			}
 		}
@@ -168,6 +172,7 @@ class FlockLockSystem extends GalleryLockSystem {
 	 */
 	public function _releaseLocksNow($locks) {
 		global $gallery;
+
 		$gallery->guaranteeTimeLimit(count($locks) + 5);
 
 		// Release all locks by closing the files
@@ -185,13 +190,15 @@ class FlockLockSystem extends GalleryLockSystem {
 	 */
 	public function refreshLocks($freshUntil) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Flush one byte to each lock file to update its timestamp
 		foreach ($this->_locks as $lockId => $lock) {
 			foreach ($lock['ids'] as $lockInfo) {
 				list($fd, $lockFile) = $lockInfo;
-				$count               = $platform->fwrite($fd, '.');
+
+				$count = $platform->fwrite($fd, '.');
 
 				if ($count == 0) {
 					return GalleryCoreApi::error(
@@ -201,6 +208,7 @@ class FlockLockSystem extends GalleryLockSystem {
 						$lockFile
 					);
 				}
+
 				$platform->fflush($fd);
 			}
 		}
@@ -227,9 +235,11 @@ class FlockLockSystem extends GalleryLockSystem {
 	 */
 	public function _closeLockFile($lockInfo) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($fd, $lockFile) = $lockInfo;
+
 		$platform->fclose($fd);
 
 		if ($platform->file_exists($lockFile)) {
@@ -247,6 +257,7 @@ class FlockLockSystem extends GalleryLockSystem {
 	public function _removeObjectsFromLock(&$lock, $ids) {
 		foreach ($ids as $id) {
 			$this->_closeLockFile($lock['ids'][$id]);
+
 			unset($lock['ids'][$id]);
 		}
 

@@ -1,8 +1,9 @@
 <?php
+
 /*
  * ATTENTION:
  *
- * If you're seeing this in your browser, and are trying to upgrade Gallery,
+ * If you are seeing this in your browser, and are trying to upgrade Gallery,
  * you either do not have PHP installed, or if it is installed, it is not
  * properly enabled. Please visit the following page for assistance:
  *
@@ -15,20 +16,19 @@
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * Gallery Upgrader
  * @package Upgrade
@@ -42,7 +42,6 @@
  * in our SQL, as well as reading/writing the config.php
  */
 @ini_set('magic_quotes_runtime', 0);
-
 $g2Base = dirname(__DIR__) . '/';
 
 require_once $g2Base . 'upgrade/UpgradeStep.class';
@@ -55,9 +54,8 @@ require_once $g2Base . 'modules/core/classes/GalleryUtilities.class';
 
 require_once $g2Base . 'lib/support/GallerySetupUtilities.class';
 
-
 /*
- * If gettext isn't enabled, subvert the _() text translation function
+ * If gettext is not enabled, subvert the _() text translation function
  * and just pass the string on through in English
  */
 if (!function_exists('_')) {
@@ -88,6 +86,7 @@ foreach ($stepOrder as $stepName) {
 GallerySetupUtilities::startSession();
 
 require_once __DIR__ . '/../init.inc';
+
 // Check if config.php is ok
 $storageConfig = @$gallery->getConfig('storage.config');
 
@@ -114,9 +113,11 @@ if (!empty($storageConfig)) {
 		unset($translator);
 	} else {
 		if (empty($_SESSION['language'])) {
-			$_SESSION['language'] = GalleryTranslator::doStatic()->getLanguageCodeFromRequest();
+			$_SESSION['language'] = GalleryTranslator::getMe()->getLanguageCodeFromRequest();
 		}
+
 		$translator->init($_SESSION['language'], true);
+
 		// Select domain for translation
 		bindtextdomain('gallery2_upgrade', dirname(__DIR__) . '/locale');
 		textdomain('gallery2_upgrade');
@@ -124,6 +125,7 @@ if (!empty($storageConfig)) {
 		if (function_exists('bind_textdomain_codeset')) {
 			bind_textdomain_codeset('gallery2_upgrade', 'UTF-8');
 		}
+
 		// Set the appropriate charset in our HTTP header
 		if (!headers_sent()) {
 			header('Content-Type: text/html; charset=UTF-8');
@@ -133,8 +135,9 @@ if (!empty($storageConfig)) {
 	// Preallocate at least 5 minutes for the upgrade
 	$gallery->guaranteeTimeLimit(300);
 
-	// Check to see if we have a database.  If we don't, then go to the installer
-	$storage                 =& $gallery->getStorage();
+	// Check to see if we have a database.  If we do not, then go to the installer
+	$storage =& $gallery->getStorage();
+
 	list($ret, $isInstalled) = $storage->isInstalled();
 
 	if ($ret || !$isInstalled) {
@@ -144,7 +147,7 @@ if (!empty($storageConfig)) {
 	$error = true;
 }
 
-// If we don't have our steps in our session, initialize them now.
+// If we do not have our steps in our session, initialize them now.
 if (!isset($_GET['startOver']) && !empty($_SESSION['upgrade_steps'])) {
 	$steps = unserialize($_SESSION['upgrade_steps']);
 }
@@ -161,11 +164,12 @@ if (empty($steps) || !is_array($steps)) {
 			$step->setStepNumber($i);
 			$step->setInError(false);
 			$step->setComplete(false);
+
 			$steps[] = $step;
 		}
 	}
 
-	// Don't do this in the loop, since not all steps are relevant
+	// Do not do this in the loop, since not all steps are relevant
 	$steps[sizeof($steps) - 1]->setIsLastStep(true);
 }
 
@@ -188,6 +192,7 @@ if (!$error) {
 	$currentStep =& $steps[$stepNumber];
 } else {
 	include_once __DIR__ . '/steps/RedirectToInstallerStep.class';
+
 	$currentStep = new RedirectToInstallerStep();
 }
 
@@ -195,7 +200,7 @@ if (!empty($_GET['doOver'])) {
 	$currentStep->setComplete(false);
 }
 
-// If the current step is incomplete, the rest of the steps can't be complete either
+// If the current step is incomplete, the rest of the steps cannot be complete either
 if (!$currentStep->isComplete()) {
 	for ($i = $stepNumber + 1; $i < sizeof($steps); $i++) {
 		$steps[$i]->setComplete(false);
@@ -209,10 +214,12 @@ if ($currentStep->processRequest()) {
 
 	// Round percentage to the nearest 5
 	$templateData['errors'] = array();
+
 	$currentStep->loadTemplateData($templateData);
 
 	// Render the output
 	$template = new StatusTemplate();
+
 	$template->renderHeaderBodyAndFooter($templateData);
 }
 
@@ -230,6 +237,7 @@ function selectAdminUser($fallback = false) {
 	if ($ret) {
 		return $ret;
 	}
+
 	list($ret, $adminUserInfo) = GalleryCoreApi::fetchUsersForGroup($siteAdminGroupId, 1);
 
 	if ($ret) {
@@ -239,17 +247,22 @@ function selectAdminUser($fallback = false) {
 	if (empty($adminUserInfo)) {
 		return GalleryCoreApi::error(ERROR_MISSING_VALUE);
 	}
+
 	// Fetch the first admin from list
-	$userId                = key($adminUserInfo);
-	$userName              = current($adminUserInfo);
+	$userId   = key($adminUserInfo);
+	$userName = current($adminUserInfo);
+
 	list($ret, $adminUser) = GalleryCoreApi::loadEntitiesById($userId, 'GalleryUser');
 
 	if ($ret) {
 		if ($fallback) {
 			// Initialize a GalleryUser with the id of a real admin
 			$gallery->debug('Unable to load admin user. Using in-memory user object as fallback');
+
 			GalleryCoreApi::requireOnce('modules/core/classes/GalleryUser.class');
+
 			$adminUser = new GalleryUser();
+
 			$adminUser->setId((int)$userId);
 			$adminUser->setUserName($userName);
 		} else {
@@ -258,7 +271,9 @@ function selectAdminUser($fallback = false) {
 	}
 
 	$gallery->setActiveUser($adminUser);
+
 	$session =& $gallery->getSession();
+
 	$session->put('isUpgrade', true);
 
 	return null;
@@ -271,7 +286,8 @@ function generateUrl($uri, $print = true) {
 	if (strncmp($uri, 'index.php', 9) && strncmp($uri, '../' . GALLERY_MAIN_PHP, 11)) {
 		// upgrade/images/*, upgrade/styles/*, ... URLs
 		global $gallery;
-		// Add @ here in case we haven't yet upgraded config.php to include galleryBaseUrl
+
+		// Add @ here in case we have not yet upgraded config.php to include galleryBaseUrl
 		$baseUrl = @$gallery->getConfig('galleryBaseUrl');
 
 		if (!empty($baseUrl)) {
@@ -281,7 +297,7 @@ function generateUrl($uri, $print = true) {
 		// If session.use_trans_sid is on then it will add the session id.
 		if (!GallerySetupUtilities::areCookiesSupported() && !ini_get('session.use_trans_sid')) {
 			/*
-			 * Don't use SID since it's a constant and we change (regenerate) the session id
+			 * Do not use SID since it is a constant and we change (regenerate) the session id
 			 * in the request
 			 */
 			$sid  = session_name() . '=' . session_id();
@@ -298,8 +314,8 @@ function generateUrl($uri, $print = true) {
 }
 
 /*
- * We don't store the steps in the session in raw form because that
+ * We do not store the steps in the session in raw form because that
  * will break in environments where session.auto_start is on since
- * it will try to instantiate the classes before they've been defined
+ * it will try to instantiate the classes before they have been defined
  */
 $_SESSION['upgrade_steps'] = serialize($steps);

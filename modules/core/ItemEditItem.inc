@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditItem extends ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditItem();
+		if (!isset($instance)) {
+			$instance = new ItemEditItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -50,7 +49,7 @@ class ItemEditItem extends ItemEditPlugin {
 
 		if (isset($form['action']['undo'])) {
 			/*
-			 * Take no action and we'll be redirected back to the same page which will
+			 * Take no action and we will be redirected back to the same page which will
 			 * reset the form.
 			 */
 		} elseif (isset($form['action']['save'])) {
@@ -97,6 +96,7 @@ class ItemEditItem extends ItemEditPlugin {
 					$form['originationTimestampSplit']['Date_Day'],
 					$form['originationTimestampSplit']['Date_Year']
 				);
+
 				GalleryUtilities::putRequestVariable(
 					'form[originationTimestamp]',
 					$newOriginationTimestamp
@@ -116,6 +116,7 @@ class ItemEditItem extends ItemEditPlugin {
 				if ($ret) {
 					return array($ret, null, null, null);
 				}
+
 				$thumbnail = empty($thumbnail) ? null : $thumbnail[$item->getId()];
 
 				if (!isset($thumbnail) && $form['thumbnail']['size'] > 0) {
@@ -126,6 +127,7 @@ class ItemEditItem extends ItemEditPlugin {
 						if ($ret) {
 							return array($ret, null, null, null);
 						}
+
 						list($ret, $thumbnail) = GalleryCoreApi::fetchThumbnailsByItemIds(array($item->getId()));
 
 						if ($ret) {
@@ -180,11 +182,13 @@ class ItemEditItem extends ItemEditPlugin {
 						if ($ret) {
 							return array($ret, null, null, null);
 						}
+
 						$ret = $thumbnail->save();
 
 						if ($ret) {
 							return array($ret, null, null, null);
 						}
+
 						$ret = GalleryCoreApi::releaseLocks(array($lockId));
 
 						if ($ret) {
@@ -247,8 +251,8 @@ class ItemEditItem extends ItemEditPlugin {
 				}
 
 				/*
-				 * It's possible to get a collision when we rename, so try that
-				 * first.  If there's no collision then make the rest of the changes.
+				 * It is possible to get a collision when we rename, so try that first. 
+				 * If there is no collision then make the rest of the changes.
 				 */
 				$originalPathComponent = $item->getPathComponent();
 
@@ -265,6 +269,7 @@ class ItemEditItem extends ItemEditPlugin {
 							null,
 						);
 					}
+
 					$ret = $item->rename($form['pathComponent']);
 
 					if ($ret && !($ret->getErrorCode() & ERROR_COLLISION)) {
@@ -309,7 +314,7 @@ class ItemEditItem extends ItemEditPlugin {
 						) {
 							/*
 							 * Move the file back and hope that this succeeds
-							 * since we're already in an error state
+							 * since we are already in an error state
 							 */
 							$item->rename($originalPathComponent);
 						}
@@ -345,20 +350,19 @@ class ItemEditItem extends ItemEditPlugin {
 	 */
 	public function loadTemplate(&$template, &$form, $item, $thumbnail) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		if ($form['formName'] != 'ItemEditItem') {
 			// First time around, load the form with item data
-			$form['formName'] = 'ItemEditItem';
-
+			$form['formName']             = 'ItemEditItem';
 			$form['title']                = $item->getTitle();
 			$form['summary']              = $item->getSummary();
 			$form['keywords']             = $item->getKeywords();
 			$form['description']          = $item->getDescription();
 			$form['pathComponent']        = $item->getPathComponent();
 			$form['originationTimestamp'] = $item->getOriginationTimestamp();
-
-			$form['thumbnail']['size'] = null;
+			$form['thumbnail']['size']    = null;
 
 			if (!empty($thumbnail) && preg_match(
 				'/thumbnail\|(\d+)/',
@@ -382,9 +386,10 @@ class ItemEditItem extends ItemEditPlugin {
 			return array($ret, null, null);
 		}
 
-		$can                        = array(
+		$can = array(
 			'createThumbnail' => false,
 		);
+
 		$can['changePathComponent'] = $can['editThumbnail'] = ($item->getId() != $rootAlbumId);
 
 		if (GalleryUtilities::isA($item, 'GalleryAlbumItem')) {
@@ -410,6 +415,7 @@ class ItemEditItem extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			list($ret, $can['createThumbnail']) = GalleryCoreApi::isSupportedOperationSequence(
 				$source->getMimeType(),
 				$thumbnail->getDerivativeOperations()
@@ -427,6 +433,7 @@ class ItemEditItem extends ItemEditPlugin {
 			if ($ret) {
 				return array($ret, null, null);
 			}
+
 			$can['createThumbnail'] = isset($operations);
 		}
 

@@ -1,5 +1,4 @@
 <?php
-
 $ADODB_LANG_ARRAY = array(
 	'LANG'                         => 'en',
 	DB_ERROR                       => 'unknown error',
@@ -33,3 +32,4 @@ $ADODB_LANG_ARRAY = array(
 	DB_ERROR_STATEMENT_TIMEOUT     => 'statement timeout',
 	DB_ERROR_SERIALIZATION_FAILURE => 'could not serialize access',
 );
+

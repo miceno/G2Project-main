@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/AdminMaintenance.inc');
 
 /**
@@ -29,16 +27,16 @@ GalleryCoreApi::requireOnce('modules/core/AdminMaintenance.inc');
  */
 class SystemInfoTask extends MaintenanceTask {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new SystemInfoTask();
+		if (!isset($instance)) {
+			$instance = new SystemInfoTask();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -59,6 +57,7 @@ class SystemInfoTask extends MaintenanceTask {
 	 */
 	public function run() {
 		global $gallery;
+
 		$storage  =& $gallery->getStorage();
 		$platform =& $gallery->getPlatform();
 
@@ -67,6 +66,7 @@ class SystemInfoTask extends MaintenanceTask {
 		if ($ret) {
 			return array($ret, null, null);
 		}
+
 		list($ret, $params) = GalleryCoreApi::fetchAllPluginParameters('module', 'core');
 
 		if ($ret) {
@@ -104,12 +104,13 @@ class SystemInfoTask extends MaintenanceTask {
 
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryTheme.class');
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryEmbed.class');
+
 		$api = $core->translate(
 			array(
 				'text' => 'API = Core %s, Module %s, Theme %s, Embed %s',
 				'arg1' => implode('.', GalleryCoreApi::getApiVersion()),
-				'arg2' => implode('.', GalleryModule::doStatic()->getApiVersion()),
-				'arg3' => implode('.', GalleryTheme::doStatic()->getApiVersion()),
+				'arg2' => implode('.', GalleryModule::getMe()->getApiVersion()),
+				'arg3' => implode('.', GalleryTheme::getMe()->getApiVersion()),
 				'arg4' => implode('.', GalleryEmbed::getApiVersion()),
 			)
 		);
@@ -153,6 +154,7 @@ class SystemInfoTask extends MaintenanceTask {
 			if ($ret) {
 				$counts[$table] = 'error';
 			}
+
 			$result         = $results->nextResult();
 			$counts[$table] = $result[0];
 		}
@@ -172,7 +174,7 @@ class SystemInfoTask extends MaintenanceTask {
 			$core->translate('Operating system') . ' = ' . php_uname(),
 			$core->translate('Default theme') . ' = ' . $params['default.theme'],
 			$core->translate('gettext') . ' = ' .
-			(GalleryTranslator::doStatic()->canTranslate() ? $core->translate('enabled') : $core->translate('disabled')),
+			(GalleryTranslator::getMe()->canTranslate() ? $core->translate('enabled') : $core->translate('disabled')),
 			$core->translate('Locale') . ' = ' . $locale,
 			$core->translate('Browser') . ' = ' . GalleryUtilities::getServerVar('HTTP_USER_AGENT'),
 		);

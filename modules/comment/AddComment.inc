@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -45,6 +44,7 @@ class AddCommentController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		// Make sure we have permission to add a comment
@@ -79,14 +79,15 @@ class AddCommentController extends GalleryController {
 				$error[] = 'form[error][comment][missing]';
 			}
 
-			// Check for flooding - don't allow more than 1 comment every 30 seconds
-			list($ret, $commentTime) = GalleryCommentHelper::doStatic()->getLatestCommentTime(
+			// Check for flooding - do not allow more than 1 comment every 30 seconds
+			list($ret, $commentTime) = GalleryCommentHelper::getMe()->getLatestCommentTime(
 				GalleryUtilities::getRemoteHostAddress()
 			);
 
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$phpVm       = $gallery->getPhpVm();
 			$currentTime = $phpVm->time();
 
@@ -94,7 +95,7 @@ class AddCommentController extends GalleryController {
 				$error[] = 'form[error][comment][flood]';
 			}
 
-			list($ret, $useValidationPlugins) = GalleryCommentHelper::doStatic()->useValidationPlugins();
+			list($ret, $useValidationPlugins) = GalleryCommentHelper::getMe()->useValidationPlugins();
 
 			if ($ret) {
 				return array($ret, null);
@@ -216,6 +217,7 @@ class AddCommentController extends GalleryController {
 		} else {
 			$results['delegate']['view'] = 'comment.AddComment';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -240,7 +242,7 @@ class AddCommentView extends GalleryView {
 			return array($ret, null);
 		}
 
-		list($ret, $AddComment) = GalleryCommentHelper::doStatic()->getAddComment($item, $form);
+		list($ret, $AddComment) = GalleryCommentHelper::getMe()->getAddComment($item, $form);
 
 		if ($ret) {
 			return array($ret, null);

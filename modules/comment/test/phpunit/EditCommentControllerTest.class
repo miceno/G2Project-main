@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,6 +31,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -56,11 +56,13 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 			}
 
 			$this->assertTrue(isset($this->_comment[$i]), 'Missing comment instance');
+
 			$ret = $this->_comment[$i]->create($this->_item[$i]->getId());
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->_comment[$i]->setCommenterId($gallery->getActiveUserId());
 			$this->_comment[$i]->setHost('127.0.0.1');
 			$this->_comment[$i]->setSubject('this is a test subject');
@@ -132,6 +134,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -177,6 +180,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we succeeded
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -201,6 +205,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		GalleryUtilities::putRequestVariable('form[publishStatus]', '');
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -230,6 +235,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -256,6 +262,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -285,6 +292,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 
 		// Perform the request and verify that we failed
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'delegate' => array(
@@ -358,6 +366,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -380,6 +389,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		}
 
 		$this->assertEquals('&lt;a&gt;a&lt;/a&gt;', $comment->getSubject());
+
 		$this->assertEquals('comment  test', $comment->getComment());
 		$this->assertEquals(
 			'this is a author with &lt;script&gt;evilness&lt;/script&gt; in it.',
@@ -402,6 +412,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -432,6 +443,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -473,6 +485,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(
@@ -514,6 +527,7 @@ class EditCommentControllerTest extends GalleryControllerTestCase {
 		);
 
 		$results = $this->handleRequest();
+
 		$this->assertEquals(
 			array(
 				'redirect' => array(

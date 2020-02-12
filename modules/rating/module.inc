@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -30,26 +29,34 @@ class RatingModule extends GalleryModule {
 
 		$this->setId('rating');
 		$this->setName($gallery->i18n('Rating'));
-		$this->setDescription($gallery->i18n('Item Rating Interface'));
-		$this->setVersion('7.0.0'); // Update upgrade() too
+		$this->setDescription(
+			$gallery->i18n(
+				'Let Users Rate Gallery2 Items'
+			)
+		);
+
+		// Update upgrade() as required
+		$this->setVersion('2.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
+
 		$this->setCallbacks('getSiteAdminViews|getItemSummaries');
 		$this->setGroup('data', $gallery->i18n('Extra Data'));
-		$this->setRequiredCoreApi(array(7, 41));
-		$this->setRequiredModuleApi(array(3, 6));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new RatingModule();
+		if (!isset($instance)) {
+			$instance = new RatingModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -110,8 +117,7 @@ class RatingModule extends GalleryModule {
 
 		foreach ($items as $item) {
 			$itemIds[] = $item->getId();
-
-			$parentId = $item->getParentId();
+			$parentId  = $item->getParentId();
 
 			if (isset($enabledAlbums[$parentId])) {
 				continue;
@@ -145,10 +151,16 @@ class RatingModule extends GalleryModule {
 		$template->style('modules/rating/rating.css');
 		$template->javascript('lib/yui/utilities.js');
 		$template->javascript('modules/rating/rating.js');
-
 		$template->setVariable('l10Domain', $this->getL10Domain());
-		$session       =& $gallery->getSession();
-		$authToken     = $session->isPersistent() ? $session->getAuthToken() : '';
+
+		$session =& $gallery->getSession();
+
+		if ($session->isPersistent()) {
+			$authToken = $session->getAuthToken();
+		} else {
+			$authToken = null;
+		}
+
 		$RatingSummary = array(
 			'ratingValues' => array(1, 2, 3, 4, 5),
 			'firstCall'    => true,
@@ -167,7 +179,6 @@ class RatingModule extends GalleryModule {
 		}
 
 		// Acquire the current rating for the items (populate $RatingData)
-
 		list($ret, $RatingData) = RatingHelper::fetchRatings(
 			$itemIds,
 			$gallery->getActiveUserId()
@@ -198,11 +209,14 @@ class RatingModule extends GalleryModule {
 			}
 
 			$RatingData[$itemId]['canRate'] = isset($permissions[$itemId]['rating.add']);
+
 			$template->setVariable('RatingData', $RatingData[$itemId]);
 			$template->setVariable('RatingSummary', $RatingSummary);
 
 			// Render and get the html
-			list($ret, $summaries[$itemId]) = $template->fetch('gallery:modules/rating/templates/RatingInterface.tpl');
+			list($ret, $summaries[$itemId]) = $template->fetch(
+				'gallery:modules/rating/templates/RatingInterface.tpl'
+			);
 
 			if ($ret) {
 				return array($ret, null);
@@ -226,15 +240,30 @@ class RatingModule extends GalleryModule {
 
 		switch ($currentVersion) {
 			case '0':
-				list($ret, $coreParams) = GalleryCoreApi::fetchAllPluginParameters('module', 'core');
+				list($ret, $coreParams) = GalleryCoreApi::fetchAllPluginParameters(
+					'module',
+					'core'
+				);
 
 				if ($ret) {
 					return $ret;
 				}
 
 				// Initial install.  Register our permissions
-				$permissions[] = array('add', $gallery->i18n('[rating] Add ratings'), 0, array());
-				$permissions[] = array('view', $gallery->i18n('[rating] View ratings'), 0, array());
+				$permissions[] = array(
+					'add',
+					$gallery->i18n('[rating] Add ratings'),
+					0,
+					array(),
+				);
+
+				$permissions[] = array(
+					'view',
+					$gallery->i18n('[rating] View ratings'),
+					0,
+					array(),
+				);
+
 				$permissions[] = array(
 					'all',
 					$gallery->i18n('[rating] All access'),
@@ -258,6 +287,7 @@ class RatingModule extends GalleryModule {
 
 				// Give everybody rating permission by default
 				$gallery->guaranteeTimeLimit(300);
+
 				$ret = GalleryCoreApi::addGroupPermission(
 					$coreParams['id.rootAlbum'],
 					$coreParams['id.everybodyGroup'],
@@ -289,7 +319,15 @@ class RatingModule extends GalleryModule {
 			case '1.0.11':
 				// Combined YUI libraries into a single file
 			case '1.0.12':
+			case '1.0.13':
+			case '2.0.0':
+				// Updated GalleryCoreApi requirement to 8.0
+				// Upgraded GalleryModule requirement to 4.0
 			case 'end of upgrade path':
+				/*
+				 * Leave this bogus case at the end of the legitimate case statements
+				 * so that we always properly terminate our upgrade path with a break.
+				 */
 				break;
 
 			default:
@@ -339,16 +377,19 @@ class RatingModule extends GalleryModule {
 					'Unable to get a GalleryEntity instance'
 				);
 			}
+
 			$ret = $entity->create();
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$ret = $entity->save(false);
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$ret = $this->setParameter('themeSettingsId', $entity->getId());
 
 			if ($ret) {
@@ -418,6 +459,7 @@ class RatingModule extends GalleryModule {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$ret = GalleryCoreApi::removeMapEntry(
 					'RatingCacheMap',
 					array(

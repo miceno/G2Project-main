@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemDeleteController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemDeleteController();
+		if (!isset($instance)) {
+			$instance = new ItemDeleteController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -52,6 +51,7 @@ class ItemDeleteController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		if (isset($form['action']['delete'])) {
@@ -60,7 +60,7 @@ class ItemDeleteController extends GalleryController {
 			if (!empty($form['selectedIds'])) {
 				$selectedIds = array_keys($form['selectedIds']);
 
-				// get the rootId, so we don't try to delete it
+				// get the rootId, so we do not try to delete it
 				list($ret, $rootId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.rootAlbum');
 
 				if ($ret) {
@@ -78,6 +78,7 @@ class ItemDeleteController extends GalleryController {
 						// Avoid information disclosure, act as if the item does not exist.
 						return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 					}
+
 					// Make sure we have permission to delete this item
 					if (!isset($permissions[$selectedId]['core.delete'])) {
 						return array(
@@ -85,20 +86,20 @@ class ItemDeleteController extends GalleryController {
 								ERROR_PERMISSION_DENIED,
 								__FILE__,
 								__LINE__,
-								"Don't have permission to delete this item"
+								"Do not have permission to delete this item"
 							),
 							null,
 						);
 					}
 
-					// Make sure we're not deleting the root album
+					// Make sure we are not deleting the root album
 					if ($selectedId == $rootId) {
 						return array(
 							GalleryCoreApi::error(
 								ERROR_BAD_PARAMETER,
 								__FILE__,
 								__LINE__,
-								"Can't delete the root album"
+								"Cannot delete the root album"
 							),
 							null,
 						);
@@ -130,19 +131,20 @@ class ItemDeleteController extends GalleryController {
 					return array($ret, null);
 				}
 
-				// What do we do if we weren't successful?  No thumbnail, I guess
+				// What do we do if we were not successful?  No thumbnail, I guess
 			}
 
 			/*
 			 * Figure out where to redirect upon success.
-			 * Can't use return url because it may be for an item we just deleted
+			 * Cannot use return url because it may be for an item we just deleted
 			 */
 			$results['redirect'] = array(
 				'view'   => 'core.ShowItem',
 				'itemId' => $itemId,
 			);
 		} elseif (isset($form['action']['next'])) {
-			$page                = GalleryUtilities::getRequestVariables('page');
+			$page = GalleryUtilities::getRequestVariables('page');
+
 			list($ret, $peerIds) = GalleryCoreApi::fetchChildItemIdsWithPermission(
 				$itemId,
 				array('core.delete', 'core.view')
@@ -152,8 +154,7 @@ class ItemDeleteController extends GalleryController {
 				return array($ret, null);
 			}
 
-			$numPages = ceil(sizeof($peerIds) / $form['numPerPage']);
-
+			$numPages                      = ceil(sizeof($peerIds) / $form['numPerPage']);
 			$results['delegate']['itemId'] = $itemId;
 			$results['delegate']['page']   = min($page + 1, $numPages);
 		} elseif (isset($form['action']['previous'])) {
@@ -168,6 +169,7 @@ class ItemDeleteController extends GalleryController {
 			$results['delegate']['view']    = 'core.ItemAdmin';
 			$results['delegate']['subView'] = 'core.ItemDelete';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -180,16 +182,16 @@ class ItemDeleteController extends GalleryController {
  */
 class ItemDeleteView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemDeleteView();
+		if (!isset($instance)) {
+			$instance = new ItemDeleteView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -203,13 +205,14 @@ class ItemDeleteView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$itemId = $item->getId();
 
+		$itemId    = $item->getId();
 		$variables = GalleryUtilities::getRequestVariables('selectedId', 'anchorId', 'page');
 
 		foreach ($variables as $key => $value) {
 			$variables[$key] = is_numeric($value) ? (int)$value : null;
 		}
+
 		list($selectedId, $anchorId, $page) = $variables;
 
 		if ($form['formName'] != 'ItemDelete') {
@@ -218,6 +221,7 @@ class ItemDeleteView extends GalleryView {
 			} elseif ($anchorId) {
 				$selectedId = $anchorId;
 			}
+
 			$form['destination'] = '';
 			$form['formName']    = 'ItemDelete';
 			$form['numPerPage']  = 30;
@@ -242,7 +246,7 @@ class ItemDeleteView extends GalleryView {
 			$numPages = ceil(sizeof($peerIds) / $form['numPerPage']);
 
 			if (empty($page)) {
-				// determine which page we're on
+				// determine which page we are on
 				$page = 1;
 
 				for ($i = 0; $i < sizeof($peerIds); $i++) {
@@ -288,9 +292,10 @@ class ItemDeleteView extends GalleryView {
 				} else {
 					$peerTypes['data'][$peerItem->getId()] = 1;
 				}
+
 				$peers[$peerItem->getId()]['selected'] = isset($form['selectedIds'][$peerItem->getId()]);
 
-				// While we're at it, attach thumbnails and resizes
+				// While we are at it, attach thumbnails and resizes
 				if (isset($derivatives[$peerItem->getId()])) {
 					foreach ($derivatives[$peerItem->getId()] as $derivative) {
 						$type = $derivative->getDerivativeType();
@@ -316,9 +321,7 @@ class ItemDeleteView extends GalleryView {
 			}
 		}
 
-
-		$urlGenerator =& $gallery->getUrlGenerator();
-
+		$urlGenerator                       =& $gallery->getUrlGenerator();
 		$ItemDelete                         = array();
 		$ItemDelete['canCancel']            = (bool)GalleryUtilities::getRequestVariables('return');
 		$ItemDelete['peers']                = $peers;

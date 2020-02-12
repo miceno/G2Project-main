@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -37,8 +36,8 @@ class EditCommentController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$itemId = $item->getId();
 
+		$itemId    = $item->getId();
 		$commentId = (int)GalleryUtilities::getRequestVariables('commentId');
 
 		// Make sure we have permission to edit a comment
@@ -104,7 +103,7 @@ class EditCommentController extends GalleryController {
 				)
 			)
 			) {
-				// UI doesn't allow this so don't bother with a clean error
+				// UI does not allow this so do not bother with a clean error
 				return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
 			}
 
@@ -139,6 +138,7 @@ class EditCommentController extends GalleryController {
 				$comment->setComment($form['comment']);
 				$comment->setAuthor($form['author']);
 				$comment->setPublishStatus($form['publishStatus']);
+
 				$ret = $comment->save();
 
 				if ($ret) {
@@ -193,6 +193,7 @@ class EditCommentController extends GalleryController {
 			// Stay on the same page
 			$results['delegate']['view'] = 'comment.EditComment';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -209,6 +210,7 @@ class EditCommentView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Load our item
@@ -240,7 +242,8 @@ class EditCommentView extends GalleryView {
 		}
 
 		// Associate the commenter's info
-		$commenterId           = $comment->getCommenterId();
+		$commenterId = $comment->getCommenterId();
+
 		list($ret, $commenter) = GalleryCoreApi::loadEntitiesById($commenterId, 'GalleryUser');
 
 		if ($ret) {
@@ -268,6 +271,7 @@ class EditCommentView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$EditComment['publishStatusList'] = array(
 			COMMENT_PUBLISH_STATUS_PUBLISHED   => $module->translate('Published'),
 			COMMENT_PUBLISH_STATUS_UNPUBLISHED => $module->translate('Unpublished'),

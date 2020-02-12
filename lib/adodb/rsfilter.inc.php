@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -15,25 +16,22 @@
  */
 
 /*
-	Filter all fields and all rows in a recordset and returns the
-	processed recordset. We scroll to the beginning of the new recordset
-	after processing.
-
-	We pass a recordset and function name to RSFilter($rs,'rowfunc');
-	and the function will be called multiple times, once
-	for each row in the recordset. The function will be passed
-	an array containing one row repeatedly.
-
-	Example:
-
-	// ucwords() every element in the recordset
-	function do_ucwords(&$arr,$rs)
-	{
-		foreach($arr as $k => $v) {
-			$arr[$k] = ucwords($v);
-		}
-	}
-	$rs = RSFilter($rs,'do_ucwords');
+ *	Filter all fields and all rows in a recordset and returns the
+ *	processed recordset. We scroll to the beginning of the new recordset
+ *	after processing.
+ *	We pass a recordset and function name to RSFilter($rs,'rowfunc');
+ *	and the function will be called multiple times, once
+ *	for each row in the recordset. The function will be passed
+ *	an array containing one row repeatedly.
+ *	Example:
+ *	// ucwords() every element in the recordset
+ *	function do_ucwords(&$arr,$rs) {
+ *		foreach($arr as $k => $v) {
+ *			$arr[$k] = ucwords($v);
+ *		}
+ *	}
+ *
+ *	$rs = RSFilter($rs,'do_ucwords');
  */
 function RSFilter($rs, $fn) {
 	if ($rs->databaseType != 'array') {
@@ -43,12 +41,14 @@ function RSFilter($rs, $fn) {
 
 		$rs = $rs->connection->_rs2rs($rs);
 	}
+
 	$rows = $rs->RecordCount();
 
 	for ($i = 0; $i < $rows; $i++) {
 		if (is_array($fn)) {
 			$obj    = $fn[0];
 			$method = $fn[1];
+
 			$obj->$method($rs->_array[$i], $rs);
 		} else {
 			$fn($rs->_array[$i], $rs);

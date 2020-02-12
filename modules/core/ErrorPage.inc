@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ErrorPageView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ErrorPageView();
+		if (!isset($instance)) {
+			$instance = new ErrorPageView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	public function setError($error) {
@@ -55,10 +54,12 @@ class ErrorPageView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$theme =& $template->getVariableByReference('theme');
 
 		list($ret, $isAdmin) = GalleryCoreApi::isUserInSiteAdminGroup();
-		$ErrorPage           = array(
+
+		$ErrorPage = array(
 			'isAdmin' => !$ret && $isAdmin,
 		);
 
@@ -122,12 +123,14 @@ class ErrorPageView extends GalleryView {
 					foreach ($list as $tmp) {
 						$toolkitList = array_merge($toolkitList, $tmp);
 					}
+
 					$ErrorPage['toolkits'] = implode(', ', array_unique($toolkitList));
 				}
 			}
 
 			GalleryCoreApi::requireOnce('modules/core/module.inc');
-			$installedVersions    = CoreModule::doStatic()->getInstalledVersions();
+
+			$installedVersions    = CoreModule::getMe()->getInstalledVersions();
 			$ErrorPage['version'] = $installedVersions['gallery'];
 		}
 
@@ -160,15 +163,18 @@ class ErrorPageView extends GalleryView {
 	 */
 	public function errorHandler($error, $g2Data = null, $initOk = null) {
 		global $gallery;
+
 		$failsafe = false;
 
 		// Post Gallery::Error event
 		$event = GalleryCoreApi::newEvent('Gallery::Error');
+
 		$event->setData(
 			array(
 				'error' => $error,
 			)
 		);
+
 		list($ret, $eventResults) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -197,6 +203,7 @@ class ErrorPageView extends GalleryView {
 
 		if (!$failsafe) {
 			$translator =& $gallery->getTranslator();
+
 			/**
 			 * @todo Add a fallback mode to the translator to just output untranslated text.
 			 */
@@ -222,8 +229,10 @@ class ErrorPageView extends GalleryView {
 
 			if (!isset($urlGenerator)) {
 				GalleryCoreApi::requireOnce('modules/core/classes/GalleryUrlGenerator.class');
+
 				$urlGenerator = new GalleryUrlGenerator();
-				$ret          = $urlGenerator->init();
+
+				$ret = $urlGenerator->init();
 
 				if ($ret) {
 					$failsafe = true;
@@ -251,8 +260,10 @@ class ErrorPageView extends GalleryView {
 
 		if (!$failsafe) {
 			$templateAdapter =& $gallery->getTemplateAdapter();
+
 			$templateAdapter->setTheme($theme);
-			list($ret, $view) = GalleryView::doStatic()->loadView('core.ErrorPage');
+
+			list($ret, $view) = GalleryView::getMe()->loadView('core.ErrorPage');
 
 			if ($ret) {
 				$failsafe = true;
@@ -261,9 +272,13 @@ class ErrorPageView extends GalleryView {
 
 		if (!$failsafe) {
 			$dummyForm = array();
+
 			GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
+
 			$template = new GalleryTemplate(dirname(dirname(__DIR__)));
+
 			$view->setError($error);
+
 			list($ret, $results) = $view->loadTemplate($template, $dummyForm);
 
 			if ($ret) {
@@ -274,7 +289,9 @@ class ErrorPageView extends GalleryView {
 		if (!$failsafe) {
 			$t                  =& $template->getVariableByReference('theme');
 			$t['errorTemplate'] = $results['body'];
+
 			$template->setVariable('l10Domain', 'modules_core');
+
 			list($ret, $templatePath) = $theme->showErrorPage($template);
 
 			if ($ret) {
@@ -284,6 +301,7 @@ class ErrorPageView extends GalleryView {
 
 		if (!$failsafe) {
 			$template->setVariable('l10Domain', 'themes_' . $themeId);
+
 			$ret = $template->display("themes/$themeId/templates/$templatePath");
 
 			if ($ret) {
@@ -294,6 +312,7 @@ class ErrorPageView extends GalleryView {
 		if ($failsafe) {
 			// A catastrophic failure has occurred so just dump the error out to the browser
 			echo '<h2>Error</h2>';
+
 			list($ret, $isAdmin) = GalleryCoreApi::isUserInSiteAdminGroup();
 
 			if ($gallery->getDebug() || (!$ret && $isAdmin)) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -13,10 +14,10 @@
  */
 function smarty_core_get_php_resource(&$params, &$smarty) {
 	$params['resource_base_path'] = $smarty->trusted_dir;
+
 	$smarty->_parse_resource_name($params, $smarty);
 
 	// Find out if the resource exists.
-
 	if ($params['resource_type'] == 'file') {
 		$_readable = false;
 

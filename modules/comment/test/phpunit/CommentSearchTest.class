@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -69,8 +68,7 @@ class CommentSearchTest extends GalleryTestCase {
 		}
 
 		$this->_randomKey = 'a' . mt_rand(1, 100000) . 'z';
-
-		$this->_item = array();
+		$this->_item      = array();
 
 		for ($j = 0; $j < 4; $j++) {
 			list($ret, $this->_item[$j]) = $this->_createRandomDataItem($this->_getRootId());
@@ -99,11 +97,13 @@ class CommentSearchTest extends GalleryTestCase {
 				if ($j == 3 && $i == 1) {
 					$this->_comment[$j][$i]->setAuthor($this->_randomKey . ": test author($j,$i)");
 				}
+
 				$this->_comment[$j][$i]->setDate(time());
 
 				if ($i == 2) {
 					$this->_comment[$j][$i]->setPublishStatus(COMMENT_PUBLISH_STATUS_UNPUBLISHED);
 				}
+
 				$ret = $this->_comment[$j][$i]->save();
 
 				if ($ret) {
@@ -154,6 +154,7 @@ class CommentSearchTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$ret = GalleryCoreApi::addUserPermission(
 						$this->_item[$j]->getId(),
 						$gallery->getActiveUserId(),
@@ -176,6 +177,7 @@ class CommentSearchTest extends GalleryTestCase {
 					if ($ret) {
 						return $ret;
 					}
+
 					$ret = GalleryCoreApi::addGroupPermission(
 						$this->_item[$j]->getId(),
 						$groupId,
@@ -248,8 +250,7 @@ class CommentSearchTest extends GalleryTestCase {
 		$commenter        = $this->_module->translate('Commenter');
 		$text['guest']    = $this->_module->translate('guest');
 		$authorCheckValue = $this->_comment[3][1]->getAuthor() . '(' . $text['guest'] . ')';
-
-		$userName = $this->_user->getFullName();
+		$userName         = $this->_user->getFullName();
 
 		if (empty($userName)) {
 			$userName = $this->_user->getUserName();
@@ -352,8 +353,7 @@ class CommentSearchTest extends GalleryTestCase {
 		$subject   = $this->_module->translate('Subject');
 		$comment   = $this->_module->translate('Comment');
 		$commenter = $this->_module->translate('Commenter');
-
-		$userName = $this->_user->getFullName();
+		$userName  = $this->_user->getFullName();
 
 		if (empty($userName)) {
 			$userName = $this->_user->getUserName();

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,16 +27,16 @@
  */
 class ItemDeleteSingleController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemDeleteSingleController();
+		if (!isset($instance)) {
+			$instance = new ItemDeleteSingleController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -45,6 +44,7 @@ class ItemDeleteSingleController extends GalleryController {
 	 */
 	public function handleRequest($form) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		list($pageItemId, $page) = GalleryUtilities::getRequestVariables('pageId', 'page');
@@ -54,9 +54,10 @@ class ItemDeleteSingleController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
-		// The framework shouldn't let us get this far if we don't have delete permission
+		// The framework should not let us get this far if we do not have delete permission
 		$ret = GalleryCoreApi::assertHasItemPermission($itemId, 'core.delete');
 
 		if ($ret) {
@@ -66,21 +67,21 @@ class ItemDeleteSingleController extends GalleryController {
 		// Get the parent *before* we delete the item
 		$parentId = $item->getParentId();
 
-		// Get the root album id, so we don't try to delete it
+		// Get the root album id, so we do not try to delete it
 		list($ret, $rootId) = GalleryCoreApi::getPluginParameter('module', 'core', 'id.rootAlbum');
 
 		if ($ret) {
 			return array($ret, null);
 		}
 
-		// The view shouldn't let us try to delete the root album, either
+		// The view should not let us try to delete the root album, either
 		if ($itemId == $rootId) {
 			return array(
 				GalleryCoreApi::error(
 					ERROR_BAD_PARAMETER,
 					__FILE__,
 					__LINE__,
-					"Can't delete the root album"
+					"Cannot delete the root album"
 				),
 				null,
 			);
@@ -109,6 +110,7 @@ class ItemDeleteSingleController extends GalleryController {
 		if (!empty($page)) {
 			$params['page'] = $page;
 		}
+
 		$result['redirect'] = $params;
 		$result['status']   = array();
 		$result['error']    = array();
@@ -116,3 +118,4 @@ class ItemDeleteSingleController extends GalleryController {
 		return array(null, $result);
 	}
 }
+

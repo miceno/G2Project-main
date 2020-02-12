@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * @version $Revision: 17580 $
  * @package RepositoryTools
@@ -45,10 +45,12 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 
 		$index             = new RepositoryIndex();
 		$index->_outputDir = 'repositorydir/';
+
 		$index->setOutputFile('testindex');
 		$index->setTemplate(new RepositoryTestTemplate());
 		$index->setTemplateFile('test.tpl');
 		$index->setUtilities(new GalleryRepositoryUtilities());
+
 		/*
 		 * The values given to the test platform contructor in the first
 		 * array will be returned by readdir in the order specified. False
@@ -57,6 +59,7 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 		 * used by fread().
 		 */
 		include __DIR__ . '/../data/SampleDescriptors.inc';
+
 		$serializeModuleDescriptor        = serialize($sampleModuleDescriptor);
 		$serializeThemeDescriptor         = serialize($sampleThemeDescriptor);
 		$serializeModule2Descriptor       = serialize($sampleModule2Descriptor);
@@ -74,6 +77,7 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 				'repositorydir/modules/module2.descriptor' => $serializeModule2Descriptor,
 			)
 		);
+
 		$gallery->setPlatform($RepositoryToolsIndexTestPlatform);
 
 		// Generate the index.
@@ -82,6 +86,7 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'themes'  => 1,
@@ -93,7 +98,9 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 
 		// Verify that the index is valid.
 		include __DIR__ . '/../data/SampleIndex.inc';
+
 		$this->assertEquals($sampleIndex, $index->_index, 'Generated index differs from expected.');
+
 		$this->assertTrue(
 			md5(serialize($sampleIndex)) == $index->_indexHash,
 			'Generated hash differs from expected.'
@@ -104,6 +111,7 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				0 => array(
@@ -111,14 +119,14 @@ class RepositoryToolsIndexTest extends GalleryTestCase {
 					'id'                => 'testModule',
 					'version'           => '1.0.0',
 					'requiredCoreApi'   => GalleryCoreApi::getApiVersion(),
-					'requiredPluginApi' => GalleryModule::doStatic()->getApiVersion(),
+					'requiredPluginApi' => GalleryModule::getMe()->getApiVersion(),
 				),
 				1 => array(
 					'type'              => 'themes',
 					'id'                => 'testTheme',
 					'version'           => '1.0.0',
 					'requiredCoreApi'   => GalleryCoreApi::getApiVersion(),
-					'requiredPluginApi' => GalleryTheme::doStatic()->getApiVersion(),
+					'requiredPluginApi' => GalleryTheme::getMe()->getApiVersion(),
 				),
 			),
 			$pluginInfo,
@@ -142,6 +150,7 @@ class RepositoryToolsIndexTestPlatform {
 
 		// Get $sampleIndex from a separate file.
 		include __DIR__ . '/../data/SampleIndex.inc';
+
 		$this->_writtenData['repositorydir/index'] = serialize($sampleIndex);
 	}
 

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,7 +31,9 @@ class GalleryEventHelper_simple {
 	 */
 	public static function newEvent($eventName) {
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryEvent.class');
+
 		$event = new GalleryEvent();
+
 		$event->setEventName($eventName);
 
 		return $event;
@@ -94,9 +95,9 @@ class GalleryEventHelper_simple {
 				}
 
 				/*
-				 * Ignore version mismatch here because we don't want event propagation during
+				 * Ignore version mismatch here because we do not want event propagation during
 				 * upgrade to lead the plugin framework to deactivate plugins, which will in turn
-				 * post more events.  All we want is to ignore plugins which aren't current, which
+				 * post more events.  All we want is to ignore plugins which are not current, which
 				 * we do below.
 				 */
 				list($ret, $module) = GalleryCoreApi::loadPlugin('module', $moduleId, true);
@@ -119,7 +120,7 @@ class GalleryEventHelper_simple {
 
 		if (!empty($allListeners[$event->getEventName()])) {
 			/*
-			 * Walk the loop using an index so that we're working with the original referenced
+			 * Walk the loop using an index so that we are working with the original referenced
 			 * object.  If we use foreach ($array as $instance) we wind up working with a
 			 * copy of the listener on PHP4.
 			 */
@@ -137,8 +138,8 @@ class GalleryEventHelper_simple {
 				}
 			}
 		}
-		// --END-- of section to remove on next major API bump
 
+		// --END-- of section to remove on next major API bump
 		return array(null, $eventResults);
 	}
 

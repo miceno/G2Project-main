@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -31,16 +30,16 @@
  */
 class GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryView();
+		if (!isset($instance)) {
+			$instance = new GalleryView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -57,13 +56,14 @@ class GalleryView {
 	 */
 	public function init($moduleId) {
 		global $gallery;
+
 		$this->_l10Domain = 'modules_' . $moduleId;
 	}
 
 	/**
 	 * Is this an immediate or a buffered view?
 	 *
-	 * @return boolean true if it's an immediate view
+	 * @return boolean true if it is an immediate view
 	 */
 	public function isImmediate() {
 		return false;
@@ -161,7 +161,7 @@ class GalleryView {
 					ERROR_BAD_PARAMETER,
 					__FILE__,
 					__LINE__,
-					"$viewName can't be parsed"
+					"$viewName cannot be parsed"
 				),
 				null,
 			);
@@ -173,6 +173,7 @@ class GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $isActive) = $plugin->isActive();
 
 		if ($ret) {
@@ -200,8 +201,7 @@ class GalleryView {
 			$moduleBaseDir = GalleryCoreApi::getCodeBasePath();
 			$moduleDir     = 'modules/' . $module . '/';
 			$fileName      = $moduleDir . $class . '.inc';
-
-			$platform =& $gallery->getPlatform();
+			$platform      =& $gallery->getPlatform();
 
 			if (!$platform->file_exists($moduleBaseDir . $fileName)) {
 				return array(
@@ -267,6 +267,7 @@ class GalleryView {
 	 */
 	public function doLoadTemplate(&$template) {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		// --------------------------------------------------
@@ -276,11 +277,13 @@ class GalleryView {
 		if (!isset($form['formName'])) {
 			$form['formName'] = '';
 		}
+
 		$template->setVariableByReference('form', $form);
 
 		// --------------------------------------------------
 		// Get our status
 		$status = $session->getStatus();
+
 		$template->setVariable('status', $status);
 
 		// --------------------------------------------------
@@ -321,14 +324,17 @@ class GalleryView {
 			 */
 			if ($this->getViewType() == VIEW_TYPE_ADMIN) {
 				$theme = new GalleryTheme();
+
 				$theme->setId('fallbackTheme');
+
 				$isFallbackTheme = true;
 			} else {
 				$redirect = array(
 					'view'    => 'core.ShowItemError',
 					'problem' => 'missingTheme',
 				);
-				$itemId   = GalleryUtilities::getRequestVariables('itemId');
+
+				$itemId = GalleryUtilities::getRequestVariables('itemId');
 
 				if ($itemId) {
 					$redirect['itemId'] = $itemId;
@@ -345,6 +351,7 @@ class GalleryView {
 		}
 
 		$templateAdapter =& $gallery->getTemplateAdapter();
+
 		$templateAdapter->setTheme($theme);
 
 		// --------------------------------------------------
@@ -406,12 +413,14 @@ class GalleryView {
 	 */
 	public function getItem($checkPermissions = true) {
 		global $gallery;
+
 		$itemId       = (int)GalleryUtilities::getRequestVariables('itemId');
 		$wasSpecified = true;
 
-		// If we don't have an itemId, default to the root album
+		// If we do not have an itemId, default to the root album
 		if (empty($itemId)) {
-			$wasSpecified       = false;
+			$wasSpecified = false;
+
 			list($ret, $itemId) = GalleryCoreApi::getDefaultAlbumId();
 
 			if ($ret) {
@@ -434,7 +443,7 @@ class GalleryView {
 			}
 
 			if (!$hasPermission) {
-				// Avoid information disclosure by treating this as if the item didn't exist.
+				// Avoid information disclosure by treating this as if the item does not exist.
 				return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null, null);
 			}
 		}
@@ -468,7 +477,8 @@ class GalleryView {
 		if ($ret) {
 			// Ignore missing object here to avoid revealing valid/invalid ids
 			if ($ret->getErrorCode() & ERROR_MISSING_OBJECT) {
-				$wasSpecified       = false;
+				$wasSpecified = false;
+
 				list($ret, $itemId) = GalleryCoreApi::getDefaultAlbumId();
 
 				if (!$ret) {
@@ -495,6 +505,7 @@ class GalleryView {
 			} else {
 				$targetId = $item->getId();
 			}
+
 			list($ret, $params) = $theme->fetchParameters($wasSpecified ? $targetId : null);
 
 			if ($ret) {
@@ -579,13 +590,16 @@ class GalleryView {
 		global $gallery;
 
 		$event = GalleryCoreApi::newEvent('Gallery::LoadThemeAndParameters');
+
 		$event->setEntity($item);
+
 		$event->setData(
 			array(
 				'viewType' => $this->getViewType(),
 				'viewName' => $gallery->getCurrentView(),
 			)
 		);
+
 		list($ret, $eventResults) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -613,6 +627,7 @@ class GalleryView {
 				// Handle bad event results gracefully by ignoring it.
 				if ($ret->getErrorCode() & (ERROR_BAD_PARAMETER | ERROR_PLUGIN_VERSION_MISMATCH)) {
 					global $gallery;
+
 					$gallery->debug(
 						sprintf(
 							'Error: The theme [%s] specified by a [%s] event '
@@ -621,6 +636,7 @@ class GalleryView {
 							'Gallery::LoadThemeAndParameters'
 						)
 					);
+
 					$theme = $params = null;
 				} else {
 					return array($ret, null, null);
@@ -636,7 +652,7 @@ class GalleryView {
 	}
 
 	/**
-	 * Load the given theme if it's active.
+	 * Load the given theme if it is active.
 	 *
 	 * @param string $themeId
 	 * @return array GalleryStatus a status code
@@ -645,7 +661,8 @@ class GalleryView {
 	 * @static
 	 */
 	public function _loadTheme($themeId) {
-		$validTheme        = false;
+		$validTheme = false;
+
 		list($ret, $theme) = GalleryCoreApi::loadPlugin('theme', $themeId, false, true);
 
 		if ($ret) {
@@ -687,6 +704,7 @@ class GalleryView {
 	 */
 	public function setCacheControl(&$template, $access = null) {
 		global $gallery;
+
 		$phpVm  = $gallery->getPhpVm();
 		$itemId = (int)GalleryUtilities::getRequestVariables('itemId');
 
@@ -703,8 +721,8 @@ class GalleryView {
 
 						break;
 					}
-					// If itemId is defined, handle the same way as SHOW_ITEM type
 
+					// If itemId is defined, handle the same way as SHOW_ITEM type
 					// Fall Through
 				case VIEW_TYPE_SHOW_ITEM:
 					list($ret, $anonymousUserId) = GalleryCoreApi::getAnonymousUserId();
@@ -712,15 +730,17 @@ class GalleryView {
 					if ($ret) {
 						return $ret;
 					}
-					// Pages shouldn't be cached if not accessible for anonymous
+
+					// Pages should not be cached if not accessible for anonymous
 					if (empty($itemId)) {
-						// If we don't have an itemId, default to the root album
+						// If we do not have an itemId, default to the root album
 						list($ret, $itemId) = GalleryCoreApi::getDefaultAlbumId();
 
 						if ($ret) {
 							return $ret;
 						}
 					}
+
 					list($ret, $anonymousViewable) = GalleryCoreApi::hasItemPermission(
 						$itemId,
 						'core.view',
@@ -771,21 +791,26 @@ class GalleryView {
 	 */
 	public function setStandardTemplateVariables(&$template) {
 		global $gallery;
-		$session =& $gallery->getSession();
 
-		$user                        = (array)$gallery->getActiveUser();
+		$session =& $gallery->getSession();
+		$user    = (array)$gallery->getActiveUser();
+
 		list($ret, $user['isGuest']) = GalleryCoreApi::isAnonymousUser($user['id']);
 
 		if ($ret) {
 			return $ret;
 		}
-		$user['isRegisteredUser']    = !$user['isGuest'];
+
+		$user['isRegisteredUser'] = !$user['isGuest'];
+
 		list($ret, $user['isAdmin']) = GalleryCoreApi::isUserInSiteAdminGroup();
 
 		if ($ret) {
 			$user['isAdmin'] = false;
 		}
+
 		$template->setVariable('user', $user);
+
 		$themeVars = array(
 			'guestPreviewMode' => $session->get('theme.guestPreviewMode') ? 1 : 0,
 		);
@@ -799,6 +824,7 @@ class GalleryView {
 				return $ret;
 			}
 		}
+
 		$template->setVariable('theme', $themeVars);
 
 		return null;
@@ -816,16 +842,18 @@ class GalleryView {
 	 */
 	public function _permissionCheck($ret) {
 		global $gallery;
-		$session =& $gallery->getSession();
 
-		$result = null;
+		$session =& $gallery->getSession();
+		$result  = null;
 
 		if ($ret) {
 			list($ret2, $inGroup) = GalleryCoreApi::isUserInSiteAdminGroup();
-			// MISSING_OBJECT should be handled like PERMISSION_DENIED, unless it's an admin
+
+			// MISSING_OBJECT should be handled like PERMISSION_DENIED, unless it is an admin
 			if ($ret->getErrorCode() & ERROR_MISSING_OBJECT && ($ret2 || !$inGroup)) {
 				$ret->addErrorCode(ERROR_PERMISSION_DENIED);
 			}
+
 			$result = array($ret, null);
 
 			if ($ret2) {

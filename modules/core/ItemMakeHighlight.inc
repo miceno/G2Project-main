@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemMakeHighlightController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemMakeHighlightController();
+		if (!isset($instance)) {
+			$instance = new ItemMakeHighlightController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -51,12 +50,14 @@ class ItemMakeHighlightController extends GalleryController {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId = $item->getId();
 
 		if (isset($form['action']['makeHighlight'])) {
 			if (empty($form['parentId'])) {
 				return array(GalleryCoreApi::error(ERROR_BAD_PARAMETER), null);
 			}
+
 			$parentId = (int)$form['parentId'];
 
 			list($ret, $canView) = GalleryCoreApi::hasItemPermission($parentId, 'core.view');
@@ -66,7 +67,7 @@ class ItemMakeHighlightController extends GalleryController {
 			}
 
 			if (!$canView) {
-				// Avoid information disclosure, act as if the item didn't exist.
+				// Avoid information disclosure, act as if the item does not exist.
 				return array(GalleryCoreApi::error(ERROR_MISSING_OBJECT), null);
 			}
 
@@ -98,16 +99,16 @@ class ItemMakeHighlightController extends GalleryController {
  */
 class ItemMakeHighlightView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemMakeHighlightView();
+		if (!isset($instance)) {
+			$instance = new ItemMakeHighlightView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -119,6 +120,7 @@ class ItemMakeHighlightView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$itemId   = $item->getId();
 		$parentId = $item->getParentId();
 
@@ -151,6 +153,7 @@ class ItemMakeHighlightView extends GalleryView {
 				'parentList' => $parentList,
 			)
 		);
+
 		$template->setVariable('controller', 'core.ItemMakeHighlight');
 
 		return array(

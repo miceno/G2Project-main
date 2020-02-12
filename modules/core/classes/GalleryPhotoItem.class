@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryDataItem.class');
 
 /**
@@ -65,16 +63,16 @@ class GalleryPhotoItem extends GalleryDataItem {
 	public $height;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryPhotoItem();
+		if (!isset($instance)) {
+			$instance = new GalleryPhotoItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -136,7 +134,7 @@ class GalleryPhotoItem extends GalleryDataItem {
 			return $ret;
 		}
 
-		// We're linkable
+		// We are linkable
 		$this->setIsLinkable(true);
 
 		// Default to empty dimensions
@@ -179,6 +177,7 @@ class GalleryPhotoItem extends GalleryDataItem {
 		if ($ret) {
 			return $ret;
 		}
+
 		$mimeType = $this->getMimeType();
 
 		// Check for CMYK colorspace and alter mime type if detected
@@ -192,13 +191,16 @@ class GalleryPhotoItem extends GalleryDataItem {
 			list($ret, $colorspace) = $toolkit->getProperty($mimeType, 'colorspace', $path);
 
 			if ($ret) {
-				$ret->addErrorCode(ERROR_BAD_DATA_TYPE); // See BAD_DATA_TYPE comment below
+				$ret->addErrorCode(ERROR_BAD_DATA_TYPE);
+
+				// See BAD_DATA_TYPE comment below
 				return $ret;
 			}
 
 			if ($colorspace[0] == 'CMYK') {
 				$this->setMimeType($mimeType .= '-cmyk');
 			}
+
 			$toolkit = null;
 		}
 
@@ -213,7 +215,7 @@ class GalleryPhotoItem extends GalleryDataItem {
 
 			if ($ret) {
 				/*
-				 * If we can't get the dimensions, it may be a bad image
+				 * If we cannot get the dimensions, it may be a bad image
 				 * Or our graphics code is broken.  Hard to tell which at this point.
 				 */
 				$ret->addErrorCode(ERROR_BAD_DATA_TYPE);
@@ -251,8 +253,8 @@ class GalleryPhotoItem extends GalleryDataItem {
 
 		switch ($format) {
 			case 'HTML':
-				$urlGenerator         =& $gallery->getUrlGenerator();
-				$src                  = $urlGenerator->generateUrl(
+				$urlGenerator =& $gallery->getUrlGenerator();
+				$src          = $urlGenerator->generateUrl(
 					array(
 						'view'         => 'core.DownloadItem',
 						'itemId'       => $this->getId(),
@@ -262,6 +264,7 @@ class GalleryPhotoItem extends GalleryDataItem {
 						'forceFullUrl' => !empty($params['forceFullUrl']),
 					)
 				);
+
 				list($width, $height) = array($this->getWidth(), $this->getHeight());
 
 				// Set a default value for params
@@ -280,6 +283,7 @@ class GalleryPhotoItem extends GalleryDataItem {
 				// Shrink our dimensions if necessary
 				if (isset($params['maxSize'])) {
 					list($width, $height) = GalleryUtilities::shrinkDimensionsToFit($width, $height, $params['maxSize']);
+
 					unset($params['maxSize']);
 				}
 

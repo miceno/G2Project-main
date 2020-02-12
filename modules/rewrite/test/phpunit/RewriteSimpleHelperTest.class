@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,6 +27,7 @@
  */
 GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteSimpleHelper.class');
 GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteUrlGenerator.class');
+
 class RewriteSimpleHelperTest extends GalleryTestCase {
 	public function __construct($methodName) {
 		parent::__construct($methodName);
@@ -35,6 +35,7 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -42,6 +43,7 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		}
 
 		$urlGenerator = new RewriteUrlGenerator();
+
 		$urlGenerator->init('phpunit');
 		$gallery->setUrlGenerator($urlGenerator);
 	}
@@ -52,7 +54,9 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($testAlbum);
+
 		list($ret, $testItem) = $this->_createRandomDataItem(
 			$testAlbum->getId(),
 			'application/unknown',
@@ -70,18 +74,20 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$testItemPath = str_replace('%2F', '/', urlencode($testItemPath));
 
-		$url    = 'v/%path%';
-		$entity = null;
-		$params = array(
+		$testItemPath = str_replace('%2F', '/', urlencode($testItemPath));
+		$url          = 'v/%path%';
+		$entity       = null;
+		$params       = array(
 			'view'   => 'core.ShowItem',
 			'itemId' => $testItem->getId(),
 		);
-		$ret    = RewriteSimpleHelper::parsePath($url, $params, $entity);
+
+		$ret = RewriteSimpleHelper::parsePath($url, $params, $entity);
 
 		$this->assertTrue($ret, 'status');
 		$this->assertEquals('v' . $testItemPath . '.html', $url, 'url');
+
 		$this->assertEquals(
 			array(
 				'view' => 'core.ShowItem',
@@ -97,7 +103,9 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($testAlbum);
+
 		list($ret, $testItem) = $this->_createRandomDataItem(
 			$testAlbum->getId(),
 			'application/unknown',
@@ -109,23 +117,26 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $derivative) = $this->_createDerivative($testItem, $testItem->getId(), DERIVATIVE_TYPE_IMAGE_RESIZE);
 
 		if ($ret) {
 			return $ret;
 		}
-		$testItemName = urlencode($testItem->getPathComponent());
 
-		$url    = 'd/%fileName%';
-		$entity = null;
-		$params = array(
+		$testItemName = urlencode($testItem->getPathComponent());
+		$url          = 'd/%fileName%';
+		$entity       = null;
+		$params       = array(
 			'view'   => 'core.DownloadItem',
 			'itemId' => $derivative->getId(),
 		);
-		$ret    = RewriteSimpleHelper::parseFileName($url, $params, $entity);
+
+		$ret = RewriteSimpleHelper::parseFileName($url, $params, $entity);
 
 		$this->assertTrue($ret, 'status');
 		$this->assertEquals('d/' . $testItemName, $url, 'url');
+
 		$this->assertEquals(
 			array(
 				'view'   => 'core.DownloadItem',
@@ -142,7 +153,9 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($testAlbum);
+
 		list($ret, $testItem) = $this->_createRandomDataItem(
 			$testAlbum->getId(),
 			'application/unknown',
@@ -154,23 +167,26 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $derivative) = $this->_createDerivative($testItem, $testItem->getId(), DERIVATIVE_TYPE_IMAGE_RESIZE);
 
 		if ($ret) {
 			return $ret;
 		}
-		$testSerialNumber = $testItem->getSerialNumber();
 
-		$url    = 'd/%serialNumber%';
-		$entity = null;
-		$params = array(
+		$testSerialNumber = $testItem->getSerialNumber();
+		$url              = 'd/%serialNumber%';
+		$entity           = null;
+		$params           = array(
 			'view'   => 'core.DownloadItem',
 			'itemId' => $derivative->getId(),
 		);
-		$ret    = RewriteSimpleHelper::parseSerialNumber($url, $params, $entity);
+
+		$ret = RewriteSimpleHelper::parseSerialNumber($url, $params, $entity);
 
 		$this->assertTrue($ret, 'status');
 		$this->assertEquals('d/' . $testSerialNumber, $url, 'url');
+
 		$this->assertEquals(
 			array(
 				'view'   => 'core.DownloadItem',
@@ -193,24 +209,27 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if (empty($language)) {
 			$language = array('en', 'US');
 		}
-		list($null, $defaultLanguages) = GalleryTranslator::doStatic()->getLanguageData();
+
+		list($null, $defaultLanguages) = GalleryTranslator::getMe()->getLanguageData();
 
 		$language = explode('_', $language);
 
 		if (isset($language[1]) && $defaultLanguages[$language[0]] == $language[1]) {
 			unset($language[1]);
 		}
-		$language = join('_', $language);
 
-		$url    = 'v/%language%';
-		$entity = null;
-		$params = array(
+		$language = join('_', $language);
+		$url      = 'v/%language%';
+		$entity   = null;
+		$params   = array(
 			'view' => 'core.ShowItem',
 		);
-		$ret    = RewriteSimpleHelper::parseLanguage($url, $params, $entity);
+
+		$ret = RewriteSimpleHelper::parseLanguage($url, $params, $entity);
 
 		$this->assertTrue($ret, 'status');
 		$this->assertEquals('v/' . $language, $url, 'url');
+
 		$this->assertEquals(
 			array(
 				'view' => 'core.ShowItem',
@@ -227,6 +246,7 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($testAlbum);
 
 		list($ret, $testAlbumPath) = $testAlbum->fetchLogicalPath();
@@ -236,6 +256,7 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		}
 
 		GalleryUtilities::putRequestVariable('path', $testAlbumPath);
+
 		$ret = RewriteSimpleHelper::loadItemIdFromPath();
 
 		if ($ret) {
@@ -243,6 +264,7 @@ class RewriteSimpleHelperTest extends GalleryTestCase {
 		}
 
 		$itemId = (int)GalleryUtilities::getRequestVariables('itemId');
+
 		$this->assertEquals($testAlbum->getId(), $itemId);
 	}
 }

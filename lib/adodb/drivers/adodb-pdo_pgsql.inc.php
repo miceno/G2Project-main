@@ -8,9 +8,7 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 8.
-
 */
-
 class ADODB_pdo_pgsql extends ADODB_pdo {
 	public $metaDatabasesSQL = "select datname from pg_database where datname not in ('template0','template1') order by 1";
 	public $metaTablesSQL    = "select tablename,'T' from pg_tables where tablename not like 'pg\_%'
@@ -18,8 +16,10 @@ class ADODB_pdo_pgsql extends ADODB_pdo {
 	 'sql_packages', 'sql_sizing', 'sql_sizing_profiles')
 	union
         select viewname,'V' from pg_views where viewname not like 'pg\_%'";
+
 	//"select tablename from pg_tables where tablename not like 'pg_%' order by 1";
-	public $isoDates       = true; // accepts dates in ISO format
+	// accepts dates in ISO format
+	public $isoDates       = true;
 	public $sysDate        = 'CURRENT_DATE';
 	public $sysTimeStamp   = 'CURRENT_TIMESTAMP';
 	public $blobEncodeType = 'C';
@@ -37,27 +37,39 @@ WHERE relkind in ('r','v') AND (c.relname='%s' or c.relname = lower('%s'))
 	AND a.atttypid = t.oid AND a.attrelid = c.oid ORDER BY a.attnum";
 
 	// get primary key etc -- from Freek Dijkstra
-	public $metaKeySQL = "SELECT ic.relname AS index_name, a.attname AS column_name,i.indisunique AS unique_key, i.indisprimary AS primary_key
+	public $metaKeySQL      = "SELECT ic.relname AS index_name, a.attname AS column_name,i.indisunique AS unique_key, i.indisprimary AS primary_key
 	FROM pg_class bc, pg_class ic, pg_index i, pg_attribute a WHERE bc.oid = i.indrelid AND ic.oid = i.indexrelid AND (i.indkey[0] = a.attnum OR i.indkey[1] = a.attnum OR i.indkey[2] = a.attnum OR i.indkey[3] = a.attnum OR i.indkey[4] = a.attnum OR i.indkey[5] = a.attnum OR i.indkey[6] = a.attnum OR i.indkey[7] = a.attnum) AND a.attrelid = bc.oid AND bc.relname = '%s'";
-
 	public $hasAffectedRows = true;
-	public $hasLimit        = false;  // set to true for pgsql 7 only. support pgsql/mysql SELECT * FROM TABLE LIMIT 10
+
+	// set to true for pgsql 7 only. support pgsql/mysql SELECT * FROM TABLE LIMIT 10
+	public $hasLimit = false;
+
 	// below suggested by Freek Dijkstra
-	public $true            = 't';        // string that represents TRUE for a database
-	public $false           = 'f';       // string that represents FALSE for a database
-	public $fmtDate         = "'Y-m-d'";   // used by DBDate() as the default date format used by the database
-	public $fmtTimeStamp    = "'Y-m-d G:i:s'"; // used by DBTimeStamp as the default timestamp fmt.
+	// string that represents TRUE for a database
+	public $true = 't';
+
+	// string that represents FALSE for a database
+	public $false = 'f';
+
+	// used by DBDate() as the default date format used by the database
+	public $fmtDate = "'Y-m-d'";
+
+	// used by DBTimeStamp as the default timestamp fmt.
+	public $fmtTimeStamp    = "'Y-m-d G:i:s'";
 	public $hasMoveFirst    = true;
 	public $hasGenID        = true;
 	public $_genIDSQL       = "SELECT NEXTVAL('%s')";
 	public $_genSeqSQL      = 'CREATE SEQUENCE %s START %s';
 	public $_dropSeqSQL     = 'DROP SEQUENCE %s';
 	public $metaDefaultsSQL = "SELECT d.adnum as num, d.adsrc as def from pg_attrdef d, pg_class c where d.adrelid=c.oid and c.relname='%s' order by d.adnum";
-	public $random          = 'random()';       /// random function
+
+	/// random function
+	public $random          = 'random()';
 	public $concat_operator = '||';
 
 	public function _init($parentDriver) {
-		$parentDriver->hasTransactions = false; // <<< BUG IN PDO pgsql driver
+		// <<< BUG IN PDO pgsql driver
+		$parentDriver->hasTransactions = false;
 		$parentDriver->hasInsertID     = true;
 		$parentDriver->_nestedSQL      = true;
 	}
@@ -110,6 +122,7 @@ select tablename,'T' from pg_tables where tablename like $mask
 select viewname,'V' from pg_views where viewname like $mask";
 			}
 		}
+
 		$ret = ADOConnection::MetaTables($ttype, $showSchema);
 
 		if ($mask) {
@@ -123,6 +136,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 		global $ADODB_FETCH_MODE;
 
 		$schema = false;
+
 		$this->_findschema($table, $schema);
 
 		if ($normalize) {
@@ -145,6 +159,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 		if (isset($savem)) {
 			$this->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if ($rs === false) {
@@ -158,19 +173,20 @@ select viewname,'V' from pg_views where viewname like $mask";
 			// Of course, a modified version of the metaColumnsSQL query using a
 			// LEFT JOIN would have been much more elegant, but postgres does
 			// not support OUTER JOINS. So here is the clumsy way.
-
 			$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
+			$rskey            = $this->Execute(sprintf($this->metaKeySQL, ($table)));
 
-			$rskey = $this->Execute(sprintf($this->metaKeySQL, ($table)));
 			// fetch all result in once for performance.
 			$keys = $rskey->GetArray();
 
 			if (isset($savem)) {
 				$this->SetFetchMode($savem);
 			}
+
 			$ADODB_FETCH_MODE = $save;
 
 			$rskey->Close();
+
 			unset($rskey);
 		}
 
@@ -184,6 +200,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 			if (isset($savem)) {
 				$this->SetFetchMode($savem);
 			}
+
 			$ADODB_FETCH_MODE = $save;
 
 			if ($rsdef) {
@@ -191,17 +208,20 @@ select viewname,'V' from pg_views where viewname like $mask";
 					$num = $rsdef->fields['num'];
 					$s   = $rsdef->fields['def'];
 
-					if (strpos($s, '::') === false && substr($s, 0, 1) == "'") { // quoted strings hack... for now... fixme
+					if (strpos($s, '::') === false && substr($s, 0, 1) == "'") {
+						// quoted strings hack... for now... fixme
 						$s = substr($s, 1);
 						$s = substr($s, 0, strlen($s) - 1);
 					}
 
 					$rsdefa[$num] = $s;
+
 					$rsdef->MoveNext();
 				}
 			} else {
 				ADOConnection::outp('==> SQL => ' . $sql);
 			}
+
 			unset($rsdef);
 		}
 
@@ -225,6 +245,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 				$fld->scale        = $fld->max_length & 0xFFFF;
 				$fld->max_length >>= 16;
 			}
+
 			// dannym
 			// 5 hasdefault; 6 num-of-column
 			$fld->has_default = ($rs->fields[5] == 't');
@@ -246,7 +267,8 @@ select viewname,'V' from pg_views where viewname like $mask";
 					}
 
 					if ($fld->name == $key['column_name'] and $key['unique_key'] == $this->true) {
-						$fld->unique = true; // What name is more compatible?
+						// What name is more compatible?
+						$fld->unique = true;
 					}
 				}
 			}
@@ -259,6 +281,7 @@ select viewname,'V' from pg_views where viewname like $mask";
 
 			$rs->MoveNext();
 		}
+
 		$rs->Close();
 
 		if (empty($retarr)) {

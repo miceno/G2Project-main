@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -37,7 +36,9 @@ class SetupRewriteController extends GalleryController {
 	 */
 	public function handleRequest($form) {
 		GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteHelper.class');
+
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$status   = $error   = array();
 		$results  = array(
@@ -127,6 +128,7 @@ class SetupRewriteController extends GalleryController {
 				'subView' => 'rewrite.SetupRewrite',
 			);
 		}
+
 		$results['error']  = $error;
 		$results['status'] = $status;
 
@@ -143,6 +145,7 @@ class SetupRewriteView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		$platform     =& $gallery->getPlatform();
 		$SetupRewrite = array();
 
@@ -158,6 +161,7 @@ class SetupRewriteView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($ret, $isActive) = $rewrite->isActive();
 
 		if ($ret) {
@@ -177,6 +181,7 @@ class SetupRewriteView extends GalleryView {
 		}
 
 		GalleryCoreApi::requireOnce('modules/rewrite/classes/RewriteHelper.class');
+
 		list($ret, $rewriteParser) = RewriteHelper::getRewriteParser();
 
 		if ($ret && !($ret->getErrorCode() & ERROR_MISSING_VALUE)) {

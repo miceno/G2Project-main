@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,10 +31,13 @@ class GalleryTranslatorHelper_medium {
 	 */
 	public static function installTranslationsForPlugin($pluginType, $pluginId) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 		$codeBase = GalleryCoreApi::getCodeBasePath();
 
-		$gallery->guaranteeTimeLimit(30);  // the glob may take a long time
+		// the glob may take a long time
+		$gallery->guaranteeTimeLimit(30);
+
 		$pluginPath     = "$codeBase${pluginType}s/$pluginId/";
 		$moFilesInPoDir = $platform->glob("${pluginPath}po/*.mo");
 
@@ -58,6 +60,7 @@ class GalleryTranslatorHelper_medium {
 				if (!preg_match($codePattern, $moPath, $matches)) {
 					continue;
 				}
+
 				$destinationDir = $g2locale . sprintf($localeDirPattern, $matches[1]);
 
 				list($success, $created) = GalleryUtilities::guaranteeDirExists($destinationDir);
@@ -83,18 +86,23 @@ class GalleryTranslatorHelper_medium {
 	 */
 	public static function removeTranslationsForPlugin($pluginType, $pluginId) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
-		$gallery->guaranteeTimeLimit(30);  // the glob may take a long time
+		// the glob may take a long time
+		$gallery->guaranteeTimeLimit(30);
+
 		$moFiles = $platform->glob(
 			$gallery->getConfig('data.gallery.locale')
 			. "*/LC_MESSAGES/${pluginType}s_$pluginId.mo"
 		);
+
 		$success = true;
 
 		if (!empty($moFiles)) {
 			foreach ($moFiles as $moPath) {
 				$gallery->guaranteeTimeLimit(30);
+
 				$success &= $platform->unlink($moPath);
 			}
 		}
@@ -107,6 +115,7 @@ class GalleryTranslatorHelper_medium {
 	 */
 	public static function installTranslationsForLocale($locale = null) {
 		global $gallery;
+
 		$platform   =& $gallery->getPlatform();
 		$codeBase   = GalleryCoreApi::getCodeBasePath();
 		$localeBase = $gallery->getConfig('data.gallery.locale');
@@ -120,10 +129,12 @@ class GalleryTranslatorHelper_medium {
 			// Nothing to do
 			return null;
 		}
+
 		$language = substr($locale, 0, 2);
 
 		foreach (array('modules', 'themes') as $pluginType) {
 			$gallery->guaranteeTimeLimit(30);
+
 			$poDirs = $platform->glob("$codeBase$pluginType/*/po");
 			$gallery->guaranteeTimeLimit(60);
 
@@ -143,6 +154,7 @@ class GalleryTranslatorHelper_medium {
 						if (!$success) {
 							return GalleryCoreApi::error(ERROR_PLATFORM_FAILURE);
 						}
+
 						$success = $platform->copy($sourcePath, $destinationDir . $filename);
 
 						if (!$success) {
@@ -163,7 +175,7 @@ class GalleryTranslatorHelper_medium {
 		$cacheKey = "GalleryTranslator::LanguageDescription::$languageCode";
 
 		if (!GalleryDataCache::containsKey($cacheKey)) {
-			list($newLanguageCode, $languageData) = GalleryTranslator::doStatic()->getSupportedLanguageCode(
+			list($newLanguageCode, $languageData) = GalleryTranslator::getMe()->getSupportedLanguageCode(
 				$languageCode,
 				false
 			);
@@ -191,7 +203,9 @@ class GalleryTranslatorHelper_medium {
 					null,
 				);
 			}
+
 			$languageDescription = $languageData['description'];
+
 			GalleryDataCache::put($cacheKey, $languageDescription);
 		} else {
 			$languageDescription = GalleryDataCache::get($cacheKey);
@@ -213,8 +227,7 @@ class GalleryTranslatorHelper_medium {
 			list(
 				$supportedLanguages,
 				$defaultCountry
-			) = GalleryTranslator::doStatic()->getLanguageData();
-
+			)                    = GalleryTranslator::getMe()->getLanguageData();
 			$installedLanguages  = array();
 			$localeBase          = $gallery->getConfig('data.gallery.locale');
 			$platform            =& $gallery->getPlatform();
@@ -231,7 +244,7 @@ class GalleryTranslatorHelper_medium {
 
 				foreach ($supportedLanguages as $language => $countryList) {
 					foreach ($countryList as $country => $languageData) {
-						// Don't apply default to Chinese for political correctness
+						// Do not apply default to Chinese for political correctness
 						if ($defaultCountry[$language] == $country && $language != 'zh') {
 							$langCode = $language;
 						} else {
@@ -251,6 +264,7 @@ class GalleryTranslatorHelper_medium {
 				$default['en']['US'] = $supportedLanguages['en']['US'];
 				$supportedLanguages  = $default;
 			}
+
 			GalleryDataCache::put($cacheKey, $supportedLanguages);
 		} else {
 			$supportedLanguages = GalleryDataCache::get($cacheKey);

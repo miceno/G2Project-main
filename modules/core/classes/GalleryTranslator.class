@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,7 +26,7 @@
  * $langCode - representation of the locale with the country portion removed if it is the default.
  *         (i.e. en_US => en; en_GB => en_GB) in some cases the $langCode == $locale.  The
  *         exception is the handling of chinese.  For political reasons there is no default
- *         country and it's always represented by the full $locale (zh_CN or zh_TW)
+ *         country and it is always represented by the full $locale (zh_CN or zh_TW)
  * @todo go through and standardize the usage or remove the langCode usage and just use locale
  * @package GalleryCore
  * @subpackage Classes
@@ -61,16 +60,16 @@ class GalleryTranslator {
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryTranslator();
+		if (!isset($instance)) {
+			$instance = new GalleryTranslator();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -107,8 +106,7 @@ class GalleryTranslator {
 	 *                     ...)
 	 */
 	public function getLanguageData() {
-		static $supportedLanguages = array();
-		static $defaultCountry     = array();
+		static $supportedLanguages = array(),  $defaultCountry     = array();
 
 		if (empty($supportedLanguages)) {
 			// English
@@ -336,12 +334,14 @@ class GalleryTranslator {
 		if (($ret = setlocale($category, $locale)) !== false) {
 			return $ret;
 		}
+
 		// Try just selecting the language
 		if (($i = strpos($locale, '_')) !== false
 			&& ($ret = setlocale($category, substr($locale, 0, $i))) !== false
 		) {
 			return $ret;
 		}
+
 		/*
 		 * Try appending some character set names; some systems (like FreeBSD) need this.
 		 * Some require a format with hyphen (eg. Gentoo) and others without (eg. FreeBSD).
@@ -367,6 +367,7 @@ class GalleryTranslator {
 				return $ret;
 			}
 		}
+
 		// For Norwegian try nb language code in addition to no
 		if (substr($locale, 0, 2) == 'no') {
 			return $this->_setlocale($category, substr_replace($locale, 'nb', 0, 2));
@@ -439,15 +440,15 @@ class GalleryTranslator {
 	 *                array data about this language code (description,right-to-left?))
 	 */
 	public function getSupportedLanguageCode($languageCode, $fallback = true) {
-		static $supportedLanguages;
-		static $defaultCountry;
+		static $supportedLanguages,  $defaultCountry;
 
 		if (!isset($supportedLanguages)) {
 			list($supportedLanguages, $defaultCountry) = $this->getLanguageData();
 		}
 
 		list($language, $country) = preg_split('/[-_]/', "${languageCode}_");
-		$country                  = GalleryUtilities::strToUpper($country);
+
+		$country = GalleryUtilities::strToUpper($country);
 
 		if ((empty($country) || !isset($supportedLanguages[$language][$country]))
 			&& isset($defaultCountry[$language])
@@ -581,8 +582,8 @@ class GalleryTranslator {
 		 * This is a useful debug routine.  Uncomment it to have every string prefixed with the
 		 * domain it was localized in.
 		 */
-		// $localized = "<font size=1 color=#C33>$domain/{$this->_languageCode}:</font>$localized";
 
+		// $localized = "<font size=1 color=#C33>$domain/{$this->_languageCode}:</font>$localized";
 		return array(null, $localized);
 	}
 
@@ -594,10 +595,12 @@ class GalleryTranslator {
 	 */
 	public function getLanguageCodeFromLocale($locale) {
 		list($language, $country) = explode('_', $locale . '_');
-		// Don't apply default to Chinese for political correctness
+
+		// Do not apply default to Chinese for political correctness
 		if ($language == 'zh') {
 			return array(null, $locale);
 		}
+
 		list($value, $defaultCountries) = $this->getLanguageData();
 
 		if (!isset($defaultCountries[$language])) {
@@ -640,6 +643,7 @@ class GalleryTranslator {
 					null,
 				);
 			}
+
 			$country = $defaultCountries[$language];
 		}
 

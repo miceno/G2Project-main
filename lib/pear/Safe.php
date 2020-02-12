@@ -1,6 +1,6 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
+// vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 /**
  * HTML_Safe Parser
  *
@@ -15,7 +15,6 @@
  * @link       http://pear.php.net/package/HTML_Safe
  */
 
-
 /**
  * This package requires HTMLSax3 package
  * @G2 - skip if already defined elsewhere (when embedded)
@@ -27,7 +26,6 @@ if (!class_exists('XML_HTMLSax3')) {
 if (class_exists('HTML_Safe')) {
 	return;
 } // @G2 - done if defined elsewhere (when embedded)
-
 
 /**
  *
@@ -381,6 +379,7 @@ class HTML_Safe {
 			for ($i = 0; $i < strlen($proto); $i++) {
 				$preg .= $proto[$i] . "[\s\x01-\x1F]*";
 			}
+
 			$preg                 .= ':/i';
 			$this->_protoRegexps[] = $preg;
 		}
@@ -422,7 +421,7 @@ class HTML_Safe {
 					}
 				}
 
-				if (($value === true) || (is_null($value))) {
+				if (($value === true) || (null === $value)) {
 					$value = $name;
 				}
 
@@ -437,6 +436,7 @@ class HTML_Safe {
 						if ($_value == $value) {
 							break;
 						}
+
 						$value = $_value;
 					}
 
@@ -466,6 +466,7 @@ class HTML_Safe {
 					},
 					$value
 				);
+
 				$tempval = preg_replace_callback(
 					'/&#x([0-9a-f]+);?/mi',
 					function ($matches) {
@@ -538,7 +539,9 @@ class HTML_Safe {
 
 		if (in_array($name, $this->singleTags)) {
 			$this->_xhtml .= '<' . $name;
+
 			$this->_writeAttrs($attrs);
+
 			$this->_xhtml .= ' />';
 
 			return true;
@@ -573,7 +576,9 @@ class HTML_Safe {
 		}
 
 		$this->_xhtml .= '<' . $name;
+
 		$this->_writeAttrs($attrs);
+
 		$this->_xhtml .= '>';
 		array_push($this->_stack, $name);
 		$this->_counter[$name] = isset($this->_counter[$name]) ? $this->_counter[$name] + 1 : 1;
@@ -703,11 +708,10 @@ class HTML_Safe {
 	 * @access public
 	 */
 	public function parse($doc) {
-
 		// Save all '<' symbols
 		$doc = preg_replace('/<(?=[^a-zA-Z\/\!\?\%])/', '&lt;', $doc);
 
-		// Web documents shouldn't contains \x00 symbol
+		// Web documents should not contains \x00 symbol
 		$doc = str_replace("\x00", '', $doc);
 
 		// Opera6 bug workaround
@@ -716,17 +720,14 @@ class HTML_Safe {
 		// UTF-7 encoding ASCII decode
 		// @G2 - skip UTF-7 handling, causes a string like 'a+b-c' to become 'ac'
 		//$doc = $this->repackUTF7($doc);
-
 		// Instantiate the parser
 		$parser = new XML_HTMLSax3();
 
 		// Set up the parser
 		$parser->set_object($this);
-
 		$parser->set_element_handler('_openHandler', '_closeHandler');
 		$parser->set_data_handler('_dataHandler');
 		$parser->set_escape_handler('_escapeHandler');
-
 		$parser->parse($doc);
 
 		return $this->getXHTML();

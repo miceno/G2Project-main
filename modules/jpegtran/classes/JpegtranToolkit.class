@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryToolkit.class');
 
 /**
@@ -154,8 +152,7 @@ class JpegtranToolkit extends GalleryToolkit {
 				$pixelY = JpegtranToolkit::round_mcu($parameters[1] / 100 * $height);
 				$width  = round($parameters[2] / 100 * $width);
 				$height = round($parameters[3] / 100 * $height);
-
-				$cmd = array(
+				$cmd    = array(
 					$jpegtran,
 					'-verbose',
 					'-copy',
@@ -173,16 +170,21 @@ class JpegtranToolkit extends GalleryToolkit {
 		$cmd = array_merge($cmd, array('-outfile', $tmpFilename, $sourceFilename));
 
 		$gallery->guaranteeTimeLimit(90);
+
 		$oldCwd = $platform->getcwd();
+
 		$platform->chdir($tmpDir);
+
 		list($success, $output) = $platform->exec(array($cmd));
 
 		if (!$success) {
 			@$platform->unlink($tmpFilename);
+
 			$platform->chdir($oldCwd);
 
 			return array(GalleryCoreApi::error(ERROR_TOOLKIT_FAILURE, null, null, $output), null, null);
 		}
+
 		$platform->chdir($oldCwd);
 
 		$success = $platform->rename($tmpFilename, $destFilename);
@@ -201,6 +203,7 @@ class JpegtranToolkit extends GalleryToolkit {
 				null,
 			);
 		}
+
 		$platform->chmod($destFilename);
 
 		if (isset($width)) {
@@ -226,8 +229,8 @@ class JpegtranToolkit extends GalleryToolkit {
 		global $gallery;
 
 		/*
-		 * Run it through PHP first, it's faster and more portable.  If it runs afoul of
-		 * open_basedir it'll return false and we can try Jpegtran.
+		 * Run it through PHP first, it is faster and more portable.
+		 * If it runs afoul of open_basedir it will return "false" and we can try Jpegtran.
 		 */
 		$platform =& $gallery->getPlatform();
 		$results  = $platform->getimagesize($filename);
@@ -254,11 +257,15 @@ class JpegtranToolkit extends GalleryToolkit {
 		}
 
 		$oldCwd = $platform->getcwd();
+
 		$platform->chdir($tmpDir);
 
-		$cmd                      = array($jpegtran, '-verbose', '-outfile', $tmpFilename, $filename);
-		list($success, , $output) = $platform->exec(array($cmd));
+		$cmd = array($jpegtran, '-verbose', '-outfile', $tmpFilename, $filename);
+
+		list($success, $ignored, $output) = $platform->exec(array($cmd));
+
 		@$platform->unlink($tmpFilename);
+
 		$platform->chdir($oldCwd);
 
 		if (!$success) {

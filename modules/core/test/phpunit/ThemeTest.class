@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryTheme.class');
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
 
@@ -35,6 +33,7 @@ class ThemeTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -42,16 +41,19 @@ class ThemeTest extends GalleryTestCase {
 		}
 
 		$this->_platform = new ThemeTestPlatform();
+
 		$gallery->setPlatform($this->_platform);
 
 		GalleryDataCache::reset();
+
 		list($ret, $this->_theme) = GalleryCoreApi::loadPlugin('theme', 'ThemeTest');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_theme->setRequiredCoreApi(GalleryCoreApi::getApiVersion());
-		$this->_theme->setRequiredThemeApi(GalleryTheme::doStatic()->getApiVersion());
+		$this->_theme->setRequiredThemeApi(GalleryTheme::getMe()->getApiVersion());
 
 		$ret = $this->_markPluginParametersForCleanup('module', 'core');
 
@@ -64,6 +66,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_item);
 	}
 
@@ -295,10 +298,11 @@ class ThemeTest extends GalleryTestCase {
 			if ($i) {
 				$data .= ',';
 			}
+
 			$data .= $data_pattern;
 		}
-		$data = '[' . $data . ']';
 
+		$data   = '[' . $data . ']';
 		$actual = $this->_theme->packSetting('block-list', $data);
 
 		$this->assertEquals(
@@ -396,6 +400,7 @@ class ThemeTest extends GalleryTestCase {
 
 	public function testInstallBadThemeApi() {
 		list($major, $minor) = $this->_theme->getRequiredThemeApi();
+
 		$this->_theme->setRequiredThemeApi(array($major - 1, $minor));
 
 		$ret = $this->_theme->installOrUpgrade();
@@ -403,6 +408,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret && !($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH)) {
 			return $ret;
 		}
+
 		$this->assertTrue(
 			$ret && ($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH),
 			'success?'
@@ -417,6 +423,7 @@ class ThemeTest extends GalleryTestCase {
 		}
 
 		list($major, $minor) = $this->_theme->getRequiredThemeApi();
+
 		$this->_theme->setRequiredThemeApi(array($major - 1, $minor));
 
 		list($ret, $redirect) = $this->_theme->activate();
@@ -424,6 +431,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret && !($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH)) {
 			return $ret;
 		}
+
 		$this->assertTrue($ret && ($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH), 'success?');
 
 		list($ret, $isActive) = $this->_theme->isActive();
@@ -431,11 +439,13 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse($isActive, 'is active');
 	}
 
 	public function testInstallBadCoreApi() {
 		list($major, $minor) = $this->_theme->getRequiredCoreApi();
+
 		$this->_theme->setRequiredCoreApi(array($major - 1, $minor));
 
 		$ret = $this->_theme->installOrUpgrade();
@@ -443,6 +453,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret && !($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH)) {
 			return $ret;
 		}
+
 		$this->assertTrue($ret && ($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH), 'success?');
 	}
 
@@ -454,6 +465,7 @@ class ThemeTest extends GalleryTestCase {
 		}
 
 		list($major, $minor) = $this->_theme->getRequiredCoreApi();
+
 		$this->_theme->setRequiredCoreApi(array($major - 1, $minor));
 
 		list($ret, $redirect) = $this->_theme->activate();
@@ -461,6 +473,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret && !($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH)) {
 			return $ret;
 		}
+
 		$this->assertTrue($ret && ($ret->getErrorCode() & ERROR_PLUGIN_VERSION_MISMATCH), 'success?');
 
 		list($ret, $isActive) = $this->_theme->isActive();
@@ -468,6 +481,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse($isActive, 'is active');
 	}
 
@@ -516,6 +530,7 @@ class ThemeTest extends GalleryTestCase {
 
 		$theme['foo'] = 'bar';
 		$theme        =& $template->getVariableByReference('theme');
+
 		$this->assertEquals('bar', $theme['foo']);
 	}
 
@@ -531,6 +546,7 @@ class ThemeTest extends GalleryTestCase {
 				return $this->assertFalse(true, 'block-list error');
 			}
 		}
+
 		list($ret, $results) = $this->_theme->loadTemplate(
 			$view,
 			$template,
@@ -549,6 +565,7 @@ class ThemeTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'core.ThemeTestBlock1',
@@ -561,7 +578,7 @@ class ThemeTest extends GalleryTestCase {
 	}
 
 	public function testSplitHtml() {
-		$html      = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ...>
+		$html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ...>
 	    <html lang="de-DE" xmlns="...">
 	    <head>
 	    <foo>
@@ -571,12 +588,14 @@ class ThemeTest extends GalleryTestCase {
 	    </body>
 	    </html>
     	';
+
 		$extraHtml = array(
 			'sidebarBlocksHtml' => 'sidebar stuff',
 			'other'             => 1,
 		);
 
 		$results = $this->_theme->splitHtml($html, $extraHtml);
+
 		$this->assertEquals(
 			array(
 				'headHtml'          => '
@@ -604,26 +623,23 @@ class ThemeTest extends GalleryTestCase {
 		$randomHtml = str_repeat($randomHtml, 160000 / strlen($randomHtml));
 		$html       = '
 	    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ...>
-
 	    <html lang="de-DE" xmlns="...">
-
 	    <head>
 	    ' . $randomHtml . 'for head
 	    </head>
-
 	    <body some="foo">
 	    ' . $randomHtml . 'for body
 	    </body>
-
 	    </html>
-
     	';
-		$extraHtml  = array(
+
+		$extraHtml = array(
 			'sidebarBlocksHtml' => 'sidebar stuff',
 			'other'             => 1,
 		);
 
 		$results = $this->_theme->splitHtml($html, $extraHtml);
+
 		$this->assertEquals(
 			array(
 				'headHtml'          => '
@@ -636,6 +652,7 @@ class ThemeTest extends GalleryTestCase {
 			),
 			$results
 		);
+
 		ini_set('pcre.backtrack_limit', $backtraceLimit);
 	}
 }
@@ -646,12 +663,14 @@ class ThemeTest extends GalleryTestCase {
 class ThemeTestTheme extends GalleryTheme {
 	public function __construct() {
 		global $gallery;
+
 		$this->setId('themetest');
 		$this->setName('ThemeTest Theme');
 		$this->setDescription('Unit test theme');
 		$this->setVersion('0.9.0');
 		$this->setRequiredCoreApi(GalleryCoreApi::getApiVersion());
-		$this->setRequiredThemeApi(GalleryTheme::doStatic()->getApiVersion());
+		$this->setRequiredThemeApi(GalleryTheme::getMe()->getApiVersion());
+
 		$this->_preloadedBlocks = array();
 	}
 
@@ -665,8 +684,7 @@ class ThemeTestTheme extends GalleryTheme {
 /**
  * Test view
  */
-class ThemeTestView extends GalleryView {
-}
+class ThemeTestView extends GalleryView {}
 
 /**
  * Test platform for this test
@@ -681,6 +699,7 @@ class ThemeTestPlatform extends GalleryPlatform {
 					array_push($this->_list, $file);
 				}
 			}
+
 			array_push($this->_list, 'themetest');
 
 			return 'themetest';

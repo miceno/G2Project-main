@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /*
@@ -29,8 +28,7 @@
  * -------------------------------------------------------------
  */
 function smarty_modifier_markup($text) {
-	static $parsers  = array();
-	static $cacheKey = 'smarty_modifier_markup';
+	static $parsers = array(),  $cacheKey = 'smarty_modifier_markup';
 
 	$stripTags = false;
 	$args      = func_get_args();
@@ -46,12 +44,17 @@ function smarty_modifier_markup($text) {
 
 	if (!isset($markupType)) {
 		if (!GalleryDataCache::containsKey($cacheKey)) {
-			list($ret, $defaultMarkupType) = GalleryCoreApi::getPluginParameter('module', 'core', 'misc.markup');
+			list($ret, $defaultMarkupType) = GalleryCoreApi::getPluginParameter(
+				'module',
+				'core',
+				'misc.markup'
+			);
 
 			if ($ret) {
-				// This code is used by the UI -- we can't return an error. Choose something safe
+				// This code is used by the UI -- we cannot return an error. Choose something safe
 				$defaultMarkupType = 'none';
 			}
+
 			GalleryDataCache::put($cacheKey, $defaultMarkupType);
 		}
 
@@ -70,7 +73,11 @@ function smarty_modifier_markup($text) {
 
 				break;
 
-			case 'none':
+			case 'markdown':
+				$parsers[$markupType] = new GalleryMarkdownMarkupParser();
+
+				break;
+
 			default:
 				$parsers[$markupType] = new GalleryNoMarkupParser();
 		}
@@ -89,8 +96,7 @@ class GalleryNoMarkupParser {
 
 class GalleryHtmlMarkupParser {
 	public function parse($text) {
-		// http://bugs.php.net/bug.php?id=22014 - TODO: remove empty check when min php is 4.3.2+
-		return empty($text) ? $text : GalleryUtilities::htmlSafe(html_entity_decode($text));
+		return GalleryUtilities::htmlSafe(html_entity_decode($text));
 	}
 }
 
@@ -103,6 +109,7 @@ class GalleryBbcodeMarkupParser {
 		}
 
 		$this->_bbcode = new StringParser_BBCode();
+
 		$this->_bbcode->setGlobalCaseSensitive(false);
 
 		// Convert line breaks everywhere
@@ -113,9 +120,8 @@ class GalleryBbcodeMarkupParser {
 
 		/*
 		 * Escape all characters everywhere
-		 * We don't need to do this 'cause G2 doesn't allow raw entities into the database
-		 * $this->_bbcode->addParser('htmlspecialchars',
-		 *			     array('block', 'inline', 'link', 'listitem'));
+		 * We do not need this as G2 does not allow raw entities into the database
+		 * $this->_bbcode->addParser('htmlspecialchars',array('block', 'inline', 'link', 'listitem'));
 		 */
 
 		// Convert line endings
@@ -204,6 +210,7 @@ class GalleryBbcodeMarkupParser {
 			array('block', 'listitem'),
 			array()
 		);
+
 		$this->_bbcode->addCode(
 			'*',
 			'simple_replace',
@@ -216,6 +223,7 @@ class GalleryBbcodeMarkupParser {
 			array('list'),
 			array()
 		);
+
 		$this->_bbcode->setCodeFlag('*', 'closetag', BBCODE_CLOSETAG_OPTIONAL);
 	}
 
@@ -229,26 +237,41 @@ class GalleryBbcodeMarkupParser {
 			if (!isset($attributes['default'])) {
 				return preg_match('#^(https?|ftp|mailto):|^/#', $content);
 			}
+
 			// The code is like [url=http://.../]Text[/url]
 			return preg_match('#^(https?|ftp|mailto):|^/#', $attributes['default']);
 		}
+
 		// Output of HTML.
 		// The code is like [url]http://.../[/url]
 		if (!isset($attributes['default'])) {
 			return '<a href="' . $content . '" rel="nofollow">' . $content . '</a>';
 		}
+
 		// The code is like [url=http://.../]Text[/url]
-		return '<a href="' . $attributes['default'] . '" rel="nofollow">'
-			. $content . '</a>';
+		return '<a href="' . $attributes['default'] . '" rel="nofollow">' . $content . '</a>';
 	}
 
 	public function image($action, $attrs, $content, $params, &$node_object) {
 		if ($action == 'validate') {
 			return preg_match('#^(https?|ftp|mailto):|^/#', $content);
 		}
+
 		// Output of HTML.
-		$size = (isset($attrs['width']) ? ' width="' . (int)$attrs['width'] . '"' : '')
-		. (isset($attrs['height']) ? ' height="' . (int)$attrs['height'] . '"' : '');
+		if (isset($attrs['width'])) {
+			$widthVar = ' width="' . (int)$attrs['width'] . '"';
+		} else {
+			$widthVar = '';
+		}
+
+		if (isset($attrs['height'])) {
+			$heightVar = ' height="' . (int)$attrs['height'] . '"';
+		} else {
+			$heightVar = '';
+		}
+
+		$size = $widthVar . $heightVar;
+
 		// Input should have entities already, so no htmlspecialchars here
 		return sprintf('<img src="%s" alt=""%s/>', $content, $size);
 	}
@@ -257,6 +280,7 @@ class GalleryBbcodeMarkupParser {
 		if ($action == 'validate') {
 			return !empty($attrs['default']);
 		}
+
 		// Output of HTML.
 		$color = empty($attrs) ? 'bummer' : $attrs['default'];
 
@@ -273,5 +297,20 @@ class GalleryBbcodeMarkupParser {
 
 	public function stripLastLineBreak($text) {
 		return preg_replace("/\n( +)?$/", '$1', $text);
+	}
+}
+
+class GalleryMarkdownMarkupParser {
+	public function __construct() {
+		GalleryCoreApi::requireOnce('lib/markdown/MarkdownExtra.inc');
+		GalleryCoreApi::requireOnce('lib/smartypants/SmartyPantsTypographer.inc');
+	}
+
+	public function parse($text) {
+		return GalleryUtilities::htmlEntityDecode(
+			SmartyPantsTypographer::defaultTransform(
+				MarkdownExtra::defaultTransform($text)
+			)
+		);
 	}
 }

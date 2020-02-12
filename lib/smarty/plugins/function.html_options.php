@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -34,8 +35,7 @@ function smarty_function_html_options($params, &$smarty) {
 	$options  = null;
 	$selected = array();
 	$output   = null;
-
-	$extra = '';
+	$extra    = '';
 
 	foreach ($params as $_key => $_val) {
 		switch ($_key) {
@@ -72,8 +72,10 @@ function smarty_function_html_options($params, &$smarty) {
 	}
 
 	if (!isset($options) && !isset($values)) {
-		return ''; // raise error here?
+		// raise error here?
+		return '';
 	}
+
 	$_html_result = '';
 
 	if (isset($options)) {
@@ -102,6 +104,7 @@ function smarty_function_html_options_optoutput($key, $value, $selected) {
 		if (in_array((string)$key, $selected)) {
 			$_html_result .= ' selected="selected"';
 		}
+
 		$_html_result .= '>' . smarty_function_escape_special_chars($value) . '</option>' . "\n";
 	} else {
 		$_html_result = smarty_function_html_options_optgroup($key, $value, $selected);
@@ -116,6 +119,7 @@ function smarty_function_html_options_optgroup($key, $values, $selected) {
 	foreach ($values as $key => $value) {
 		$optgroup_html .= smarty_function_html_options_optoutput($key, $value, $selected);
 	}
+
 	$optgroup_html .= "</optgroup>\n";
 
 	return $optgroup_html;

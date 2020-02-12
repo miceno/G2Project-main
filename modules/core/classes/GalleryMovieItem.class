@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryDataItem.class');
 
 /**
@@ -78,16 +76,16 @@ class GalleryMovieItem extends GalleryDataItem {
 	public $duration;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryMovieItem();
+		if (!isset($instance)) {
+			$instance = new GalleryMovieItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -129,6 +127,7 @@ class GalleryMovieItem extends GalleryDataItem {
 		$symlink = false
 	) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		// Validate input
@@ -152,7 +151,7 @@ class GalleryMovieItem extends GalleryDataItem {
 		$this->setHeight(0);
 		$this->setDuration(0);
 
-		// We're linkable
+		// We are linkable
 		$this->setIsLinkable(true);
 
 		// Detect our dimensions, if possible
@@ -190,7 +189,8 @@ class GalleryMovieItem extends GalleryDataItem {
 			return $ret;
 		}
 
-		$mimeType            = $this->getMimeType();
+		$mimeType = $this->getMimeType();
+
 		list($ret, $toolkit) = GalleryCoreApi::getToolkitByProperty($mimeType, 'dimensions-and-duration');
 
 		if ($ret) {
@@ -203,8 +203,8 @@ class GalleryMovieItem extends GalleryDataItem {
 			if ($ret) {
 				if (!($ret->getErrorCode() & ERROR_STORAGE_FAILURE)) {
 					/*
-					 * We can't get the dimensions.  It may be a bad movie, or the graphics toolkit
-					 * may be broken.  We can't tell, so set everything to zero for now.
+					 * We cannot get the dimensions.  It may be a bad movie, or the graphics toolkit
+					 * may be broken.  We cannot tell, so set everything to zero for now.
 					 *
 					 * TODO: trapping everything but storage failures is too broad.  Trap only
 					 * toolkit failures after we refactor all toolkits to set the

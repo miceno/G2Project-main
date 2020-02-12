@@ -1,14 +1,10 @@
 <?php
-//
+
 // PHP framework for testing, based on the design of "JUnit".
-//
 // Written by Fred Yankowski <fred@ontosys.com>
 //            OntoSys, Inc  <http://www.OntoSys.com>
-//
 // $Id: phpunit.inc 20957 2009-12-16 04:57:07Z mindless $
-
 // Copyright (c) 2000 Fred Yankowski
-
 // Permission is hereby granted, free of charge, to any person
 // obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without
@@ -16,10 +12,8 @@
 // modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,8 +22,6 @@
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//
-
 if (version_compare(phpversion(), '5.3', '>=')) {
 	// Ignore these warnings for PHP 5.3 in Gallery 2.3
 	error_reporting(E_ALL & ~E_STRICT);
@@ -43,9 +35,9 @@ if (version_compare(phpversion(), '5.3', '>=')) {
  *    function countTestCases();
  * }
  */
-
 function trace($msg) {
 	return;
+
 	echo $msg;
 	flush();
 }
@@ -83,13 +75,16 @@ function PHPUnit_error_handler($errno, $errstr, $errfile, $errline) {
 			} elseif (isset($traceEntry['function'])) {
 				$buf .= " ($traceEntry[function]) ";
 			}
+
 			$buf    .= ' <B>at line</B> ' . (isset($traceEntry['line']) ? $traceEntry['line'] : '??');
 			$trace[] = $buf;
 		}
+
 		$message .= join('<BR>', $trace);
 	} else {
 		$message .= ' <B>in</B> ' . $errfile . ' <B>at line</B> ' . $errline;
 	}
+
 	$PHPUnit_testRunning->fail($message);
 }
 
@@ -111,7 +106,6 @@ class PHPUnitException {
 		return $this->type;
 	}
 }
-
 
 /**
  * A set of assert methods.
@@ -214,6 +208,7 @@ class Assert {
 
 			$serializedActual   = serialize($actual);
 			$serializedExpected = serialize($expected);
+
 			/*
 			 *			$message = sprintf(
 			 *				'%sEXPECTED: %s <br>ACTUAL: %s',
@@ -224,6 +219,7 @@ class Assert {
 			 */
 			if ($serializedActual !== $serializedExpected) {
 				return $this->failNotEquals($expected, $actual, $message);
+
 				//return $this->fail($message);
 			}
 		} elseif (is_numeric($actual) && is_numeric($expected)) {
@@ -279,6 +275,7 @@ class Assert {
 
 			$serializedActual   = serialize($actual);
 			$serializedExpected = serialize($expected);
+
 			/*
 			 *			$message = sprintf(
 			 *				'%sEXPECTED: %s <br>ACTUAL: %s',
@@ -289,6 +286,7 @@ class Assert {
 			 */
 			if ($serializedActual == $serializedExpected) {
 				return $this->failNotEquals($expected, $actual, $message);
+
 				//return $this->fail($message);
 			}
 		} elseif (is_numeric($actual) && is_numeric($expected)) {
@@ -330,7 +328,7 @@ class Assert {
 			!empty($message) ? $message . ' <br>' : '<br>'
 		);
 
-		if (is_null($actual)) {
+		if (null === $actual) {
 			return $this->fail($message);
 		}
 	}
@@ -348,7 +346,7 @@ class Assert {
 			!empty($message) ? $message . ' <br>' : '<br>'
 		);
 
-		if (!is_null($actual)) {
+		if (null !== $actual) {
 			return $this->fail($message);
 		}
 	}
@@ -532,13 +530,15 @@ class Assert {
 		} else {
 			$translateValue = htmlspecialchars($value);
 		}
+
 		$htmlValue = "<code class=\"$class\">" . $translateValue . '</code>';
 
 		if (is_bool($value)) {
 			$htmlValue = $value ? '<i>true</i>' : '<i>false</i>';
-		} elseif (is_null($value)) {
+		} elseif (null === $value) {
 			$htmlValue = '<i>null</i>';
 		}
+
 		$htmlValue .= '&nbsp;&nbsp;&nbsp;<span class="typeinfo">';
 		$htmlValue .= 'type:' . gettype($value);
 		$htmlValue .= is_object($value) ? ', class:' . get_class($value) : '';
@@ -550,6 +550,7 @@ class Assert {
 	public function failNotEquals($expected, $actual, $message = null) {
 		// Private function for reporting failure to match.
 		$str = $message ? ($message . ' <br>') : '';
+
 		//$str .= "($expected_label/actual)<br>";
 		$str .= sprintf(
 			'EXPECTED:<br>%s<br><br>ACTUAL:<br>%s',
@@ -584,10 +585,12 @@ class Assert_X {
 
 		if ($condition === 'true') {
 			$message = sprintf('%sexpected TRUE, actual FALSE', $string);
-			$ret     = $this->_assertHelperTrue($condition, $message);
+
+			$ret = $this->_assertHelperTrue($condition, $message);
 		} elseif ($condition === 'false') {
 			$message = sprintf('%sexpected FALSE, actual TRUE', $string);
-			$ret     = $this->_assertHelperFalse($condition, $message);
+
+			$ret = $this->_assertHelperFalse($condition, $message);
 		}
 
 		if ($ret != 'null') {
@@ -673,20 +676,23 @@ class Assert_X {
 					$this->failNotEquals($expected, $actual, 'expected', $message);
 				}
 
-				return;     // no further tests after equals()
+				// no further tests after equals()
+				return;
 			}
 		}
 
-		if (is_null($expected) != is_null($actual)) {
+		if ((null === $expected) != (null === $actual)) {
 			$this->failNotEquals($expected, $actual, 'expected', $message);
 
 			return;
 		}
+
 		$itemsAreEqual = ($expected === $actual);
 
 		if ($itemsAreEqual) {
 			return;
 		}
+
 		$this->failNotEquals($expected, $actual, 'expected', $message);
 	}
 
@@ -734,13 +740,15 @@ class Assert_X {
 		} else {
 			$translateValue = htmlspecialchars($value);
 		}
+
 		$htmlValue = "<code class=\"$class\">" . $translateValue . '</code>';
 
 		if (is_bool($value)) {
 			$htmlValue = $value ? '<i>true</i>' : '<i>false</i>';
-		} elseif (is_null($value)) {
+		} elseif (null === $value) {
 			$htmlValue = '<i>null</i>';
 		}
+
 		$htmlValue .= '&nbsp;&nbsp;&nbsp;<span class="typeinfo">';
 		$htmlValue .= 'type:' . gettype($value);
 		$htmlValue .= is_object($value) ? ', class:' . get_class($value) : '';
@@ -752,6 +760,7 @@ class Assert_X {
 	public function failNotEquals($expected, $actual, $expected_label, $message = 0) {
 		// Private function for reporting failure to match.
 		$str = $message ? ($message . ' <br>') : '';
+
 		//$str .= "($expected_label/actual)<br>";
 		$str .= sprintf(
 			'%s<br>%s',
@@ -799,7 +808,9 @@ class TestCase extends Assert {
 		Note that if a TestResult object was passed in, it must be by
 		reference. */
 		$this->fResult = $testResult;
+
 		$testResult->run($this, $ranges);
+
 		$this->fResult = 0;
 
 		return $testResult;
@@ -820,10 +831,9 @@ class TestCase extends Assert {
 	public function runTest() {
 		// Saved ref to current TestCase, so that the error handler can access it.
 		$GLOBALS['PHPUnit_testRunning'] =& $this;
+		$old_handler                    = set_error_handler('PHPUnit_error_handler');
 
-		$old_handler = set_error_handler('PHPUnit_error_handler');
 		// errors will now be handled by our error handler
-
 		$name = $this->name();
 
 		if (!method_exists($this, $name)) {
@@ -833,9 +843,9 @@ class TestCase extends Assert {
 
 			if ($ret) {
 				global $gallery;
+
 				/*
-				 * DA-HACK
-				 * Array check below is a hack to allow linksinthehead to passe
+				 * DA NOTE: Array check below is a hack to allow linksinthehead to pass
 				 * TODO Remove and resolve real issue.
 				 */
 				if (is_array($ret)) {
@@ -855,18 +865,22 @@ class TestCase extends Assert {
 			// Call set/restore just to see what the current error handler is:
 			$old_handler = set_error_handler('PHPUnit_error_handler');
 			restore_error_handler();
+
 			// Remove current error handler:
 			restore_error_handler();
+
 			// If we just removed PHPUnit_error_handler then previous state is restored.
 			// If all error handlers are gone then test must have called restore_error_handler
-			// (preferably they don't do that).
+			// (preferably they do not do that).
 			if ($old_handler == 'PHPUnit_error_handler' || empty($old_handler)) {
 				break;
 			}
 		}
+
 		// Original code:
 		//if (isset($old_handler)) {
-		//    set_error_handler($old_handler); // revert to prior error handler
+		// revert to prior error handler
+		//    set_error_handler($old_handler);
 		//} else {
 		//    restore_error_handler();
 		//}
@@ -890,7 +904,6 @@ class TestCase extends Assert {
 	}
 
 	////////////////////////////////////////////////////////////////
-
 	// protected
 	protected function _createResult() {
 		// override this to use specialized subclass of TestResult
@@ -899,6 +912,7 @@ class TestCase extends Assert {
 
 	public function fail($message = 0) {
 		//printf("TestCase::fail(%s)<br>\n", ($message) ? $message : '');
+
 		/* JUnit throws AssertionFailedError here.  We just record the
 		failure and carry on */
 		$this->fExceptions[] = new PHPUnitException($message, 'FAILURE');
@@ -908,7 +922,9 @@ class TestCase extends Assert {
 		/* report error that requires correction in the test script
 		itself, or (heaven forbid) in this testing infrastructure */
 		$this->fExceptions[] = new PHPUnitException($message, 'ERROR');
-		$this->fResult->stop(); // [does not work]
+
+		// [does not work]
+		$this->fResult->stop();
 	}
 
 	public function failed() {
@@ -960,12 +976,15 @@ class TestCase extends Assert {
 
 	public function runBare() {
 		global $gallery;
+
 		$this->fTiming['start'] = microtime();
-		$ret                    = $this->setUp();
+
+		$ret = $this->setUp();
 
 		if ($ret) {
 			$this->fail($ret->getAsHtml() . $gallery->getDebugBuffer());
 		}
+
 		parent::__construct(
 			!empty($this->fLifeCycle['setUp']),
 			'TestSuite setUp() method did not call parent::setUp()'
@@ -974,15 +993,18 @@ class TestCase extends Assert {
 		if (!($this->errored() || $this->failed())) {
 			$this->runTest();
 		}
+
 		$ret = $this->tearDown();
 
 		if ($ret) {
 			$this->fail($ret->getAsHtml() . $gallery->getDebugBuffer());
 		}
+
 		parent::__construct(
 			!empty($this->fLifeCycle['tearDown']),
 			'TestSuite tearDown() method did not call parent::tearDown()'
 		);
+
 		$this->fTiming['stop'] = microtime();
 	}
 }
@@ -997,10 +1019,10 @@ class TestSuite {
 	public function __construct($classname = false, $moduleid = false, $filter = null) {
 		// Find all methods of the given class whose name starts with
 		// "test" and add them to the test suite.
-
 		if (empty($classname)) {
 			return;
 		}
+
 		$this->fClassname = $classname;
 		$this->fModuleId  = $moduleid;
 		$this->fFilter    = $filter;
@@ -1053,6 +1075,7 @@ class TestSuite {
 			if ($testResult->shouldStop()) {
 				break;
 			}
+
 			$test->run($testResult, $ranges);
 		}
 	}
@@ -1070,7 +1093,6 @@ class TestSuite {
 		return $count;
 	}
 }
-
 
 class TestFailure {
 	/* Record failure of a single TestCase, associating it with the
@@ -1103,7 +1125,6 @@ class TestFailure {
 	}
 }
 
-
 class TestResult {
 	// Collect the results of running a set of TestCases.
 	public $fFailures       = array();
@@ -1112,11 +1133,11 @@ class TestResult {
 	public $fUnskippedTests = 0;
 	public $fStop           = false;
 
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	public function _endTest(&$test) {
 		// protected
+
 		/* specialize this for end-of-test action, such as progress
 		reports  */
 	}
@@ -1147,6 +1168,7 @@ class TestResult {
 		if ($skipFlag) {
 			$test->skip();
 		}
+
 		$this->_startTest($test);
 
 		if (!$test->wasSkipped()) {
@@ -1165,6 +1187,7 @@ class TestResult {
 				$this->addFailure($test, $exception);
 			}
 		}
+
 		//    if ($exceptions)
 		//      $this->fFailures[] = new TestFailure(&$test, &$exceptions);
 		$this->_endTest($test);
@@ -1205,7 +1228,8 @@ class TestResult {
 class TextTestResult extends TestResult {
 	// Specialize TestResult to produce text/html report
 	public function __construct() {
-		parent::__construct();  // call superclass constructor
+		// call superclass constructor
+		parent::__construct();
 	}
 
 	public function report() {
@@ -1225,15 +1249,16 @@ class TextTestResult extends TestResult {
 			foreach ($failures as $i => $failure) {
 				$failedTestName = $failure->getTestName();
 				printf("<li>%s</li>\n", $failedTestName);
-
 				$exceptions = $failure->getExceptions();
 				echo "\n<ul>";
 
 				foreach ($exceptions as $na => $exception) {
 					printf("<li>%s</li>\n", $exception->getMessage());
 				}
+
 				echo '</ul>';
 			}
+
 			echo "</ol>\n";
 		}
 
@@ -1245,12 +1270,12 @@ class TextTestResult extends TestResult {
 			foreach ($this->fErrors as $i => $error) {
 				$erroredTestName = $error->getTestName();
 				printf("<li>%s</li>\n", $failedTestName);
-
 				$exception = $error->getException();
 				echo "\n<ul>";
 				printf("<li>%s</li>\n", $exception->getMessage());
 				echo '</ul>';
 			}
+
 			echo "</ol>\n";
 		}
 	}
@@ -1261,6 +1286,7 @@ class TextTestResult extends TestResult {
 		} else {
 			printf('%s ', $test->name());
 		}
+
 		flush();
 	}
 
@@ -1278,20 +1304,21 @@ class PrettyTestResult extends TestResult {
 
 	// Specialize TestResult to produce text/html report
 	public function __construct() {
-		parent::__construct();  // call superclass constructor
-		echo '<h2>Test Results</h2>';
+		// call superclass constructor
+		parent::__construct();
 
+		echo '<h2>Test Results</h2>';
 		echo '<TABLE CELLSPACING="1" CELLPADDING="1" BORDER="0" WIDTH="90%" ALIGN="CENTER" class="details">';
 		echo '<TR><TH>#</TH><TH>Module</TH><TH>Class</TH><TH>Function</TH><TH>Success?</TH><TH>Time</TH></TR>';
 	}
 
 	public function report() {
 		echo '</TABLE>';
+
 		// report result of test run
 		$nRun      = $this->countTests();
 		$nFailures = $this->countFailures();
 		echo '<h2>Summary</h2>';
-
 		printf('<p>%2.4f seconds elapsed</p>', $this->_totalElapsed);
 		printf('<p>%s test%s run</p>', $nRun, ($nRun == 1) ? '' : 's');
 		printf("<p>%s failure%s.</p>\n", $nFailures, ($nFailures == 1) ? '' : 's');
@@ -1306,6 +1333,7 @@ class PrettyTestResult extends TestResult {
 		foreach ($failures as $failure) {
 			$newFilter[$failure->getClassName() . '.' . $failure->getTestName()] = 1;
 		}
+
 		printf(
 			'<input type="button" onClick="javascript:reRun(\'%s\');" value="Re-run broken tests">',
 			'(' . join('|', array_keys($newFilter)) . ')$'
@@ -1318,15 +1346,16 @@ class PrettyTestResult extends TestResult {
 		foreach ($failures as $i => $failure) {
 			$failedTestName = $failure->getTestName();
 			printf("\n<li>%s</li>\n", $failedTestName);
-
 			$exceptions = $failure->getExceptions();
 			echo '<ul>';
 
 			foreach ($exceptions as $na => $exception) {
 				printf("\n<li>%s</li>\n", $exception->getMessage());
 			}
+
 			echo '</ul>';
 		}
+
 		echo "</ol>\n";
 	}
 
@@ -1336,6 +1365,7 @@ class PrettyTestResult extends TestResult {
 		} else {
 			$style = '';
 		}
+
 		printf("<TR><TD$style>%d</TD><TD$style>%s </TD><TD$style>%s </TD><TD$style>%s </TD>", $this->fRunTests, $test->getModuleId(), $test->classname(), $test->name());
 		flush();
 	}
@@ -1350,6 +1380,7 @@ class PrettyTestResult extends TestResult {
 			$elapsed              = sprintf('%2.4f', $test->elapsed());
 			$this->_totalElapsed += $elapsed;
 		}
+
 		printf("<TD$outcome</TD><TD>$elapsed</TD></TR>");
 		flush();
 	}
@@ -1359,6 +1390,7 @@ class TestRunner {
 	// Run a suite of tests and report results.
 	public function run(&$suite, $ranges) {
 		$result = new TextTestResult();
+
 		$suite->run($result, $ranges);
 		$result->report();
 	}

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ShowItemController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ShowItemController();
+		if (!isset($instance)) {
+			$instance = new ShowItemController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -54,6 +53,7 @@ class ShowItemController extends GalleryController {
 
 		if ($guestPreviewMode != null) {
 			$session =& $gallery->getSession();
+
 			$session->put('theme.guestPreviewMode', $guestPreviewMode ? 1 : 0);
 		}
 
@@ -73,16 +73,16 @@ class ShowItemController extends GalleryController {
  */
 class ShowItemView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ShowItemView();
+		if (!isset($instance)) {
+			$instance = new ShowItemView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -90,6 +90,7 @@ class ShowItemView extends GalleryView {
 	 */
 	public function loadTemplate(&$template = null, &$form = null) {
 		global $gallery;
+
 		list($ret, $item, $wasSpecified) = $this->getItem(true);
 
 		if ($ret) {
@@ -113,8 +114,8 @@ class ShowItemView extends GalleryView {
 		}
 
 		/*
-		 * Don't increment the view count for anything but the first page of the album so that we
-		 * don't count each individual page views as an album view.  This only applies to
+		 * Do not increment the view count for anything but the first page of the album so that we
+		 * do not count each individual page views as an album view.  This only applies to
 		 * non-persistent sessions because GalleryCoreApi::incrementItemViewCount does the right
 		 * thing for persistent sessions.
 		 */
@@ -144,6 +145,7 @@ class ShowItemView extends GalleryView {
 	 */
 	public function getItem($getOriginalSpecified = false) {
 		static $originalSpecified;
+
 		list($ret, $item, $wasSpecified) = parent::getItem();
 
 		if ($ret) {
@@ -158,6 +160,7 @@ class ShowItemView extends GalleryView {
 		if (!$wasSpecified) {
 			GalleryUtilities::putRequestVariable('itemId', $item->getId());
 		}
+
 		// Default wasSpecified=true so without itemId we still use root album theme/params
 		return array(null, $item, $getOriginalSpecified ? $originalSpecified : true);
 	}

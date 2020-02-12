@@ -100,3 +100,4 @@ interface SessionHandlerInterface
      */
     public function gc($maxlifetime);
 }
+

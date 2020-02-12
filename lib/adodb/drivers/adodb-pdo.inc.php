@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @version   v5.20.12  30-Mar-2018
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -24,8 +25,8 @@ if (!defined('ADODB_DIR')) {
 	die();
 }
 
-
 /*
+
 enum pdo_param_type {
 PDO::PARAM_NULL, 0
 
@@ -43,18 +44,16 @@ PDO::PARAM_STR, 2
 PDO::PARAM_LOB, 3
 
 /* get_col: will expect the ptr to point to a new PDOStatement object handle,
- * but this isn't wired up yet
+ * but this is not wired up yet
 PDO::PARAM_STMT, 4 /* hierarchical result set
 
 /* get_col ptr should point to a zend_bool
 PDO::PARAM_BOOL, 5
 
-
 /* magic flag to denote a parameter as being input/output
 PDO::PARAM_INPUT_OUTPUT = 0x80000000
 };
 */
-
 function adodb_pdo_type($t) {
 	switch ($t) {
 		case 2:
@@ -69,14 +68,14 @@ function adodb_pdo_type($t) {
 }
 
 // ----------------------------------------------------------------------------
-
-
 class ADODB_pdo extends ADOConnection {
-	public $databaseType    = 'pdo';
-	public $dataProvider    = 'pdo';
-	public $fmtDate         = "'Y-m-d'";
-	public $fmtTimeStamp    = "'Y-m-d, h:i:sA'";
-	public $replaceQuote    = "''"; // string to use to replace quotes
+	public $databaseType = 'pdo';
+	public $dataProvider = 'pdo';
+	public $fmtDate      = "'Y-m-d'";
+	public $fmtTimeStamp = "'Y-m-d, h:i:sA'";
+
+	// string to use to replace quotes
+	public $replaceQuote    = "''";
 	public $hasAffectedRows = true;
 	public $_bindInputArray = true;
 	public $_genIDSQL;
@@ -85,16 +84,13 @@ class ADODB_pdo extends ADOConnection {
 	public $_autocommit        = true;
 	public $_haserrorfunctions = true;
 	public $_lastAffectedRows  = 0;
-
-	public $_errormsg = false;
-	public $_errorno  = false;
-
-	public $dsnType = '';
-	public $stmt    = false;
+	public $_errormsg          = false;
+	public $_errorno           = false;
+	public $dsnType            = '';
+	public $stmt               = false;
 	public $_driver;
 
-	public function __construct() {
-	}
+	public function __construct() {}
 
 	public function _UpdatePDO() {
 		$d                     = $this->_driver;
@@ -106,11 +102,10 @@ class ADODB_pdo extends ADOConnection {
 		$this->random          = $d->random;
 		$this->concat_operator = $d->concat_operator;
 		$this->nameQuote       = $d->nameQuote;
-
-		$this->hasGenID    = $d->hasGenID;
-		$this->_genIDSQL   = $d->_genIDSQL;
-		$this->_genSeqSQL  = $d->_genSeqSQL;
-		$this->_dropSeqSQL = $d->_dropSeqSQL;
+		$this->hasGenID        = $d->hasGenID;
+		$this->_genIDSQL       = $d->_genIDSQL;
+		$this->_genSeqSQL      = $d->_genSeqSQL;
+		$this->_dropSeqSQL     = $d->_dropSeqSQL;
 
 		$d->_init($this);
 	}
@@ -158,6 +153,7 @@ class ADODB_pdo extends ADOConnection {
 		} catch (Exception $e) {
 			$this->_connectionID = false;
 			$this->_errorno      = -1;
+
 			//var_dump($e);
 			$this->_errormsg = 'Connection attempt failed: ' . $e->getMessage();
 
@@ -187,6 +183,7 @@ class ADODB_pdo extends ADOConnection {
 			$this->_connectionID->setAttribute(PDO::ATTR_CASE, $m);
 
 			$class = 'ADODB_pdo_' . $this->dsnType;
+
 			//$this->_connectionID->setAttribute(PDO::ATTR_AUTOCOMMIT,true);
 			switch ($this->dsnType) {
 				case 'mssql':
@@ -207,11 +204,14 @@ class ADODB_pdo extends ADOConnection {
 			}
 
 			$this->_driver->_connectionID = $this->_connectionID;
+
 			$this->_UpdatePDO();
+
 			$this->_driver->database = $this->database;
 
 			return true;
 		}
+
 		$this->_driver = new ADODB_pdo_base();
 
 		return false;
@@ -237,12 +237,13 @@ class ADODB_pdo extends ADOConnection {
 	}
 
 	// ------------------------------------------------------------------------------
-
 	public function SelectLimit($sql, $nrows = -1, $offset = -1, $inputarr = false, $secs2cache = 0) {
 		$save                     = $this->_driver->fetchMode;
 		$this->_driver->fetchMode = $this->fetchMode;
 		$this->_driver->debug     = $this->debug;
-		$ret                      = $this->_driver->SelectLimit($sql, $nrows, $offset, $inputarr, $secs2cache);
+
+		$ret = $this->_driver->SelectLimit($sql, $nrows, $offset, $inputarr, $secs2cache);
+
 		$this->_driver->fetchMode = $save;
 
 		return $ret;
@@ -330,7 +331,8 @@ class ADODB_pdo extends ADOConnection {
 		}
 
 		if ($err == '00000') {
-			return 0; // allows empty check
+			// allows empty check
+			return 0;
 		}
 
 		return $err;
@@ -366,8 +368,10 @@ class ADODB_pdo extends ADOConnection {
 		if ($this->transOff) {
 			return true;
 		}
+
 		$this->transCnt   += 1;
 		$this->_autocommit = false;
+
 		$this->SetAutoCommit(false);
 
 		return $this->_connectionID->beginTransaction();
@@ -393,9 +397,11 @@ class ADODB_pdo extends ADOConnection {
 		if ($this->transCnt) {
 			$this->transCnt -= 1;
 		}
+
 		$this->_autocommit = true;
 
 		$ret = $this->_connectionID->commit();
+
 		$this->SetAutoCommit(true);
 
 		return $ret;
@@ -417,9 +423,11 @@ class ADODB_pdo extends ADOConnection {
 		if ($this->transCnt) {
 			$this->transCnt -= 1;
 		}
+
 		$this->_autocommit = true;
 
 		$ret = $this->_connectionID->rollback();
+
 		$this->SetAutoCommit(true);
 
 		return $ret;
@@ -441,6 +449,7 @@ class ADODB_pdo extends ADOConnection {
 		if (!$stmt) {
 			return false;
 		}
+
 		$obj = new ADOPDOStatement($stmt, $this);
 
 		return $obj;
@@ -477,6 +486,7 @@ class ADODB_pdo extends ADOConnection {
 		} else {
 			$stmt = $this->_connectionID->prepare($sql);
 		}
+
 		// adodb_backtrace();
 		// var_dump($this->_bindInputArray);
 		if ($stmt) {
@@ -488,7 +498,6 @@ class ADODB_pdo extends ADOConnection {
 				$ok = $stmt->execute();
 			}
 		}
-
 
 		$this->_errormsg = false;
 		$this->_errorno  = false;
@@ -560,6 +569,7 @@ class ADODB_pdo_base extends ADODB_pdo {
 
 	public function _init($parentDriver) {
 		$parentDriver->_bindInputArray = true;
+
 		// $parentDriver->_connectionID->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY,true);
 	}
 
@@ -647,7 +657,6 @@ class ADOPDOStatement {
 /*--------------------------------------------------------------------------------------
 	Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordSet_pdo extends ADORecordSet {
 	public $bind         = false;
 	public $databaseType = 'pdo';
@@ -656,8 +665,10 @@ class ADORecordSet_pdo extends ADORecordSet {
 	public function __construct($id, $mode = false) {
 		if ($mode === false) {
 			global $ADODB_FETCH_MODE;
+
 			$mode = $ADODB_FETCH_MODE;
 		}
+
 		$this->adodbFetchMode = $mode;
 
 		switch ($mode) {
@@ -677,9 +688,10 @@ class ADORecordSet_pdo extends ADORecordSet {
 
 				break;
 		}
-		$this->fetchMode = $mode;
 
-		$this->_queryID = $id;
+		$this->fetchMode = $mode;
+		$this->_queryID  = $id;
+
 		parent::__construct($id);
 	}
 
@@ -687,6 +699,7 @@ class ADORecordSet_pdo extends ADORecordSet {
 		if ($this->_inited) {
 			return;
 		}
+
 		$this->_inited = true;
 
 		if ($this->_queryID) {
@@ -700,7 +713,8 @@ class ADORecordSet_pdo extends ADORecordSet {
 			$this->_currentRow = 0;
 
 			if ($this->EOF = ($this->_fetch() === false)) {
-				$this->_numOfRows = 0; // _numOfRows could be -1
+				// _numOfRows could be -1
+				$this->_numOfRows = 0;
 			}
 		} else {
 			$this->EOF = true;
@@ -715,13 +729,14 @@ class ADORecordSet_pdo extends ADORecordSet {
 		if (!$this->_numOfRows) {
 			$this->_numOfRows = -1;
 		}
+
 		$this->_numOfFields = $this->_queryID->columnCount();
 	}
 
 	// returns the field object
 	public function FetchField($fieldOffset = -1) {
-		$off = $fieldOffset + 1; // offsets begin at 1
-
+		// offsets begin at 1
+		$off = $fieldOffset + 1;
 		$o   = new ADOFieldObject();
 		$arr = @$this->_queryID->getColumnMeta($fieldOffset);
 
@@ -730,9 +745,11 @@ class ADORecordSet_pdo extends ADORecordSet {
 			$o->max_length = -1;
 			$o->type       = 'VARCHAR';
 			$o->precision  = 0;
+
 			// $false = false;
 			return $o;
 		}
+
 		//adodb_pr($arr);
 		$o->name = $arr['name'];
 

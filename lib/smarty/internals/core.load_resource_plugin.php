@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -11,7 +12,6 @@
  */
 
 // $type
-
 function smarty_core_load_resource_plugin($params, &$smarty) {
 	/*
 	 * Resource plugins are not quite like the other ones, so they are
@@ -19,8 +19,7 @@ function smarty_core_load_resource_plugin($params, &$smarty) {
 	 * functions provided by the plugin, the second one indicates whether
 	 * all of them exist or not.
 	 */
-
-	$_plugin = &$smarty->_plugins['resource'][$params['type']];
+	$_plugin =& $smarty->_plugins['resource'][$params['type']];
 
 	if (isset($_plugin)) {
 		if (!$_plugin[1] && count($_plugin[0])) {
@@ -63,6 +62,7 @@ function smarty_core_load_resource_plugin($params, &$smarty) {
 
 				return;
 			}
+
 			$_resource_funcs[] = $_plugin_func;
 		}
 

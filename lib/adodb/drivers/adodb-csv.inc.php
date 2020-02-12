@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,13 +8,10 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 4.
-
   Currently unsupported: MetaDatabases, MetaTables and MetaColumns, and also inputarr in Execute.
   Native types have been converted to MetaTypes.
   Transactions not supported yet.
-
   Limitation of url length. For IIS, see MaxClientRequestBuffer registry value.
-
 	  http://support.microsoft.com/default.aspx?scid=kb;en-us;260694
 */
 
@@ -36,12 +34,13 @@ if (!defined('_ADODB_CSV_LAYER')) {
 		public $_affectedrows    = 0;
 		public $_insertid        = 0;
 		public $_url;
-		public $replaceQuote    = "''"; // string to use to replace quotes
+
+		// string to use to replace quotes
+		public $replaceQuote    = "''";
 		public $hasTransactions = false;
 		public $_errorNo        = false;
 
-		public function __construct() {
-		}
+		public function __construct() {}
 
 		public function _insertid() {
 			return $this->_insertid;
@@ -60,6 +59,7 @@ if (!defined('_ADODB_CSV_LAYER')) {
 			if (strtolower(substr($argHostname, 0, 7)) !== 'http://') {
 				return false;
 			}
+
 			$this->_url = $argHostname;
 
 			return true;
@@ -70,6 +70,7 @@ if (!defined('_ADODB_CSV_LAYER')) {
 			if (strtolower(substr($argHostname, 0, 7)) !== 'http://') {
 				return false;
 			}
+
 			$this->_url = $argHostname;
 
 			return true;
@@ -139,26 +140,28 @@ if (!defined('_ADODB_CSV_LAYER')) {
 					} else {
 						$sql .= $v;
 					}
+
 					$i += 1;
 				}
+
 				$sql .= $sqlarr[$i];
 
 				if ($i + 1 != sizeof($sqlarr)) {
 					echo 'Input Array does not match ?: ' . htmlspecialchars($sql);
 				}
+
 				$inputarr = false;
 			}
 
 			$url = $this->_url . '?sql=' . urlencode($sql) . '&fetch=' .
 			(($this->fetchMode !== false) ? $this->fetchMode : $ADODB_FETCH_MODE);
 			$err = false;
-
-
-			$rs = csv2rs($url, $err, false);
+			$rs  = csv2rs($url, $err, false);
 
 			if ($this->debug) {
 				echo urldecode($url) . "<br><i>$err</i><br>";
 			}
+
 			$at = strpos($err, '::::');
 
 			if ($at === false) {
@@ -176,8 +179,7 @@ if (!defined('_ADODB_CSV_LAYER')) {
 			}
 
 			if (is_object($rs)) {
-				$rs->fetchMode = ($this->fetchMode !== false) ? $this->fetchMode : $ADODB_FETCH_MODE;
-
+				$rs->fetchMode       = ($this->fetchMode !== false) ? $this->fetchMode : $ADODB_FETCH_MODE;
 				$this->_affectedrows = $rs->affectedrows;
 				$this->_insertid     = $rs->insertid;
 				$rs->databaseType    = 'csv';

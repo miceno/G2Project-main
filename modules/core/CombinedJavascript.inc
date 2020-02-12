@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,16 +27,16 @@
  */
 class CombinedJavascriptView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new CombinedJavascriptView();
+		if (!isset($instance)) {
+			$instance = new CombinedJavascriptView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -52,9 +51,9 @@ class CombinedJavascriptView extends GalleryView {
 	 */
 	public function renderImmediate($status = null, $error = null) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
-		$phpVm    = $gallery->getPhpVm();
 
+		$platform        =& $gallery->getPlatform();
+		$phpVm           = $gallery->getPhpVm();
 		$ifModifiedSince = GalleryUtilities::getServerVar('HTTP_IF_MODIFIED_SINCE');
 
 		if (isset($ifModifiedSince)
@@ -71,7 +70,7 @@ class CombinedJavascriptView extends GalleryView {
 		$key = GalleryUtilities::getRequestVariables('key');
 
 		if (preg_match('/[^0-9a-f]/', $key)) {
-			// The key can't contain non-hex, so just terminate early
+			// The key cannot contain non-hex, so just terminate early
 			return null;
 		}
 
@@ -96,9 +95,10 @@ class CombinedJavascriptView extends GalleryView {
 				}
 
 				$phpVm->header('Content-Encoding: gzip');
+
 				/*
 				 * Cache control is public for proxies that handle gzip properly.
-				 * Private for the ones that don't.
+				 * Private for the ones that do not.
 				 * http://www.mnot.net/blog/2005/05/12/google_cache
 				 */
 				$phpVm->header('Cache-Control: private, x-gzip-ok="public"');
@@ -121,6 +121,7 @@ class CombinedJavascriptView extends GalleryView {
 
 		if (isset($cacheData)) {
 			$phpVm->header('Content-type: text/javascript; charset=UTF-8');
+
 			$phpVm->header('Last-Modified: ' . $gallery->getHttpDate(1));
 			$phpVm->header('Expires: ' . $gallery->getHttpDate(2147483647));
 

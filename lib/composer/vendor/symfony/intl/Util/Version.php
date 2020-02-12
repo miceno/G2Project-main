@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Symfony\Component\Intl\Util;
 
 /**
@@ -67,7 +66,7 @@ class Version
      * @param int|null $precision The number of components to include. Pass
      *                            NULL to return the version unchanged.
      *
-     * @return string|null the normalized version or NULL if it couldn't be
+     * @return string|null the normalized version or NULL if it could not be
      *                     normalized
      */
     public static function normalize($version, $precision)
@@ -77,7 +76,6 @@ class Version
         }
 
         $pattern = '[^\.]+';
-
         for ($i = 2; $i <= $precision; ++$i) {
             $pattern = sprintf('[^\.]+(\.%s)?', $pattern);
         }
@@ -96,3 +94,4 @@ class Version
     {
     }
 }
+

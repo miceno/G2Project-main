@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -39,6 +38,7 @@ class GalleryCharsetHelper_simple {
 		}
 
 		global $gallery;
+
 		$phpVm          = $gallery->getPhpVm();
 		$sourceEncoding = $gallery->getConfig('systemCharset');
 
@@ -59,6 +59,7 @@ class GalleryCharsetHelper_simple {
 
 		if (empty($sourceEncoding)) {
 			$lcTable = explode(';', $phpVm->setlocale(LC_ALL, '0'));
+
 			/*
 			 * setlocale() returns a string like this:
 			 *    LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=C;LC_COLLATE=C;LC_MONETARY=C;
@@ -102,7 +103,7 @@ class GalleryCharsetHelper_simple {
 			default:
 				/*
 				 * Windows XP has LC_CTYPE=English_United States.1252, LC_CTYPE=Russian_Russia.1251,
-				 * etc.  Convert all the .125x types to CP125x, except Windows-1252 which we'll preserve
+				 * etc.  Convert all the .125x types to CP125x, except Windows-1252 which we will preserve
 				 * for backwards compatibility with G2.1
 				 */
 				$intEncoding = (int)$sourceEncoding;
@@ -115,8 +116,10 @@ class GalleryCharsetHelper_simple {
 					}
 				}
 		}
+
 		// FreeBSD may return charset with missing hyphen from nl_langinfo
 		$sourceEncoding = str_replace('ISO8859', 'ISO-8859', $sourceEncoding);
+
 		// Gentoo may return ANSI_X3.4-1968
 		if (preg_match('{^ANSI[_-]}', $sourceEncoding)) {
 			$sourceEncoding = 'ASCII';
@@ -132,6 +135,7 @@ class GalleryCharsetHelper_simple {
 	 */
 	public static function convertToUtf8($string, $sourceEncoding = null) {
 		global $gallery;
+
 		$phpVm = $gallery->getPhpVm();
 
 		if (empty($sourceEncoding)) {
@@ -156,9 +160,11 @@ class GalleryCharsetHelper_simple {
 		if ($phpVm->function_exists('recode_string')) {
 			return $phpVm->recode_string($sourceEncoding . '..UTF-8', $string);
 		}
+
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/helpers/GalleryCharsetHelper_medium.class'
 		);
+
 		$charset =& GalleryCharsetHelper_medium::getCharsetTable($sourceEncoding);
 
 		if (isset($charset)) {
@@ -186,6 +192,7 @@ class GalleryCharsetHelper_simple {
 	 */
 	public static function convertFromUtf8($string, $targetEncoding = null) {
 		global $gallery;
+
 		$phpVm = $gallery->getPhpVm();
 
 		if (empty($targetEncoding)) {
@@ -215,6 +222,7 @@ class GalleryCharsetHelper_simple {
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/helpers/GalleryCharsetHelper_medium.class'
 		);
+
 		$sourceCharset =& GalleryCharsetHelper_medium::getCharsetTable($targetEncoding);
 
 		if (isset($sourceCharset)) {
@@ -228,6 +236,7 @@ class GalleryCharsetHelper_simple {
 				if (empty($value)) {
 					continue;
 				}
+
 				// Convert decimal value 128-255 to character
 				$search[]  = $value;
 				$replace[] = chr($key);
@@ -253,7 +262,11 @@ class GalleryCharsetHelper_simple {
 			}
 		}
 
-		$result = $hasMbSubstr ? (string)mb_substr($string, $start, $length, 'UTF-8') : GalleryCharsetHelper_medium::phpUtf8Substring($string, $start, $length);
+		if ($hasMbSubstr) {
+			$result = (string)mb_substr($string, $start, $length, 'UTF-8');
+		} else {
+			$result = GalleryCharsetHelper_medium::phpUtf8Substring($string, $start, $length);
+		}
 
 		// Truncate partial HTML entity at end of result
 		return preg_replace('/&[^;]{0,6}$/', '', $result);
@@ -273,7 +286,11 @@ class GalleryCharsetHelper_simple {
 			}
 		}
 
-		$result = $hasMbStrCut ? (string)mb_strcut($string, $start, $length, 'UTF-8') : GalleryCharsetHelper_medium::phpUtf8Strcut($string, $start, $length);
+		if ($hasMbStrCut) {
+			$result = (string)mb_strcut($string, $start, $length, 'UTF-8');
+		} else {
+			$result = GalleryCharsetHelper_medium::phpUtf8Strcut($string, $start, $length);
+		}
 
 		// Truncate partial HTML entity at end of result
 		return preg_replace('/&[^;]{0,6}$/', '', $result);

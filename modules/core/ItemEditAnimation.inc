@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class ItemEditAnimation extends ItemEditPlugin {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new ItemEditAnimation();
+		if (!isset($instance)) {
+			$instance = new ItemEditAnimation();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -48,7 +47,7 @@ class ItemEditAnimation extends ItemEditPlugin {
 		$status = null;
 		$error  = array();
 
-		// Figure out which command we're taking
+		// Figure out which command we are taking
 		if (isset($form['action']['save'])) {
 			if (isset($form['width']) && $form['width'] < 0) {
 				$error[] = 'form[error][width][invalid]';
@@ -80,6 +79,7 @@ class ItemEditAnimation extends ItemEditPlugin {
 				$item->setWidth($form['width']);
 				$item->setHeight($form['height']);
 				$item->setSerialNumber($form['serialNumber']);
+
 				$ret = $item->save();
 
 				if ($ret) {
@@ -122,6 +122,7 @@ class ItemEditAnimation extends ItemEditPlugin {
 		}
 
 		$ItemEditAnimation = array();
+
 		$template->setVariable('ItemEditAnimation', $ItemEditAnimation);
 		$template->setVariable('controller', 'core.ItemEditAnimation');
 
@@ -152,3 +153,4 @@ class ItemEditAnimation extends ItemEditPlugin {
 		return array(null, $module->translate('Animation Size'));
 	}
 }
+

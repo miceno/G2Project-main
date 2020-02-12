@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,6 +31,7 @@ class MainTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -41,18 +41,21 @@ class MainTest extends GalleryTestCase {
 		$_SERVER['HTTP_HOST']   = 'example.com';
 		$_SERVER['SERVER_PORT'] = 80;
 		$_SERVER['REQUEST_URI'] = '/gallery2/phpunit_test.php';
+
 		GalleryUtilities::putRequestVariable('view', 'core.Foo');
+
 		$this->_urlGenerator = new GalleryUrlGenerator();
-		$ret                 = $this->_urlGenerator->init('phpunit_test.php');
+
+		$ret = $this->_urlGenerator->init('phpunit_test.php');
 
 		if ($ret) {
 			return $ret;
 		}
 
 		$this->_saveSession = $gallery->_session;
+		$gallery->_phpVm    = new MainTestPhpVm();
+		$gallery->_session  = new GallerySession();
 
-		$gallery->_phpVm   = new MainTestPhpVm();
-		$gallery->_session = new GallerySession();
 		$gallery->setUrlGenerator($this->_urlGenerator);
 
 		// Clear response headers
@@ -62,6 +65,7 @@ class MainTest extends GalleryTestCase {
 
 	public function tearDown() {
 		global $gallery;
+
 		$gallery->_session = $this->_saveSession;
 
 		list($ret, $languageCode) = $gallery->getActiveLanguageCode();
@@ -70,9 +74,11 @@ class MainTest extends GalleryTestCase {
 			$this->failWithStatus($ret);
 		} else {
 			// Init a new translator so that we reset our locale
-			$translator = GalleryTranslator::doStatic();
+			$translator = GalleryTranslator::getMe();
+
 			$translator->init($languageCode);
 		}
+
 		GalleryUtilities::removeRequestVariable('view');
 		GalleryUtilities::removeRequestVariable('controller');
 
@@ -85,7 +91,8 @@ class MainTest extends GalleryTestCase {
 
 	public function _getResponseHeaders() {
 		$headers = GalleryUtilities::_getResponseHeaders();
-		// We're not interested in the status header
+
+		// We are not interested in the status header
 		unset($headers['status']);
 
 		return $headers;
@@ -96,6 +103,7 @@ class MainTest extends GalleryTestCase {
 	 */
 	public function testEmbedOnly() {
 		global $gallery;
+
 		$gallery->setConfig('mode.embed.only', true);
 
 		list($ret, $g2Data) = _GalleryMain();
@@ -112,8 +120,10 @@ class MainTest extends GalleryTestCase {
 	 */
 	public function testEmbedOnlyUrl() {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$expectedUrl  = $urlGenerator->makeUrl('/embedApp/index.php');
+
 		$gallery->setConfig('mode.embed.only', $expectedUrl);
 
 		list($ret, $g2Data) = _GalleryMain();
@@ -137,8 +147,11 @@ class MainTest extends GalleryTestCase {
 	 */
 	public function testMaintenanceMode() {
 		global $gallery;
+
 		$gallery->_session->_sessionId = 'fakeSID';
+
 		$gallery->setConfig('mode.maintenance', true);
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 
 		GalleryUtilities::putRequestVariable('controller', 'core.FooController');
@@ -159,6 +172,7 @@ class MainTest extends GalleryTestCase {
 				'forceFullUrl' => true,
 			)
 		);
+
 		$this->assertEquals(
 			array(
 				'location' => "Location: $expectedUrl",
@@ -173,9 +187,10 @@ class MainTest extends GalleryTestCase {
 	 */
 	public function testMaintenanceModeUrl() {
 		global $gallery;
-		$urlGenerator =& $gallery->getUrlGenerator();
 
-		$expectedUrl = $urlGenerator->makeUrl('/maintenance.html');
+		$urlGenerator =& $gallery->getUrlGenerator();
+		$expectedUrl  = $urlGenerator->makeUrl('/maintenance.html');
+
 		$gallery->setConfig('mode.maintenance', $expectedUrl);
 
 		list($ret, $g2Data) = _GalleryMain();
@@ -201,7 +216,6 @@ class MainTest extends GalleryTestCase {
 		global $gallery;
 
 		// Prepare test cases
-
 		// IIS servers with a version < 6 are affected
 		$buggyWebServers = array(
 			'Microsoft-IIS/3.0',
@@ -222,34 +236,38 @@ class MainTest extends GalleryTestCase {
 			'Zeus',
 		);
 
-		// Controllers that shouldn't trigger the fix, just a few samples
+		// Controllers that should not trigger the fix, just a few samples
 		$okControllers = array('core.ItemAdd', 'migrate.Redirect', null, 'core.ItemMove');
 
 		// Controllers that should trigger the fix
 		$needFixControllers = array('core.Logout', 'core.UserLogin', 'publishxp.Login');
+		$base               = 'http://www.example.com/';
+		$session            =& $gallery->getSession();
 
-		$base    = 'http://www.example.com/';
-		$session =& $gallery->getSession();
-		$ret     = $session->init();
+		$ret = $session->init();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = $session->start();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$sessionId  = $session->getId();
 		$sessionKey = $session->getKey();
+
 		$this->assertTrue(
 			!empty($sessionId) && !empty($sessionKey),
 			'Initial session assertion failed'
 		);
+
 		$sessionParamString = GalleryUtilities::prefixFormVariable(urlencode($session->getKey())) . '=' .
 		urlencode($session->getId());
 
-		// URLs that shouldn't be changed (because they already have the session param)
+		// URLs that should not be changed (because they already have the session param)
 		$okUrls = array(
 			"main.php?$sessionParamString",
 			'main.php?g2_view=core.ShowItem&amp;' .
@@ -310,18 +328,22 @@ class MainTest extends GalleryTestCase {
 
 	public function testDoRedirectConvertsToAbsoluteUrl() {
 		global $gallery;
-		GalleryDataCache::reset(); // Ensure getCurrentRequestUri result isn't cached
+
+		// Ensure getCurrentRequestUri result is not cached
+		GalleryDataCache::reset();
 
 		// Make sure the redirect has no sessionId in it
 		GalleryUtilities::removeRequestVariable(SESSION_ID_PARAMETER);
-		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
 
+		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
 		$session = new GallerySession();
-		$ret     = $session->init();
+
+		$ret = $session->init();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse($session->isUsingCookies(), 'isUsingCookies');
 		$this->assertEquals(SESSION_TEMP_ID, $session->getId(), 'SESSION_TEMP_ID');
 
@@ -350,14 +372,16 @@ class MainTest extends GalleryTestCase {
 	public function testDoRedirectRemoveTrailingQMark() {
 		// Make sure the redirect has no sessionId in it
 		GalleryUtilities::removeRequestVariable(SESSION_ID_PARAMETER);
-		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
 
+		unset($_COOKIE[SESSION_ID_PARAMETER], $_SERVER['HTTP_COOKIE']);
 		$session = new GallerySession();
-		$ret     = $session->init();
+
+		$ret = $session->init();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse($session->isUsingCookies(), 'isUsingCookies');
 		$this->assertEquals(SESSION_TEMP_ID, $session->getId(), 'SESSION_TEMP_ID');
 
@@ -385,6 +409,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testAuthTokenCheckIsEnforcedForControllers() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		GalleryUtilities::removeRequestVariable('view');
@@ -407,6 +432,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testAuthTokenCheckIsEnforcedForControllerLikeViews() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		GalleryUtilities::removeRequestVariable('controller');
@@ -429,6 +455,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testAuthTokenCheckIsOmittedForSpecificControllers() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		GalleryUtilities::removeRequestVariable('view');
@@ -451,6 +478,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testRedirectViewForGuestWithoutPermissions() {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$session      =& $gallery->getSession();
 
@@ -459,6 +487,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($item);
 
 		$ret = GalleryCoreApi::removeItemPermissions($item->getId());
@@ -483,6 +512,7 @@ class MainTest extends GalleryTestCase {
 		}
 
 		$session->doNotUseTempId();
+
 		$expectedUrl = $urlGenerator->generateUrl(
 			$gallery->getConfig('loginRedirect'),
 			array(
@@ -505,6 +535,7 @@ class MainTest extends GalleryTestCase {
 			$g2Data,
 			'returned data'
 		);
+
 		$this->assertEquals(
 			array(
 				'location' => "Location: $expectedUrl",
@@ -516,6 +547,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testRedirectViewForAlternateGuestWithoutPermissions() {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$session      =& $gallery->getSession();
 
@@ -524,6 +556,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($item);
 
 		$ret = GalleryCoreApi::removeItemPermissions($item->getId());
@@ -540,6 +573,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$session->doNotUseTempId();
 
 		$expectedUrl = $urlGenerator->generateUrl(
@@ -566,6 +600,7 @@ class MainTest extends GalleryTestCase {
 			$g2Data,
 			'returned data'
 		);
+
 		$this->assertEquals(
 			array(
 				'location' => "Location: $expectedUrl",
@@ -577,6 +612,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testViewForUserWithoutPermission() {
 		global $gallery;
+
 		$session =& $gallery->getSession();
 
 		list($ret, $item) = $this->_createRandomAlbum($this->_getRootId());
@@ -584,6 +620,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($item);
 
 		list($ret, $user) = $this->_createRandomUser();
@@ -591,6 +628,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 
 		// Verify registered user gets error page (used to redirect to root album)
@@ -629,6 +667,7 @@ class MainTest extends GalleryTestCase {
 		} else {
 			$this->fail('Expected an error');
 		}
+
 		$this->assertEquals(null, $g2Data, 'returned data');
 		$this->assertEquals(array(), $this->_getResponseHeaders(), 'headers');
 	}
@@ -660,6 +699,7 @@ class MainTest extends GalleryTestCase {
 		} else {
 			$this->fail('Expected an error');
 		}
+
 		$this->assertEquals(null, $g2Data, 'returned data');
 		$this->assertEquals(array(), $this->_getResponseHeaders(), 'headers');
 	}
@@ -687,9 +727,11 @@ class MainTest extends GalleryTestCase {
 		}
 
 		$receivedEvent = $_GET['testEvent'];
+
 		$this->assertEquals('Gallery::BeforeDisplay', $receivedEvent->getEventName());
 
 		$receivedData = $receivedEvent->getData();
+
 		$this->assertEquals(
 			'gallery:themes',
 			substr($receivedData['templatePath'], 0, 14),
@@ -710,6 +752,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'isDone' => true,
@@ -717,6 +760,7 @@ class MainTest extends GalleryTestCase {
 			$g2Data,
 			'returned data'
 		);
+
 		$this->assertTrue(
 			$this->_hasCacheControlNoCacheHeader($_REQUEST['header']),
 			'wrong Cache-Control header: ' . implode(', ', $_REQUEST['header'])
@@ -735,6 +779,7 @@ class MainTest extends GalleryTestCase {
 
 	public function testImmediateViewRequestWithoutAutoCacheControl() {
 		GalleryUtilities::putRequestVariable('view', 'core.MainTestImmediateItemNoAutoCache');
+
 		$_REQUEST['header'] = array();
 
 		list($ret, $g2Data) = _GalleryMain();
@@ -742,6 +787,7 @@ class MainTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				'isDone' => true,
@@ -749,6 +795,7 @@ class MainTest extends GalleryTestCase {
 			$g2Data,
 			'returned data'
 		);
+
 		$this->assertTrue(
 			!$this->_hasCacheControlNoCacheHeader($_REQUEST['header']),
 			'wrong Cache-Control header: ' . implode(', ', $_REQUEST['header'])
@@ -768,8 +815,8 @@ class MainTestPhpVm extends GalleryPhpVm {
 }
 
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryView.class');
-class FooView extends GalleryView {
-}
+
+class FooView extends GalleryView {}
 
 /**
  * Fake view that returns a bogus body template path so that it seems like a real view.
@@ -794,7 +841,7 @@ class MainTest_BeforeDisplayListener {
 }
 
 /**
- * Fake GalleryTemplate that doesn't actually fetch the data.
+ * Fake GalleryTemplate that does not actually fetch the data.
  */
 class MainTest_FakeTemplate extends GalleryTemplate {
 	public function __construct() {
@@ -817,6 +864,7 @@ class MainTestImmediateView extends GalleryView {
 }
 
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryController.class');
+
 class FooControllerController extends GalleryController {
 	public function omitAuthTokenCheck() {
 		return true;

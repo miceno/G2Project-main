@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -29,7 +28,8 @@ class RatingCallbacks {
 
 		switch ($callback) {
 			case 'LoadRating':
-				$itemId           = $params['itemId'];
+				$itemId = $params['itemId'];
+
 				list($ret, $item) = GalleryCoreApi::loadEntitiesById($itemId, 'GalleryItem');
 
 				if ($ret) {
@@ -43,12 +43,13 @@ class RatingCallbacks {
 				}
 
 				if (!$hasPermission) {
-					// Avoid information disclosure, act as if the item didn't exist.
+					// Avoid information disclosure, act as if the item does not exist.
 					return GalleryCoreApi::error(ERROR_MISSING_OBJECT);
 				}
 
 				if (GalleryUtilities::isA($item, 'GalleryAlbumItem')) {
-					$albumId                      = $itemId;
+					$albumId = $itemId;
+
 					list($ret, $allowAlbumRating) = GalleryCoreApi::getPluginParameter('module', 'rating', 'allowAlbumRating');
 
 					if ($ret) {
@@ -83,6 +84,7 @@ class RatingCallbacks {
 				}
 
 				GalleryCoreApi::requireOnce('modules/rating/classes/RatingHelper.class');
+
 				list($ret, $RatingData) = RatingHelper::fetchRatings(array($itemId), $userId);
 
 				if ($ret) {
@@ -94,11 +96,11 @@ class RatingCallbacks {
 				if ($ret) {
 					return $ret;
 				}
-				$RatingData[$itemId]['canRate'] = ($permission ? true : false);
 
-				$session       =& $gallery->getSession();
-				$authToken     = $session->isPersistent() ? $session->getAuthToken() : '';
-				$RatingSummary = array(
+				$RatingData[$itemId]['canRate'] = ($permission ? true : false);
+				$session                        =& $gallery->getSession();
+				$authToken                      = $session->isPersistent() ? $session->getAuthToken() : '';
+				$RatingSummary                  = array(
 					'ratingValues' => array(1, 2, 3, 4, 5),
 					'firstCall'    => true,
 					'authToken'    => $authToken,
@@ -114,3 +116,4 @@ class RatingCallbacks {
 		return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 	}
 }
+

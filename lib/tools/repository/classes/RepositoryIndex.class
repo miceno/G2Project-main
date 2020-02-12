@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryModule.class');
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryTheme.class');
 
@@ -73,15 +71,15 @@ class RepositoryIndex extends RepositoryObject {
 	public function generate() {
 		global $gallery;
 
-		$pluginTypes      = array('modules', 'themes');
-		$pluginCount      = array(
+		$pluginTypes = array('modules', 'themes');
+		$pluginCount = array(
 			'themes'  => 0,
 			'modules' => 0,
 		);
+
 		$index            = array();
 		$buildLookupTable = array();
-
-		$platform =& $gallery->getPlatform();
+		$platform         =& $gallery->getPlatform();
 
 		foreach ($pluginTypes as $pluginType) {
 			if (false !== ($dir = $platform->opendir($this->_outputDir . $pluginType))) {
@@ -118,6 +116,7 @@ class RepositoryIndex extends RepositoryObject {
 							null,
 						);
 					}
+
 					$currentPluginId = $descriptor['header']['id'];
 					$indexPluginData = isset($index[$pluginType][$currentPluginId]) ? $index[$pluginType][$currentPluginId] : null;
 
@@ -127,7 +126,7 @@ class RepositoryIndex extends RepositoryObject {
 					}
 
 					/*
-					 * Check if current plugin is a newer version of a plugin that's already in the
+					 * Check if current plugin is a newer version of a plugin that is already in the
 					 * in the index. We replace it if it is, because the index should only contain
 					 * the latest versions of plugins.
 					 */
@@ -172,7 +171,7 @@ class RepositoryIndex extends RepositoryObject {
 					if ($pluginType == 'modules' && $currentPluginId == 'core') {
 						$index[$pluginType][$currentPluginId]['header']['coreApiVersion']   = GalleryCoreApi::getApiVersion();
 						$index[$pluginType][$currentPluginId]['header']['moduleApiVersion'] = GalleryModule::getApiVersion();
-						$index[$pluginType][$currentPluginId]['header']['themeApiVersion']  = GalleryTheme::doStatic()->getApiVersion();
+						$index[$pluginType][$currentPluginId]['header']['themeApiVersion']  = GalleryTheme::getMe()->getApiVersion();
 					}
 				}
 			} else {
@@ -181,7 +180,7 @@ class RepositoryIndex extends RepositoryObject {
 						ERROR_PLATFORM_FAILURE,
 						__FILE__,
 						__LINE__,
-						"Couldn't open directory [$this->_outputDir$pluginType]"
+						"Could not open directory [$this->_outputDir$pluginType]"
 					),
 					null,
 				);
@@ -194,6 +193,7 @@ class RepositoryIndex extends RepositoryObject {
 
 		// Write index to disk.
 		$this->_template->setVariable('contents', $serializedIndex);
+
 		$ret = $this->writeToDisk(true, true);
 
 		if ($ret) {
@@ -202,13 +202,16 @@ class RepositoryIndex extends RepositoryObject {
 
 		// Write index hash to disk.
 		$indexFile = $this->_fileName;
+
 		$this->setOutputFile($indexFile . '.hash');
 		$this->_template->setVariable('contents', $this->_indexHash);
+
 		$ret = $this->writeToDisk(true);
 
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		$this->setOutputFile($indexFile);
 
 		return array(null, $pluginCount);
@@ -223,7 +226,7 @@ class RepositoryIndex extends RepositoryObject {
 	public function getPluginInfo() {
 		global $gallery;
 
-		// Read index from disk if it's not in memory.
+		// Read index from disk if it is not in memory.
 		if (!is_array($this->_index)) {
 			$platform  =& $gallery->getPlatform();
 			$indexPath = $this->_outputDir . $this->_fileName;
@@ -246,7 +249,7 @@ class RepositoryIndex extends RepositoryObject {
 						ERROR_BAD_PARAMETER,
 						__FILE__,
 						__LINE__,
-						"Couldn't unserialize index [$index]"
+						"Could not unserialize index [$index]"
 					),
 					null,
 				);

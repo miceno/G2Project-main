@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryFileSystemEntity.class');
 
 /**
@@ -162,16 +160,16 @@ class GalleryItem extends GalleryFileSystemEntity {
 	public $originationTimestamp;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryItem();
+		if (!isset($instance)) {
+			$instance = new GalleryItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -219,7 +217,7 @@ class GalleryItem extends GalleryFileSystemEntity {
 		// Initialize the viewedSince timestamp
 		$this->setViewedSinceTimestamp(time());
 
-		// By default, items can't contain children
+		// By default, items cannot contain children
 		$this->setCanContainChildren($canContainChildren);
 
 		// Origination timestamp defaults to now
@@ -290,7 +288,7 @@ class GalleryItem extends GalleryFileSystemEntity {
 		// Initialize the viewedSince timestamp
 		$this->setViewedSinceTimestamp(time());
 
-		// By default, items can't contain children
+		// By default, items cannot contain children
 		$this->setCanContainChildren(false);
 
 		// Copy over anything else from the target entity
@@ -310,10 +308,11 @@ class GalleryItem extends GalleryFileSystemEntity {
 	 */
 	public function delete() {
 		global $gallery;
+
 		$storage =& $gallery->getStorage();
 
 		// Delete any children
-		$query                     = '
+		$query = '
 		SELECT
 		[GalleryChildEntity::id]
 		FROM
@@ -321,6 +320,7 @@ class GalleryItem extends GalleryFileSystemEntity {
 		WHERE
 		[GalleryChildEntity::parentId] = ?
 		';
+
 		list($ret, $searchResults) = $gallery->search($query, array($this->getId()));
 
 		if ($ret) {
@@ -331,12 +331,13 @@ class GalleryItem extends GalleryFileSystemEntity {
 
 		while ($result = $searchResults->nextResult()) {
 			$ret = GalleryCoreApi::deleteEntityById($result[0], 'GalleryChildEntity');
+
 			/*
 			 * Deletes can cascade in interesting ways.  For example, deleting a derivative will
-			 * get rid of any other derivatives that are sourced to it, so it's possible that
+			 * get rid of any other derivatives that are sourced to it, so it is possible that
 			 * deleting children here can lead to a MISSING_OBJECT result unless we re-run the
 			 * parent/child query each time.  Easier to just ignore the MISSING_OBJECT error
-			 * since we only care that it's gone.
+			 * since we only care that it is gone.
 			 */
 			if ($ret && !($ret->getErrorCode() & ERROR_MISSING_OBJECT)) {
 				return $ret;
@@ -367,12 +368,14 @@ class GalleryItem extends GalleryFileSystemEntity {
 
 		if ($this->getParentId()) {
 			$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 			$event->setData(
 				array(
 					'userId' => null,
 					'itemId' => $this->getParentId(),
 				)
 			);
+
 			list($ret) = GalleryCoreApi::postEvent($event);
 
 			if ($ret) {
@@ -397,19 +400,22 @@ class GalleryItem extends GalleryFileSystemEntity {
 	 */
 	public function move($newParentId) {
 		$parentId = $this->getParentId();
-		$ret      = parent::move($newParentId);
+
+		$ret = parent::move($newParentId);
 
 		if ($ret) {
 			return $ret;
 		}
 
 		$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 		$event->setData(
 			array(
 				'userId' => null,
 				'itemId' => empty($parentId) ? $this->getParentId() : array($parentId, $this->getParentId()),
 			)
 		);
+
 		list($ret) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -422,8 +428,10 @@ class GalleryItem extends GalleryFileSystemEntity {
 		if ($ret) {
 			return $ret;
 		}
+
 		$newParentSequence[] = $this->getParentId();
-		$ret                 = GalleryCoreApi::setParentSequence($this->getId(), $newParentSequence);
+
+		$ret = GalleryCoreApi::setParentSequence($this->getId(), $newParentSequence);
 
 		if ($ret) {
 			return $ret;
@@ -439,8 +447,8 @@ class GalleryItem extends GalleryFileSystemEntity {
 	 */
 	public function save($postEvent = true, $x1 = null) {
 		global $gallery;
-		$isNew = $this->testPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
 
+		$isNew         = $this->testPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
 		$changedParent = $this->isModified('parentId');
 
 		if ($changedParent) {
@@ -471,6 +479,7 @@ class GalleryItem extends GalleryFileSystemEntity {
 				if ($ret) {
 					return $ret;
 				}
+
 				$parentSequence[] = $this->getParentId();
 			} else {
 				$parentSequence = array();
@@ -485,12 +494,14 @@ class GalleryItem extends GalleryFileSystemEntity {
 
 			if ($this->getParentId()) {
 				$event = GalleryCoreApi::newEvent('Gallery::ViewableTreeChange');
+
 				$event->setData(
 					array(
 						'userId' => null,
 						'itemId' => $this->getParentId(),
 					)
 				);
+
 				list($ret) = GalleryCoreApi::postEvent($event);
 
 				if ($ret) {

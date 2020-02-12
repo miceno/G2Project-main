@@ -1,6 +1,7 @@
 <?php
+
 // +-----------------------------------------------------------------------+
-// | Copyright (c) 2002-2003  Richard Heyes                                     |
+// | Copyright (c) 2002-2003  Richard Heyes                                |
 // | All rights reserved.                                                  |
 // |                                                                       |
 // | Redistribution and use in source and binary forms, with or without    |
@@ -42,7 +43,7 @@
  *
  * Why use this instead of mime.php?
  *   mime.php is a userfriendly api to this class for
- *   people who aren't interested in the internals of
+ *   people who are not interested in the internals of
  *   mime mail. This class however allows full control
  *   over the email.
  *
@@ -233,6 +234,7 @@ class Mail_mimePart {
 				foreach ($tmp['headers'] as $key => $value) {
 					$headers[] = $key . ': ' . $value;
 				}
+
 				$subparts[] = implode(MAIL_MIMEPART_CRLF, $headers) . MAIL_MIMEPART_CRLF . MAIL_MIMEPART_CRLF . $tmp['body'];
 			}
 
@@ -328,9 +330,11 @@ class Mail_mimePart {
 				$char = substr($line, $i, 1);
 				$dec  = ord($char);
 
-				if (($dec == 32) and ($i == ($linlen - 1))) {    // convert space at eol only
+				if (($dec == 32) and ($i == ($linlen - 1))) {
+					// convert space at eol only
 					$char = '=20';
-				} elseif (($dec == 9) and ($i == ($linlen - 1))) {  // convert tab at eol only
+				} elseif (($dec == 9) and ($i == ($linlen - 1))) {
+					// convert tab at eol only
 					$char = '=09';
 				} elseif ($dec == 9) {
 					// Do nothing if a tab.
@@ -338,15 +342,22 @@ class Mail_mimePart {
 					$char = $escape . strtoupper(sprintf('%02s', dechex($dec)));
 				}
 
-				if ((strlen($newline) + strlen($char)) >= $line_max) {        // MAIL_MIMEPART_CRLF is not counted
-					$output .= $newline . $escape . $eol;                    // soft line break; " =\r\n" is okay
+				if ((strlen($newline) + strlen($char)) >= $line_max) {
+					// MAIL_MIMEPART_CRLF is not counted
+					// soft line break; " =\r\n" is okay
+					$output .= $newline . $escape . $eol;
 					$newline = '';
 				}
+
 				$newline .= $char;
 			} // end of for
+
 			$output .= $newline . $eol;
 		}
-		$output = substr($output, 0, -1 * strlen($eol)); // Don't want last crlf
+
+		// Do not want last crlf
+		$output = substr($output, 0, -1 * strlen($eol));
+
 		return $output;
 	}
 } // End of class

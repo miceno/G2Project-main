@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim. All rights reserved.
@@ -6,17 +7,12 @@
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Portable version of oci8 driver, to make it more similar to other database drivers.
   The main differences are
-
    1. that the OCI_ASSOC names are in lowercase instead of uppercase.
    2. bind variables are mapped using ? instead of :<bindvar>
-
    Should some emulation of RecordCount() be implemented?
-
 */
 
 // security - hide paths
@@ -30,14 +26,12 @@ class ADODB_oci8quercus extends ADODB_oci8 {
 	public $databaseType = 'oci8quercus';
 	public $dataProvider = 'oci8';
 
-	public function __construct() {
-	}
+	public function __construct() {}
 }
 
 /*--------------------------------------------------------------------------------------
 		 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
-
 class ADORecordset_oci8quercus extends ADORecordset_oci8 {
 	public $databaseType = 'oci8quercus';
 
@@ -47,6 +41,7 @@ class ADORecordset_oci8quercus extends ADORecordset_oci8 {
 
 	public function _FetchField($fieldOffset = -1) {
 		global $QUERCUS;
+
 		$fld = new ADOFieldObject();
 
 		if (!empty($QUERCUS)) {
@@ -81,6 +76,7 @@ class ADORecordset_oci8quercus extends ADORecordset_oci8 {
 				if ($p != 0 && $sc == 0) {
 					$fld->type = 'INT';
 				}
+
 				$fld->scale = $p;
 
 				break;

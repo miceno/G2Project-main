@@ -1,25 +1,24 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
- * Scan through all of our source code and verify that we're not doing anything "bad".
+ * Scan through all of our source code and verify that we are not doing anything "bad".
  * Checks for style guidelines too.
  *
  * @package GalleryCore
@@ -30,16 +29,15 @@
 class CodeAuditTest extends CodeAuditTestCase {
 	public function __construct($methodName) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		parent::__construct($methodName);
 
-		$this->_exception['endphp'] = array();
-
-		$this->_exception['preamble'] = '{(?:/TestCase/|templates/blocks/blocks.inc|(?:install|upgrade)/index.php|' .
+		$this->_exception['endphp']       = array();
+		$this->_exception['preamble']     = '{(?:/TestCase/|templates/blocks/blocks.inc|(?:install|upgrade)/index.php|' .
 		'data/Sample(?:Descriptors|Index).inc|DataCacheTest_\d+.class|getid3/lib/getid3|' .
 		'Php43IllegalFunctions.inc|GdFunctionMatrix.inc|frame.inc|iconpack.inc)}';
-
 		$this->_exception['superglobals'] = array(
 			'FILES' => array(
 				'modules/core/classes/GalleryUtilities.class' => 1,
@@ -101,8 +99,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 
 		$this->_longLineFiles = array();
 		$this->_errorCount    = 0;
-
-		$this->_lineEnding = $platform->getLineEnding();
+		$this->_lineEnding    = $platform->getLineEnding();
 
 		/* Windows CVS appends a CRLF after ?>, so allow for it */
 		$this->_phpEndFile = '/\?>(' . $this->_lineEnding . ')?$/';
@@ -206,6 +203,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 
 				foreach ($calls as $call) {
 					$params = $this->getFunctionParameters($call);
+
 					$this->assertTrue(
 						count($params) == 2,
 						sprintf(
@@ -235,6 +233,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 						"Return outside of a function on line $i in $fileName"
 					);
 				}
+
 				$return = '';
 				$j      = $i;
 
@@ -266,7 +265,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 
 			/*
 			 * Verify that all access to superglobal variables from the browser
-			 * is properly filtered through the framework so that we don't get remote exploits.
+			 * is properly filtered through the framework so that we do not get remote exploits.
 			 */
 			if ($checkSuperglobals && preg_match_all(
 				'/\$_(REQUEST|POST|GET|SESSION|FILES|SERVER|COOKIE)/',
@@ -279,7 +278,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 						continue;
 					}
 
-					// It's ok if it's inside a debug statement
+					// It is ok if it is inside a debug statement
 					if (preg_match("/gallery->debug(|_r)\(.*$item.*\)/", $lines[$i])) {
 						continue;
 					}
@@ -297,7 +296,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 				}
 			}
 
-			// Check that we don't mess with PHP error handler (allowed in tests).
+			// Check that we do not mess with PHP error handler (allowed in tests).
 			if (preg_match('/((?:set|restore)_error_handler)\s*\(/', $lines[$i], $matches)
 				&& strpos($fileName, '/test/phpunit/') === false
 				&& !isset($this->_exception['errorHandler'][$fileName])
@@ -409,6 +408,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 					' --> ' . $returnCount[$function][$i][1]
 				);
 			}
+
 			$this->assertFalse(
 				true,
 				sprintf(
@@ -437,6 +437,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 			|| count($longLineTable) > $this->_exception['longLineCount'][$fileName])
 		) {
 			$this->_longLineFiles = array_merge($this->_longLineFiles, $longLineTable);
+
 			// debug
 			// printf("%s: %d<br/>", $fileName, $longLineCount);
 		}
@@ -454,6 +455,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 		if (preg_match('/^' . $this->_preamblePattern . '/', $buffer)) {
 			return;
 		}
+
 		$this->_errorCount++;
 		$errorReported = false;
 
@@ -467,6 +469,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 					. "Expected: [$expected]<br/>"
 					. "Received: [$lines[$i]]<br/>"
 				);
+
 				$errorReported = true;
 			}
 		}
@@ -508,6 +511,7 @@ class CodeAuditTest extends CodeAuditTestCase {
 
 				foreach ($this->_longLineFiles as $entry) {
 					list($fileName, $lineNr) = $entry;
+
 					$this->assertFalse(
 						true,
 						'File: ' . $fileName . ', line number: ' . $lineNr

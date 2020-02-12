@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -33,26 +32,34 @@ class FfmpegModule extends GalleryModule {
 
 		$this->setId('ffmpeg');
 		$this->setName($gallery->i18n('Ffmpeg'));
-		$this->setDescription($gallery->i18n('A toolkit for processing movies'));
-		$this->setVersion('7.0.0');
+		$this->setDescription(
+			$gallery->i18n(
+				'A toolkit for processing movies'
+			)
+		);
+
+		// Update upgrade() as required
+		$this->setVersion('2.0.0');
+		$this->setRequiredCoreApi(array(8, 0));
+		$this->setRequiredModuleApi(array(4, 0));
+
 		$this->_templateVersion = 1;
+
 		$this->setGroup('toolkits', $gallery->i18n('Graphics Toolkits'));
 		$this->setCallbacks('getSiteAdminViews');
-		$this->setRequiredCoreApi(array(7, 27));
-		$this->setRequiredModuleApi(array(3, 6));
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new FfmpegModule();
+		if (!isset($instance)) {
+			$instance = new FfmpegModule();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -60,6 +67,7 @@ class FfmpegModule extends GalleryModule {
 	 */
 	public function upgrade($currentVersion, $x1 = null) {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($ret, $params) = GalleryCoreApi::fetchAllPluginParameters('module', 'ffmpeg');
@@ -81,8 +89,10 @@ class FfmpegModule extends GalleryModule {
 			}
 		}
 
-		$slash         = $platform->getDirectorySeparator();
-		$imageDir      = $gallery->getConfig('data.gallery.plugins_data') . "modules${slash}ffmpeg";
+		$slash     = $platform->getDirectorySeparator();
+		$pluginDir = $gallery->getConfig('data.gallery.plugins_data');
+		$imageDir  = $pluginDir . "modules${slash}ffmpeg";
+
 		list($success) = GalleryUtilities::guaranteeDirExists($imageDir);
 
 		if (!$success) {
@@ -95,12 +105,10 @@ class FfmpegModule extends GalleryModule {
 		}
 
 		$imageFile = "$imageDir${slash}filmreel.png";
+		$filmReel  = __DIR__ . "${slash}images${slash}filmreel.png";
 
 		if (!$platform->is_file($imageFile)
-			&& !$platform->copy(
-				__DIR__ . "${slash}images${slash}filmreel.png",
-				$imageFile
-			)
+			&& !$platform->copy($filmReel, $imageFile)
 		) {
 			return GalleryCoreApi::error(
 				ERROR_PLATFORM_FAILURE,
@@ -189,6 +197,7 @@ class FfmpegModule extends GalleryModule {
 				if ($path[strlen($path) - 1] != $slash) {
 					$path .= $slash;
 				}
+
 				$paths[] = $path . 'ffmpeg.exe';
 			}
 
@@ -205,6 +214,7 @@ class FfmpegModule extends GalleryModule {
 				if ($path[strlen($path) - 1] != $slash) {
 					$path .= $slash;
 				}
+
 				$paths[] = $path . 'ffmpeg';
 			}
 
@@ -278,6 +288,7 @@ class FfmpegModule extends GalleryModule {
 			if ($ret) {
 				return array($ret, null);
 			}
+
 			$priority = min($priority + 1, 40);
 		}
 
@@ -328,6 +339,7 @@ class FfmpegModule extends GalleryModule {
 		if (in_array('exec', preg_split('/,\s*/', ini_get('disable_functions')))) {
 			return array(null, true);
 		}
+
 		// This module requires all fields to be filled out before it can be activated.
 		foreach (array('path') as $key) {
 			list($ret, $value) = $this->getParameter($key);

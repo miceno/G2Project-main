@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -42,6 +41,7 @@ class ShowItemTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		list($ret, $this->_item) = $this->_createRandomDataItem($this->_album->getId());
@@ -50,13 +50,14 @@ class ShowItemTest extends GalleryTestCase {
 			return $ret;
 		}
 
-		list($ret, $this->_view) = GalleryView::doStatic()->loadView('core.ShowItem');
+		list($ret, $this->_view) = GalleryView::getMe()->loadView('core.ShowItem');
 
 		if ($ret) {
 			return $ret;
 		}
 
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryTemplate.class');
+
 		$this->_template = new GalleryTemplate(GalleryCoreApi::getCodeBasePath());
 	}
 
@@ -66,9 +67,11 @@ class ShowItemTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, $count, 'count before');
 
 		GalleryUtilities::putRequestVariable('itemId', $itemId);
+
 		list($ret, $result, $theme) = $this->_view->doLoadTemplate($this->_template);
 
 		if ($ret) {
@@ -76,6 +79,7 @@ class ShowItemTest extends GalleryTestCase {
 		}
 
 		$match = 'themes/' . $theme->getId() . '/templates';
+
 		$this->assertEquals(
 			substr($result['body'], 0, strlen($match)),
 			$match,
@@ -87,6 +91,7 @@ class ShowItemTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(1, $count, 'count after');
 	}
 
@@ -104,6 +109,7 @@ class ShowItemTest extends GalleryTestCase {
 
 	public function testAlbumSourcePermission() {
 		// Verify viewing album contents requires ?? permission
+
 		/*
 		 * We briefly put code in place to require core.viewSource to view album contents..
 		 * This allows setting permissions such that guests can see an album thumbnail but
@@ -114,11 +120,13 @@ class ShowItemTest extends GalleryTestCase {
 		 * a new core.viewAlbum permission?
 		 */
 		global $gallery;
+
 		$ret = GalleryCoreApi::removeItemPermissions($this->_album->getId());
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_album->getId(),
 			$gallery->getActiveUserId(),
@@ -131,6 +139,7 @@ class ShowItemTest extends GalleryTestCase {
 		}
 
 		GalleryUtilities::putRequestVariable('itemId', $this->_album->getId());
+
 		list($ret, $result, $theme) = $this->_view->doLoadTemplate($this->_template);
 
 		if ($ret) {
@@ -142,6 +151,7 @@ class ShowItemTest extends GalleryTestCase {
 			array('redirect' => array('view' => 'core.ShowItem', 'itemId' => $this->_getRootId())),
 			$result);
 		*/
+
 		// Current result:
 		$this->assertTrue(isset($result['body']));
 	}
@@ -149,11 +159,13 @@ class ShowItemTest extends GalleryTestCase {
 	public function testItemSourcePermission() {
 		// Verify data item does not require core.viewSource permission
 		global $gallery;
+
 		$ret = GalleryCoreApi::removeItemPermissions($this->_item->getId());
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_item->getId(),
 			$gallery->getActiveUserId(),
@@ -166,6 +178,7 @@ class ShowItemTest extends GalleryTestCase {
 		}
 
 		GalleryUtilities::putRequestVariable('itemId', $this->_item->getId());
+
 		list($ret, $result, $theme) = $this->_view->doLoadTemplate($this->_template);
 
 		if ($ret) {
@@ -173,6 +186,7 @@ class ShowItemTest extends GalleryTestCase {
 		}
 
 		$match = 'themes/' . $theme->getId() . '/templates';
+
 		$this->assertEquals(
 			substr($result['body'], 0, strlen($match)),
 			$match,
@@ -188,9 +202,10 @@ class ShowItemTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
-		$this->_markForCleanup($album);
 
+		$this->_markForCleanup($album);
 		$gallery->setConfig('defaultAlbumId', $album->getId());
+
 		GalleryUtilities::removeRequestVariable('itemId');
 
 		// Assign our test theme
@@ -202,6 +217,7 @@ class ShowItemTest extends GalleryTestCase {
 
 		// Use a dummy theme.
 		$album->setTheme('showItemTest');
+
 		$ret = $album->save();
 
 		if ($ret) {
@@ -215,11 +231,12 @@ class ShowItemTest extends GalleryTestCase {
 		}
 
 		// Execute the test.
-		list($ret, $view) = GalleryView::doStatic()->loadView('core.ShowItem');
+		list($ret, $view) = GalleryView::getMe()->loadView('core.ShowItem');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $theme, $params, $item) = $view->loadThemeAndParameters();
 
 		if ($ret) {

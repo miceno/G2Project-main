@@ -23,7 +23,6 @@
  * http://localhost/php/server.php?select+*+from+table&nrows=10&offset=2
  */
 
-
 /*
  * Define the IP address you want to accept requests from
  * as a security measure. If blank we accept anyone promisciously!
@@ -31,8 +30,10 @@
 $ACCEPTIP = '127.0.0.1';
 
 // Connection parameters
-$driver   = 'mysql';
-$host     = 'localhost'; // DSN for odbc
+$driver = 'mysql';
+
+// DSN for odbc
+$host     = 'localhost';
 $uid      = 'root';
 $pwd      = 'garbase-it-is';
 $database = 'test';
@@ -42,7 +43,6 @@ $database = 'test';
 $sep = ' :::: ';
 
 require './adodb.inc.php';
-
 require_once ADODB_DIR . '/adodb-csvlib.inc.php';
 
 function err($s) {
@@ -62,10 +62,7 @@ function undomq(&$m) {
 }
 
 ///////////////////////////////////////// DEFINITIONS
-
-
 $remote = $_SERVER['REMOTE_ADDR'];
-
 
 if (!empty($ACCEPTIP)) {
 	if ($remote != '127.0.0.1' && $remote != $ACCEPTIP) {
@@ -73,17 +70,16 @@ if (!empty($ACCEPTIP)) {
 	}
 }
 
-
 if (empty($_REQUEST['sql'])) {
 	err('No SQL');
 }
-
 
 $conn = ADONewConnection($driver);
 
 if (!$conn->Connect($host, $uid, $pwd, $database)) {
 	err($conn->ErrorNo() . $sep . $conn->ErrorMsg());
 }
+
 $sql = undomq($_REQUEST['sql']);
 
 if (isset($_REQUEST['fetch'])) {
@@ -101,6 +97,7 @@ if (isset($_REQUEST['nrows'])) {
 if ($rs) {
 	//$rs->timeToLive = 1;
 	echo _rs2serialize($rs, $conn, $sql);
+
 	$rs->Close();
 } else {
 	err($conn->ErrorNo() . $sep . $conn->ErrorMsg());

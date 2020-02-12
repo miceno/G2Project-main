@@ -1,4 +1,5 @@
 <?php
+
 /*
  @version   v5.20.12  30-Mar-2018
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,7 +8,6 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
   Set tabs to 4.
-
   Postgres8 support.
 */
 
@@ -23,9 +23,9 @@ class ADODB_postgres8 extends ADODB_postgres7 {
 
 	/**
 	 * Retrieve last inserted ID
-	 * Don't use OIDs, since as per {@link http://php.net/function.pg-last-oid php manual }
-	 * they won't be there in Postgres 8.1
-	 * (and they're not what the application wants back, anyway).
+	 * Do not use OIDs, since as per {@link http://php.net/function.pg-last-oid php manual }
+	 * they would not be there in Postgres 8.1
+	 * (and they are not what the application wants back, anyway).
 	 * @param string $table
 	 * @param string $column
 	 * @return int last inserted ID for given table/column, or the most recently
@@ -43,3 +43,4 @@ class ADORecordSet_postgres8 extends ADORecordSet_postgres7 {
 class ADORecordSet_assoc_postgres8 extends ADORecordSet_assoc_postgres7 {
 	public $databaseType = 'postgres8';
 }
+

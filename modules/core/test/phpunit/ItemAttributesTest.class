@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -32,6 +31,7 @@ class ItemAttributesTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -55,6 +55,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_album);
 
 		/*
@@ -66,16 +67,19 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($ret, $everybodyGroupId) = GalleryCoreApi::getPluginParameter(
 			'module',
 			'core',
 			'id.everybodyGroup'
 		);
-		$everybodyGroupId             = (int)$everybodyGroupId;
+
+		$everybodyGroupId = (int)$everybodyGroupId;
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addGroupPermission(
 			$this->_album->getId(),
 			$everybodyGroupId,
@@ -86,6 +90,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		// Verify the permissions
 		list($ret, $compressedPerms) = GalleryCoreApi::fetchAllPermissionsForItem(
 			$this->_album->getId(),
@@ -95,6 +100,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				array(
@@ -118,6 +124,7 @@ class ItemAttributesTest extends GalleryTestCase {
 
 	public function tearDown() {
 		global $gallery;
+
 		$gallery->_session = $this->_saveSession;
 
 		$ret = parent::tearDown();
@@ -151,6 +158,7 @@ class ItemAttributesTest extends GalleryTestCase {
 	 */
 	public function testIncrementItemViewCount() {
 		global $gallery;
+
 		$gallery->_phpVm   = new ItemAttributesTestPhpVm();
 		$gallery->_session = new ItemAttributesTestSession();
 
@@ -181,11 +189,12 @@ class ItemAttributesTest extends GalleryTestCase {
 	}
 
 	/**
-	 * Verify that we don't increment the view count until a day after the last increment within
+	 * Verify that we do not increment the view count until a day after the last increment within
 	 * the same session.
 	 */
 	public function testDontIncrementItemViewCountTooOften() {
 		global $gallery;
+
 		$gallery->_phpVm   = new ItemAttributesTestPhpVm();
 		$gallery->_session = new ItemAttributesTestSession();
 
@@ -208,19 +217,20 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(1, $viewCount);
 	}
 
 	/**
-	 * Verify that we don't increment the view count until a day after the last increment within
+	 * Verify that we do not increment the view count until a day after the last increment within
 	 * the same session.
 	 */
 	public function testIncrementItemViewCountThreshold() {
 		global $gallery;
+
 		$gallery->_phpVm   = new ItemAttributesTestPhpVm();
 		$gallery->_session = new ItemAttributesTestSession();
-
-		$session =& $gallery->_session;
+		$session           =& $gallery->_session;
 
 		$ret = GalleryCoreApi::setItemViewCount($this->_items[0]->getId(), 0);
 
@@ -275,10 +285,12 @@ class ItemAttributesTest extends GalleryTestCase {
 
 	public function testIncrementItemViewCountGuestNoSessionIfModifiedNotSetIsSearchEngine() {
 		global $gallery;
+
 		$gallery->_phpVm   = new ItemAttributesTestPhpVm(false, array(), time());
 		$gallery->_session = new ItemAttributesTestSession(false, true);
 
 		$this->_becomeGuestUser();
+
 		unset($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
 		$ret = GalleryCoreApi::setItemViewCount($this->_items[0]->getId(), 0);
@@ -298,18 +310,22 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, $viewCount, 'first attempt, search engine -> do not increment');
+
 		// It only sets the header if it actually increments
 		$this->assertEquals(array(), GalleryUtilities::_getResponseHeaders());
 	}
 
 	public function testIncrementItemViewCountGuestNoSessionIfModifiedNotSetIsNotSearchEngine() {
 		global $gallery;
+
 		$now               = time();
 		$gallery->_phpVm   = new ItemAttributesTestPhpVm(false, array(), $now);
 		$gallery->_session = new ItemAttributesTestSession(false, false);
 
 		$this->_becomeGuestUser();
+
 		unset($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
 		$ret = GalleryCoreApi::setItemViewCount($this->_items[0]->getId(), 0);
@@ -329,7 +345,9 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(1, $viewCount, 'First attempt, not search engine -> increment');
+
 		$this->assertEquals(
 			array(
 				'last-modified' => 'Last-Modified: ' . GalleryUtilities::getHttpDate($now),
@@ -341,10 +359,12 @@ class ItemAttributesTest extends GalleryTestCase {
 
 	public function testIncrementItemViewCountGuestIfModifiedIsSet() {
 		global $gallery;
+
 		$gallery->_phpVm   = new ItemAttributesTestPhpVm();
 		$gallery->_session = new ItemAttributesTestSession(false);
 
 		$this->_becomeGuestUser();
+
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = 'something';
 
 		$ret = GalleryCoreApi::setItemViewCount($this->_items[0]->getId(), 0);
@@ -364,20 +384,24 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, $viewCount);
 	}
 
 	public function testIncrementItemViewCountGuestIfModifiedIsSet2() {
 		global $gallery;
-		$gallery->_phpVm   = new ItemAttributesTestPhpVm(
+
+		$gallery->_phpVm = new ItemAttributesTestPhpVm(
 			true,
 			array(
 				'If-Modified-Since' => 'something',
 			)
 		);
+
 		$gallery->_session = new ItemAttributesTestSession(false);
 
 		$this->_becomeGuestUser();
+
 		unset($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
 		$ret = GalleryCoreApi::setItemViewCount($this->_items[0]->getId(), 0);
@@ -397,19 +421,21 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(0, $viewCount);
 	}
 
 	public function testIncrementItemViewCountGuestIfModifiedIsSetNotGuest() {
 		global $gallery;
-		$gallery->_phpVm   = new ItemAttributesTestPhpVm(
+
+		$gallery->_phpVm = new ItemAttributesTestPhpVm(
 			true,
 			array(
 				'If-Modified-Since' => 'something',
 			)
 		);
-		$gallery->_session = new ItemAttributesTestSession();
 
+		$gallery->_session                 = new ItemAttributesTestSession();
 		$asdminUserId                      = $gallery->getActiveUserId();
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = 'foobar';
 
@@ -432,6 +458,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(1, $viewCount, 'View count');
 	}
 
@@ -472,6 +499,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($higher, 2);
 
 		list($ret, $lower) = GalleryCoreApi::fetchNextItemWeight($this->_items[1]->getId(), LOWER_WEIGHT);
@@ -479,6 +507,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($lower, 0);
 	}
 
@@ -501,6 +530,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($max, 102);
 
 		list($ret, $min) = GalleryCoreApi::fetchMaxChildWeight($this->_album->getId(), LOWER_WEIGHT);
@@ -508,6 +538,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($max, 100);
 	}
 
@@ -522,6 +553,7 @@ class ItemAttributesTest extends GalleryTestCase {
 				return $ret;
 			}
 		}
+
 		$ret = GalleryCoreApi::rebalanceChildOrderWeights($this->_album->getId(), 100);
 
 		if ($ret) {
@@ -536,6 +568,7 @@ class ItemAttributesTest extends GalleryTestCase {
 			if ($ret) {
 				return $ret;
 			}
+
 			$this->assertEquals(
 				($i + 1) * 100,
 				$weight,
@@ -559,6 +592,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		}
 
 		list($ret, $parentSequence) = GalleryCoreApi::fetchParentSequence($album->getId());
+
 		$this->assertEquals(
 			array(
 				$this->_getRootId(),
@@ -580,6 +614,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				$this->_getRootId(),
@@ -599,6 +634,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				$this->_items[1]->getId(),
@@ -613,6 +649,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				$this->_getRootId(),
@@ -630,6 +667,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$gallery->setConfig('breadcrumbRootId', null);
 
 		list($ret, $parentSequence) = GalleryCoreApi::fetchParentSequence($item->getId());
@@ -637,6 +675,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(
 			array(
 				$this->_getRootId(),
@@ -670,6 +709,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::removeItemPermissions($this->_items[0]->getId());
 
 		if ($ret) {
@@ -724,6 +764,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::removeItemPermissions($this->_items[0]->getId());
 
 		if ($ret) {
@@ -751,20 +792,23 @@ class ItemAttributesTest extends GalleryTestCase {
 	public function testFetchDescendentCountsSessionPermission() {
 		// Session based permissions should not apply when calculating cached descendent count
 		global $gallery;
+
 		$session                 =& $gallery->getSession();
 		$this->_saveSessionPerms = $session->get(GALLERY_PERMISSION_SESSION_KEY);
+		$itemId                  = $this->_items[1]->getId();
 
-		$itemId = $this->_items[1]->getId();
-		$ret    = GalleryCoreApi::removeItemPermissions($itemId);
+		$ret = GalleryCoreApi::removeItemPermissions($itemId);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addEntityPermission($itemId, $itemId, 'core.all');
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$session->put(GALLERY_PERMISSION_SESSION_KEY, array($itemId));
 
 		list($ret, $counts) = GalleryCoreApi::fetchDescendentCounts(array($this->_album->getId()));
@@ -802,6 +846,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($user);
 
 		for ($i = 0; $i < 3; $i++) {
@@ -818,6 +863,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::removeItemPermissions($this->_items[0]->getId());
 
 		if ($ret) {
@@ -835,6 +881,7 @@ class ItemAttributesTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = GalleryCoreApi::addUserPermission(
 			$this->_items[0]->getId(),
 			$gallery->getActiveUserId(),
@@ -846,7 +893,7 @@ class ItemAttributesTest extends GalleryTestCase {
 			return $ret;
 		}
 
-		// Verify that the target user can't see the item (even though the active user can)
+		// Verify that the target user cannot see the item (even though the active user can)
 		list($ret, $counts) = GalleryCoreApi::fetchDescendentCounts(
 			array($this->_album->getId(), $album->getId()),
 			$user->getId()

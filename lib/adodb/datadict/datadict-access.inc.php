@@ -31,7 +31,9 @@ class ADODB2_access extends ADODB_DataDict {
 				return 'MEMO';
 
 			case 'C2':
-				return 'TEXT'; // up to 32K
+				// up to 32K
+				return 'TEXT';
+
 			case 'X2':
 				return 'MEMO';
 
@@ -85,6 +87,7 @@ class ADODB2_access extends ADODB_DataDict {
 		if (substr($ftype, 0, 7) == 'DECIMAL') {
 			$ftype = 'DECIMAL';
 		}
+
 		$suffix = '';
 
 		if (strlen($fdefault)) {
@@ -109,8 +112,7 @@ class ADODB2_access extends ADODB_DataDict {
 		return array();
 	}
 
-	public function SetSchema($schema) {
-	}
+	public function SetSchema($schema) {}
 
 	public function AlterColumnSQL($tabname, $flds, $tableflds = '', $tableoptions = '') {
 		if ($this->debug) {

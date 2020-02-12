@@ -1,25 +1,23 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 if (php_sapi_name() == 'cli') {
-	// We don't apply this security check to command-line PHP
+	// We do not apply this security check to command-line PHP
 	return;
 }
 
@@ -44,7 +42,7 @@ if (!empty($config) && $config['galleryBaseUrl'] != '') {
 
 /*
  * If the config, or setup.password is missing, main.php will try to send us to the installer.
- * We don't want that to happen, so check for ourselves first.
+ * We do not want that to happen, so check for ourselves first.
  */
 $options = array();
 
@@ -63,11 +61,13 @@ if (empty($config)) {
 		DIRECTORY_SEPARATOR,
 		basename($authFile)
 	);
-	$options['baseDir']  = basename($baseDir) . DIRECTORY_SEPARATOR;
-	$options['key']      = GallerySetupUtilities::getAuthenticationKey();
+
+	$options['baseDir'] = basename($baseDir) . DIRECTORY_SEPARATOR;
+	$options['key']     = GallerySetupUtilities::getAuthenticationKey();
 
 	if (empty($options['key'])) {
 		$options['key'] = GallerySetupUtilities::generateAuthenticationKey();
+
 		GallerySetupUtilities::setAuthenticationKey($options['key']);
 	}
 
@@ -85,8 +85,10 @@ if (empty($config)) {
 
 				exit;
 			}
+
 			$options['authFileErrors']['mismatch'] = 1;
 		}
+
 		render('loginTxtForm', $options);
 	} elseif (!empty($_POST['password'])) {
 		if ($_POST['password'] == $config['setup.password']) {
@@ -95,6 +97,7 @@ if (empty($config)) {
 
 			exit;
 		}
+
 		$options['attempts']++;
 
 		if (!GallerySetupUtilities::setLoginAttempts($options['attempts'])) {
@@ -104,8 +107,10 @@ if (empty($config)) {
 		if ($options['error'] || $options['attempts'] >= G2_SUPPORT_MAX_LOGIN_ATTEMPTS) {
 			if ($options['attempts'] >= G2_SUPPORT_MAX_LOGIN_ATTEMPTS) {
 				$ret = GallerySetupUtilities::notifySiteAdministrator();
-				// swallow return code; we can't do anything with it
+
+				// swallow return code; we cannot do anything with it
 			}
+
 			render('loginTxtForm', $options);
 		} else {
 			$options['wrongPassword'] = 1;
@@ -115,6 +120,7 @@ if (empty($config)) {
 		if (isset($_POST['password'])) {
 			$options['missingPassword'] = 1;
 		}
+
 		render('passwordForm', $options);
 	}
 }
@@ -124,7 +130,7 @@ if (GallerySetupUtilities::isSessionAuthenticated()) {
 	return;
 }
 
-// Unless we're properly authenticated, this is the end of the line
+// Unless we are properly authenticated, this is the end of the line
 exit;
 
 function startForm($action = '', $name = null) {
@@ -137,6 +143,7 @@ function startForm($action = '', $name = null) {
 
 function render($renderType, $options = array()) {
 	global $baseUrl; ?>
+
 	<!DOCTYPE html>
 	<html lang="en">
 	<head>
@@ -144,114 +151,105 @@ function render($renderType, $options = array()) {
 		<link rel="stylesheet" type="text/css" href="<?php echo $baseUrl; ?>support.css">
 	</head>
 	<body>
-		<div id="content">
+		<div class="container">
 			<div id="title">
-				Security Check
+				<a href="../../">Gallery</a> &raquo;
+				Support &raquo; Authentication
 			</div>
-
+			<h1>
+				Restricted Access Area
+			</h1>
 			<h2>
-				You are attempting to access a secure section of this Gallery installation.  You can't
-				proceed until you pass the security check.
+				Authentication Required
 			</h2>
-
 			<?php
+
 			if ($renderType == 'missingConfig') {
 				?>
-				<div class="error">
-					You must create a config.php file in the Gallery directory before
-					you can continue configuring the application.  Use the
-					<a href="../../install">installer</a> to create one.
+				<div class="alert alert-danger">
+					Create a Gallery2 config.php file to continue configuring Gallery2.  Use the <a href="../../install">installer</a> to create one.
 				</div>
 				<?php
-			} ?>
+			}
 
-			<?php
-			if ($renderType == 'missingSetupPassword') {
-				?>
-				<div class="error">
-					You must enter a setup password in your gallery/config.php file in order
-					to be able to set up Gallery. If your config.php is empty, you should run
-					the <a href="../../install">installer</a> to install your Gallery.
+	if ($renderType == 'missingSetupPassword') {
+		?>
+				<div class="alert alert-danger">
+					You must enter a setup password in the config.php file to set up Gallery2. If the config.php file is empty, run the <a href="../../install">installer</a> to install Gallery2.
 				</div>
 				<?php
-			} ?>
+	}
 
-			<?php
-			if ($renderType == 'passwordForm') {
-				?>
-				<?php startForm(); ?>
+	if ($renderType == 'passwordForm') {
+		startForm(); ?>
+				<div class="alert alert-danger">
+					<p>
+						Please enter the Gallery2 setup password created during installation.
+						<br>
+						It can be found in the config.php file:
+					</p>
+					<br>
+					<pre>
+						$gallery-&gt;setConfig('setup.password', '<b>YOUR SETUP PASSWORD</b>');
+					</pre>
+					<br>
+					<p>
+						<input type="password" name="password" placeholder="Password" required>
+						<input type="submit" value="Authenticate" class="btn btn-primary">
+						<script>document.forms[0]['password'].focus();</script>
+					</p>
+				</div>
 				<?php
+
 				if (!empty($options['attempts'])) {
-					?>
-					<div class="warning">
-						Failed login attempts: <?php echo $options['attempts']; ?> out of a total of
-						<?php echo G2_SUPPORT_MAX_LOGIN_ATTEMPTS; ?>.
-					</div>
-					<?php
-				} ?>
+					echo '
+					<div class="alert alert-warning">
+						Failed attempts: ' . $options['attempts'] . ' of ' . G2_SUPPORT_MAX_LOGIN_ATTEMPTS . '
+					</div>';
+				}
 
-				<p>
-					In order to verify you, we require you to enter your Gallery setup password.  This is
-					the password you entered when you installed Gallery.  It can be found in your
-					gallery/config.php file like this:
-				</p>
-				<pre>
-					$gallery-&gt;setConfig('setup.password', '<b>your password here</b>');
-				</pre>
-				<p>
-					Password:
-					<input type="password" name="password">
-					<script type="text/javascript">document.forms[0]['password'].focus();</script>
-					<input type="submit" value="Verify Me">
-				</p>
-				<?php
-				if (isset($options['missingPassword'])) {
-					?>
-					<div class="warning">
-						Please enter a password!
-					</div>
-					<?php
-				} ?>
-			</form>
-				<?php
-			} ?>
+		if (isset($options['missingPassword'])) {
+			echo '
+					<div class="alert alert-warning">
+						Please Enter a Password
+					</div>';
+		}
 
-		<?php
-		if ($renderType == 'loginTxtForm') {
-			?>
-			<?php startForm(); ?>
-			<p>
-				<span class="error"><b>
-					<?php
-					if (!empty($options['error'])) {
-						?>
-						There was a problem connecting to the database.
-						<?php
-					} else {
-						?>
-						You have exceeded the maximum attempts to login by entering a password.
-						<?php
-					} ?>
-				</b></span>
+		echo '</form>';
+	}
 
-				To prevent somebody from hacking your website, we now
-				require you to complete a stricter authentication
-				process.  You must create a text file called
-				<strong>authFile.txt</strong> in the gallery2 directory on your
-				webserver (that's the same directory where main.php is
-				located) and put specific text in it.  If you used the preinstaller
-				to install Gallery, then you may have to use it again to set your directory
-				permissions so that you can create the authFile.txt file.
+	if ($renderType == 'loginTxtForm') {
+		startForm();
+		echo '
+			<p class="alert alert-danger">
+				<b>';
+
+		if (!empty($options['error'])) {
+			echo 'There was a problem connecting to the database.';
+		} else {
+			echo 'You have exceeded the maximum attempts to login by entering a password.';
+		} ?>
+				</b>
 			</p>
-			<div class="info">
-				Create this file: <b><?php echo $options['baseDir']; ?>authFile.txt</b> <br>
+			<p>
+				To prevent unauthorized access, Gallery2 requires addtional  authentication.
+				<br>
+				You must create a file with a specific name with specific contents and upload this to your Gallery2 installation to authenticate yourself.
+			</p>
+			<div class="alert alert-info">
+				Create this file: <b><?php echo $options['baseDir']; ?>authFile.txt</b>
+				<br>
 				Put this in the file: <b><?php echo $options['key']; ?></b>
+				<br>
+				Please upload this to your Gallery2 installation.
 			</div>
-			<?php
-			if (!empty($options['authFileErrors'])) {
-				?>
-				<div class="error">
+				<?php
+
+				if (!empty($options['authFileErrors'])) {
+					?>
+				<div class="alert alert-danger">
 					<?php
+
 					if (!empty($options['authFileErrors']['missing'])) {
 						?>
 						The authFile.txt file does not exist.
@@ -264,25 +262,27 @@ function render($renderType, $options = array()) {
 					} elseif (!empty($options['authFileErrors']['mismatch'])) {
 						?>
 						The password in your authFile.txt file does not match the key above!
-							<?php
+						<?php
 					} ?>
 				</div>
-				<?php
-			} ?>
-			<p>
-				<?php
-				if (!empty($options['error'])) {
-					?>
 					<?php
 				} ?>
-				<input type="submit" value="Verify me">
+			<p>
+				<?php
+
+				if (!empty($options['error'])) {
+					// DA-Note
+					// TODO: Why is there a redundant if block?
+				} ?>
+				<input type="submit" value="Authenticate">
 			</p>
 		</form>
-			<?php
-		} ?>
+				<?php
+	} ?>
 </div>
 </body>
 </html>
 	<?php
 }
+
 ?>

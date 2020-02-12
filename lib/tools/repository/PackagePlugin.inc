@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('lib/tools/repository/classes/RepositoryObject.class');
 GalleryCoreApi::requireOnce('lib/tools/repository/classes/RepositoryDescriptor.class');
 GalleryCoreApi::requireOnce('lib/tools/repository/classes/RepositoryPackage.class');
@@ -115,12 +113,14 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 	 */
 	public function packagePlugins() {
 		global $gallery;
+
 		$pluginsPackaged = 0;
 
 		// Set default filter if none is provided.
 		$filter = GalleryUtilities::getRequestVariables('filter');
 
-		if (strlen($filter) < 3) { // Is there a check to see if a regexp is valid?
+		if (strlen($filter) < 3) {
+			// Is there a check to see if a regexp is valid?
 			$filter = '/.*/';
 		}
 
@@ -141,9 +141,11 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 				if ($ret) {
 					return $ret;
 				}
+
 				$packagedPluginList[] = $pluginInfo;
 			}
 		}
+
 		$this->showView(
 			'PackageResults',
 			array(
@@ -163,6 +165,7 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 	 */
 	public function doPackagePlugin($pluginType, $pluginId) {
 		global $gallery;
+
 		$outputDir = $gallery->getConfig('repository.path');
 
 		list($ret, $plugin) = GalleryCoreApi::loadPlugin($pluginType, $pluginId, true);
@@ -172,9 +175,9 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 		}
 
 		$outputDir .= sprintf('%ss', $pluginType);
-
 		$descriptor = new RepositoryDescriptor();
-		$ret        = $descriptor->init($outputDir);
+
+		$ret = $descriptor->init($outputDir);
 
 		if ($ret) {
 			return array($ret, null);
@@ -186,8 +189,7 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 			return array($ret, null);
 		}
 
-		$overwrite = GalleryUtilities::getRequestVariables('overwrite');
-
+		$overwrite       = GalleryUtilities::getRequestVariables('overwrite');
 		$integrityErrors = $descriptor->checkIntegrity();
 		$pluginInfo      = array(
 			'pluginId'  => $descriptor->getPluginId(),
@@ -202,7 +204,8 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 			}
 
 			$package = new RepositoryPackage();
-			$ret     = $package->init($descriptor, $descriptor->getOutputDir());
+
+			$ret = $package->init($descriptor, $descriptor->getOutputDir());
 
 			if ($ret) {
 				return array($ret, null);
@@ -221,7 +224,8 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 				'packagesWritten' => array(),
 				'packagesSkipped' => array(),
 			);
-			$pluginInfo['errors']      = $integrityErrors;
+
+			$pluginInfo['errors'] = $integrityErrors;
 		}
 
 		return array(null, $pluginInfo);
@@ -236,6 +240,7 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 	 */
 	public function getAvailablePluginList($links) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
 		$data         = array();
 		$pluginTypes  = array('module', 'theme');
@@ -253,8 +258,7 @@ class PackagePluginControllerAndView extends RepositoryControllerAndView {
 				$data[$pluginId]['type']      = $pluginType;
 				$data[$pluginId]['active']    = isset($plugin['active']) ? 'active' : 'inactive';
 				$data[$pluginId]['available'] = isset($plugin['available']) ? 'available' : 'unavailable';
-
-				$pluginUrlParameters = array(
+				$pluginUrlParameters          = array(
 					'pluginId'   => $pluginId,
 					'pluginType' => $pluginType,
 				);

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -113,14 +112,15 @@ class RepositoryDescriptor extends RepositoryObject {
 		 * Get translated strings for all supported languages. All
 		 * locales must be installed on the system for this to work.
 		 */
-		$translator                                =& $gallery->getTranslator();
+		$translator =& $gallery->getTranslator();
+
 		list($supportedLanguages, $defaultCountry) = $translator->getLanguageData();
 
 		foreach ($supportedLanguages as $language => $countries) {
 			foreach ($countries as $country => $description) {
 				$languageCode = $language . '_' . $country;
 
-				// We've already got the en_US strings.
+				// We have already got the en_US strings.
 				if ($languageCode == 'en_US') {
 					continue;
 				}
@@ -139,16 +139,18 @@ class RepositoryDescriptor extends RepositoryObject {
 					if ($ret) {
 						return $ret;
 					}
+
 					$descriptions[$languageCode][$stringId] = $translatedString;
 				}
 			}
 		}
+
 		$this->_data['descriptions'] = $descriptions;
 
 		// Get file meta data.
 		$platform =& $gallery->getPlatform();
 
-		// Don't force the _pluginDir, so that tests can override it
+		// Do not force the _pluginDir, so that tests can override it
 		if (!isset($this->_pluginDir)) {
 			$this->_pluginDir = $platform->realpath(
 				sprintf(
@@ -165,7 +167,7 @@ class RepositoryDescriptor extends RepositoryObject {
 		}
 
 		if (!$platform->file_exists($this->_pluginDir . 'MANIFEST')) {
-			// Don't do anything.  Integrity check will fail on this
+			// Do not do anything.  Integrity check will fail on this
 			$this->_data = array();
 
 			return null;
@@ -236,18 +238,19 @@ class RepositoryDescriptor extends RepositoryObject {
 	 */
 	public function getFileMetaData($pluginDir, &$data) {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
 
+		$platform     =& $gallery->getPlatform();
 		$manifest     = array();
 		$manifestFile = $pluginDir . 'MANIFEST';
+
 		GalleryUtilities::readIndividualManifest($manifestFile, $manifest);
 
-		$g2Base       = GalleryCoreApi::getCodeBasePath();
-		$ignoreOffset = strlen(substr($pluginDir, strlen($g2Base)));
-
-		$manifestContents          = $this->filterManifestForBasePackage(
+		$g2Base           = GalleryCoreApi::getCodeBasePath();
+		$ignoreOffset     = strlen(substr($pluginDir, strlen($g2Base)));
+		$manifestContents = $this->filterManifestForBasePackage(
 			$platform->file_get_contents($manifestFile)
 		);
+
 		$data['files']['MANIFEST'] = array(
 			'bytes'    => (string)strlen($manifestContents),
 			'hash'     => sprintf('%u', crc32($manifestContents)),
@@ -267,6 +270,7 @@ class RepositoryDescriptor extends RepositoryObject {
 					$data['directories'][$dir]['packages'] = $this->getPackageNames($dir);
 				}
 			}
+
 			$data['files'][$file] = array(
 				'bytes'      => $fileInfo['size'],
 				'bytes_crlf' => $fileInfo['size_crlf'],
@@ -282,6 +286,7 @@ class RepositoryDescriptor extends RepositoryObject {
 				if ($ret) {
 					return $ret;
 				}
+
 				$data['header']['stringsRevision'] = $revision;
 			}
 		}
@@ -348,6 +353,7 @@ class RepositoryDescriptor extends RepositoryObject {
 				$files[] = $file;
 			}
 		}
+
 		sort($files);
 
 		return $files;
@@ -366,6 +372,7 @@ class RepositoryDescriptor extends RepositoryObject {
 				$packageTypes = array_merge($packageTypes, $info['packages']);
 			}
 		}
+
 		$packageTypes = array_unique($packageTypes);
 		sort($packageTypes);
 
@@ -374,14 +381,14 @@ class RepositoryDescriptor extends RepositoryObject {
 
 	/**
 	 * Check all the files in this descriptor against the MANIFEST to make sure that
-	 * they're up to date.  Return an empty array if there are no errors.
+	 * they are up to date.  Return an empty array if there are no errors.
 	 * @return array (error, error, error)
 	 */
 	public function checkIntegrity() {
 		global $gallery;
-		$platform =& $gallery->getPlatform();
-		$phpVm    = $gallery->getPhpVm();
 
+		$platform     =& $gallery->getPlatform();
+		$phpVm        = $gallery->getPhpVm();
 		$errors       = array();
 		$manifestPath = $this->_pluginDir . 'MANIFEST';
 

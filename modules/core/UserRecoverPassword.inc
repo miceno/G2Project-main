@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce(
 	'modules/core/classes/helpers/UserRecoverPasswordHelper_simple.class'
 );
@@ -32,16 +30,16 @@ GalleryCoreApi::requireOnce(
  */
 class UserRecoverPasswordController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserRecoverPasswordController();
+		if (!isset($instance)) {
+			$instance = new UserRecoverPasswordController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -70,8 +68,7 @@ class UserRecoverPasswordController extends GalleryController {
 		global $gallery;
 
 		$status = $error = $results = array();
-
-		$phpVm = $gallery->getPhpVm();
+		$phpVm  = $gallery->getPhpVm();
 
 		if (isset($form['action']['recover'])) {
 			$form['userName'] = is_string($form['userName']) ? $form['userName'] : null;
@@ -169,6 +166,7 @@ class UserRecoverPasswordController extends GalleryController {
 					 * Do not update the auth string.
 					 * We will silently fail to thwart phishing attempts.
 					 */
+
 					// Create a special flag for UnitTests
 					$unitTest = 0;
 
@@ -180,7 +178,7 @@ class UserRecoverPasswordController extends GalleryController {
 
 					if (!empty($lastRequest)) {
 						if (($lastRequest - (7 * 24 * 60 * 60) + (20 * 60)) < time()) {
-							$ret             = GalleryCoreApi::updateMapEntry(
+							$ret = GalleryCoreApi::updateMapEntry(
 								'GalleryRecoverPasswordMap',
 								array(
 									'userName' => $user->getUserName(),
@@ -190,12 +188,13 @@ class UserRecoverPasswordController extends GalleryController {
 									'requestExpires' => $requestExpires,
 								)
 							);
+
 							$shouldSendEmail = true;
 						}
 					} else {
 						/*
 						 * Add the map entry before sending email to the user -
-						 * We don't want to send them mail if the data never gets into the DB
+						 * We do not want to send them mail if the data never gets into the DB
 						 */
 						$ret = GalleryCoreApi::addMapEntry(
 							'GalleryRecoverPasswordMap',
@@ -209,13 +208,14 @@ class UserRecoverPasswordController extends GalleryController {
 						if ($ret) {
 							return array($ret, null);
 						}
+
 						$shouldSendEmail = true;
 					}
 
 					if ($unitTest || (empty($error) && $shouldSendEmail)) {
 						// Generate baseUrl and recoverUrl for the email template
-						$generator  =& $gallery->getUrlGenerator();
-						$baseUrl    = $generator->generateUrl(
+						$generator =& $gallery->getUrlGenerator();
+						$baseUrl   = $generator->generateUrl(
 							array(),
 							array(
 								'forceFullUrl'   => true,
@@ -223,6 +223,7 @@ class UserRecoverPasswordController extends GalleryController {
 								'forceSessionId' => false,
 							)
 						);
+
 						$recoverUrl = $generator->generateUrl(
 							array(
 								'view'       => 'core.UserAdmin',
@@ -261,9 +262,10 @@ class UserRecoverPasswordController extends GalleryController {
 								'body'    => $tplData,
 								'headers' => null,
 							);
-							$mailData = serialize($mailData);
 
-							$session =& $gallery->getSession();
+							$mailData = serialize($mailData);
+							$session  =& $gallery->getSession();
+
 							$session->put(
 								'RecoverDummyPlatform.mail',
 								$mailData
@@ -271,7 +273,8 @@ class UserRecoverPasswordController extends GalleryController {
 						} else {
 							// Send the user email based on our confirmation template
 							$platform = $gallery->getPlatform();
-							$ret      = $platform->sendEmail(
+
+							$ret = $platform->sendEmail(
 								'modules/core/templates/UserRecoverPasswordEmail.tpl',
 								$tplData,
 								'',
@@ -321,6 +324,7 @@ class UserRecoverPasswordController extends GalleryController {
 	 */
 	public function _generateAuthString() {
 		GalleryCoreApi::requireOnce('lib/joomla/crypt.php');
+
 		$j = new JCrypt();
 
 		return md5($j->genRandomBytes(32));
@@ -332,16 +336,16 @@ class UserRecoverPasswordController extends GalleryController {
  */
 class UserRecoverPasswordView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new UserRecoverPasswordView();
+		if (!isset($instance)) {
+			$instance = new UserRecoverPasswordView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**

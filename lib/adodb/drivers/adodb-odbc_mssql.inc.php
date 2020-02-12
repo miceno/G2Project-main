@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,9 +8,7 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
 Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   MSSQL support via ODBC. Requires ODBC. Works on Windows and Unix.
   For Unix configuration, see http://phpbuilder.com/columns/alberto20000919.php3
 */
@@ -23,7 +22,6 @@ if (!defined('_ADODB_ODBC_LAYER')) {
 	include ADODB_DIR . '/drivers/adodb-odbc.inc.php';
 }
 
-
 class ADODB_odbc_mssql extends ADODB_odbc {
 	public $databaseType     = 'odbc_mssql';
 	public $fmtDate          = "'Y-m-d'";
@@ -36,27 +34,36 @@ class ADODB_odbc_mssql extends ADODB_odbc {
 		(case when c.xusertype=61 then 0 else c.xprec end),
 		(case when c.xusertype=61 then 0 else c.xscale end)
 		from syscolumns c join systypes t on t.xusertype=c.xusertype join sysobjects o on o.id=c.id where o.name='%s'";
-	public $hasTop           = 'top';        // support mssql/interbase SELECT TOP 10 * FROM TABLE
-	public $sysDate          = 'GetDate()';
-	public $sysTimeStamp     = 'GetDate()';
-	public $leftOuter        = '*=';
-	public $rightOuter       = '=*';
-	public $substr           = 'substring';
-	public $length           = 'len';
-	public $ansiOuter        = true; // for mssql7 or later
-	public $identitySQL      = 'select SCOPE_IDENTITY()'; // 'select SCOPE_IDENTITY'; # for mssql 2000
-	public $hasInsertID      = true;
-	public $connectStmt      = 'SET CONCAT_NULL_YIELDS_NULL OFF'; // When SET CONCAT_NULL_YIELDS_NULL is ON,
-	// concatenating a null value with a string yields a NULL result
 
+	// support mssql/interbase SELECT TOP 10 * FROM TABLE
+	public $hasTop       = 'top';
+	public $sysDate      = 'GetDate()';
+	public $sysTimeStamp = 'GetDate()';
+	public $leftOuter    = '*=';
+	public $rightOuter   = '=*';
+	public $substr       = 'substring';
+	public $length       = 'len';
+
+	// for mssql7 or later
+	public $ansiOuter = true;
+
+	// 'select SCOPE_IDENTITY'; # for mssql 2000
+	public $identitySQL = 'select SCOPE_IDENTITY()';
+	public $hasInsertID = true;
+	public $connectStmt = 'SET CONCAT_NULL_YIELDS_NULL OFF';
+
+	// When SET CONCAT_NULL_YIELDS_NULL is ON,
+	// concatenating a null value with a string yields a NULL result
 	public function __construct() {
 		parent::__construct();
+
 		//$this->curmode = SQL_CUR_USE_ODBC;
 	}
 
 	// crashes php...
 	public function ServerInfo() {
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 		$row              = $this->GetRow('execute sp_server_info 2');
@@ -65,6 +72,7 @@ class ADODB_odbc_mssql extends ADODB_odbc {
 		if (!is_array($row)) {
 			return false;
 		}
+
 		$arr['description'] = $row[2];
 		$arr['version']     = ADOConnection::_findvers($arr['description']);
 
@@ -72,7 +80,8 @@ class ADODB_odbc_mssql extends ADODB_odbc {
 	}
 
 	public function IfNull($field, $ifNull) {
-		return " ISNULL($field, $ifNull) "; // if MS SQL Server
+		// if MS SQL Server
+		return " ISNULL($field, $ifNull) ";
 	}
 
 	public function _insertid() {
@@ -90,20 +99,16 @@ class ADODB_odbc_mssql extends ADODB_odbc {
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 		$table            = $this->qstr(strtoupper($table));
-
-		$sql = "select object_name(constid) as constraint_name,
+		$sql              = "select object_name(constid) as constraint_name,
 	col_name(fkeyid, fkey) as column_name,
 	object_name(rkeyid) as referenced_table_name,
    	col_name(rkeyid, rkey) as referenced_column_name
 from sysforeignkeys
 where upper(object_name(fkeyid)) = $table
 order by constraint_name, referenced_table_name, keyno";
-
-		$constraints = $this->GetArray($sql);
-
+		$constraints      = $this->GetArray($sql);
 		$ADODB_FETCH_MODE = $save;
-
-		$arr = false;
+		$arr              = false;
 
 		foreach ($constraints as $constr) {
 			//print_r($constr);
@@ -121,6 +126,7 @@ order by constraint_name, referenced_table_name, keyno";
 				if ($upper) {
 					$a = strtoupper($a);
 				}
+
 				$arr2[$a] = $b;
 			}
 		}
@@ -129,11 +135,13 @@ order by constraint_name, referenced_table_name, keyno";
 	}
 
 	public function MetaTables($ttype = false, $showSchema = false, $mask = false) {
-		if ($mask) {//$this->debug=1;
+		if ($mask) {
+			//$this->debug=1;
 			$save                 = $this->metaTablesSQL;
 			$mask                 = $this->qstr($mask);
 			$this->metaTablesSQL .= " AND name like $mask";
 		}
+
 		$ret = ADOConnection::MetaTables($ttype, $showSchema);
 
 		if ($mask) {
@@ -148,15 +156,19 @@ order by constraint_name, referenced_table_name, keyno";
 
 		if ($schema) {
 			$dbName = $this->database;
+
 			$this->SelectDB($schema);
 		}
+
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
 		if ($this->fetchMode !== false) {
 			$savem = $this->SetFetchMode(false);
 		}
+
 		$rs = $this->Execute(sprintf($this->metaColumnsSQL, $table));
 
 		if ($schema) {
@@ -166,6 +178,7 @@ order by constraint_name, referenced_table_name, keyno";
 		if (isset($savem)) {
 			$this->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!is_object($rs)) {
@@ -177,18 +190,19 @@ order by constraint_name, referenced_table_name, keyno";
 		$retarr = array();
 
 		while (!$rs->EOF) {
-			$fld       = new ADOFieldObject();
-			$fld->name = $rs->fields[0];
-			$fld->type = $rs->fields[1];
+			$fld           = new ADOFieldObject();
+			$fld->name     = $rs->fields[0];
+			$fld->type     = $rs->fields[1];
+			$fld->not_null = (!$rs->fields[3]);
 
-			$fld->not_null       = (!$rs->fields[3]);
-			$fld->auto_increment = ($rs->fields[4] == 128);     // sys.syscolumns status field. 0x80 = 128 ref: http://msdn.microsoft.com/en-us/library/ms186816.aspx
-
+			// sys.syscolumns status field. 0x80 = 128 ref: http://msdn.microsoft.com/en-us/library/ms186816.aspx
+			$fld->auto_increment = ($rs->fields[4] == 128);
 
 			if (isset($rs->fields[5]) && $rs->fields[5]) {
 				if ($rs->fields[5] > 0) {
 					$fld->max_length = $rs->fields[5];
 				}
+
 				$fld->scale = $rs->fields[6];
 
 				if ($fld->scale > 0) {
@@ -198,12 +212,12 @@ order by constraint_name, referenced_table_name, keyno";
 				$fld->max_length = $rs->fields[2];
 			}
 
-
 			if ($save == ADODB_FETCH_NUM) {
 				$retarr[] = $fld;
 			} else {
 				$retarr[strtoupper($fld->name)] = $fld;
 			}
+
 			$rs->MoveNext();
 		}
 
@@ -214,8 +228,7 @@ order by constraint_name, referenced_table_name, keyno";
 
 	public function MetaIndexes($table, $primary = false, $owner = false) {
 		$table = $this->qstr($table);
-
-		$sql = "SELECT i.name AS ind_name, C.name AS col_name, USER_NAME(O.uid) AS Owner, c.colid, k.Keyno,
+		$sql   = "SELECT i.name AS ind_name, C.name AS col_name, USER_NAME(O.uid) AS Owner, c.colid, k.Keyno,
 			CASE WHEN I.indid BETWEEN 1 AND 254 AND (I.status & 2048 = 2048 OR I.Status = 16402 AND O.XType = 'V') THEN 1 ELSE 0 END AS IsPK,
 			CASE WHEN I.status & 2 = 2 THEN 1 ELSE 0 END AS IsUnique
 			FROM dbo.sysobjects o INNER JOIN dbo.sysindexes I ON o.id = i.id
@@ -225,6 +238,7 @@ order by constraint_name, referenced_table_name, keyno";
 			ORDER BY O.name, I.Name, K.keyno";
 
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -237,6 +251,7 @@ order by constraint_name, referenced_table_name, keyno";
 		if (isset($savem)) {
 			$this->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!is_object($rs)) {
@@ -277,6 +292,7 @@ order by constraint_name, referenced_table_name, keyno";
 		if (!stristr($transaction_mode, 'isolation')) {
 			$transaction_mode = 'ISOLATION LEVEL ' . $transaction_mode;
 		}
+
 		$this->Execute('SET TRANSACTION ' . $transaction_mode);
 	}
 
@@ -286,16 +302,17 @@ order by constraint_name, referenced_table_name, keyno";
 		global $ADODB_FETCH_MODE;
 
 		$schema = '';
+
 		$this->_findschema($table, $schema);
+
 		//if (!$schema) $schema = $this->database;
 		if ($schema) {
 			$schema = "and k.table_catalog like '$schema%'";
 		}
 
-		$sql = "select distinct k.column_name,ordinal_position from information_schema.key_column_usage k,
+		$sql              = "select distinct k.column_name,ordinal_position from information_schema.key_column_usage k,
 		information_schema.table_constraints tc
 		where tc.constraint_name = k.constraint_name and tc.constraint_type = 'PRIMARY KEY' and k.table_name = '$table' $schema order by ordinal_position ";
-
 		$savem            = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 		$a                = $this->GetCol($sql);
@@ -304,6 +321,7 @@ order by constraint_name, referenced_table_name, keyno";
 		if ($a && sizeof($a) > 0) {
 			return $a;
 		}
+
 		$false = false;
 
 		return $false;
@@ -319,7 +337,8 @@ order by constraint_name, referenced_table_name, keyno";
 				'\\1 ' . $this->hasTop . " $nrows ",
 				$sql
 			);
-			$rs  = $this->Execute($sql, $inputarr);
+
+			$rs = $this->Execute($sql, $inputarr);
 		} else {
 			$rs = ADOConnection::SelectLimit($sql, $nrows, $offset, $inputarr, $secs2cache);
 		}
@@ -332,14 +351,15 @@ order by constraint_name, referenced_table_name, keyno";
 		if (!$col) {
 			$col = $this->sysTimeStamp;
 		}
-		$s = '';
 
+		$s   = '';
 		$len = strlen($fmt);
 
 		for ($i = 0; $i < $len; $i++) {
 			if ($s) {
 				$s .= '+';
 			}
+
 			$ch = $fmt[$i];
 
 			switch ($ch) {
@@ -402,6 +422,7 @@ order by constraint_name, referenced_table_name, keyno";
 						$i++;
 						$ch = substr($fmt, $i, 1);
 					}
+
 					$s .= $this->qstr($ch);
 
 					break;

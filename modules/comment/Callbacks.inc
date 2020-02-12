@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -26,11 +25,13 @@
 class CommentCallbacks {
 	public function callback($params, &$smarty, $callback, $userId) {
 		global $gallery;
+
 		$phpVm = $gallery->getPhpVm();
 
 		switch ($callback) {
 			case 'LoadComments':
-				$itemId           = $params['itemId'];
+				$itemId = $params['itemId'];
+
 				list($ret, $item) = GalleryCoreApi::loadEntitiesById($itemId, 'GalleryItem');
 
 				if ($ret) {
@@ -44,7 +45,7 @@ class CommentCallbacks {
 				}
 
 				if (empty($permissions['core.view'])) {
-					// Avoid information disclosure, act as if the item didn't exist.
+					// Avoid information disclosure, act as if the item does not exist.
 					return GalleryCoreApi::error(ERROR_MISSING_OBJECT);
 				}
 
@@ -52,13 +53,14 @@ class CommentCallbacks {
 					return null;
 				}
 
-				// Pages shouldn't be cached if comments are not accessible for anonymous
+				// Pages should not be cached if comments are not accessible for anonymous
 				if (!$phpVm->headers_sent()) {
 					list($ret, $anonymousUserId) = GalleryCoreApi::getAnonymousUserId();
 
 					if ($ret) {
 						return $ret;
 					}
+
 					// If !comment.view || !core.view
 					list($ret, $anonymousViewable) = GalleryCoreApi::hasItemPermission(
 						$itemId,
@@ -86,21 +88,24 @@ class CommentCallbacks {
 
 					if (!$anonymousViewable) {
 						$expires = $gallery->getHttpDate($phpVm->time() - 7 * 24 * 3600);
+
 						$phpVm->header('Cache-Control: no-cache');
 						$phpVm->header('Pragma: no-cache');
 						$phpVm->header('Expires: ' . $expires);
 					}
 				}
+
 				$viewMax = $params['show'];
 
 				GalleryCoreApi::requireOnce('modules/comment/classes/GalleryCommentHelper.class');
-				list($ret, $comments) = GalleryCommentHelper::doStatic()->fetchComments($item->getId(), $viewMax, ORDER_DESCENDING);
+
+				list($ret, $comments) = GalleryCommentHelper::getMe()->fetchComments($item->getId(), $viewMax, ORDER_DESCENDING);
 
 				if ($ret) {
 					return $ret;
 				}
 
-				list($ret, $counts) = GalleryCommentHelper::doStatic()->fetchCommentCounts(array($item->getId()));
+				list($ret, $counts) = GalleryCommentHelper::getMe()->fetchCommentCounts(array($item->getId()));
 
 				if ($ret) {
 					return $ret;
@@ -144,13 +149,12 @@ class CommentCallbacks {
 					$can[$canFlag] = isset($permissions[$permission]);
 				}
 
-				$LoadComments                  = array();
-				$LoadComments['comments']      = $comments;
-				$LoadComments['commenters']    = $commenters;
-				$LoadComments['can']           = $can;
-				$LoadComments['item']          = (array)$item;
-				$LoadComments['totalComments'] = $totalComments;
-
+				$LoadComments                     = array();
+				$LoadComments['comments']         = $comments;
+				$LoadComments['commenters']       = $commenters;
+				$LoadComments['can']              = $can;
+				$LoadComments['item']             = (array)$item;
+				$LoadComments['totalComments']    = $totalComments;
 				$block                            =& $smarty->_tpl_vars['block'];
 				$block['comment']['LoadComments'] = $LoadComments;
 
@@ -165,8 +169,10 @@ class CommentCallbacks {
 				}
 
 				GalleryCoreApi::requireOnce('modules/comment/classes/GalleryCommentHelper.class');
-				$form                   =& $smarty->_tpl_vars['form'];
-				list($ret, $AddComment) = GalleryCommentHelper::doStatic()->getAddComment($item, $form);
+
+				$form =& $smarty->_tpl_vars['form'];
+
+				list($ret, $AddComment) = GalleryCommentHelper::getMe()->getAddComment($item, $form);
 
 				if ($ret) {
 					if ($ret->getErrorCode() & ERROR_PERMISSION_DENIED) {

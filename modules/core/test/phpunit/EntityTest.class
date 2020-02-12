@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -36,19 +35,23 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		global $gallery;
 
 		$this->_entity = new EntityTestEntity();
-		$ret           = $this->_entity->create();
+
+		$ret = $this->_entity->create();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = $this->_entity->save();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($this->_entity);
 
 		$ret = GalleryCoreApi::registerFactoryImplementation(
@@ -63,14 +66,18 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markFactoryModuleForCleanup('coreTest');
+
 		$this->_savedSession = $gallery->_session;
 		$gallery->_session   = null;
-		$ret                 = $gallery->initSession();
+
+		$ret = $gallery->initSession();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = $gallery->_session->start();
 
 		if ($ret) {
@@ -80,6 +87,7 @@ class EntityTest extends GalleryTestCase {
 
 	public function tearDown() {
 		global $gallery;
+
 		$gallery->_session = $this->_savedSession;
 
 		$ret = parent::tearDown();
@@ -110,6 +118,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals('entitytestentity', strtolower(get_class($newEntity)), 'Entity class');
 		$this->assertEquals($this->_entity, $newEntity, 'Entity check');
 		$this->assertTrue($newEntity->_wasOnLoadCalled(), 'onLoad for database load');
@@ -117,12 +126,14 @@ class EntityTest extends GalleryTestCase {
 		if (GalleryDataCache::isFileCachingEnabled()) {
 			// Load back from disk cache and verify it
 			GalleryDataCache::reset();
+
 			$data =& GalleryDataCache::getFromDisk(
 				array(
 					'type'   => 'entity',
 					'itemId' => $this->_entity->getId(),
 				)
 			);
+
 			$this->assertFalse(empty($data), 'Entity data should be in disk cache');
 
 			list($ret, $newEntity) = GalleryCoreApi::loadEntitiesById($this->_entity->getId());
@@ -146,6 +157,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertFalse($newEntity->_wasOnLoadCalled(), 'onLoad for memory cache load');
 
 		// Refresh from db
@@ -154,14 +166,17 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($this->_entity, $newEntity, 'Entity check 3');
 		$this->assertTrue($newEntity->_wasOnLoadCalled(), 'onLoad for refresh');
 	}
 
 	public function testOnLoadHandler() {
 		global $gallery;
+
 		$entity = new EntityTestEntity();
-		$ret    = $entity->create();
+
+		$ret = $entity->create();
 
 		if ($ret) {
 			return $ret;
@@ -191,6 +206,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($entity);
 		$this->assertFalse($entity->_wasOnLoadCalled(), 'onLoad for new entity');
 
@@ -201,6 +217,7 @@ class EntityTest extends GalleryTestCase {
 		}
 
 		$session =& $gallery->getSession();
+
 		$this->assertTrue(isset($session), 'session is not set');
 		$this->assertEquals('entitytestentity', strtolower(get_class($newEntity)), 'Entity class');
 		$this->assertTrue($newEntity->_wasOnLoadCalled(), 'onLoad for database load');
@@ -212,8 +229,11 @@ class EntityTest extends GalleryTestCase {
 
 		// During upgrades the session has 'isUpgrade' key
 		GalleryDataCache::reset();
+
 		unset($newEntity);
+
 		$session->put('isUpgrade', true);
+
 		list($ret, $newEntity) = GalleryCoreApi::loadEntitiesById($entity->getId());
 
 		if ($ret) {
@@ -234,7 +254,6 @@ class EntityTest extends GalleryTestCase {
 		 * Ensure modified flag is not set if we assign a value that once casted
 		 * to the right type is the same as the old value..
 		 */
-
 		$oldValue = $this->_entity->getModificationTimestamp();
 		$newValue = (string)$oldValue;
 
@@ -247,11 +266,10 @@ class EntityTest extends GalleryTestCase {
 		 * Ensure modified flag is cleared if we change an attribute and then
 		 * change it back to its original value..
 		 */
-
 		$oldValue = $this->_entity->getModificationTimestamp();
+
 		$this->_entity->setModificationTimestamp(10);
 		$this->assertTrue($this->_entity->isModified(), 'is modified');
-
 		$this->_entity->setModificationTimestamp($oldValue);
 		$this->assertFalse($this->_entity->isModified(), 'is not modified');
 	}
@@ -259,11 +277,11 @@ class EntityTest extends GalleryTestCase {
 	public function testSetSetSet() {
 		/*
 		 * Ensure modified flag stays set if value goes null->A->B->A (ie first set of A
-		 * doesn't become the "original value" when it should stay as null)
+		 * does not become the "original value" when it should stay as null)
 		 */
-
 		$entity = new EntityTestEntity();
-		$ret    = $entity->create();
+
+		$ret = $entity->create();
 
 		if ($ret) {
 			return $ret;
@@ -278,13 +296,13 @@ class EntityTest extends GalleryTestCase {
 		$entity->setIsLinkable(true);
 		$entity->setIsLinkable(false);
 		$entity->setIsLinkable(true);
-
 		$this->assertTrue($entity->isModified(), 'is modified');
 	}
 
 	public function testIsModifiedMember() {
 		$entity = new EntityTestEntity();
-		$ret    = $entity->create();
+
+		$ret = $entity->create();
 
 		if ($ret) {
 			return $ret;
@@ -298,18 +316,23 @@ class EntityTest extends GalleryTestCase {
 	public function testEmptyVsNull() {
 		// Ensure we can save and reset empty string without triggering modified flag
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryEntity.class');
+
 		$entity = new GalleryEntity();
-		$ret    = $entity->create();
+
+		$ret = $entity->create();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$entity->setOnLoadHandlers('');
+
 		$ret = $entity->save();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($entity);
 
 		list($ret, $entity) = $entity->refresh();
@@ -325,20 +348,24 @@ class EntityTest extends GalleryTestCase {
 
 	public function testSaveWithoutEvent() {
 		$listener = new EntityTestEventListener($this);
-		GalleryCoreApi::registerEventListener('GalleryEntity::save', $listener);
 
+		GalleryCoreApi::registerEventListener('GalleryEntity::save', $listener);
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryEntity.class');
+
 		$entity = new GalleryEntity();
-		$ret    = $entity->create();
+
+		$ret = $entity->create();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$ret = $entity->save(false);
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($entity);
 		$this->assertEquals(null, $listener->getEvent());
 
@@ -349,8 +376,10 @@ class EntityTest extends GalleryTestCase {
 		 * too many and fail the test.  So generate our own event to keep the books straight.
 		 */
 		$event = GalleryCoreApi::newEvent('GalleryEntity::save');
+
 		$entity->setPersistentFlag(STORAGE_FLAG_NEWLY_CREATED);
 		$event->setEntity($entity);
+
 		list($ret, $result) = GalleryCoreApi::postEvent($event);
 
 		if ($ret) {
@@ -359,6 +388,7 @@ class EntityTest extends GalleryTestCase {
 
 		$event     = $listener->getEvent();
 		$newEntity = $event->getEntity();
+
 		$this->assertEquals($entity->getId(), $newEntity->getId());
 	}
 
@@ -377,6 +407,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return array($ret, null, null);
 		}
+
 		$this->_markForCleanup($photo1);
 		$this->assertEquals(100, $photo1->getWidth());
 
@@ -385,6 +416,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return array($ret, null, null);
 		}
+
 		$this->_markForCleanup($photo2);
 
 		return array(null, $photo1, $photo2);
@@ -398,8 +430,8 @@ class EntityTest extends GalleryTestCase {
 		}
 
 		/*
-		 * width is null, because photo2 hasn't yet been loaded from the database (or refreshed)
-		 * so its onLoad hasn't been called yet, which means that it still has its original
+		 * width is null, because photo2 has not yet been loaded from the database (or refreshed)
+		 * so its onLoad has not been called yet, which means that it still has its original
 		 * value.
 		 */
 		$this->assertEquals(null, $photo2->getWidth());
@@ -410,7 +442,7 @@ class EntityTest extends GalleryTestCase {
 			return $ret;
 		}
 
-		// Now that we've reloaded photo2, it has linked values
+		// Now that we have reloaded photo2, it has linked values
 		$this->assertEquals(100, $photo2->getWidth());
 		$this->assertEquals('application/unknown', $photo2->getMimeType());
 	}
@@ -488,6 +520,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($this->_getRootId(), $entity->getId());
 	}
 
@@ -497,6 +530,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($this->_getRootId(), $entity->getId());
 	}
 
@@ -506,6 +540,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($this->_getRootId(), $entity->getId());
 	}
 
@@ -523,6 +558,7 @@ class EntityTest extends GalleryTestCase {
 		} else {
 			$this->fail('Requested entity-type not asserted');
 		}
+
 		$this->assertEquals(null, $entity);
 	}
 
@@ -532,6 +568,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($dataItem);
 
 		list($ret, $entities) = GalleryCoreApi::loadEntitiesById(
@@ -557,6 +594,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($dataItem);
 
 		list($ret, $entities) = GalleryCoreApi::loadEntitiesById(
@@ -589,11 +627,13 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals($this->_getRootId(), $entity->getId());
 	}
 
 	public function deleteEntityByIdAssertsTheRequestedEntityTypeSubclassMatch() {
 		list($ret, $album) = $this->_createRandomAlbum($this->_getRootId());
+
 		$this->_markForCleanup($album);
 
 		if ($ret) {
@@ -613,6 +653,7 @@ class EntityTest extends GalleryTestCase {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->_markForCleanup($album);
 
 		$ret = GalleryCoreApi::deleteEntityById($album->getId(), 'GalleryDerivative');
@@ -642,6 +683,7 @@ class EntityTestEntity extends GalleryEntity {
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->setEntityType('EntityTestEntity');
 
 		return null;
@@ -649,6 +691,7 @@ class EntityTestEntity extends GalleryEntity {
 
 	public function onLoad() {
 		$this->_wasOnLoadCalled(true);
+
 		$ret = parent::onLoad();
 
 		if ($ret) {
@@ -698,7 +741,6 @@ class EntityTestOnLoadHandler {
 		return null;
 	}
 }
-
 
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryEventListener.class');
 

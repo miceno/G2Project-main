@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -66,7 +65,8 @@ class UpgradeStep {
 	}
 
 	public function processRequest() {
-		return true; // true means continue rendering the page
+		// true means continue rendering the page
+		return true;
 	}
 
 	public function loadTemplateData(&$templateData) {
@@ -85,8 +85,7 @@ class UpgradeStep {
 		return $this->_isLastStep;
 	}
 
-	public function loadGalleryConfig($config) {
-	}
+	public function loadGalleryConfig($config) {}
 
 	public function sanitize($string) {
 		if (get_magic_quotes_gpc()) {
@@ -113,6 +112,7 @@ class UpgradeStep {
 
 	public function _startDebugLog($header) {
 		global $gallery;
+
 		$gallery->setDebug('logged');
 
 		if (!isset($_SESSION['debugLogFile'])) {
@@ -120,6 +120,7 @@ class UpgradeStep {
 			$tag                      = substr(md5(microtime() . mt_rand(1, 32767)), 0, 10);
 			$_SESSION['debugLogFile'] = $dataBase . '/upgrade_' . $tag . '.log';
 		}
+
 		$gallery->setDebugLogFile($_SESSION['debugLogFile']);
 		$gallery->debug(
 			"\n\n--------------------------------------------------------\n\t$header\n"

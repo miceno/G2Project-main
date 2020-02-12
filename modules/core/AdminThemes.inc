@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class AdminThemesController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminThemesController();
+		if (!isset($instance)) {
+			$instance = new AdminThemesController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -52,19 +51,19 @@ class AdminThemesController extends GalleryController {
 		$status       = array();
 		$error        = array();
 		$errorMessage = array();
-
-		$theme   = null;
-		$themeId = GalleryUtilities::getRequestVariables('themeId');
+		$theme        = null;
+		$themeId      = GalleryUtilities::getRequestVariables('themeId');
 
 		if (isset($form['action']['saveDefaults'])) {
 			// Do some basic input validation (by whitelisting)
 			GalleryCoreApi::requireOnce('modules/core/classes/GallerySortInterface_1_2.class');
+
 			list(
 				$ret,
 				$orderByList,
 				$presortList,
 				$orderDirectionList
-			) = GallerySortInterface_1_2::doStatic()->getAllSortOrders(false);
+			) = GallerySortInterface_1_2::getMe()->getAllSortOrders(false);
 
 			if ($ret) {
 				return array($ret, null);
@@ -151,6 +150,7 @@ class AdminThemesController extends GalleryController {
 					if ($key == 'default.orderBy' && !empty($form['default']['presort'])) {
 						$value = $form['default']['presort'] . '|' . $value;
 					}
+
 					$ret = GalleryCoreApi::setPluginParameter('module', 'core', $key, $value);
 
 					if ($ret) {
@@ -254,6 +254,7 @@ class AdminThemesController extends GalleryController {
 						$error[]                      = sprintf('form[error][key][%s][invalid]', $validationKey);
 						$errorMessage[$validationKey] = $validationMessage;
 					}
+
 					GalleryUtilities::putRequestVariable('form[errorMessage]', $errorMessage);
 				}
 			} elseif ($theme && isset($form['action']['undoTheme'])) {
@@ -270,6 +271,7 @@ class AdminThemesController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'core.AdminThemes';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -282,16 +284,16 @@ class AdminThemesController extends GalleryController {
  */
 class AdminThemesView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminThemesView();
+		if (!isset($instance)) {
+			$instance = new AdminThemesView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -330,9 +332,9 @@ class AdminThemesView extends GalleryView {
 		}
 
 		/*
-		 * It's possible that we have some out-of-date themes which haven't been deactivated yet,
+		 * It is possible that we have some out-of-date themes which have not been deactivated yet,
 		 * since the deactivation only occurs when we try to load the theme.  Load all the active
-		 * themes now to force the version check, then reload the theme status when we're done to
+		 * themes now to force the version check, then reload the theme status when we are done to
 		 * pick up any changes we trigger.
 		 */
 		foreach ($themes as $id => $status) {
@@ -353,7 +355,7 @@ class AdminThemesView extends GalleryView {
 		}
 
 		/*
-		 * Figure out how many active themes we have (because we don't allow
+		 * Figure out how many active themes we have (because we do not allow
 		 * deactivating the last one.
 		 */
 		$activeCount = 0;
@@ -390,9 +392,10 @@ class AdminThemesView extends GalleryView {
 				$theme->getRequiredCoreApi(),
 				GalleryCoreApi::getApiVersion()
 			);
+
 			$themeApiCompatible = GalleryUtilities::isCompatibleWithApi(
 				$theme->getRequiredThemeApi(),
-				GalleryTheme::doStatic()->getApiVersion()
+				GalleryTheme::getMe()->getApiVersion()
 			);
 
 			if ($coreApiCompatible && $themeApiCompatible) {
@@ -400,7 +403,7 @@ class AdminThemesView extends GalleryView {
 					$entry['state'] = 'inactive';
 
 					/*
-					 * If the database versions doesn't match the theme
+					 * If the database versions does not match the theme
 					 * version, we need to get the user to install the theme.
 					 */
 					if ($status['version'] != $theme->getVersion()) {
@@ -413,7 +416,8 @@ class AdminThemesView extends GalleryView {
 									'form[action][install]' => 1,
 								),
 							);
-							$entry['state']    = 'install';
+
+							$entry['state'] = 'install';
 						} else {
 							$entry['action'][] = array(
 								'text'   => $module->translate('upgrade'),
@@ -423,7 +427,8 @@ class AdminThemesView extends GalleryView {
 									'form[action][upgrade]' => 1,
 								),
 							);
-							$entry['state']    = 'upgrade';
+
+							$entry['state'] = 'upgrade';
 						}
 					} else {
 						$entry['action'][] = array(
@@ -434,6 +439,7 @@ class AdminThemesView extends GalleryView {
 								'form[action][activate]' => 1,
 							),
 						);
+
 						$entry['action'][] = array(
 							'text'   => $module->translate('uninstall'),
 							'params' => array(
@@ -466,7 +472,8 @@ class AdminThemesView extends GalleryView {
 								'form[action][upgrade]' => 1,
 							),
 						);
-						$entry['state']    = 'upgrade';
+
+						$entry['state'] = 'upgrade';
 					}
 				}
 			} else {
@@ -475,15 +482,18 @@ class AdminThemesView extends GalleryView {
 					'.',
 					$theme->getRequiredThemeApi()
 				);
-				$entry['api']['required']['core']  = join(
+
+				$entry['api']['required']['core'] = join(
 					'.',
 					$theme->getRequiredCoreApi()
 				);
+
 				$entry['api']['provided']['theme'] = join(
 					'.',
-					GalleryTheme::doStatic()->getApiVersion()
+					GalleryTheme::getMe()->getApiVersion()
 				);
-				$entry['api']['provided']['core']  = join(
+
+				$entry['api']['provided']['core'] = join(
 					'.',
 					GalleryCoreApi::getApiVersion()
 				);
@@ -500,6 +510,7 @@ class AdminThemesView extends GalleryView {
 		}
 
 		$AdminThemes = array();
+
 		// Load up the stored defaults
 		foreach (array(
 			'default.orderBy',
@@ -525,7 +536,8 @@ class AdminThemesView extends GalleryView {
 				}
 			}
 
-			list($outer, $inner)  = explode('.', $key);
+			list($outer, $inner) = explode('.', $key);
+
 			$form[$outer][$inner] = $value;
 		}
 
@@ -538,12 +550,13 @@ class AdminThemesView extends GalleryView {
 		GalleryCoreApi::requireOnce(
 			'modules/core/classes/GallerySortInterface_1_2.class'
 		);
+
 		list(
 			$ret,
 			$orderByList,
 			$presortList,
 			$orderDirectionList
-		) = GallerySortInterface_1_2::doStatic()->getAllSortOrders(false);
+		) = GallerySortInterface_1_2::getMe()->getAllSortOrders(false);
 
 		if ($ret) {
 			return array($ret, null);
@@ -561,7 +574,7 @@ class AdminThemesView extends GalleryView {
 		if ($ret) {
 			if ($ret->getErrorCode() & (ERROR_PLUGIN_VERSION_MISMATCH | ERROR_BAD_PARAMETER | ERROR_BAD_PLUGIN)
 			) {
-				// The default theme isn't available. Show a warning, don't load any settings.
+				// The default theme is not available. Show a warning, do not load any settings.
 				$theme                             = null;
 				$form['error']['themeUnavailable'] = true;
 			} else {
@@ -576,6 +589,7 @@ class AdminThemesView extends GalleryView {
 				if ($ret) {
 					return array($ret, null);
 				}
+
 				$AdminThemes['customTemplate'] = $tpl;
 			}
 
@@ -594,8 +608,7 @@ class AdminThemesView extends GalleryView {
 
 		if ($form['formName'] != 'AdminThemes') {
 			$form['formName'] = 'AdminThemes';
-
-			$settingTypes = array();
+			$settingTypes     = array();
 
 			if ($theme && isset($AdminThemes['settings'])) {
 				foreach ($AdminThemes['settings'] as $setting) {

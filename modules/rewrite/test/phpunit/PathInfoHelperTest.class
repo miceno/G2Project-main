@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,6 +26,7 @@
  * @version $Revision: 20940 $
  */
 GalleryCoreApi::requireOnce('modules/rewrite/classes/parsers/pathinfo/PathInfoHelper.class');
+
 class PathInfoHelperTest extends GalleryTestCase {
 	public function __construct($methodName) {
 		parent::__construct($methodName);
@@ -34,6 +34,7 @@ class PathInfoHelperTest extends GalleryTestCase {
 
 	public function setUp($x1 = null) {
 		global $gallery;
+
 		$ret = parent::setUp();
 
 		if ($ret) {
@@ -58,36 +59,43 @@ class PathInfoHelperTest extends GalleryTestCase {
 
 		// Set up our mock platform
 		$this->_platform = new PathInfoHelperMockPlatform();
+
 		$gallery->setPlatform($this->_platform);
 	}
 
 	public function testCheckPathInfo() {
 		GalleryUtilities::putRequestVariable('pathInfoTest', 'pass');
+
 		list($ret, $status, $trueStatus) = PathInfoHelper::checkPathInfo();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_OK, $status, 'status');
 		$this->assertEquals(REWRITE_STATUS_OK, $trueStatus, 'trueStatus');
 	}
 
 	public function testCheckPathInfoFail() {
 		GalleryUtilities::putRequestVariable('pathInfoTest', 'fail');
+
 		list($ret, $status, $trueStatus) = PathInfoHelper::checkPathInfo();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_NO_PATH_INFO, $status, 'status');
 		$this->assertEquals(REWRITE_STATUS_NO_PATH_INFO, $trueStatus, 'trueStatus');
 
 		GalleryUtilities::putRequestVariable('pathInfoTest', '404');
+
 		list($ret, $status, $trueStatus) = PathInfoHelper::checkPathInfo();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_NO_PATH_INFO, $status, 'status');
 		$this->assertEquals(REWRITE_STATUS_NO_PATH_INFO, $trueStatus, 'trueStatus');
 	}
@@ -100,11 +108,13 @@ class PathInfoHelperTest extends GalleryTestCase {
 		}
 
 		GalleryUtilities::putRequestVariable('pathInfoTest', 'fail');
+
 		list($ret, $status, $trueStatus) = PathInfoHelper::checkPathInfo();
 
 		if ($ret) {
 			return $ret;
 		}
+
 		$this->assertEquals(REWRITE_STATUS_OK, $status, 'status');
 		$this->assertEquals(REWRITE_STATUS_NO_PATH_INFO, $trueStatus, 'trueStatus');
 	}
@@ -121,7 +131,9 @@ class PathInfoHelperMockPlatform extends GalleryPlatform {
 
 	public function fsockopen($target, $port, &$errno, &$errstr, $timeout) {
 		global $gallery;
+
 		$urlGenerator =& $gallery->getUrlGenerator();
+
 		// The hostName can include the port part
 		list($host) = explode(':', $urlGenerator->getHostName());
 

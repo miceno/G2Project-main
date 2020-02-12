@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -28,8 +27,8 @@
 class SvnAuditTest extends CodeAuditTestCase {
 	public function __construct($methodName) {
 		global $gallery;
-		$this->_platform =& $gallery->getPlatform();
 
+		$this->_platform   =& $gallery->getPlatform();
 		$this->_exceptions = array(
 			'lib/pear/mime.php' => array(
 				'svn:eol-style' => 'native',
@@ -88,6 +87,7 @@ class SvnAuditTest extends CodeAuditTestCase {
 		);
 
 		parent::__construct($methodName);
+
 		$this->_errorCount = 0;
 	}
 
@@ -110,7 +110,7 @@ class SvnAuditTest extends CodeAuditTestCase {
 		$propsFile = dirname($fileName) . "${slash}.svn${slash}props${slash}${base}.svn-work";
 
 		if (!$this->_platform->file_exists($propsFile)) {
-			// svn 1.4.x doesn't write .svn-work unless local prop changes are made
+			// svn 1.4.x does not write .svn-work unless local prop changes are made
 			$propsFile = dirname($fileName) . "${slash}.svn${slash}prop-base${slash}${base}.svn-base";
 		}
 
@@ -165,6 +165,7 @@ class SvnAuditTest extends CodeAuditTestCase {
 						"svn property $key = " . $props[$key]
 						. " for $fileName expected to match $valueMatch"
 					);
+
 					$this->_errorCount++;
 				}
 			}

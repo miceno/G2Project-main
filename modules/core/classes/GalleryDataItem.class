@@ -1,23 +1,21 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
-
 GalleryCoreApi::requireOnce('modules/core/classes/GalleryItem.class');
 
 /**
@@ -66,21 +64,21 @@ class GalleryDataItem extends GalleryItem {
 	public $size;
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryDataItem();
+		if (!isset($instance)) {
+			$instance = new GalleryDataItem();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
 	 * Data items that can be viewed inline (photos, movies, etc) should return true.
-	 * Items that can't be viewed inline (word documents, text, etc) should return false.
+	 * Items that cannot be viewed inline (word documents, text, etc) should return false.
 	 *
 	 * Classes that return true for this query must implement getWidth() and getHeight()
 	 *
@@ -138,7 +136,7 @@ class GalleryDataItem extends GalleryItem {
 		$platform =& $gallery->getPlatform();
 
 		// Validate input
-		if (is_null($parentId) || is_null($inputFileName) || !$mimeType) {
+		if (null === $parentId || null === $inputFileName || !$mimeType) {
 			return GalleryCoreApi::error(ERROR_BAD_PARAMETER);
 		}
 
@@ -149,8 +147,8 @@ class GalleryDataItem extends GalleryItem {
 		}
 
 		/*
-		 * The parent must be read locked at this point to make sure that it's
-		 * not going to be moved around while we're adding stuff to it.
+		 * The parent must be read locked at this point to make sure that it is
+		 * not going to be moved around while we are adding stuff to it.
 		 */
 		if (!GalleryCoreApi::isReadLocked($parentId)) {
 			return GalleryCoreApi::error(ERROR_LOCK_REQUIRED);
@@ -160,7 +158,8 @@ class GalleryDataItem extends GalleryItem {
 		$this->setMimeType($mimeType);
 
 		$baseName = !empty($targetName) ? $targetName : basename($inputFileName);
-		$ret      = parent::create($parentId, $baseName);
+
+		$ret = parent::create($parentId, $baseName);
 
 		if ($ret) {
 			return $ret;
@@ -186,9 +185,9 @@ class GalleryDataItem extends GalleryItem {
 		$newFileName = $parentPath . $this->getPathComponent();
 
 		/*
-		 * XXX: Race condition here!  It's possible for two threads to be
+		 * XXX: Race condition here!  It is possible for two threads to be
 		 * adding a file with the same name to the container at the same time.
-		 * We have to write lock the container to be sure that this doesn't happen.
+		 * We have to write lock the container to be sure that this does not happen.
 		 */
 		if ($symlink) {
 			if (!$platform->isSymlinkSupported()) {
@@ -226,7 +225,8 @@ class GalleryDataItem extends GalleryItem {
 			return $ret;
 		}
 
-		$platform               =& $gallery->getPlatform();
+		$platform =& $gallery->getPlatform();
+
 		list($ret, $sourcePath) = $linkedEntity->fetchPath();
 
 		if ($ret) {
@@ -245,7 +245,7 @@ class GalleryDataItem extends GalleryItem {
 			return $ret;
 		}
 
-		// This path should already be legal, unless we screwed up elsewhere
+		// This path should already be legal
 		$newPath = $newPathBase . $this->getPathComponent();
 
 		if (!$platform->copy($sourcePath, $newPath)) {
@@ -269,7 +269,7 @@ class GalleryDataItem extends GalleryItem {
 			return $ret;
 		}
 
-		// Delete our source file, if we're not a link
+		// Delete our source file, if we are not a link
 		if (!$this->isLinked()) {
 			list($ret, $path) = $this->fetchPath();
 
@@ -301,6 +301,7 @@ class GalleryDataItem extends GalleryItem {
 	 */
 	public function rescan() {
 		global $gallery;
+
 		$platform =& $gallery->getPlatform();
 
 		list($ret, $path) = $this->fetchPath();
@@ -310,6 +311,7 @@ class GalleryDataItem extends GalleryItem {
 		}
 
 		$this->setSize($platform->filesize($path));
+
 		GalleryCoreApi::deleteFastDownloadFileById($this->getId());
 
 		return null;
@@ -328,7 +330,7 @@ class GalleryDataItem extends GalleryItem {
 			return null;
 		}
 
-		// Read lock the parent so that we don't have a race condition below
+		// Read lock the parent so that we do not have a race condition below
 		list($ret, $lockId) = GalleryCoreApi::acquireReadLock($this->getParentId());
 
 		if ($ret) {
@@ -336,7 +338,6 @@ class GalleryDataItem extends GalleryItem {
 		}
 
 		$platform =& $gallery->getPlatform();
-
 
 		// Get the current path before we let the superclass do the rename
 		list($ret, $currentPath) = $this->fetchPath();
@@ -350,13 +351,14 @@ class GalleryDataItem extends GalleryItem {
 		 * Jump through hoops to make sure that we release our locks at the end.
 		 */
 		$error = null;
-		$ret   = parent::rename($newName);
+
+		$ret = parent::rename($newName);
 
 		if ($ret) {
 			$error = $ret;
 		}
 
-		// Only rename the filesystem entity if we're not a link
+		// Only rename the filesystem entity if we are not a link
 		if (!$this->isLinked()) {
 			/*
 			 * Grab the new name from the path component, since GalleryFileSystemEntity
@@ -404,7 +406,7 @@ class GalleryDataItem extends GalleryItem {
 		global $gallery;
 
 		/*
-		 * Source files in the item's directory.  But the parent may be an item that doesn't have
+		 * Source files in the item's directory.  But the parent may be an item that does not have
 		 * its own directory, so we need to get the path of the nearest parent who is a container
 		 * (eg an AlbumItem), because a container has a directory for the items it contains.
 		 */

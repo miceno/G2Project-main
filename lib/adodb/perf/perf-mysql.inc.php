@@ -1,4 +1,5 @@
 <?php
+
 /*
 @version   v5.20.12  30-Mar-2018
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
@@ -7,11 +8,8 @@
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-
   Latest version is available at http://adodb.sourceforge.net
-
   Library for basic performance monitoring and tuning
-
 */
 
 // security - hide paths
@@ -20,8 +18,7 @@ if (!defined('ADODB_DIR')) {
 }
 
 class perf_mysql extends adodb_perf {
-	public $tablesSQL = 'show table status';
-
+	public $tablesSQL      = 'show table status';
 	public $createTableSQL = 'CREATE TABLE adodb_logsql (
 		  created datetime NOT NULL,
 		  sql0 varchar(250) NOT NULL,
@@ -30,8 +27,7 @@ class perf_mysql extends adodb_perf {
 		  tracer text NOT NULL,
 		  timer decimal(16,6) NOT NULL
 		)';
-
-	public $settings = array(
+	public $settings       = array(
 		'Ratios',
 		'MyISAM cache hit ratio' => array(
 			'RATIO',
@@ -64,7 +60,6 @@ class perf_mysql extends adodb_perf {
 			'=GetWrites',
 			'Number of inserts/updates/deletes * coef (Key_writes is not accurate)',
 		),
-
 		'Data Cache',
 		'MyISAM data cache size' => array(
 			'DATAC',
@@ -108,7 +103,6 @@ class perf_mysql extends adodb_perf {
 			array('show variables', 'max_connections'),
 			'',
 		),
-
 		false,
 	);
 
@@ -120,6 +114,7 @@ class perf_mysql extends adodb_perf {
 		if (strtoupper(substr(trim($sql), 0, 6)) !== 'SELECT') {
 			return '<p>Unable to EXPLAIN non-select statement</p>';
 		}
+
 		$save = $this->conn->LogSQL(false);
 
 		if ($partial) {
@@ -136,6 +131,7 @@ class perf_mysql extends adodb_perf {
 				}
 			}
 		}
+
 		$sql = str_replace('?', "''", $sql);
 
 		if ($partial) {
@@ -146,7 +142,9 @@ class perf_mysql extends adodb_perf {
 		$s  = '<p><b>Explain</b>: ' . htmlspecialchars($sql) . '</p>';
 		$rs = $this->conn->Execute('EXPLAIN ' . $sql);
 		$s .= rs2html($rs, false, false, false, false);
+
 		$this->conn->LogSQL($save);
+
 		$s .= $this->Tracer($sql);
 
 		return $s;
@@ -170,6 +168,7 @@ class perf_mysql extends adodb_perf {
 
 	public function GetReads() {
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -182,21 +181,25 @@ class perf_mysql extends adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!$rs) {
 			return 0;
 		}
+
 		$val = 0;
 
 		while (!$rs->EOF) {
 			switch ($rs->fields[0]) {
 				case 'Com_select':
 					$val = $rs->fields[1];
+
 					$rs->Close();
 
 					return $val;
 			}
+
 			$rs->MoveNext();
 		}
 
@@ -207,6 +210,7 @@ class perf_mysql extends adodb_perf {
 
 	public function GetWrites() {
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -219,11 +223,13 @@ class perf_mysql extends adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!$rs) {
 			return 0;
 		}
+
 		$val = 0.0;
 
 		while (!$rs->EOF) {
@@ -240,10 +246,12 @@ class perf_mysql extends adodb_perf {
 
 				case 'Com_update':
 					$val += $rs->fields[1] / 2;
+
 					$rs->Close();
 
 					return $val;
 			}
+
 			$rs->MoveNext();
 		}
 
@@ -255,8 +263,8 @@ class perf_mysql extends adodb_perf {
 	public function FindDBHitRatio() {
 		// first find out type of table
 		//$this->conn->debug=1;
-
 		global $ADODB_FETCH_MODE;
+
 		$save             = $ADODB_FETCH_MODE;
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 
@@ -269,12 +277,15 @@ class perf_mysql extends adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!$rs) {
 			return '';
 		}
+
 		$type = strtoupper($rs->fields[1]);
+
 		$rs->Close();
 
 		switch ($type) {
@@ -295,7 +306,6 @@ class perf_mysql extends adodb_perf {
 		$hits   = $this->_DBParameter(array('show status', 'Qcache_hits'));
 		$total  = $this->_DBParameter(array('show status', 'Qcache_inserts'));
 		$total += $this->_DBParameter(array('show status', 'Qcache_not_cached'));
-
 		$total += $hits;
 
 		if ($total) {
@@ -308,11 +318,9 @@ class perf_mysql extends adodb_perf {
 	/*
 		Use session variable to store Hit percentage, because MySQL
 		does not remember last value of SHOW INNODB STATUS hit ratio
-
 		# 1st query to SHOW INNODB STATUS
 		0.00 reads/s, 0.00 creates/s, 0.00 writes/s
 		Buffer pool hit rate 1000 / 1000
-
 		# 2nd query to SHOW INNODB STATUS
 		0.00 reads/s, 0.00 creates/s, 0.00 writes/s
 		No buffer pool activity since the last printout
@@ -332,13 +340,17 @@ class perf_mysql extends adodb_perf {
 		if (isset($savem)) {
 			$this->conn->SetFetchMode($savem);
 		}
+
 		$ADODB_FETCH_MODE = $save;
 
 		if (!$rs || $rs->EOF) {
 			return 0;
 		}
+
 		$stat = $rs->fields[0];
+
 		$rs->Close();
+
 		$at   = strpos($stat, 'Buffer pool hit rate');
 		$stat = substr($stat, $at, 200);
 
@@ -406,6 +418,7 @@ class perf_mysql extends adodb_perf {
 
 				return false;
 		}
+
 		$sql = sprintf($sql, $table);
 
 		return $conn->Execute($sql) !== false;

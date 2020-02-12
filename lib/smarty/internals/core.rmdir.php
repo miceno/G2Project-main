@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -13,7 +14,6 @@
  */
 
 //  $dirname, $level = 1, $exp_time = null
-
 function smarty_core_rmdir($params, &$smarty) {
 	if (!isset($params['level'])) {
 		$params['level'] = 1;
@@ -32,12 +32,14 @@ function smarty_core_rmdir($params, &$smarty) {
 						'level'    => $params['level'] + 1,
 						'exp_time' => $params['exp_time'],
 					);
+
 					smarty_core_rmdir($_params, $smarty);
 				} else {
 					$smarty->_unlink($params['dirname'] . DIRECTORY_SEPARATOR . $_entry, $params['exp_time']);
 				}
 			}
 		}
+
 		closedir($_handle);
 	}
 

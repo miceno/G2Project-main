@@ -1,22 +1,22 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
+
 /**
  * Database storage mechanism.  This object provides the hooks for saving and restoring objects in
  * the persistent store.
@@ -38,17 +38,17 @@ if (!defined('ADODB_ERROR_HANDLER')) {
 }
 
 /**
- * Name of the sequence we'll use for GalleryEntity ids
+ * Name of the sequence we will use for GalleryEntity ids
  */
 define('DATABASE_SEQUENCE_ID', 'SequenceId');
 
 /**
- * Name of the sequence we'll use for lock ids
+ * Name of the sequence we will use for lock ids
  */
 define('DATABASE_SEQUENCE_LOCK', 'SequenceLock');
 
 /**
- * Name of the sequence we'll use for event log records
+ * Name of the sequence we will use for event log records
  */
 define('DATABASE_SEQUENCE_EVENT_LOG', 'SequenceEventLog');
 
@@ -152,7 +152,7 @@ class GalleryStorage {
 	public $_columnPrefix;
 
 	/**
-	 * A cache of member info that we've discovered about various classes
+	 * A cache of member info that we have discovered about various classes
 	 * @var array
 	 * @access protected
 	 */
@@ -187,26 +187,25 @@ class GalleryStorage {
 		$this->_isEmptyAllowedForNotNullColumn = true;
 		$this->_entityInfoCache                = array();
 
-		// We use persistent connections if the value is left out, or if it's non empty.
+		// We use persistent connections if the value is left out, or if it is non empty.
 		$this->_usePersistentConnections = !isset($config['usePersistentConnections'])
 		|| !empty($config['usePersistentConnections']);
-
-		$this->_schema       = isset($config['schema']) ? $config['schema'] : '';
-		$this->_tablePrefix  = isset($config['tablePrefix']) ? $config['tablePrefix'] : DATABASE_TABLE_PREFIX;
-		$this->_columnPrefix = isset($config['columnPrefix']) ? $config['columnPrefix'] : DATABASE_COLUMN_PREFIX;
+		$this->_schema                   = isset($config['schema']) ? $config['schema'] : '';
+		$this->_tablePrefix              = isset($config['tablePrefix']) ? $config['tablePrefix'] : DATABASE_TABLE_PREFIX;
+		$this->_columnPrefix             = isset($config['columnPrefix']) ? $config['columnPrefix'] : DATABASE_COLUMN_PREFIX;
 	}
 
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new GalleryStorage();
+		if (!isset($instance)) {
+			$instance = new GalleryStorage();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -220,7 +219,9 @@ class GalleryStorage {
 		global $gallery;
 
 		$this->_traceStart();
+
 		$db = ADONewConnection($this->getAdoDbType());
+
 		$this->_traceStop();
 
 		if (empty($db)) {
@@ -238,8 +239,10 @@ class GalleryStorage {
 		}
 
 		$this->_traceStart();
+
 		$connectMethod = ($forceNew || !$this->_usePersistentConnections) ? 'NConnect' : 'PConnect';
-		$ret           = $db->$connectMethod(
+
+		$ret = $db->$connectMethod(
 			$this->_hostname,
 			$this->_username,
 			$this->_password,
@@ -291,7 +294,7 @@ class GalleryStorage {
 
 	/**
 	 * Get the reference to our GalleryStorageExtras instance where we put less frequently used code
-	 * (most code that's used to modify the database).
+	 * (most code that is used to modify the database).
 	 *
 	 * @return GalleryStorageExtras
 	 * @access protected
@@ -302,6 +305,7 @@ class GalleryStorage {
 				'modules/core/classes/GalleryStorage/GalleryStorageExtras.class',
 				true
 			);
+
 			$tmp           = new GalleryStorageExtras($this);
 			$this->_extras =& $tmp;
 		}
@@ -422,7 +426,7 @@ class GalleryStorage {
 	}
 
 	/**
-	 * Refresh all the locks that we hold so that they aren't accidentally considered expired
+	 * Refresh all the locks that we hold so that they are not accidentally considered expired
 	 *
 	 * @param array $lockIds the lock ids
 	 * @param int $freshUntil the new "fresh until" timestamp
@@ -511,11 +515,15 @@ class GalleryStorage {
 			$offset = empty($optional['limit']['offset']) ? -1 : $optional['limit']['offset'];
 
 			$this->_traceStart();
+
 			$recordSet = $this->_db->SelectLimit($query, $count, $offset, $data);
+
 			$this->_traceStop();
 		} else {
 			$this->_traceStart();
+
 			$recordSet = $this->_db->Execute($query, $data);
+
 			$this->_traceStop();
 		}
 
@@ -609,6 +617,7 @@ class GalleryStorage {
 		if ($ret) {
 			return array($ret, null);
 		}
+
 		list($tableName, $unused) = $this->_translateTableName($mapName);
 
 		$data          = array();
@@ -617,13 +626,12 @@ class GalleryStorage {
 		$wheredata     = array();
 		$orderBy       = array();
 
-
-
 		// SELECT
 		foreach ($select as $columnName) {
 			if (!array_key_exists($columnName, $mapInfo)) {
 				break;
 			}
+
 			$selectColumns[] = $this->_translateColumnName($columnName);
 		}
 
@@ -632,6 +640,7 @@ class GalleryStorage {
 			if (!array_key_exists($columnName, $mapInfo)) {
 				break;
 			}
+
 			$this->_getWhereSql(
 				$columnName,
 				$mapInfo[$columnName],
@@ -647,6 +656,7 @@ class GalleryStorage {
 				if (!array_key_exists($columnName, $mapInfo)) {
 					break;
 				}
+
 				$orderDirection = ($orderDirection == ORDER_DESCENDING) ? 'DESC' : 'ASC';
 				$orderBy[]      = $this->_translateColumnName($columnName) . ' ' . $orderDirection;
 			}
@@ -666,7 +676,8 @@ class GalleryStorage {
 
 		if (!empty($where)) {
 			$query .= ' WHERE ' . implode(' AND ', $where);
-			$data   = array_merge($data, $wheredata);
+
+			$data = array_merge($data, $wheredata);
 		}
 
 		if (!empty($orderBy)) {
@@ -679,11 +690,15 @@ class GalleryStorage {
 			$offset = empty($optional['limit']['offset']) ? -1 : $optional['limit']['offset'];
 
 			$this->_traceStart();
+
 			$recordSet = $this->_db->SelectLimit($query, $count, $offset, $data);
+
 			$this->_traceStop();
 		} else {
 			$this->_traceStart();
+
 			$recordSet = $this->_db->Execute($query, $data);
+
 			$this->_traceStop();
 		}
 
@@ -726,6 +741,7 @@ class GalleryStorage {
 					return $ret;
 				}
 			}
+
 			$db = $this->_db;
 
 			$ret = $this->_guaranteeTransaction();
@@ -740,13 +756,13 @@ class GalleryStorage {
 		if ($ret) {
 			return $ret;
 		}
+
 		list($tableName, $unused) = $this->_translateTableName($mapName);
 
 		$data      = array();
 		$set       = array();
 		$where     = array();
 		$wheredata = array();
-
 
 		foreach ($mapInfo as $memberName => $memberData) {
 			if (array_key_exists($memberName, $match)) {
@@ -779,13 +795,17 @@ class GalleryStorage {
 		}
 
 		$query = 'UPDATE ' . $tableName . ' SET ' . implode(', ', $set) . ' ';
-		$data  = array_merge($data, $setdata);
+
+		$data = array_merge($data, $setdata);
 
 		$query .= 'WHERE ' . implode(' AND ', $where);
-		$data   = array_merge($data, $wheredata);
+
+		$data = array_merge($data, $wheredata);
 
 		$this->_traceStart();
+
 		$recordSet = $db->Execute($query, $data);
+
 		$this->_traceStop();
 
 		if (!$recordSet) {
@@ -819,12 +839,13 @@ class GalleryStorage {
 				$qs[]        = '?';
 				$wheredata[] = $this->_normalizeValue($value, $memberData);
 			}
+
 			$where[] = $this->_translateColumnName($memberName) . ' IN ('
 			. implode(',', $qs) . ')';
 		} else {
 			$value = $this->_normalizeValue($matchValue, $memberData);
 
-			if (is_null($value)) {
+			if (null === $value) {
 				$where[] = $this->_translateColumnName($memberName) . ' IS NULL';
 			} else {
 				$where[]     = $this->_translateColumnName($memberName) . '=?';
@@ -896,7 +917,9 @@ class GalleryStorage {
 
 		if ($this->_isTransactional) {
 			$this->_traceStart();
+
 			$ok = $this->_db->BeginTrans();
+
 			$this->_traceStop();
 
 			if (!$ok) {
@@ -915,7 +938,9 @@ class GalleryStorage {
 	public function commitTransaction() {
 		if ($this->_isTransactional && isset($this->_db) && $this->_db->transCnt > 0) {
 			$this->_traceStart();
+
 			$ok = $this->_db->CommitTrans();
+
 			$this->_traceStop();
 
 			if (!$ok) {
@@ -926,12 +951,15 @@ class GalleryStorage {
 		if ($this->_isTransactional) {
 			// Release any queued locks
 			global $gallery;
+
 			$result =& $gallery->getLockSystem(false);
-			$ret    = $result[0];
+
+			$ret = $result[0];
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$lockSystem =& $result[1];
 
 			if (isset($lockSystem)) {
@@ -974,7 +1002,9 @@ class GalleryStorage {
 	public function rollbackTransaction() {
 		if ($this->_isTransactional && isset($this->_db) && $this->_db->transCnt > 0) {
 			$this->_traceStart();
+
 			$ok = $this->_db->RollbackTrans();
+
 			$this->_traceStop();
 
 			if (!$ok) {
@@ -985,12 +1015,15 @@ class GalleryStorage {
 		if ($this->_isTransactional) {
 			// Release any queued locks
 			global $gallery;
+
 			$result =& $gallery->getLockSystem(false);
-			$ret    = $result[0];
+
+			$ret = $result[0];
 
 			if ($ret) {
 				return $ret;
 			}
+
 			$lockSystem =& $result[1];
 
 			if (isset($lockSystem)) {
@@ -1137,7 +1170,7 @@ class GalleryStorage {
 	}
 
 	/**
-	 * Return true if enough of this storage system is installed that there'll be a conflict if you
+	 * Return true if enough of this storage system is installed that there will be a conflict if you
 	 * try to do another install.
 	 *
 	 * @return array GalleryStatus a status code
@@ -1216,8 +1249,9 @@ class GalleryStorage {
 	public function _translateQuery($query) {
 		// Change '[Class::member]' to 'table.column' or 'alias.column'
 		while (preg_match('#\[([\w_=]*)::([\w_]*)\]#', $query, $regs)) {
-			$class               = $regs[1];
-			$member              = $regs[2];
+			$class  = $regs[1];
+			$member = $regs[2];
+
 			list($table, $alias) = $this->_translateTableName($class);
 
 			$column = $this->_translateColumnName($member);
@@ -1233,7 +1267,8 @@ class GalleryStorage {
 
 		// Change '[Class]' to 'table'
 		while (preg_match('#\[([\w_=]*)\]#', $query, $regs)) {
-			$class               = $regs[1];
+			$class = $regs[1];
+
 			list($table, $alias) = $this->_translateTableName($class);
 
 			if ($alias == null) {
@@ -1245,6 +1280,7 @@ class GalleryStorage {
 					// XXX TODO: propagate this back up as a GalleryStatus
 					return 'QUERY ERROR';
 				}
+
 				$query = str_replace("[${class}]", "$table $as $alias", $query);
 			}
 		}
@@ -1279,10 +1315,10 @@ class GalleryStorage {
 	 */
 	public function _translateTableName($tableName) {
 		/*
-		 * Remove the the ubiquitous "Gallery" prefix, since it's not part of the schema name.  For
+		 * Remove the the ubiquitous "Gallery" prefix, since it is not part of the schema name.  For
 		 * now we automatically translate the class name into the schema name by doing this.  If
 		 * this ever becomes a problem, we should start hand-writing the schema name instead and
-		 * then pushing that into the interface classes so that we don't have to automatically
+		 * then pushing that into the interface classes so that we do not have to automatically
 		 * generate the schema name (and get it wrong).
 		 */
 		$tableName = str_replace('Gallery', '', $tableName);
@@ -1309,6 +1345,7 @@ class GalleryStorage {
 					$alias .= $chr;
 				}
 			}
+
 			$alias = GalleryUtilities::strToLower($alias) . ($number - 1);
 		} else {
 			$tableName = $split[0];
@@ -1383,20 +1420,25 @@ class GalleryStorage {
 	 */
 	public function _getEntityOrMapInfo($type, $tryAllModules) {
 		global $gallery;
-		$session =& $gallery->getSession();
 
+		$session            =& $gallery->getSession();
 		$isInstallOrUpgrade = empty($session) ? false : $session->exists('isInstall') || $session->exists('isUpgrade');
+
 		// @todo Remove the type constraint from selects and have describeXXX use the same map
 		$typeInfo = array();
+
 		// If this is an install or upgrade force the use all plugins including non-active.
 		if (!$tryAllModules && !$isInstallOrUpgrade) {
 			$query = 'SELECT [Schema::info] FROM [GalleryPluginMap], [Schema]
 		       WHERE [GalleryPluginMap::pluginId] = [Schema::pluginId]
+
 			 AND [Schema::type] = ? AND [GalleryPluginMap::active] = ?';
-			$data  = array($type, 1);
+
+			$data = array($type, 1);
 		} else {
 			$query = 'SELECT [Schema::info] FROM [Schema] WHERE [Schema::type] = ?';
-			$data  = array($type);
+
+			$data = array($type);
 		}
 
 		list($ret, $results) = $this->search($query, $data);
@@ -1415,7 +1457,7 @@ class GalleryStorage {
 	}
 
 	/**
-	 * Encode a blob of binary data into a form that's safe for a varchar column
+	 * Encode a blob of binary data into a form that is safe for a varchar column
 	 *
 	 * @param string $blob binary data
 	 * @return database safe string
@@ -1425,7 +1467,7 @@ class GalleryStorage {
 	}
 
 	/**
-	 * Decode a blob of binary data into a form that's safe for a varchar column
+	 * Decode a blob of binary data into a form that is safe for a varchar column
 	 *
 	 * @param string $blob database safe string
 	 * @return binary data
@@ -1457,6 +1499,7 @@ class GalleryStorage {
 		if ($gallery->getDebug()) {
 			$buf = ob_get_contents();
 			ob_end_clean();
+
 			$gallery->debug($buf);
 		}
 	}
@@ -1492,7 +1535,7 @@ class GalleryStorage {
 		$notNull = !empty($memberData['notNull']) ||
 		(!empty($memberData['notNullEmptyAllowed']) && $this->_isEmptyAllowedForNotNullColumn);
 
-		if (is_null($value) && !$notNull) {
+		if (null === $value && !$notNull) {
 			return $value;
 		}
 
@@ -1682,6 +1725,7 @@ class GallerySearchResults {
 		if (!empty($row) && !empty($this->_fieldNames) && !empty($this->_mapInfo)) {
 			// Normalize fetched values
 			global $gallery;
+
 			$storage =& $gallery->getStorage();
 
 			for ($i = 0; $i < count($row) && $i < count($this->_fieldNames); $i++) {
@@ -1839,7 +1883,9 @@ class MySqlStorage extends GalleryStorage {
 
 		if ($this->_serverInfo && version_compare($this->_serverInfo, '4.1.0', '>=')) {
 			$this->_traceStart();
+
 			$recordSet = $db->execute('SET NAMES "utf8"');
+
 			$this->_traceStop();
 
 			if (!$recordSet) {
@@ -1931,6 +1977,7 @@ class MySqlStorage extends GalleryStorage {
 					while (count($args) > 1) {
 						$sql[] = 'WHEN ' . array_shift($args) . ' THEN ' . array_shift($args);
 					}
+
 					$sql = 'CASE ' . implode(' ', $sql) . ' ELSE ' . $args[0] . ' END';
 				}
 
@@ -2034,7 +2081,8 @@ class MySqlStorage extends GalleryStorage {
 	 */
 	public function getUniqueId($sequence = DATABASE_SEQUENCE_ID) {
 		// Make sure we are using a non-transactional connection to avoid duplicating sequence ids
-		$extras         =& $this->_getExtras();
+		$extras =& $this->_getExtras();
+
 		list($ret, $db) = $extras->_getNonTransactionalDatabaseConnection();
 
 		if ($ret) {

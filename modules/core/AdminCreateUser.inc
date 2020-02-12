@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -27,16 +26,16 @@
  */
 class AdminCreateUserController extends GalleryController {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminCreateUserController();
+		if (!isset($instance)) {
+			$instance = new AdminCreateUserController();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -91,7 +90,9 @@ class AdminCreateUserController extends GalleryController {
 					$user->setEmail($form['email']);
 					$user->setFullName($form['fullName']);
 					$user->setLanguage($form['language']);
+
 					GalleryUtilities::unsanitizeInputValues($form['password1'], false);
+
 					$user->changePassword($form['password1']);
 
 					$ret = $user->save();
@@ -126,6 +127,7 @@ class AdminCreateUserController extends GalleryController {
 			$results['delegate']['view']    = 'core.SiteAdmin';
 			$results['delegate']['subView'] = 'core.AdminCreateUser';
 		}
+
 		$results['status'] = $status;
 		$results['error']  = $error;
 
@@ -138,16 +140,16 @@ class AdminCreateUserController extends GalleryController {
  */
 class AdminCreateUserView extends GalleryView {
 	/**
-	 * Load as Singleton
+	 * Class Loader
 	 */
-	public static function doStatic() {
-		static $singleton;
+	public static function getMe() {
+		static $instance;
 
-		if (!isset($singleton)) {
-			$singleton = new AdminCreateUserView();
+		if (!isset($instance)) {
+			$instance = new AdminCreateUserView();
 		}
 
-		return $singleton;
+		return $instance;
 	}
 
 	/**
@@ -177,9 +179,9 @@ class AdminCreateUserView extends GalleryView {
 		if ($ret) {
 			return array($ret, null);
 		}
-		$languageList     = array();
-		$languageList[''] = $module->translate('&lt;none&gt;');
 
+		$languageList       = array();
+		$languageList['']   = $module->translate('&lt;none&gt;');
 		$supportedLanguages = GalleryCoreApi::getSupportedLanguages();
 
 		foreach ($supportedLanguages as $language => $countryList) {

@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 /**
@@ -60,6 +59,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = 'Anything';
+
 		$gallery->_phpVm->setReply('header', array('HTTP/1.0 304 Not Modified', null), null);
 
 		list($ret, $results) = $this->_renderImmediate();
@@ -75,6 +75,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), true);
+
 		$gallery->_phpVm->setReply(
 			'getAllHeaders',
 			array(),
@@ -82,6 +83,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 				'If-Modified-Since' => 'Anything',
 			)
 		);
+
 		$gallery->_phpVm->setReply('header', array('HTTP/1.0 304 Not Modified', null), null);
 
 		list($ret, $results) = $this->_renderImmediate();
@@ -97,6 +99,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), true);
+
 		$gallery->_phpVm->setReply(
 			'getAllHeaders',
 			array(),
@@ -104,6 +107,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 				'If-modified-since' => 'Anything',
 			)
 		);
+
 		$gallery->_phpVm->setReply('header', array('HTTP/1.0 304 Not Modified', null), null);
 
 		list($ret, $results) = $this->_renderImmediate();
@@ -119,6 +123,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		GalleryUtilities::putRequestVariable('key', 'bogus');
+
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), false);
 
 		list($ret, $results) = $this->_renderImmediate();
@@ -134,7 +139,9 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		unset($_SERVER['HTTP_ACCEPT_ENCODING']);
+
 		GalleryUtilities::putRequestVariable('key', '/../sensitive_file');
+
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), false);
 
 		list($ret, $results) = $this->_renderImmediate();
@@ -152,6 +159,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		GalleryDataCache::setFileCachingEnabled(true);
 
 		$path = $gallery->getConfig('data.gallery.cache') . $file;
+
 		$gallery->_platform->setReply('file_exists', array($path), true);
 		$gallery->_platform->setReply('file_get_contents', array($path), $contents);
 	}
@@ -160,20 +168,25 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,and,other,stuff';
+
 		GalleryUtilities::putRequestVariable('key', '123');
+
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), false);
 		$gallery->_phpVm->setReply('function_exists', array('apache_setenv'), false);
 		$gallery->_phpVm->setReply('header', array('Content-Encoding: gzip', null), null);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Cache-Control: private, x-gzip-ok="public"', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Content-type: text/javascript; charset=UTF-8', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Thu, 01 Jan 1970 00:00:01 GMT', null),
@@ -184,7 +197,6 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 			array('Expires: Tue, 19 Jan 2038 03:14:07 GMT', null),
 			null
 		);
-
 		$this->_prepareToReadFromDiskCache(
 			'module/_all/0/0/CombinedJavascript_gzip_123.inc',
 			'|' . serialize('gzipped data')
@@ -203,7 +215,9 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'something_that_doesnt_include_compression';
+
 		GalleryUtilities::putRequestVariable('key', '123');
+
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), false);
 		$gallery->_phpVm->setReply('header', array('Cache-Control: public', null), null);
 		$gallery->_phpVm->setReply(
@@ -211,6 +225,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 			array('Content-type: text/javascript; charset=UTF-8', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Thu, 01 Jan 1970 00:00:01 GMT', null),
@@ -221,7 +236,6 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 			array('Expires: Tue, 19 Jan 2038 03:14:07 GMT', null),
 			null
 		);
-
 		$this->_prepareToReadFromDiskCache(
 			'module/_all/0/0/CombinedJavascript_123.inc',
 			'|' . serialize('regular data')
@@ -240,7 +254,9 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		global $gallery;
 
 		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,and,other,stuff';
+
 		GalleryUtilities::putRequestVariable('key', '123');
+
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), false);
 		$gallery->_phpVm->setReply('time', array(), 12345);
 		$this->_prepareToReadFromDiskCache('module/_all/0/0/CombinedJavascript_gzip_123.inc', null);
@@ -269,7 +285,8 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		 * test. (Verify all header() calls, including those from loadView())
 		 */
 		GalleryCoreApi::requireOnce('modules/core/classes/GalleryView.class');
-		list($ret, $this->_view) = GalleryView::doStatic()->loadView(
+
+		list($ret, $this->_view) = GalleryView::getMe()->loadView(
 			'core.CombinedJavascript'
 		);
 
@@ -278,7 +295,9 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 		}
 
 		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'something_that_doesnt_include_compression';
+
 		GalleryUtilities::putRequestVariable('key', '123');
+
 		$gallery->_phpVm->setReply('function_exists', array('getallheaders'), false);
 		$gallery->_phpVm->setReply('header', array('Cache-Control: public', null), null);
 		$gallery->_phpVm->setReply(
@@ -286,6 +305,7 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 			array('Content-type: text/javascript; charset=UTF-8', null),
 			null
 		);
+
 		$gallery->_phpVm->setReply(
 			'header',
 			array('Last-Modified: Thu, 01 Jan 1970 00:00:01 GMT', null),
@@ -296,7 +316,6 @@ class CombinedJavascriptTest extends GalleryImmediateViewTestCase {
 			array('Expires: Tue, 19 Jan 2038 03:14:07 GMT', null),
 			null
 		);
-
 		$this->_prepareToReadFromDiskCache(
 			'module/_all/0/0/CombinedJavascript_123.inc',
 			'|' . serialize('regular data')

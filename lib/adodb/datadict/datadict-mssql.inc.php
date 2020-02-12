@@ -14,30 +14,20 @@
 
 /*
 In ADOdb, named quotes for MS SQL Server use ". From the MSSQL Docs:
-
 	Note Delimiters are for identifiers only. Delimiters cannot be used for keywords,
 	whether or not they are marked as reserved in SQL Server.
-
 	Quoted identifiers are delimited by double quotation marks ("):
 	SELECT * FROM "Blanks in Table Name"
-
 	Bracketed identifiers are delimited by brackets ([ ]):
 	SELECT * FROM [Blanks In Table Name]
-
 	Quoted identifiers are valid only when the QUOTED_IDENTIFIER option is set to ON. By default,
 	the Microsoft OLE DB Provider for SQL Server and SQL Server ODBC driver set QUOTED_IDENTIFIER ON
 	when they connect.
-
 	In Transact-SQL, the option can be set at various levels using SET QUOTED_IDENTIFIER,
 	the quoted identifier option of sp_dboption, or the user options option of sp_configure.
-
 	When SET ANSI_DEFAULTS is ON, SET QUOTED_IDENTIFIER is enabled.
-
 	Syntax
-
 		SET QUOTED_IDENTIFIER { ON | OFF }
-
-
 */
 
 // security - hide paths
@@ -51,11 +41,11 @@ class ADODB2_mssql extends ADODB_DataDict {
 	public $renameTable  = "EXEC sp_rename '%s','%s'";
 	public $renameColumn = "EXEC sp_rename '%s.%s','%s'";
 
-	public $typeX  = 'TEXT';  // Alternatively, set it to VARCHAR(4000)
+	// Alternatively, set it to VARCHAR(4000)
+	public $typeX  = 'TEXT';
 	public $typeXL = 'TEXT';
 
 	//var $alterCol = ' ALTER COLUMN ';
-
 	public function MetaType($t, $len = -1, $fieldobj = false) {
 		if (is_object($t)) {
 			$fieldobj = $t;
@@ -63,7 +53,9 @@ class ADODB2_mssql extends ADODB_DataDict {
 			$len      = $fieldobj->max_length;
 		}
 
-		$len = -1; // mysql max_length is not accurate
+		// mysql max_length is not accurate
+		$len = -1;
+
 		switch (strtoupper($t)) {
 			case 'R':
 			case 'INT':
@@ -101,7 +93,9 @@ class ADODB2_mssql extends ADODB_DataDict {
 				return (isset($this)) ? $this->typeXL : 'TEXT';
 
 			case 'X':
-				return (isset($this)) ? $this->typeX : 'TEXT'; // could be varchar(8000), but we want compat with oracle
+				// could be varchar(8000), but we want compat with oracle
+				return (isset($this)) ? $this->typeX : 'TEXT';
+
 			case 'C2':
 				return 'NVARCHAR';
 
@@ -149,14 +143,17 @@ class ADODB2_mssql extends ADODB_DataDict {
 	}
 
 	public function AddColumnSQL($tabname, $flds) {
-		$tabname            = $this->TableName($tabname);
-		$f                  = array();
+		$tabname = $this->TableName($tabname);
+		$f       = array();
+
 		list($lines, $pkey) = $this->_GenFields($flds);
-		$s                  = "ALTER TABLE $tabname $this->addCol";
+
+		$s = "ALTER TABLE $tabname $this->addCol";
 
 		foreach ($lines as $v) {
 			$f[] = "\n $v";
 		}
+
 		$s    .= implode(', ', $f);
 		$sql[] = $s;
 
@@ -165,30 +162,35 @@ class ADODB2_mssql extends ADODB_DataDict {
 
 	/*
 	function AlterColumnSQL($tabname, $flds, $tableflds='', $tableoptions='')
+
 	{
 		$tabname = $this->TableName ($tabname);
 		$sql = array();
+
 		list($lines,$pkey) = $this->_GenFields($flds);
+
 		foreach($lines as $v) {
 			$sql[] = "ALTER TABLE $tabname $this->alterCol $v";
 		}
 
 		return $sql;
 	}
-	*/
 
+	*/
 	public function DropColumnSQL($tabname, $flds, $tableflds = '', $tableoptions = '') {
 		$tabname = $this->TableName($tabname);
 
 		if (!is_array($flds)) {
 			$flds = explode(',', $flds);
 		}
+
 		$f = array();
 		$s = 'ALTER TABLE ' . $tabname;
 
 		foreach ($flds as $v) {
 			$f[] = "\n$this->dropCol " . $this->NameQuote($v);
 		}
+
 		$s    .= implode(', ', $f);
 		$sql[] = $s;
 
@@ -226,13 +228,10 @@ class ADODB2_mssql extends ADODB_DataDict {
 	( { < column_definition >
 		| column_name AS computed_column_expression
 		| < table_constraint > ::= [ CONSTRAINT constraint_name ] }
-
 			| [ { PRIMARY KEY | UNIQUE } [ ,...n ]
 	)
-
 	[ ON { filegroup | DEFAULT } ]
 	[ TEXTIMAGE_ON { filegroup | DEFAULT } ]
-
 	< column_definition > ::= { column_name data_type }
 	[ COLLATE < collation_name > ]
 	[ [ DEFAULT constant_expression ]
@@ -240,7 +239,6 @@ class ADODB2_mssql extends ADODB_DataDict {
 	]
 	[ ROWGUIDCOL]
 	[ < column_constraint > ] [ ...n ]
-
 	< column_constraint > ::= [ CONSTRAINT constraint_name ]
 	{ [ NULL | NOT NULL ]
 		| [ { PRIMARY KEY | UNIQUE }
@@ -275,7 +273,6 @@ class ADODB2_mssql extends ADODB_DataDict {
 		( search_conditions )
 	}
 
-
 	*/
 
 	/*
@@ -290,6 +287,7 @@ class ADODB2_mssql extends ADODB_DataDict {
 			STATISTICS_NORECOMPUTE |
 			SORT_IN_TEMPDB
 		}
+
 	*/
 	public function _IndexSQL($idxname, $tabname, $flds, $idxoptions) {
 		$sql = array();
@@ -312,12 +310,12 @@ class ADODB2_mssql extends ADODB_DataDict {
 		if (is_array($flds)) {
 			$flds = implode(', ', $flds);
 		}
+
 		$s = 'CREATE' . $unique . $clustered . ' INDEX ' . $idxname . ' ON ' . $tabname . ' (' . $flds . ')';
 
 		if (isset($idxoptions[$this->upperName])) {
 			$s .= $idxoptions[$this->upperName];
 		}
-
 
 		$sql[] = $s;
 

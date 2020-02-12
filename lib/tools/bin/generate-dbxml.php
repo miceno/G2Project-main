@@ -1,21 +1,20 @@
 <?php
+
 /*
  * Gallery - a web based photo album viewer and editor
  * Copyright (C) 2000-2008 Bharat Mediratta
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation;
+ * either version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 ini_set('error_reporting', 2047);
 
@@ -26,7 +25,6 @@ if (!empty($_SERVER['SERVER_NAME'])) {
 }
 
 require_once __DIR__ . '/XmlParser.inc';
-
 require_once __DIR__ . '/../../smarty/Smarty.class.php';
 
 $tmpdir = __DIR__ . '/tmp_dbxml_' . mt_rand(1, 30000);
@@ -60,13 +58,12 @@ function generateEntityDbXml() {
 	}
 
 	foreach ($entityXmlFiles as $xmlFile) {
-		$p        = new XmlParser();
-		$root     = $p->parse($xmlFile);
-		$base     = basename($xmlFile);
-		$base     = preg_replace('/\.[^\.]*$/', '', $base);
-		$tmpFile  = "tmp/dbxml/$base.xml";
-		$origFile = "$base.xml";
-
+		$p           = new XmlParser();
+		$root        = $p->parse($xmlFile);
+		$base        = basename($xmlFile);
+		$base        = preg_replace('/\.[^\.]*$/', '', $base);
+		$tmpFile     = "tmp/dbxml/$base.xml";
+		$origFile    = "$base.xml";
 		$membersBase = $root[0]['child'];
 		$schema      = array(
 			'name'  => $root[0]['child'][2]['child'][0]['content'],
@@ -97,26 +94,29 @@ function generateEntityDbXml() {
 								break;
 
 							case 'INDEXED':
-								$indexes[]                                           = array(
+								$indexes[] = array(
 									'columns' => array($member['name']),
 								);
+
 									$member[strtolower($child['child'][$i]['name'])] = 1;
 
 								break;
 
 							case 'UNIQUE':
-								$keys[]                                          = array(
+								$keys[] = array(
 									'columns' => array($member['name']),
 								);
+
 								$member[strtolower($child['child'][$i]['name'])] = 1;
 
 								break;
 
 							case 'PRIMARY':
-								$keys[]            = array(
+								$keys[] = array(
 									'columns' => array($member['name']),
 									'primary' => 1,
 								);
+
 								$member['primary'] = 1;
 
 								break;
@@ -166,6 +166,7 @@ function generateEntityDbXml() {
 					foreach ($child['child'] as $column) {
 						$key['columns'][] = $column['content'];
 					}
+
 					$key['primary'] = isset($child['attrs']['PRIMARY']) && $child['attrs']['PRIMARY'] == 'true';
 					$keys[]         = $key;
 
@@ -177,9 +178,9 @@ function generateEntityDbXml() {
 					foreach ($child['child'] as $column) {
 						$index['columns'][] = $column['content'];
 					}
-					$index['primary'] = isset($child['attrs']['PRIMARY']) && $child['attrs']['PRIMARY'] == 'true';
 
-					$indexes[] = $index;
+					$index['primary'] = isset($child['attrs']['PRIMARY']) && $child['attrs']['PRIMARY'] == 'true';
+					$indexes[]        = $index;
 
 					break;
 
@@ -201,9 +202,9 @@ function generateEntityDbXml() {
 		$smarty->assign('indexes', $indexes);
 		$smarty->assign('requiresId', $requiresId);
 		$smarty->assign('isMap', false);
-		$new = $smarty->fetch('dbxml.tpl');
 
-		$fd = fopen($tmpFile, 'w');
+		$new = $smarty->fetch('dbxml.tpl');
+		$fd  = fopen($tmpFile, 'w');
 		fwrite($fd, $new);
 		fclose($fd);
 	}
@@ -233,18 +234,18 @@ function generateMapDbXml() {
 		 */
 		$mapName = $origMapName;
 		$mapName = preg_replace('/^Gallery/', '', $mapName);
+
 		// Shorten some table names to fit Oracle's 30 char name limit..
 		$mapName = str_replace('Preferences', 'Prefs', $mapName);
 		$mapName = str_replace('Toolkit', 'Tk', $mapName);
 		$mapName = str_replace('TkOperation', 'TkOperatn', $mapName);
-
 		$schema  = array(
 			'name'  => $mapName,
 			'major' => $map['child'][1]['child'][0]['content'],
 			'minor' => $map['child'][1]['child'][1]['content'],
 		);
-		$tmpFile = "tmp/dbxml/$origMapName.xml";
 
+		$tmpFile    = "tmp/dbxml/$origMapName.xml";
 		$members    = array();
 		$keys       = array();
 		$indexes    = array();
@@ -270,26 +271,29 @@ function generateMapDbXml() {
 								break;
 
 							case 'INDEXED':
-								$indexes[]                                           = array(
+								$indexes[] = array(
 									'columns' => array($member['name']),
 								);
+
 									$member[strtolower($child['child'][$i]['name'])] = 1;
 
 								break;
 
 							case 'UNIQUE':
-								$keys[]                                          = array(
+								$keys[] = array(
 									'columns' => array($member['name']),
 								);
+
 								$member[strtolower($child['child'][$i]['name'])] = 1;
 
 								break;
 
 							case 'PRIMARY':
-								$keys[]            = array(
+								$keys[] = array(
 									'columns' => array($member['name']),
 									'primary' => 1,
 								);
+
 								$member['primary'] = 1;
 
 								break;
@@ -333,6 +337,7 @@ function generateMapDbXml() {
 					foreach ($child['child'] as $column) {
 						$key['columns'][] = $column['content'];
 					}
+
 					$key['primary'] = isset($child['attrs']['PRIMARY']) && $child['attrs']['PRIMARY'] == 'true';
 					$keys[]         = $key;
 
@@ -344,9 +349,9 @@ function generateMapDbXml() {
 					foreach ($child['child'] as $column) {
 						$index['columns'][] = $column['content'];
 					}
-					$index['primary'] = isset($child['attrs']['PRIMARY']) && $child['attrs']['PRIMARY'] == 'true';
 
-					$indexes[] = $index;
+					$index['primary'] = isset($child['attrs']['PRIMARY']) && $child['attrs']['PRIMARY'] == 'true';
+					$indexes[]        = $index;
 
 					break;
 			}
@@ -358,9 +363,9 @@ function generateMapDbXml() {
 			$smarty->assign('indexes', $indexes);
 			$smarty->assign('requiresId', $requiresId);
 			$smarty->assign('isMap', true);
-			$new = $smarty->fetch('dbxml.tpl');
 
-			$fd = fopen($tmpFile, 'w');
+			$new = $smarty->fetch('dbxml.tpl');
+			$fd  = fopen($tmpFile, 'w');
 			fwrite($fd, $new);
 			fclose($fd);
 		}
