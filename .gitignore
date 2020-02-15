@@ -70,6 +70,7 @@ modules/*
 !modules/rating
 !modules/rearrange
 !modules/search
+!modules/share
 !modules/slideshow
 
 modules/mapv3/images/routes/*
