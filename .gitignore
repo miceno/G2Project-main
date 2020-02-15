@@ -73,6 +73,7 @@ modules/*
 !modules/share
 !modules/sitemap
 !modules/slideshow
+!modules/squarethumb
 
 modules/mapv3/images/routes/*
 
