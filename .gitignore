@@ -71,6 +71,7 @@ modules/*
 !modules/rearrange
 !modules/search
 !modules/share
+!modules/sitemap
 !modules/slideshow
 
 modules/mapv3/images/routes/*
