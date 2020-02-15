@@ -132,6 +132,7 @@ class CaptchaModule extends GalleryModule {
 				// .mo file migration
 			case '1.1.5':
 			case '1.1.6':
+			case '1.1.7':
 			case 'end of upgrade path':
 				break;
 
