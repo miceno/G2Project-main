@@ -59,6 +59,7 @@ modules/*
 !modules/gd
 !modules/icons
 !modules/imagemagick
+!modules/integrity
 !modules/jpegtran
 !modules/keyalbum
 !modules/linkitem
