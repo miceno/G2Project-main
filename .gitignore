@@ -74,6 +74,7 @@ modules/*
 !modules/sitemap
 !modules/slideshow
 !modules/squarethumb
+!modules/thumbnail
 !modules/watermark
 
 modules/mapv3/images/routes/*
